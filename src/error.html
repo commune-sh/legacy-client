@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+	<head>
+        <title>Error - Shpong</title>
+		<meta charset="utf-8" />
+		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
+		<link rel="stylesheet" href="%sveltekit.assets%/css/main.css" />
+		<meta name="viewport" content="width=device-width" />
+		%sveltekit.head%
+
+    <style>
+    </style>
+    <script>
+        let theme = localStorage.getItem(`theme`)
+        switch (theme) {
+            case `light`:
+                document.getElementsByTagName(`html`)[0].setAttribute(`class`,`light`)
+                break;
+            case `black`:
+                document.getElementsByTagName(`html`)[0].setAttribute(`class`,`black`)
+                break;
+            default:
+                document.getElementsByTagName(`html`)[0].setAttribute(`class`,`dark`)
+                break;
+        }
+    </script>
+	</head>
+	<body class="">
+        ERRORR
+	</body>
+</html>
