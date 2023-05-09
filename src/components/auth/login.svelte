@@ -1,4 +1,5 @@
 <script>
+import { logo }  from '../../assets/logo.js'
 import { onMount, createEventDispatcher } from 'svelte'
 import Config from '../../../config.json'
 import { store } from '../../store/store.js'
@@ -119,6 +120,13 @@ function pkey(e) {
     </div>
     <div class="grd">
         <div class="bi grd-c fl-co">
+            <div class="ts grd">
+                <div class="l-c grd grd-c">
+                    <div class="l-c-i grd-c">
+                        {@html logo}
+                    </div>
+                </div>
+            </div>
             <div class="ts">
                 {#if usernameWarning}
                     <div class="invalid">Username can't be empty</div>
@@ -140,11 +148,15 @@ function pkey(e) {
                 on:keydown={plw}
                 type="password" placeholder="Password" />
             </div>
-            <div class="pb4">
-                <button on:click={login} disabled={busy}>Login</button>
-            </div>
-            <div class="sm">
-                <a href="" on:click={resetPass}>Forgot Password?</a>
+            <div class="pb4 fl">
+                <div class="">
+                    <button on:click={login} disabled={busy}>Login</button>
+                </div>
+                <div class="fl-o">
+                </div>
+                <div class="sm grd">
+                    <a class="grd-c" href="" on:click={resetPass}>Forgot Password?</a>
+                </div>
             </div>
             <div class="ts">
             </div>
@@ -199,4 +211,27 @@ input:focus {
         width: 100%;
     }
 }
+.l-c {
+    height: 38px;
+    width: 38px;
+    background-color: var(--logo-bg);
+    border-radius: 6px;
+    transition: 0.1s;
+}
+
+.l-c-a {
+    background-color: var(--primary);
+}
+
+
+.l-c-i {
+    height: 20px;
+    width: 20px;
+    fill: var(--logo-shade-1);
+}
+
+.l-c-t {
+    fill: var(--logo-shade-2);
+}
+
 </style>

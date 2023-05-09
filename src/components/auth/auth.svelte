@@ -37,7 +37,7 @@ let syncCreds = (token) => {
                 success()
                 active = true
             } else {
-                //localStorage.removeItem('access_token')
+                localStorage.removeItem('access_token')
                 active = true
             }
 
@@ -103,11 +103,10 @@ let logout = () => {
     padding: 10px;
     font-weight: bold;
     font-family: monospace;
-    background-color: var(--black);
-    color: var(--primary);
+    background-color: var(--primary);
+    color: white;
 }
 .btn:hover {
     background-color: var(--primary);
-    color: var(--white);
 }
 </style>

@@ -20,8 +20,6 @@ function toggleTheme() {
 <div class="root">
     <div class="container">
 
-        <Switcher/>
-
         <Sidebar/>
 
         <div class="content">
@@ -51,26 +49,30 @@ function toggleTheme() {
 
 .container {
     place-self: stretch;
+    max-width:1200px;
     width: 100%;
     height: 100%;
     justify-self: center;
     align-self: start;
     display: grid;
     grid-template-rows: auto;
-    grid-template-columns: [switcher] 64px [sidebar] 300px [content] auto;
+    grid-template-columns: [sidebar] 300px [content] 1fr;
 }
 .content {
     place-self: stretch;
-    max-width:860px;
     width: 100%;
     height: 100%;
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: auto;
     justify-self: center;
     align-self: start;
 }
 
-@media screen and (max-width: 1160px) {
+@media screen and (max-width: 1280px) {
     .container {
-        max-width: auto;
+        max-width:1000px;
+        grid-template-columns: [sidebar] auto [content] 1fr;
     }
 }
 

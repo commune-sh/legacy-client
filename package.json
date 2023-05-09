@@ -20,5 +20,8 @@
 		"typescript-svelte-plugin": "^0.3.22",
 		"vite": "^4.3.0"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"dayjs": "^1.11.7"
+	}
 }

@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
-import { APIRequest } from '../../../utils/request.js'
-import Config from '../../../../config.json'
+import { APIRequest } from '../../../../utils/request.js'
+import Config from '../../../../../config.json'
 
 
 export async function load({ params }) {

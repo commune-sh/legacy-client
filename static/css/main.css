@@ -1,7 +1,8 @@
 :root {
     --bg: #141414;
-    --font-color: #dadada;
-    --link: #ff2a2a;
+    --text-1: #dadada;
+    --text-light: #dadada;
+    --link: #a53131;
     --border-color: #191919;
     --scrollbar-thumb: #323232;
     --scrollbar-track: #0a0a0a;
@@ -9,7 +10,7 @@
     --shade-2: #0e0e0e;
     --shade-3: #111111;
     --logo-bg: #000;
-    --primary: #b24c4c;
+    --primary: #a53131;
     --secondary: #ff2a2a;
     --logo-shade-1: #ff2a2a;
     --logo-shade-2: #000000;
@@ -23,8 +24,9 @@
 
 :root.light {
     --bg: white;
-    --font-color: black;
-    --link: #ff2a2a;
+    --text-1: black;
+    --text-light: #4f4e4e;
+    --link: #a53131;
     --border-color: #eaeaea;
     --scrollbar-thumb: #b9b9b9;
     --scrollbar-track: #ffffff;
@@ -32,7 +34,7 @@
     --shade-2: #E9ECEF;
     --shade-3: #DEE2E6;
     --logo-bg: #000;
-    --primary: #ff2a2a;
+    --primary: #a53131;
     --secondary: #ff2a2a;
     --logo-shade-1: #ff2a2a;
     --logo-shade-2: #aa0000;
@@ -41,6 +43,7 @@
     --modal: white;
     --black: white;
     --white: black;
+
 }
 
 
@@ -65,7 +68,7 @@ body {
     line-height: 1.5;
     margin: 0;
     padding: 0;
-    color: var(--font-color);
+    color: var(--text-1);
     background-color: var(--bg);
     overflow-y: scroll;
 }
