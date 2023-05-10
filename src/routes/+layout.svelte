@@ -1,5 +1,5 @@
 <script>
-
+import Authentication from '../components/auth/authentication.svelte'
 import Switcher from '../components/switcher/switcher.svelte'
 import Sidebar from '../components/sidebar/sidebar.svelte'
 
@@ -15,16 +15,30 @@ function toggleTheme() {
         document.documentElement.setAttribute('class', 'light')
     }
 }
+
+$: error = data?.error
+
 </script>
+
+{#if data?.error}
+<div class="root">
+    <section class="grd">
+        <section class="grd-c">
+                Shpong appears to be down right now.
+        </section>
+    </section>
+</div>
+{:else}
+
+
+
 
 <div class="root">
     <div class="container">
 
         <Sidebar/>
 
-        <div class="content">
-            <slot></slot>
-        </div>
+        <slot></slot>
 
     </div>
 </div>
@@ -33,9 +47,11 @@ function toggleTheme() {
 
 
 <div class="theme-switcher">
+        <Authentication />
 <button on:click={toggleTheme}>Toggle</button>
 </div>
 
+{/if}
 
 <style>
 
@@ -57,7 +73,9 @@ function toggleTheme() {
     display: grid;
     grid-template-rows: auto;
     grid-template-columns: [sidebar] 300px [content] 1fr;
+    grid-column-gap: 1rem;
 }
+
 .content {
     place-self: stretch;
     width: 100%;
@@ -67,6 +85,8 @@ function toggleTheme() {
     grid-template-columns: auto;
     justify-self: center;
     align-self: start;
+    border-right: 1px solid var(--border-1);
+    border-left: 1px solid var(--border-1);
 }
 
 @media screen and (max-width: 1280px) {

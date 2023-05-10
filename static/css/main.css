@@ -20,6 +20,7 @@
     --modal: #141414;
     --black: black;
     --white: white;
+    --border-1: #272727;
 }
 
 :root.light {
@@ -33,7 +34,7 @@
 
     --shade-2: #E9ECEF;
     --shade-3: #DEE2E6;
-    --logo-bg: #000;
+    --logo-bg: #eeeeee;
     --primary: #a53131;
     --secondary: #ff2a2a;
     --logo-shade-1: #ff2a2a;
@@ -43,6 +44,7 @@
     --modal: white;
     --black: white;
     --white: black;
+    --border-1: #e9e9e9;
 
 }
 

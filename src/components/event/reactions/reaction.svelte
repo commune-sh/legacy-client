@@ -6,20 +6,15 @@ export let reaction;
     <div class="emoji">
         {reaction?.key}
     </div>
+    {#if reaction?.senders?.length > 1}
     <div class="t">
-        {reaction?.senders?.length}
+        ×{reaction?.senders?.length}
     </div>
+    {/if}
 </div>
 
 <style>
 .reaction {
-    padding-right: 0.25rem;
-    padding-left: 0.25rem;
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
-    border-radius: 500px;
-    border: 2px solid var(--reaction-border);
-    height: 14px;
 }
 
 .bg {
@@ -44,6 +39,6 @@ export let reaction;
     font-size: small;
     color: var(--text-light);
     line-height: 1;
-    margin-left: 4px;
+    margin-left: 2px;
 }
 </style>

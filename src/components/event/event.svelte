@@ -5,6 +5,8 @@ import * as dayjs from 'dayjs'
 import * as relativeTime from 'dayjs/plugin/relativeTime'
 import Reactions from '../../components/event/reactions/reactions.svelte'
 
+export let isReply = false;
+
 
 export let event;
 
@@ -13,36 +15,52 @@ function goToEvent() {
 
 }
 
+$: isToday = dayjs().isSame(dayjs(event?.origin_server_ts), 'day')
 $: dayjsr = dayjs.extend(relativeTime)
+$: when = dayjsr(event?.origin_server_ts)?.fromNow(true)
+$: created = dayjs(event?.origin_server_ts)?.format('MMM D')
 
-$: when = dayjsr(event?.origin_server_ts)?.fromNow()
 
 $: content = event?.content?.formatted_body ? event?.content?.formatted_body :
     event?.content?.body
 
+function fetchReplies() {
+    console.log("lol")
+}
+
 </script>
 
 <div class="event" on:click={goToEvent}>
-    <div class="">
-        <div class="avatar-base">
-        </div>
-    </div>
     <div class="fl-co">
         <div class="">
             {@html content}
         </div>
         <div class="pt2 fl">
-            <div class="">
-                {event?.reply_count}
+            <div class="fl">
+                <div class="">
+                    <span class="avatar-base">
+                    </span>
+                </div>
+                <div class="">
+                </div>
             </div>
             <div class="fl-o">
             </div>
             <div class="">
                 <Reactions reactions={event?.reactions} />
             </div>
+            {#if event?.reply_count > 0}
+                <div class="rep ml3" on:click={fetchReplies}>
+                    {event?.reply_count} replies
+                </div>
+            {/if}
         </div>
         <div class="pt1">
-            <span class="time" title="This is your tooltip">{when}</span>
+            {#if isToday}
+                <span class="time" title={when}>{when}</span>
+            {:else}
+                <span class="time" title={created}>{created}</span>
+            {/if}
         </div>
     </div>
 </div>
@@ -50,19 +68,22 @@ $: content = event?.content?.formatted_body ? event?.content?.formatted_body :
 <style>
 .event {
     display: grid;
-    grid-template-columns: 40px 1fr;
+    grid-template-columns: auto;
     grid-template-rows: auto;
     grid-column-gap: 10px;
     padding: 1rem;
     cursor: pointer;
+    border-bottom: 1px solid var(--ev-bb);
 }
 
 :global(:root) {
     --ev-bb: #272727;
-    --event-bg-hover: #f7f7f7;
+    --rep-bb: #f2f2f2;
+    --event-bg-hover: #181818;
 }
 :global(:root.light) {
     --ev-bb: #f2f2f2;
+    --rep-bb: #f2f2f2;
     --event-bg-hover: #f7f7f7;
 }
 
@@ -71,11 +92,21 @@ $: content = event?.content?.formatted_body ? event?.content?.formatted_body :
 }
 
 .avatar-base {
-    width: 28px;
-    height: 28px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     background-color: #ccc;
 }
+
+.rep {
+    font-size: small;
+    line-height: 1;
+    color: var(--text-light);
+    border: 2px solid var(--rep-bb);
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+}
+
 
 .time {
     font-size: small;

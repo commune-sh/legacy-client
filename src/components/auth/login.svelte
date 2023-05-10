@@ -68,7 +68,8 @@ function login() {
         } else if (resp?.authenticated == true && resp?.access_token && resp?.credentials) {
             localStorage.setItem('access_token', resp.access_token)
             store.saveCredentials(resp.credentials)
-                dispatch('authenticated', true)
+            store.isAuthenticated()
+            dispatch('authenticated', true)
         }
 
         busy = false

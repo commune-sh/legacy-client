@@ -18,7 +18,6 @@ import { page } from '$app/stores';
             </a>
         </div>
         <div class="">
-            ok
         </div>
     </div>
     <div class="content">
@@ -36,11 +35,10 @@ import { page } from '$app/stores';
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: [search] 64px [content] auto [auth] 64px;
+    margin-left: 1rem;
 }
 
 .header {
-    margin-top: 1rem;
-    padding-left: 1rem;
 }
 .logo {
     cursor: pointer;

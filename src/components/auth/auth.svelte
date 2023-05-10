@@ -1,68 +1,27 @@
 <script>
 import { onMount } from 'svelte'
-import Flow from './flow.svelte'
-import { APIRequest } from '../../utils/request.js'
-import Config from '../../../config.json'
 import { store } from '../../store/store.js'
 
 let authenticated = false
-let authenticating = false
+
+$: authenticated = $store?.authenticated && $store?.credentials
 
 
-let active = false;
+$: active = $store.verifiedSession
+
 
 $: username = $store?.credentials?.username
 
-onMount(() =>{
-    const token = localStorage.getItem('access_token')
-    console.log('Token:', token)
-    if(token) {
-        syncCreds(token)
-    } else {
-        active = true
-    }
-})
-
-let syncCreds = (token) => {
-    if(token) {
-
-        APIRequest({
-            url: `${Config.baseURL}/account/session`,
-        })
-          .then(resp => {
-
-            console.log('Response:', resp);
-            if(resp?.valid && resp?.credentials) {
-                store.saveCredentials(resp.credentials)
-                success()
-                active = true
-            } else {
-                localStorage.removeItem('access_token')
-                active = true
-            }
-
-          })
-          .catch(error => {
-            console.error('Error:', error);
-            active = true
-          });
-    }
-}
 
 let toggleFlow = () => {
-    authenticating = !authenticating
+    store.startAuthenticating()
 }
 
-let success = () => {
-    //syncCreds()
-    authenticated = true
-    authenticating = false
-}
 
 let logout = () => {
     localStorage.removeItem('access_token')
     store.removeCredentials()
-    authenticated = false
+    store.isNotAuthenticated()
 }
 
 </script>
@@ -85,10 +44,6 @@ let logout = () => {
         <button class="btn" on:click={logout}>Log out</button>
     </div>
 </div>
-{/if}
-
-{#if authenticating}
-    <Flow on:authenticated={success} on:kill={toggleFlow}/>
 {/if}
 
 <style>

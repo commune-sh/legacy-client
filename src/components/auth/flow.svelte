@@ -1,5 +1,5 @@
 <script>
-import { onMount, createEventDispatcher } from 'svelte'
+import { onMount, onDestroy, createEventDispatcher } from 'svelte'
 import Login from './login.svelte'
 import Signup from './signup.svelte'
 import Password from './password.svelte'
@@ -10,19 +10,6 @@ let kill =() => {
     dispatch('kill', true)
 }
 
-onMount(() => {
-    function handleKeyPress(e) {
-      if (e.key === 'Escape') {
-        dispatch('kill', true)
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyPress);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyPress);
-    };
-});
 
 export let mode = "login";
 
@@ -73,19 +60,22 @@ function passMode() {
 <style>
 .mask {
     position: fixed;
-    z-index: 1000;
+    z-index: 10000;
     width: 100%;
     height: 100%;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
+    overflow-y: hidden;
+    background-color: var(--mask);
 }
 
 .modal {
+    z-index: 11000;
     background-color: var(--modal);
-    min-width: 100%;
-    min-height: 100%;
+    min-width: 450px;
+    min-height: 650px;
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: [header] 40px [content] 1fr;

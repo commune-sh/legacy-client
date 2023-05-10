@@ -5,7 +5,9 @@ function createApp() {
   let app = {
     active: false,
     ready: false,
-    sessions: [],
+    authenticated: false,
+    authenticating: false,
+    verifiedSession: false,
     credentials: null,
   }
 
@@ -25,6 +27,41 @@ function createApp() {
     })
   }
 
+  let startAuthenticating = () => {
+    update(p => {
+      p.authenticating = true
+      return p
+    })
+  }
+
+  let stopAuthenticating = () => {
+    update(p => {
+      p.authenticating = false
+      return p
+    })
+  }
+
+  let isAuthenticated = () => {
+    update(p => {
+      p.authenticated = true
+      return p
+    })
+  }
+
+  let isNotAuthenticated = () => {
+    update(p => {
+      p.authenticated = false
+      return p
+    })
+  }
+
+  let verifiedSession = (v) => {
+    update(p => {
+      p.verifiedSession = v
+      return p
+    })
+  }
+
 
   const { subscribe, set, update } = writable(app);
 
@@ -34,6 +71,11 @@ function createApp() {
     set,
     saveCredentials,
     removeCredentials,
+    startAuthenticating,
+    stopAuthenticating,
+    isAuthenticated,
+    isNotAuthenticated,
+    verifiedSession,
   };
 }
 
