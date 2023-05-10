@@ -7,24 +7,10 @@ import { onMount } from 'svelte';
 import { page } from '$app/stores';
 export let data;
 
-let replies;
+$: replies = data?.replies
 
 onMount(() => {
     console.log(data)
-    if(data?.event?.reply_count > 0) {
-        APIRequest({
-            url: `${Config.baseURL}/event/${data.event.event_id}/replies`,
-            method: 'GET',
-        })
-        .then(resp => {
-            console.log('Response:', resp);
-            replies = resp?.replies;
-                replies = replies
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
 })
 
 function goBack() {

@@ -9,13 +9,16 @@ import Reactions from '../../components/event/reactions/reactions.svelte'
 export let event;
 
 function goToEvent() {
-    goto(`/${$page.params.space}/p/${event?.slug}`)
+    goto(`/${event?.room_alias}/p/${event?.slug}`)
 
 }
 
 $: dayjsr = dayjs.extend(relativeTime)
 
 $: when = dayjsr(event?.origin_server_ts)?.fromNow()
+
+$: content = event?.content?.formatted_body ? event?.content?.formatted_body :
+    event?.content?.body
 
 </script>
 
@@ -26,18 +29,11 @@ $: when = dayjsr(event?.origin_server_ts)?.fromNow()
     </div>
     <div class="fl-co">
         <div class="">
-            {event?.content?.body}
+            {@html content}
         </div>
         <div class="pt2 fl">
             <div class="">
-                <div class="">
-                    {#if event?.sender?.display_name}
-                        <b>{event?.sender?.display_name}</b>
-                        {event?.sender?.id}
-                    {:else}
-                        <b>{event?.sender?.id}</b>
-                    {/if}
-                </div>
+                {event?.reply_count}
             </div>
             <div class="fl-o">
             </div>
