@@ -1,4 +1,6 @@
 <script>
+import Config from '../../../config.json'
+import { APIRequest } from '../../utils/request.js'
 import { onMount } from 'svelte'
 import { store } from '../../store/store.js'
 
@@ -11,6 +13,23 @@ $: active = $store.verifiedSession
 
 
 $: username = $store?.credentials?.username
+
+$: if(authenticated) {
+    //Sync()
+    //SSE()
+}
+
+function SSE() {
+    const token = $store.credentials.access_token
+    const url = `${Config.baseURL}/sse?token=${token}`
+    const eventSource = new EventSource(url);
+    eventSource.onmessage = function(event) {
+        if(event.data) {
+          console.log('Received event:', JSON.parse(event.data));
+        }
+    };
+
+}
 
 
 let toggleFlow = () => {

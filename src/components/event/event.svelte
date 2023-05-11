@@ -6,6 +6,7 @@ import * as relativeTime from 'dayjs/plugin/relativeTime'
 import Reactions from '../../components/event/reactions/reactions.svelte'
 
 export let isReply = false;
+export let showAlias = false;
 
 
 export let event;
@@ -55,6 +56,13 @@ function fetchReplies() {
                 <div class="rep ml3" on:click={fetchReplies}>
                     {event?.reply_count} replies
                 </div>
+            {/if}
+        </div>
+        <div class="pt1">
+            {#if showAlias && event?.room_alias}
+                <a href={`/${event?.room_alias}`}>
+                <span class="time" title={event?.room_alias}>{event?.room_alias}</span>
+            </a>
             {/if}
         </div>
         <div class="pt1">

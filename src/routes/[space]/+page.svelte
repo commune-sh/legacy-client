@@ -1,4 +1,7 @@
 <script>
+import Config from '../../../config.json'
+import { APIRequest } from '../../utils/request.js'
+import { onMount, tick } from 'svelte'
 import Header from '../../components/header/header.svelte'
 import { page } from '$app/stores';
 import Event from '../../components/event/event.svelte'
@@ -11,6 +14,45 @@ function link(space) {
 
 $: error = data?.error
 $: exists = data?.exists
+
+let scrollHeight;
+let obs;
+
+onMount(() => {
+    scrollHeight = document.documentElement.scrollHeight;
+    handleScroll();
+})
+
+function handleScroll() {
+    let options = {
+        rootMargin: `${scrollHeight/2}px`
+    };
+
+    let callback = (entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                fetchMore()
+            }
+        });
+    };
+
+    let observer = new IntersectionObserver(callback, options);
+    observer.observe(obs);
+}
+
+let fetchMore = () => {
+    const events = data.events;
+    const last = events[events.length - 1]?.origin_server_ts
+    APIRequest({
+        url: `${Config.baseURL}/${$page.params.space}?last=${last}`,
+      method: 'GET',
+    }).then((res) => {
+            console.log("got data", res)
+        if(res && res?.events?.length > 0) {
+            data.events = [...data.events, ...res.events];
+        }
+    });
+}
 
 </script>
 
@@ -42,6 +84,7 @@ $: exists = data?.exists
             </div>
         {/if}
 </section>
+<section class="" bind:this={obs}></section>
 
 {/if}
 
@@ -49,7 +92,7 @@ $: exists = data?.exists
 .content {
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: 64px 1fr;
+    grid-template-rows: 50px 1fr;
     border-right: 1px solid var(--border-1);
     border-left: 1px solid var(--border-1);
 }

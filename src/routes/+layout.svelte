@@ -24,7 +24,7 @@ $: error = data?.error
 <div class="root">
     <section class="grd">
         <section class="grd-c">
-                Shpong appears to be down right now.
+            Yikes. Shpong is down right now.
         </section>
     </section>
 </div>
@@ -35,6 +35,8 @@ $: error = data?.error
 
 <div class="root">
     <div class="container">
+
+            <Switcher />
 
     <div class="sidebar-container grd">
         <Sidebar/>
@@ -73,8 +75,7 @@ $: error = data?.error
     align-self: start;
     display: grid;
     grid-template-rows: auto;
-    grid-template-columns: [sidebar] 300px [content] 1fr;
-    grid-column-gap: 1rem;
+    grid-template-columns: [switcher] 64px [sidebar] 240px [content] 1fr;
 }
 
 .content {
@@ -92,7 +93,10 @@ $: error = data?.error
 
 @media screen and (max-width: 1280px) {
     .container {
-        grid-template-columns: [sidebar] auto [content] 1fr;
+        grid-template-columns: [switcher] 64px [content] 1fr;
+    }
+    .sidebar-container {
+            display: none;
     }
 }
 

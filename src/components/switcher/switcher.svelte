@@ -5,9 +5,9 @@ import { page } from '$app/stores';
 $: isIndex = $page.route.id === '/'
 
 $: if(isIndex) {
-    toggleFavicon()
+    //toggleFavicon()
 } else {
-    toggleFavicon()
+    //toggleFavicon()
 }
 
 function toggleFavicon() {
@@ -31,15 +31,17 @@ function toggleFavicon() {
 
 </script>
 <div class="switcher">
-    <div class="logo grd">
-        <a class="grd-c" href="/">
-            <div class="l-c grd" class:l-c-a={isIndex}>
-                <div class="l-c-i grd-c" class:l-c-t={isIndex}>
+
+    <div class="logo">
+        <a class="" href="/">
+            <div class="l-c grd">
+                <div class="l-c-i grd-c">
                     {@html logo}
                 </div>
             </div>
         </a>
     </div>
+
     <div class="content">
     </div>
 </div>
@@ -49,10 +51,9 @@ function toggleFavicon() {
     position: sticky;
     top: 0;
     height: 100vh;
-    background-color: var(--shade-3);
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: [logo] 64px [content] auto;
+    grid-template-rows: [logo] 50px [content] auto;
 }
 .content {
     padding-top: 1rem;
@@ -71,7 +72,6 @@ function toggleFavicon() {
 }
 
 .logo:hover {
-    opacity: 0.9;
 }
 .l-c {
     height: 38px;
@@ -81,13 +81,15 @@ function toggleFavicon() {
     transition: 0.1s;
 }
 
+
 .l-c:hover {
-    background-color: var(--primary);
 }
 
 .l-c:hover .l-c-i {
-    fill: var(--logo-shade-2);
+    animation: rainbow 0.5s linear;
+    animation-iteration-count: infinite;
 }
+
 .l-c-a {
     background-color: var(--primary);
 }
@@ -103,4 +105,55 @@ function toggleFavicon() {
     fill: var(--logo-shade-2);
 }
 
+.rainbow-bg{
+}
+
+.auth {
+    display: grid;
+}
+
+@media screen and (max-width: 1280px) {
+    .auth {
+        display: none;
+    }
+}
+
+@keyframes rainbow{
+		100%,0%{
+			fill: rgb(255,0,0);
+		}
+		8%{
+			fill: rgb(255,127,0);
+		}
+		16%{
+			fill: rgb(255,255,0);
+		}
+		25%{
+			fill: rgb(127,255,0);
+		}
+		33%{
+			fill: rgb(0,255,0);
+		}
+		41%{
+			fill: rgb(0,255,127);
+		}
+		50%{
+			fill: rgb(0,255,255);
+		}
+		58%{
+			fill: rgb(0,127,255);
+		}
+		66%{
+			fill: rgb(0,0,255);
+		}
+		75%{
+			fill: rgb(127,0,255);
+		}
+		83%{
+			fill: rgb(255,0,255);
+		}
+		91%{
+			fill: rgb(255,0,127);
+		}
+}
 </style>

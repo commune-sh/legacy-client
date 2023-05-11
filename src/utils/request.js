@@ -5,12 +5,14 @@ export async function APIRequest(r) {
     }
 
     const token = localStorage.getItem('access_token')
-    console.log("whst is token?", token)
 
     if(token) {
       headers['Authorization'] = `Bearer ${token}`
     }
 
+    if(r.token) {
+      headers['Authorization'] = `Bearer ${r.token}`
+    }
     let options = {
       method: 'POST',
       headers: headers,

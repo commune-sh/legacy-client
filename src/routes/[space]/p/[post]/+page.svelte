@@ -40,9 +40,8 @@ function goBack() {
     <section>
         <Event event={data.event} />
 
-        <div class="sep">
-                ok
-        </div>
+            <div class="sep">
+            </div>
 
 
         {#if replies}
@@ -61,7 +60,7 @@ function goBack() {
 .content {
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: 64px 1fr;
+    grid-template-rows: 50px 1fr;
     border-right: 1px solid var(--border-1);
     border-left: 1px solid var(--border-1);
 }
