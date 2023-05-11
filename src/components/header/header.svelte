@@ -1,5 +1,6 @@
 <script>
 import { page } from '$app/stores';
+import { goto } from '$app/navigation';
 export let state;
 export let type = 'space';
 
@@ -8,6 +9,9 @@ $: space = $page.params.space
 export let isStatic = false;
 export let name = '';
 
+function goToSpace() {
+    goto(`/${$page.params.space}`)
+}
 </script>
 
 {#if isStatic && name}
@@ -21,7 +25,7 @@ export let name = '';
 
 <div class="header">
     <div class="name grd-c">
-        <span class="n">{state?.space?.name}</span>
+        <span class="n" on:click={goToSpace}>{state?.space?.name}</span>
     </div>
 </div>
 {/if}
@@ -44,6 +48,7 @@ export let name = '';
 }
 
 .n {
+    cursor: pointer;
     font-weight: bold;
     font-size: 1rem;
 }

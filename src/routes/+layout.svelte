@@ -36,9 +36,11 @@ $: error = data?.error
 <div class="root">
     <div class="container">
 
+    <div class="sidebar-container grd">
         <Sidebar/>
+    </div>
 
-        <slot></slot>
+    <slot></slot>
 
     </div>
 </div>
@@ -65,7 +67,6 @@ $: error = data?.error
 
 .container {
     place-self: stretch;
-    max-width:1200px;
     width: 100%;
     height: 100%;
     justify-self: center;
@@ -91,10 +92,10 @@ $: error = data?.error
 
 @media screen and (max-width: 1280px) {
     .container {
-        max-width:1000px;
         grid-template-columns: [sidebar] auto [content] 1fr;
     }
 }
+
 
 .theme-switcher {
     position: fixed;

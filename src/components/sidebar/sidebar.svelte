@@ -63,6 +63,7 @@ import { page } from '$app/stores';
     transition: 0.1s;
 }
 
+
 .l-c:hover {
 }
 

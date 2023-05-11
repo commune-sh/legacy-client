@@ -12,7 +12,6 @@ export let event;
 
 function goToEvent() {
     goto(`/${event?.room_alias}/p/${event?.slug}`)
-
 }
 
 $: isToday = dayjs().isSame(dayjs(event?.origin_server_ts), 'day')
@@ -33,15 +32,18 @@ function fetchReplies() {
 <div class="event" on:click={goToEvent}>
     <div class="fl-co">
         <div class="">
+        </div>
+        <div class="">
             {@html content}
         </div>
         <div class="pt2 fl">
             <div class="fl">
                 <div class="">
-                    <span class="avatar-base">
-                    </span>
+                    <div class="avatar-base">
+                    </div>
                 </div>
                 <div class="">
+                    {event?.sender?.display_name}
                 </div>
             </div>
             <div class="fl-o">
@@ -75,6 +77,7 @@ function fetchReplies() {
     cursor: pointer;
     border-bottom: 1px solid var(--ev-bb);
 }
+
 
 :global(:root) {
     --ev-bb: #272727;

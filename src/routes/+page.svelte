@@ -1,15 +1,55 @@
 <script>
 import Config from '../../config.json'
 import { APIRequest } from '../utils/request.js'
-import { onMount } from 'svelte'
+import { onMount, tick } from 'svelte'
 import { page } from '$app/stores';
 import Event from '../components/event/event.svelte'
 import Header from '../components/header/header.svelte'
 export let data;
 console.log(data)
 
+
+let scrollHeight;
+let obs;
+
 onMount(() => {
+    scrollHeight = document.documentElement.scrollHeight;
+    handleScroll();
 })
+
+let observer;
+let options;
+let callback;
+
+function handleScroll() {
+    options = {
+        rootMargin: `${scrollHeight/2}px`
+    };
+
+    callback = (entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                fetchMore()
+            }
+        });
+    };
+
+    observer = new IntersectionObserver(callback, options);
+    observer.observe(obs);
+}
+
+let fetchMore = () => {
+    const events = data.events;
+    const last = events[events.length - 1]?.origin_server_ts
+    APIRequest({
+      url: `${Config.baseURL}/events?last=${last}`,
+      method: 'GET',
+    }).then((res) => {
+        if(res && res?.events?.length > 0) {
+            data.events = [...data.events, ...res.events];
+        }
+    });
+}
 
 let active = false;
 
@@ -43,6 +83,7 @@ $: exists = data?.exists
         {/each}
     </section>
 </section>
+<section class="" bind:this={obs}></section>
 {/if}
 
 <style>
