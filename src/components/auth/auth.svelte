@@ -6,7 +6,9 @@ import { store } from '../../store/store.js'
 
 let authenticated = false
 
-$: authenticated = $store?.authenticated && $store?.credentials
+$: authenticated = $store?.authenticated && 
+    $store?.credentials != null
+    $store?.credentials?.access_token?.length > 0
 
 
 $: active = $store.verifiedSession
@@ -14,13 +16,14 @@ $: active = $store.verifiedSession
 
 $: username = $store?.credentials?.username
 
-$: if(authenticated) {
+$: if(authenticated && active) {
     //Sync()
     //SSE()
 }
 
 function SSE() {
-    const token = $store.credentials.access_token
+    const token = $store?.credentials?.access_token
+    console.log("token issss", $store.credentials)
     const url = `${Config.baseURL}/sse?token=${token}`
     const eventSource = new EventSource(url);
     eventSource.onmessage = function(event) {
@@ -38,9 +41,7 @@ let toggleFlow = () => {
 
 
 let logout = () => {
-    localStorage.removeItem('access_token')
-    store.removeCredentials()
-    store.isNotAuthenticated()
+    store.logout()
 }
 
 </script>

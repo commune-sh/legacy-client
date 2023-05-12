@@ -5,7 +5,6 @@ import { onMount } from 'svelte';
 import { page } from '$app/stores';
 
 
-import Header from '../../../../components/header/header.svelte'
 export let data;
 
 $: replies = data?.replies
@@ -35,7 +34,6 @@ function goBack() {
 
 <section class="content">
 
-        <Header state={data.state}/>
 
     <section>
         <Event event={data.event} />
@@ -60,7 +58,7 @@ function goBack() {
 .content {
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: 50px 1fr;
+    grid-template-rows: auto;
     border-right: 1px solid var(--border-1);
     border-left: 1px solid var(--border-1);
 }

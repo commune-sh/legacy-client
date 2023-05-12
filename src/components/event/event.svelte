@@ -12,7 +12,9 @@ export let showAlias = false;
 export let event;
 
 function goToEvent() {
-    goto(`/${event?.room_alias}/p/${event?.slug}`)
+    goto(`/${event?.room_alias}/p/${event?.slug}`, {
+        noscroll: true,
+    })
 }
 
 $: isToday = dayjs().isSame(dayjs(event?.origin_server_ts), 'day')
@@ -28,9 +30,11 @@ function fetchReplies() {
     console.log("lol")
 }
 
+
+$: highlight = $page.params.post === event?.slug
 </script>
 
-<div class="event" on:click={goToEvent}>
+<div class="event" on:click={goToEvent} class:highlight={highlight}>
     <div class="fl-co">
         <div class="">
         </div>
@@ -99,6 +103,10 @@ function fetchReplies() {
 }
 
 .event:hover {
+    background-color: var(--event-bg-hover);
+}
+
+.highlight {
     background-color: var(--event-bg-hover);
 }
 

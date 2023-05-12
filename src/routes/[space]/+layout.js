@@ -4,8 +4,13 @@ import Config from '../../../config.json'
 
 export async function load({ params }) {
 
+    let x = params.space;
+  if(params?.room) {
+    x = params.room
+  }
+
     const data = await APIRequest({
-      url: `${Config.baseURL}/${params.space}`,
+      url: `${Config.baseURL}/${x}`,
       method: 'GET',
     })
 

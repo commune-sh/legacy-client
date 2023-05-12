@@ -62,6 +62,15 @@ function createApp() {
     })
   }
 
+  let logout = () => {
+    update(p => {
+      p.authenticated = false
+      p.credentials = null
+      localStorage.removeItem('access_token')
+      return p
+    })
+  }
+
 
   const { subscribe, set, update } = writable(app);
 
@@ -76,6 +85,7 @@ function createApp() {
     isAuthenticated,
     isNotAuthenticated,
     verifiedSession,
+    logout,
   };
 }
 

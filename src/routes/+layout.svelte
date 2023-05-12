@@ -36,13 +36,20 @@ $: error = data?.error
 <div class="root">
     <div class="container">
 
-            <Switcher />
+    <div class="switcher-container grd">
+        <Switcher />
+    </div>
 
     <div class="sidebar-container grd">
         <Sidebar/>
     </div>
 
-    <slot></slot>
+    <div class="content">
+
+
+        <slot></slot>
+
+    </div>
 
     </div>
 </div>
@@ -60,8 +67,7 @@ $: error = data?.error
 <style>
 
 .root {
-    min-height: 100vh; 
-    height: 100%;
+    height: 100vh;
     display: grid;
     grid-template-columns: 100%;
     grid-template-rows: 100%;
@@ -81,14 +87,11 @@ $: error = data?.error
 .content {
     place-self: stretch;
     width: 100%;
-    height: 100%;
+    height: 100vh;
     display: grid;
     grid-template-rows: auto;
     grid-template-columns: auto;
-    justify-self: center;
-    align-self: start;
-    border-right: 1px solid var(--border-1);
-    border-left: 1px solid var(--border-1);
+    overflow: hidden;
 }
 
 @media screen and (max-width: 1280px) {
@@ -99,6 +102,15 @@ $: error = data?.error
             display: none;
     }
 }
+@media screen and (max-width: 768px) {
+    .container {
+        grid-template-columns: auto;
+    }
+    .switcher-container {
+        display: none;
+    }
+}
+
 
 
 .theme-switcher {

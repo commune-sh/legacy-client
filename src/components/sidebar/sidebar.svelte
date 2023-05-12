@@ -3,6 +3,19 @@ import { logo } from '/src/assets/logo.js'
 import Auth from '../auth/auth.svelte'
 import { page } from '$app/stores';
 
+import { goto } from '$app/navigation';
+
+function switchto() {
+    goto(`/music/test`, {
+        noscroll: true,
+    })
+}
+
+function switcht() {
+    goto(`/music`, {
+        noscroll: true,
+    })
+}
 
 </script>
 
@@ -12,6 +25,17 @@ import { page } from '$app/stores';
         </div>
     </div>
     <div class="content">
+        <textarea></textarea>
+
+
+        <div class="" on:click={switchto}>
+            Test
+        </div>
+
+        <div class="" on:click={switcht}>
+            Music
+        </div>
+
     </div>
     <div class="auth">
         <Auth/>
@@ -26,7 +50,7 @@ import { page } from '$app/stores';
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: [search] 64px [content] auto [auth] 64px;
-    border-left: 1px solid var(--border-1);
+    border-right: 1px solid var(--border-1);
 }
 
 .header {
