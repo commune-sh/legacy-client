@@ -118,7 +118,7 @@ let fetchMore = () => {
     </div>
 
     <div class="sidebar-container grd">
-        <Sidebar/>
+                <Sidebar data={data}/>
     </div>
 
     <div class="content">
@@ -211,14 +211,6 @@ let fetchMore = () => {
     overflow: hidden;
 }
 
-@media screen and (max-width: 1280px) {
-    .container {
-        grid-template-columns: [switcher] 64px [content] 1fr;
-    }
-    .sidebar-container {
-            display: none;
-    }
-}
 @media screen and (max-width: 768px) {
     .container {
         grid-template-columns: auto;
@@ -266,6 +258,5 @@ let fetchMore = () => {
     height: 100%;
     justify-self: center;
     align-self: start;
-    display: grid;
 }
 </style>

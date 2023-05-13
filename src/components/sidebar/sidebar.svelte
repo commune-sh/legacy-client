@@ -2,6 +2,10 @@
 import { logo } from '/src/assets/logo.js'
 import Auth from '../auth/auth.svelte'
 import { page } from '$app/stores';
+import RoomList from './room-list/room-list.svelte'
+
+export let data;
+
 
 import { goto } from '$app/navigation';
 
@@ -17,6 +21,8 @@ function switcht() {
     })
 }
 
+$: children = data?.state?.children
+
 </script>
 
 <div class="sidebar">
@@ -24,17 +30,15 @@ function switcht() {
         <div class="">
         </div>
     </div>
-    <div class="content">
-        <textarea></textarea>
+    <div class="content fl-co">
 
-
-        <div class="" on:click={switchto}>
-            Test
+        <div class="">
+            <RoomList children={children} />
+        </div>
+        <div class="">
         </div>
 
-        <div class="" on:click={switcht}>
-            Music
-        </div>
+
 
     </div>
     <div class="auth">
@@ -44,8 +48,6 @@ function switcht() {
 
 <style>
 .sidebar {
-    position: sticky;
-    top: 0;
     height: 100vh;
     display: grid;
     grid-template-columns: auto;
@@ -53,6 +55,7 @@ function switcht() {
     border-right: 1px solid var(--border-1);
 }
 
-.header {
+.content {
+    padding: 1rem;
 }
 </style>

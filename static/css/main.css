@@ -22,6 +22,9 @@
     --white: white;
     --border-1: #272727;
     --placeholder-color: #3e3e3e;
+
+    --light: #f7f7f7
+    --svg-fill-1: #e1e1e1;
 }
 
 :root.light {
@@ -48,6 +51,8 @@
     --border-1: #e9e9e9;
     --placeholder-color: #b1b1b1;
 
+    --light: #f7f7f7
+    --svg-fill-1: #e1e1e1;
 }
 
 
@@ -60,13 +65,16 @@
     src: local('Twemoji'), url('/fonts/TwemojiMozilla-colr.4d2d834.woff2') format('woff');
 }
 
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap');
+
+
 html {
     -webkit-font-smoothing: antialiased;
     -webkit-text-size-adjust: none;
 }
 
 body {
-    font-family: monospace, Twemoji;
+    font-family: 'IBM Plex Mono', monospace, Twemoji;
     font-weight: normal;
     font-size: 16px;
     line-height: 1.5;
@@ -338,3 +346,4 @@ textarea {
 .sm {
     font-size: small;
 }
+

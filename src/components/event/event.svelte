@@ -5,6 +5,7 @@ import * as dayjs from 'dayjs'
 import * as relativeTime from 'dayjs/plugin/relativeTime'
 import Reactions from '../../components/event/reactions/reactions.svelte'
 
+export let isPost = false;
 export let isReply = false;
 export let showAlias = false;
 
@@ -21,6 +22,10 @@ $: isRoom = $page.params.room !== undefined && $page.params.room !== null &&
 function goToEvent() {
 
 
+    if(isPost || isReply) {
+        return
+    }
+
     let url = `/post/${event?.slug}`
     if(isSpace) {
         url = `/${event?.room_alias}/post/${event?.slug}`
@@ -30,6 +35,24 @@ function goToEvent() {
         url = `/${event?.room_alias}/${$page.params.room}/post/${event?.slug}`
     }
 
+    const pathname = $page.url.pathname
+    if(url == pathname) {
+        url = '/'
+
+        if(isSpace) {
+            url = `/${$page.params.space}`
+        }
+
+        if(isSpace && isRoom)  {
+            url = `/${$page.params.space}/${$page.params.room}`
+        }
+
+        goto(url, {
+            noscroll: true,
+        })
+
+        return
+    }
 
     goto(url, {
         noscroll: true,
@@ -53,7 +76,10 @@ function fetchReplies() {
 $: highlight = $page.params.post === event?.slug
 </script>
 
-<div class="event" on:click={goToEvent} class:highlight={highlight}>
+<div class="event" 
+    class:h={!isReply && !isPost}
+    on:click={goToEvent} 
+    class:highlight={highlight}>
     <div class="fl-co">
         <div class="">
         </div>
@@ -105,9 +131,9 @@ $: highlight = $page.params.post === event?.slug
     grid-template-rows: auto;
     grid-column-gap: 10px;
     padding: 1rem;
-    cursor: pointer;
     border-bottom: 1px solid var(--ev-bb);
 }
+
 
 
 :global(:root) {
@@ -121,7 +147,10 @@ $: highlight = $page.params.post === event?.slug
     --event-bg-hover: #f7f7f7;
 }
 
-.event:hover {
+.h {
+    cursor: pointer;
+}
+.h:hover {
     background-color: var(--event-bg-hover);
 }
 

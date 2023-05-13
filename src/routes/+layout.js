@@ -3,6 +3,7 @@ export const ssr = false
 import { error } from '@sveltejs/kit';
 import { APIRequest } from '../utils/request.js'
 import Config from '../../config.json'
+import { store } from '../store/store.js'
 
 export async function load({ params }) {
     console.log("params is", params)
@@ -37,6 +38,7 @@ export async function load({ params }) {
     const data = await APIRequest(opt)
 
     if (data) {
+        //store.addRoomEvents(data.state.room_id, data.events)
         return data;
   } else {
     return {

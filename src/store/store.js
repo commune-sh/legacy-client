@@ -9,6 +9,7 @@ function createApp() {
     authenticating: false,
     verifiedSession: false,
     credentials: null,
+    events: [],
   }
 
 
@@ -71,6 +72,14 @@ function createApp() {
     })
   }
 
+  let addRoomEvents = (room_id, events) => {
+    update(p => {
+      console.log("adding room events", room_id, events)
+      p.events[room_id] = events
+      return p
+    })
+  }
+
 
   const { subscribe, set, update } = writable(app);
 
@@ -86,6 +95,7 @@ function createApp() {
     isNotAuthenticated,
     verifiedSession,
     logout,
+    addRoomEvents,
   };
 }
 
