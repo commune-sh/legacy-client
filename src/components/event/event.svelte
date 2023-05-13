@@ -11,8 +11,27 @@ export let showAlias = false;
 
 export let event;
 
+$: isSpace = $page.params.space !== undefined && $page.params.space !== null &&
+    $page.params.space !== ''
+
+$: isRoom = $page.params.room !== undefined && $page.params.room !== null &&
+    $page.params.room !== ''
+
+
 function goToEvent() {
-    goto(`/${event?.room_alias}/p/${event?.slug}`, {
+
+
+    let url = `/post/${event?.slug}`
+    if(isSpace) {
+        url = `/${event?.room_alias}/post/${event?.slug}`
+    }
+
+    if(isSpace && isRoom)  {
+        url = `/${event?.room_alias}/${$page.params.room}/post/${event?.slug}`
+    }
+
+
+    goto(url, {
         noscroll: true,
     })
 }

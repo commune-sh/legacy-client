@@ -1,12 +1,12 @@
 import { error } from '@sveltejs/kit';
-import { APIRequest } from '../../../../utils/request.js'
-import Config from '../../../../../config.json'
+import { APIRequest } from '../../../utils/request.js'
+import Config from '../../../../config.json'
 
 
 export async function load({ params }) {
 
     const data = await APIRequest({
-      url: `${Config.baseURL}/${params.space}/${params.post}`,
+      url: `${Config.baseURL}/${params.space}/post/${params.post}`,
       method: 'GET',
     })
 
