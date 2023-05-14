@@ -347,3 +347,8 @@ textarea {
     font-size: small;
 }
 
+.icon {
+    fill: red;
+    height: 28px;
+    width: 28px;
+}

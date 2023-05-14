@@ -1,5 +1,6 @@
 <script>
 import Event from '../../../components/event/event.svelte'
+import Header from '../../../components/header/replies-header.svelte'
 import { onMount } from 'svelte';
 
 import { page } from '$app/stores';
@@ -33,9 +34,9 @@ function goBack() {
 {:else}
 
 <section class="content">
+    <Header />
 
-
-    <section>
+    <section class="events">
         <Event event={data.event} />
 
             <div class="sep">
@@ -44,10 +45,9 @@ function goBack() {
 
         {#if replies}
             {#each replies as reply}
-                    <Event isReply={true} event={reply} />
+                <Event isReply={true} event={reply} />
             {/each}
         {/if}
-    <a href="" on:click={goBack}>Go Back</a>
 
     </section>
 </section>
@@ -58,8 +58,12 @@ function goBack() {
 .content {
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: auto;
+    grid-template-rows: 48px auto;
     border-right: 1px solid var(--border-1);
     border-left: 1px solid var(--border-1);
+    overflow-y: hidden;
+}
+.events {
+    overflow-y: scroll;
 }
 </style>

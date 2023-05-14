@@ -11,7 +11,9 @@ import Event from '../components/event/event.svelte'
 import Header from '../components/header/header.svelte'
 
 export let data;
-console.log(data)
+$: if(data) {
+    console.log(data)
+}
 
 function toggleTheme() {
     const theme = localStorage.getItem('theme')
@@ -42,7 +44,6 @@ let obs;
 onMount(() => {
     if(!data.error && !data.down) {
         scrollHeight = scrollable?.scrollHeight;
-        console.log(scrollHeight/2)
         handleScroll();
     }
 })
@@ -88,7 +89,6 @@ let fetchMore = () => {
         url: url,
       method: 'GET',
     }).then((res) => {
-            console.log("got data", res)
         if(res && res?.events?.length > 0) {
             data.events = [...data.events, ...res.events];
         }
@@ -118,7 +118,7 @@ let fetchMore = () => {
     </div>
 
     <div class="sidebar-container grd">
-                <Sidebar data={data}/>
+        <Sidebar data={data}/>
     </div>
 
     <div class="content">
@@ -126,9 +126,9 @@ let fetchMore = () => {
 
     <section class="space-container" class:post={isPost}>
 
-        <div class="inner-area">
+                <div class="inner-area" class:hide={isPost}>
 
-            <Header/>
+            <Header data={data}/>
 
             <div class="inner-content" bind:this={scrollable}>
 
@@ -211,15 +211,6 @@ let fetchMore = () => {
     overflow: hidden;
 }
 
-@media screen and (max-width: 768px) {
-    .container {
-        grid-template-columns: auto;
-    }
-    .switcher-container {
-        display: none;
-    }
-}
-
 
 
 .theme-switcher {
@@ -259,4 +250,33 @@ let fetchMore = () => {
     justify-self: center;
     align-self: start;
 }
+
+.hide {
+}
+
+
+
+@media screen and (max-width: 1280px) {
+    .container {
+        grid-template-columns: [switcher] 64px [content] 1fr;
+    }
+    .sidebar-container {
+            display: none;
+    }
+}
+@media screen and (max-width: 768px) {
+    .container {
+        grid-template-columns: auto;
+    }
+    .switcher-container {
+        display: none;
+    }
+    .post {
+        grid-template-columns: auto;
+    }
+    .hide {
+        display: none;
+    }
+}
+
 </style>

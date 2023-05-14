@@ -1,13 +1,19 @@
 <script>
 import { createEventDispatcher } from 'svelte'
 import { close } from '../../assets/icons.js'
+import Logo from '../../components/logo/logo.svelte'
+import Close from '../../assets/icons/close-fill.svg'
+import ArrowLeft from '../../assets/icons/arrow-left-s-line.svg'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 
 const dispatch = createEventDispatcher()
 
 function kill() {
-    let url = `/${$page.params?.space}`
+    let url = `/`
+    if($page.params?.space) {
+        url = `/${$page.params?.space}`
+    }
     if($page.params?.room) {
         url = `/${$page.params?.space}/${$page.params?.room}`
     }
@@ -21,12 +27,18 @@ function kill() {
 
 <div class="header">
     <div class="container fl">
+        <div class="logo grd-c">
+            <Logo />
+        </div>
         <div class="pd grd-c">
             <span class="n">Replies</span>
         </div>
         <div class="fl-o"></div>
-        <div class="icon pd grd-c" on:click={kill}>
-            {@html close}
+        <div class="close icon pd grd-c" on:click={kill}>
+            <img src={Close} />
+        </div>
+        <div class="back icon pd grd-c" on:click={kill}>
+            <img src={ArrowLeft} alt="arrow-left" />
         </div>
     </div>
 </div>
@@ -58,11 +70,34 @@ function kill() {
     height: 28px;
     width: 28px;
     cursor: pointer;
-    opacity: 0.9;
+    opacity: 0.7;
 }
 
 .icon:hover {
     opacity: 1;
 }
 
+.back {
+    display: none;
+}
+
+.logo {
+    display: none;
+    padding-left: 0.5rem;
+}
+
+@media screen and (max-width: 768px) {
+    .logo {
+        display: block;
+    }
+    .n {
+        display: none;
+    }
+    .close {
+        display: none;
+    }
+    .back {
+        display: block;
+    }
+}
 </style>

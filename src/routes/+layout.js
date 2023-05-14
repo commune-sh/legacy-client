@@ -6,7 +6,6 @@ import Config from '../../config.json'
 import { store } from '../store/store.js'
 
 export async function load({ params }) {
-    console.log("params is", params)
     const token = localStorage.getItem('access_token')
 
     let url = `${Config.baseURL}/events/`
@@ -23,7 +22,6 @@ export async function load({ params }) {
   if(isRoom) {
     url = `${Config.baseURL}/${space}/${room}/events`
   }
-  console.log("url is ", url)
 
     let opt = {
       url: url,

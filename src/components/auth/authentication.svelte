@@ -13,7 +13,6 @@ let active = false;
 onMount(() => {
 
     const token = localStorage.getItem('access_token')
-    console.log('Token:', token)
     if(token) {
         syncCreds(token)
     } else {

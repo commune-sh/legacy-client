@@ -65,6 +65,7 @@ function goToRoom() {
     fill: var(--text-1);
 }
 .sl {
+    padding-top: 4px;
     align-self: center;
 }
 .inactive {
