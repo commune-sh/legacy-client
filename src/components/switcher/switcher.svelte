@@ -32,7 +32,7 @@ function toggleFavicon() {
 </script>
 <div class="switcher">
 
-    <Logo />
+    <Logo large={true} />
 
     <div class="content">
     </div>
@@ -45,10 +45,15 @@ function toggleFavicon() {
     height: 100vh;
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: [logo] 50px [content] auto;
+    grid-template-rows: [logo] 64px [content] auto;
     border-right: 1px solid var(--border-1);
 }
 .content {
     padding-top: 1rem;
+}
+@media screen and (max-width: 1280px) {
+    .switcher {
+        grid-template-rows: [logo] 48px [content] auto;
+    }
 }
 </style>

@@ -1,10 +1,11 @@
 <script>
-    import { logo } from '../../assets/logo.js'
+import { logo } from '../../assets/logo.js'
+export let large = false;
 </script>
 
 <div class="logo">
     <a class="" href="/">
-        <div class="l-c grd">
+        <div class="l-c grd" class:lg={large}>
             <div class="l-c-i grd-c">
                 {@html logo}
             </div>
@@ -22,13 +23,6 @@
     display: grid;
 }
 
-.limg {
-    height: 22px;
-    width: 22px;
-}
-
-.logo:hover {
-}
 .l-c {
     height: 38px;
     width: 38px;
@@ -37,8 +31,16 @@
     transition: 0.1s;
 }
 
+.lg {
+    height: 42px;
+    width: 42px;
+}
 
-.l-c:hover {
+@media screen and (max-width: 1280px) {
+    .lg {
+        height: 38px;
+        width: 38px;
+    }
 }
 
 .l-c:hover .l-c-i {

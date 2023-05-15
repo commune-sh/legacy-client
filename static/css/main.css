@@ -352,3 +352,9 @@ textarea {
     height: 28px;
     width: 28px;
 }
+
+.hourglass {
+    fill: red;
+    height: 28px;
+    width: 28px;
+}

@@ -41,6 +41,8 @@ let scrollHeight;
 let scrollable
 let obs;
 
+let ready = false;
+
 onMount(() => {
     if(!data.error && !data.down) {
         scrollHeight = scrollable?.scrollHeight;
@@ -126,7 +128,7 @@ let fetchMore = () => {
 
     <section class="space-container" class:post={isPost}>
 
-                <div class="inner-area" class:hide={isPost}>
+        <div class="inner-area" class:ina={isPost}>
 
             <Header data={data}/>
 
@@ -251,14 +253,15 @@ let fetchMore = () => {
     align-self: start;
 }
 
-.hide {
+.ina {
+    border-right: 1px solid var(--border-1);
 }
 
 
 
 @media screen and (max-width: 1280px) {
     .container {
-        grid-template-columns: [switcher] 64px [content] 1fr;
+        grid-template-columns: [switcher] 54px [content] 1fr;
     }
     .sidebar-container {
             display: none;
@@ -274,7 +277,7 @@ let fetchMore = () => {
     .post {
         grid-template-columns: auto;
     }
-    .hide {
+    .ina {
         display: none;
     }
 }

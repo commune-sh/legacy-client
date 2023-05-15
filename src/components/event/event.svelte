@@ -74,6 +74,9 @@ function fetchReplies() {
 
 
 $: highlight = $page.params.post === event?.slug
+
+
+
 </script>
 
 <div class="event" 

@@ -60,8 +60,6 @@ function goBack() {
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: 48px auto;
-    border-right: 1px solid var(--border-1);
-    border-left: 1px solid var(--border-1);
     overflow-y: hidden;
 }
 .events {
