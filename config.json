@@ -1,4 +1,0 @@
-{
-	"baseURL": "http://localhost:8989",
-	"baseURLWS": "ws://localhost:8989"
-}
