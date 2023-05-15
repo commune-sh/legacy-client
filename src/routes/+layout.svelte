@@ -2,13 +2,14 @@
 import Authentication from '../components/auth/authentication.svelte'
 import Switcher from '../components/switcher/switcher.svelte'
 import Sidebar from '../components/sidebar/sidebar.svelte'
-import Config from '../../config.json'
+import { PUBLIC_BASE_URL } from '$env/static/public';
 import { APIRequest } from '../utils/request.js'
 import { onMount, tick } from 'svelte'
 import { page } from '$app/stores';
 import { store } from '../store/store.js'
 import Event from '../components/event/event.svelte'
 import Header from '../components/header/header.svelte'
+
 
 export let data;
 $: if(data) {
@@ -78,13 +79,13 @@ let fetchMore = () => {
     let events = data?.events;
     const last = events?.[events?.length - 1]?.origin_server_ts
 
-    let url = `${Config.baseURL}/events?last=${last}`
+    let url = `${PUBLIC_BASE_URL}/events?last=${last}`
     if(isSpace) {
-        url = `${Config.baseURL}/${$page.params.space}/events?last=${last}`
+        url = `${PUBLIC_BASE_URL}/${$page.params.space}/events?last=${last}`
     }
 
     if(isSpace && isRoom) {
-        url = `${Config.baseURL}/${$page.params.space}/${$page.params.room}/events?last=${last}`
+        url = `${PUBLIC_BASE_URL}/${$page.params.space}/${$page.params.room}/events?last=${last}`
     }
 
     APIRequest({

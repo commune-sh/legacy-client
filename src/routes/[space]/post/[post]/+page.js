@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 import { APIRequest } from '../../../../utils/request.js'
-import Config from '../../../../../config.json'
+import { PUBLIC_BASE_URL } from '$env/static/public';
 
 
 export async function load({ params }) {
@@ -8,7 +8,7 @@ export async function load({ params }) {
   console.log("LOOOOOOL", params)
 
     const data = await APIRequest({
-      url: `${Config.baseURL}/${params.space}/post/${params.post}`,
+      url: `${PUBLIC_BASE_URL}/${params.space}/post/${params.post}`,
       method: 'GET',
     })
 

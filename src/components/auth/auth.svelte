@@ -1,5 +1,5 @@
 <script>
-import Config from '../../../config.json'
+import { PUBLIC_BASE_URL } from '$env/static/public';
 import { APIRequest } from '../../utils/request.js'
 import { onMount } from 'svelte'
 import { store } from '../../store/store.js'
@@ -24,7 +24,7 @@ $: if(authenticated && active) {
 function SSE() {
     const token = $store?.credentials?.access_token
     console.log("token issss", $store.credentials)
-    const url = `${Config.baseURL}/sse?token=${token}`
+    const url = `${PUBLIC_BASE_URL}/sse?token=${token}`
     const eventSource = new EventSource(url);
     eventSource.onmessage = function(event) {
         if(event.data) {
