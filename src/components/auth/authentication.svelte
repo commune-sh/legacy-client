@@ -3,6 +3,7 @@ import { onMount, onDestroy } from 'svelte'
 import { APIRequest } from '../../utils/request.js'
 import { PUBLIC_BASE_URL } from '$env/static/public';
 import Login from './login.svelte'
+import { page } from '$app/stores';
 import Signup from './signup.svelte'
 import Password from './password.svelte'
 import { store } from '../../store/store.js'
@@ -102,6 +103,7 @@ function passMode() {
 }
 
 function loggedin() {
+    store.startRefreshingFeed()
     kill()
 }
 

@@ -2,6 +2,7 @@
 import { PUBLIC_BASE_URL } from '$env/static/public';
 import { APIRequest } from '../../utils/request.js'
 import { onMount } from 'svelte'
+import { page } from '$app/stores';
 import { store } from '../../store/store.js'
 
 let authenticated = false
@@ -39,9 +40,15 @@ let toggleFlow = () => {
     store.startAuthenticating()
 }
 
+$: isSpace = $page.params.space !== undefined && $page.params.space !== null &&
+    $page.params.space !== ''
 
 let logout = () => {
     store.logout()
+    console.log("logout", authenticated, isSpace)
+    if(!isSpace) {
+        //location.replace('/')
+    }
 }
 
 </script>

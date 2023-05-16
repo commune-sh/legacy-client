@@ -7,6 +7,7 @@ function createApp() {
     ready: false,
     authenticated: false,
     authenticating: false,
+    refreshingFeed: false,
     verifiedSession: false,
     credentials: null,
     events: [],
@@ -38,6 +39,20 @@ function createApp() {
   let stopAuthenticating = () => {
     update(p => {
       p.authenticating = false
+      return p
+    })
+  }
+
+  let startRefreshingFeed = () => {
+    update(p => {
+      p.refreshingFeed = true
+      return p
+    })
+  }
+
+  let stopRefreshingFeed = () => {
+    update(p => {
+      p.refreshingFeed = false
       return p
     })
   }
@@ -91,6 +106,8 @@ function createApp() {
     removeCredentials,
     startAuthenticating,
     stopAuthenticating,
+    startRefreshingFeed,
+    stopRefreshingFeed,
     isAuthenticated,
     isNotAuthenticated,
     verifiedSession,

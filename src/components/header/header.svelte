@@ -15,6 +15,8 @@ export let data;
 $: state = data?.state
 export let type = 'space';
 
+export let ready = false;
+
 $: space = $page.params.space
 
 export let isStatic = false;
@@ -40,27 +42,29 @@ $: indexText = authenticated ? `Your feed` : `What's new`
 
 <div class="header">
     <div class="container fl">
-        <div class="logo grd-c">
-            <Logo />
-        </div>
-        <div class="menu grd-c">
-        </div>
-        <div class="name grd-c">
-            {#if isStatic && name}
-                <span class="n">{name}</span>
-            {:else if isIndex}
-                {#if authDone}
-                <span class="n">{indexText}</span>
-                {/if}
-            {:else}
-                <span class="n" on:click={goToSpace}>{state?.space?.name}</span>
-            {/if}
-        </div>
-        <div class="fl-o"></div>
-        {#if joined}
-            <div class="grd-c">
-                <button class="" on:click={newPost}>New Post</button>
+            <div class="logo grd-c">
+                <Logo />
             </div>
+        {#if ready}
+            <div class="menu grd-c">
+            </div>
+            <div class="name grd-c">
+                {#if isStatic && name}
+                    <span class="n">{name}</span>
+                {:else if isIndex}
+                    {#if authDone}
+                    <span class="n">{indexText}</span>
+                    {/if}
+                {:else}
+                    <span class="n" on:click={goToSpace}>{state?.space?.name}</span>
+                {/if}
+            </div>
+            <div class="fl-o"></div>
+            {#if joined}
+                <div class="grd-c">
+                    <button class="" on:click={newPost}>New Post</button>
+                </div>
+            {/if}
         {/if}
     </div>
 </div>

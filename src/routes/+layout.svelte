@@ -10,10 +10,53 @@ import { store } from '../store/store.js'
 import Event from '../components/event/event.svelte'
 import Header from '../components/header/header.svelte'
 
+let ready = false;
 
-export let data;
+function loadEvents() {
+
+    const token = localStorage.getItem('access_token')
+
+    let url = `${PUBLIC_BASE_URL}/events/`
+
+
+  let space = $page.params.space
+  let isSpace = space && space !== 'undefined' && space?.length > 0
+  if(isSpace) {
+    url = `${PUBLIC_BASE_URL}/${space}/events`
+  }
+
+  let room = $page.params.room
+  let isRoom = room && room !== 'undefined' && room?.length > 0
+  if(isRoom) {
+    url = `${PUBLIC_BASE_URL}/${space}/${room}/events`
+  }
+
+    let opt = {
+      url: url,
+      method: 'GET',
+    }
+
+    if(token && !isSpace && !isRoom) {
+        opt.url = `${PUBLIC_BASE_URL}/feed`
+        opt.token = token
+    }
+
+    APIRequest(opt)
+    .then(resp => {
+        console.log('Response:', resp);
+        data = resp
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+
+let data = null;
+
 $: if(data) {
     console.log(data)
+    ready = true
 }
 
 function toggleTheme() {
@@ -42,9 +85,10 @@ let scrollHeight;
 let scrollable
 let obs;
 
-let ready = false;
 
 onMount(() => {
+    loadEvents()
+    return
     if(!data.error && !data.down) {
         scrollHeight = scrollable?.scrollHeight;
         handleScroll();
@@ -97,21 +141,18 @@ let fetchMore = () => {
         }
     });
 }
+
+$: if($store.refreshingFeed) {
+    store.stopRefreshingFeed()
+    console.log("refreshing feeed....")
+}
+
 </script>
 
 
-{#if data?.down}
-<div class="root">
-    <section class="grd">
-        <section class="grd-c">
-            Shpong is down right now.
-        </section>
-    </section>
-</div>
-{:else}
 
 
-
+{#if ready}
 
 <div class="root">
     <div class="container">
@@ -131,7 +172,7 @@ let fetchMore = () => {
 
         <div class="inner-area" class:ina={isPost}>
 
-            <Header data={data}/>
+            <Header ready={ready} data={data}/>
 
             <div class="inner-content" bind:this={scrollable}>
 
@@ -182,7 +223,15 @@ let fetchMore = () => {
 <button on:click={toggleTheme}>Toggle</button>
 </div>
 
+{:else}
+<section class="root">
+    <section class="grd-c">
+        loading...
+    </section>
+</section>
+
 {/if}
+
 
 <style>
 
