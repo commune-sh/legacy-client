@@ -2,7 +2,7 @@
 import Authentication from '../components/auth/authentication.svelte'
 import Switcher from '../components/switcher/switcher.svelte'
 import Sidebar from '../components/sidebar/sidebar.svelte'
-import { PUBLIC_BASE_URL } from '$env/static/public';
+import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { APIRequest } from '../utils/request.js'
 import { onMount, tick } from 'svelte'
 import { page } from '$app/stores';
@@ -43,19 +43,21 @@ function loadEvents() {
 
     APIRequest(opt)
     .then(resp => {
-        console.log('Response:', resp);
-        data = resp
+        if(resp && resp?.events) {
+            data = resp
+        }
+        if(!resp) {
+            down = true
+        }
     })
-    .catch(error => {
-        console.error('Error:', error);
-    });
 }
+
+let down = false;
 
 
 let data = null;
 
 $: if(data) {
-    console.log(data)
     ready = true
 }
 
@@ -150,9 +152,7 @@ $: if($store.refreshingFeed) {
 </script>
 
 
-
-
-{#if ready}
+{#if ready && !down}
 
 <div class="root">
     <div class="container">
@@ -223,7 +223,7 @@ $: if($store.refreshingFeed) {
 <button on:click={toggleTheme}>Toggle</button>
 </div>
 
-{:else}
+{:else if !down}
 <section class="root">
     <section class="grd-c">
         loading...
@@ -232,6 +232,13 @@ $: if($store.refreshingFeed) {
 
 {/if}
 
+{#if down}
+<section class="root">
+    <section class="grd-c">
+            {PUBLIC_APP_NAME} is down.
+    </section>
+</section>
+{/if}
 
 <style>
 

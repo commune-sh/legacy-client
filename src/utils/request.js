@@ -34,8 +34,7 @@ export async function APIRequest(r) {
     const responseData = await response.json();
     return responseData;
   } catch (error) {
-    console.error('Error:', error.message);
-    // You can choose to throw or return a specific error object here if needed
+    console.error('Error:', error.eessage);
   }
 }
 
