@@ -226,7 +226,7 @@ $: if($store.refreshingFeed) {
 {:else if !down}
 <section class="root">
     <section class="grd-c">
-        loading...
+        <div class="loader"></div>
     </section>
 </section>
 

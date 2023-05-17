@@ -25,6 +25,7 @@
 
     --light: #f7f7f7
     --svg-fill-1: #e1e1e1;
+    --action-icon: #fff;
 }
 
 :root.light {
@@ -53,6 +54,7 @@
 
     --light: #f7f7f7
     --svg-fill-1: #e1e1e1;
+    --action-icon: #000;
 }
 
 
@@ -65,7 +67,6 @@
     src: local('Twemoji'), url('/fonts/TwemojiMozilla-colr.4d2d834.woff2') format('woff');
 }
 
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap');
 
 
 html {
@@ -74,7 +75,7 @@ html {
 }
 
 body {
-    font-family: 'IBM Plex Mono', monospace, Twemoji;
+    font-family: Helvetica, Arial, sans-serif;
     font-weight: normal;
     font-size: 16px;
     line-height: 1.5;
@@ -340,17 +341,20 @@ textarea {
 .mh5 { margin-left: 4rem; margin-right: 4rem; }
 .mh6 { margin-left: 8rem; margin-right: 8rem; }
 .mh7 { margin-left: 16rem; margin-right: 16rem; }
-/*
-*
 
 .sm {
     font-size: small;
 }
 
-.icon {
-    fill: red;
+.c-ico {
+    fill: var(--action-icon);
     height: 28px;
     width: 28px;
+    cursor: pointer;
+    opacity: 0.8;
+}
+.c-ico:hover {
+    opacity: 1;
 }
 
 .hourglass {
@@ -358,3 +362,44 @@ textarea {
     height: 28px;
     width: 28px;
 }
+
+.loader,
+.loader:after {
+    border-radius: 50%;
+    height: 23px;
+    width: 23px;
+}
+.loader {
+    position: relative;
+    text-indent: -9999em;
+    border-top: 2px solid var(--text-1);
+    border-right: 2px solid var(--text-1);
+    border-bottom: 2px solid var(--text-1);
+    border-left: 2px solid var(--bg);
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-animation: load8 0.7s infinite linear;
+    animation: load8 0.7s infinite linear;
+}
+@-webkit-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+

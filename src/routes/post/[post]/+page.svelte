@@ -64,13 +64,15 @@ function goBack() {
             {#each replies as reply}
                 <Event isReply={true} event={reply} />
             {/each}
+        {:else}
+                No replies
         {/if}
 
     </section>
     {:else}
         <section class="grd">
             <section class="grd-c">
-                loading...
+                <div class="loader"></div>
             </section>
         </section>
     {/if}

@@ -1,6 +1,8 @@
 <script>
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
+import * as dayjs from 'dayjs'
+import * as relativeTime from 'dayjs/plugin/relativeTime'
 import Reactions from '../../components/event/reactions/reactions.svelte'
 
 export let isPost = false;
@@ -57,6 +59,10 @@ function goToEvent() {
     })
 }
 
+$: isToday = dayjs().isSame(dayjs(event?.origin_server_ts), 'day')
+$: dayjsr = dayjs.extend(relativeTime)
+$: when = dayjsr(event?.origin_server_ts)?.fromNow(true)
+$: created = dayjs(event?.origin_server_ts)?.format('MMM D')
 
 
 $: content = event?.content?.formatted_body ? event?.content?.formatted_body :
@@ -112,6 +118,11 @@ $: highlight = $page.params.post === event?.slug
             {/if}
         </div>
         <div class="pt1">
+            {#if isToday}
+                <span class="time" title={when}>{when}</span>
+            {:else}
+                <span class="time" title={created}>{created}</span>
+            {/if}
         </div>
     </div>
 </div>

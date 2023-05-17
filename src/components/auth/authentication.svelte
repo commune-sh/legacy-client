@@ -3,6 +3,7 @@ import { onMount, onDestroy } from 'svelte'
 import { APIRequest } from '../../utils/request.js'
 import { PUBLIC_BASE_URL } from '$env/static/public';
 import Login from './login.svelte'
+import { close } from '../../assets/icons.js'
 import { page } from '$app/stores';
 import Signup from './signup.svelte'
 import Password from './password.svelte'
@@ -117,8 +118,8 @@ function loggedin() {
     <div class="modal grd-c">
 
         <div class="hed fl">
-            <div class="">
-                    X
+            <div class="c-ico grd-c pa2" on:click={kill}>
+                    {@html close}
             </div>
             <div class="fl-o">
             </div>
@@ -162,7 +163,7 @@ function loggedin() {
     height: 650px;
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: [header] 40px [content] 1fr;
+    grid-template-rows: [header] auto [content] 1fr;
 }
 
 
