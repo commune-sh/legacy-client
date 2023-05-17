@@ -39,6 +39,7 @@ onMount(() => {
         loadEvents()
     }
 })
+
 $: if(lastPost != null && $page.params.post != lastPost) {
     loadEvents()
 }

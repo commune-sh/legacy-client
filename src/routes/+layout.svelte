@@ -12,6 +12,13 @@ import Header from '../components/header/header.svelte'
 
 let ready = false;
 
+
+let lastRoom = null;
+
+$: if($page.params.room != lastRoom) {
+    loadEvents()
+}
+
 function loadEvents() {
 
     const token = localStorage.getItem('access_token')
@@ -45,6 +52,7 @@ function loadEvents() {
     .then(resp => {
         if(resp && resp?.events) {
             data = resp
+            lastRoom = $page.params.room
         }
         if(!resp) {
             down = true
@@ -88,6 +96,11 @@ let scrollable
 let obs;
 
 
+$: if(obs) {
+    console.log("obs element mounted", obs)
+    setupObserver()
+}
+
 onMount(() => {
     loadEvents()
     return
@@ -96,6 +109,12 @@ onMount(() => {
         handleScroll();
     }
 })
+
+function setupObserver() {
+    scrollHeight = scrollable?.scrollHeight;
+    console.log(scrollHeight)
+    handleScroll();
+}
 
 function handleScroll() {
     let options = {

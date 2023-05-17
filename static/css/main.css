@@ -26,6 +26,8 @@
     --light: #f7f7f7
     --svg-fill-1: #e1e1e1;
     --action-icon: #fff;
+
+    --text-input: #fff;
 }
 
 :root.light {
@@ -55,6 +57,8 @@
     --light: #f7f7f7
     --svg-fill-1: #e1e1e1;
     --action-icon: #000;
+
+    --text-input: #fff;
 }
 
 
@@ -74,7 +78,7 @@ html {
 }
 
 body {
-    font-family: monospace;
+    font-family: Arial, Helvetica, sans-serif;
     font-weight: normal;
     font-size: 16px;
     line-height: 1.5;
@@ -213,6 +217,7 @@ input, textarea {
     padding: 0.25rem;
     border-radius: 5px;
     background: var(--black);
+    border: 1px solid var(--text-input);
     color: var(--text);
     font-family: monospace;
     font-size: 16px;
