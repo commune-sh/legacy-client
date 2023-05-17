@@ -1,8 +1,8 @@
 <script>
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
-import * as dayjs from 'dayjs'
-import * as relativeTime from 'dayjs/plugin/relativeTime'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
 import Reactions from '../../components/event/reactions/reactions.svelte'
 
 export let isPost = false;
