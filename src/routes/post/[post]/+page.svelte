@@ -16,6 +16,7 @@ function loadEvents() {
     })
     .then(resp => {
         if(resp && resp?.event) {
+            //
             data = resp
             lastPost = $page.params.post
             ready = true
