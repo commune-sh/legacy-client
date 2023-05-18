@@ -1,13 +1,13 @@
 <script>
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
-import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
 import Reactions from '../../components/event/reactions/reactions.svelte'
+import User from './user/user.svelte'
+import Date from './date/date.svelte'
 
 export let isPost = false;
 export let isReply = false;
-export let showAlias = false;
+export let showAlias = true;
 
 
 export let event;
@@ -59,11 +59,6 @@ function goToEvent() {
     })
 }
 
-$: isToday = dayjs().isSame(dayjs(event?.origin_server_ts), 'day')
-$: dayjsr = dayjs.extend(relativeTime)
-$: when = dayjsr(event?.origin_server_ts)?.fromNow(true)
-$: created = dayjs(event?.origin_server_ts)?.format('MMM D')
-
 
 $: content = event?.content?.formatted_body ? event?.content?.formatted_body :
     event?.content?.body
@@ -76,6 +71,13 @@ function fetchReplies() {
 $: highlight = $page.params.post === event?.slug
 
 
+$: user = {
+    avatar_url: event?.sender?.avatar_url,
+    display_name: event?.sender?.display_name,
+    id: event?.sender?.id,
+    username: event?.sender?.username
+}
+
 
 </script>
 
@@ -85,20 +87,13 @@ $: highlight = $page.params.post === event?.slug
     class:highlight={highlight}>
     <div class="fl-co">
         <div class="">
+            {event?.room_alias}
         </div>
         <div class="">
             {@html content}
         </div>
         <div class="pt2 fl">
-            <div class="fl">
-                <div class="">
-                    <div class="avatar-base">
-                    </div>
-                </div>
-                <div class="">
-                    {event?.sender?.display_name}
-                </div>
-            </div>
+            <User user={user} />
             <div class="fl-o">
             </div>
             <div class="">
@@ -118,11 +113,7 @@ $: highlight = $page.params.post === event?.slug
             {/if}
         </div>
         <div class="pt1">
-            {#if isToday}
-                <span class="time" title={when}>{when}</span>
-            {:else}
-                <span class="time" title={created}>{created}</span>
-            {/if}
+            <Date date={event?.origin_server_ts} />
         </div>
     </div>
 </div>
@@ -159,13 +150,6 @@ $: highlight = $page.params.post === event?.slug
 
 .highlight {
     background-color: var(--event-bg-hover);
-}
-
-.avatar-base {
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background-color: #ccc;
 }
 
 .rep {

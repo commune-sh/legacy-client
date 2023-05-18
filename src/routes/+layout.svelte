@@ -50,7 +50,7 @@ function loadEvents() {
 
     APIRequest(opt)
     .then(resp => {
-        if(resp && resp?.events) {
+        if(resp) {
             data = resp
             lastRoom = $page.params.room
         }
