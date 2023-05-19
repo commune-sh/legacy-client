@@ -16,7 +16,7 @@
     --logo-shade-2: #000000;
 
     --button-1: #0a0a0a;
-    --mask: #141414;
+    --mask: #000000e8;
     --modal: #141414;
     --black: black;
     --white: white;
@@ -41,13 +41,13 @@
 
     --shade-2: #E9ECEF;
     --shade-3: #DEE2E6;
-    --logo-bg: #eeeeee;
+    --logo-bg: #2f2f2f;
     --primary: #a53131;
     --secondary: #ff2a2a;
     --logo-shade-1: #ff2a2a;
     --logo-shade-2: #aa0000;
     --button-1: #0a0a0a;
-    --mask: #00000057;
+    --mask: #878787d1;
     --modal: white;
     --black: white;
     --white: black;

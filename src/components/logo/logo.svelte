@@ -36,15 +36,8 @@ export let large = false;
     width: 42px;
 }
 
-@media screen and (max-width: 1280px) {
-    .lg {
-        height: 38px;
-        width: 38px;
-    }
-}
-
 .l-c:hover .l-c-i {
-    animation: rainbow 0.5s linear;
+    animation: rainbow 1.5s linear;
     animation-iteration-count: infinite;
 }
 
@@ -54,8 +47,8 @@ export let large = false;
 
 
 .l-c-i {
-    height: 20px;
-    width: 20px;
+    height: 34px;
+    width: 34px;
     fill: var(--logo-shade-1);
 }
 
@@ -71,6 +64,17 @@ export let large = false;
 }
 
 @media screen and (max-width: 1280px) {
+}
+
+@media screen and (max-width: 1280px) {
+    .l-c-i {
+        height: 28px;
+        width: 28px;
+    }
+    .lg {
+        height: 38px;
+        width: 38px;
+    }
     .auth {
         display: none;
     }
