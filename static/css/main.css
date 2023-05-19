@@ -383,10 +383,10 @@ textarea {
     -webkit-transform: translateZ(0);
     -ms-transform: translateZ(0);
     transform: translateZ(0);
-    -webkit-animation: load8 0.7s infinite linear;
-    animation: load8 0.7s infinite linear;
+    -webkit-animation: anim 0.7s infinite linear;
+    animation: anim 0.7s infinite linear;
 }
-@-webkit-keyframes load8 {
+@-webkit-keyframes anim {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
