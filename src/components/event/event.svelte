@@ -87,13 +87,10 @@ $: user = {
     class:highlight={highlight}>
     <div class="fl-co">
         <div class="">
-            {event?.room_alias}
-        </div>
-        <div class="">
             {@html content}
         </div>
         <div class="pt2 fl">
-            <User user={user} />
+            <User user={user} /> <span class="ml1"> in {event?.room_alias}</span>
             <div class="fl-o">
             </div>
             <div class="">
@@ -106,11 +103,6 @@ $: user = {
             {/if}
         </div>
         <div class="pt1">
-            {#if showAlias && event?.room_alias}
-                <a href={`/${event?.room_alias}`}>
-                <span class="time" title={event?.room_alias}>{event?.room_alias}</span>
-            </a>
-            {/if}
         </div>
         <div class="pt1">
             <Date date={event?.origin_server_ts} />

@@ -12,7 +12,7 @@ export let children;
 <RoomListItem isSpace={true} />
 {#if children?.length > 0}
     {#each children as child}
-            <RoomListItem alias={child.alias} />
+        <RoomListItem item={child} />
     {/each}
 {/if}
 

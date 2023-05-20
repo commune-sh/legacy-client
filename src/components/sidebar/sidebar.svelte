@@ -6,6 +6,7 @@ import RoomList from './room-list/room-list.svelte'
 
 export let data;
 
+export let exists;
 
 import { goto } from '$app/navigation';
 
@@ -19,17 +20,20 @@ $: isNotIndex = $page.params.space || $page.params.room
     <div class="header fl">
         <Search />
     </div>
+
     <div class="content fl-co">
+        {#if exists}
 
-        {#if isNotIndex}
-        <div class="">
-            <RoomList children={children} />
-        </div>
+            {#if isNotIndex}
+                <div class="">
+                    <RoomList children={children} />
+                </div>
+            {/if}
+
+            <div class="">
+            </div>
+
         {/if}
-
-        <div class="">
-        </div>
-
 
 
     </div>

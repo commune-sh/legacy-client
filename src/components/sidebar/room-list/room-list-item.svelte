@@ -4,16 +4,16 @@ import { goto } from '$app/navigation';
 import { hash, home } from '../../../assets/icons.js'
 
 export let isSpace
-export let alias
+export let item
 
 $: space = $page.params?.space
 $: room = $page.params?.room
-$: active = room === alias
+$: active = room === item?.alias
 
-$: name = isSpace ? space : alias
+$: name = isSpace ? space : item?.alias
 
 function goToRoom() {
-    let url = `/${space}/${alias}`
+    let url = `/${space}/${item?.alias}`
     if(isSpace) {
         url = `/${space}`
     }

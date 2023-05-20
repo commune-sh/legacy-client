@@ -16,6 +16,7 @@ $: state = data?.state
 export let type = 'space';
 
 export let ready = false;
+export let exists;
 
 $: space = $page.params.space
 
@@ -40,11 +41,12 @@ $: indexText = authenticated ? `Your feed` : `What's new`
 </script>
 
 
-<div class="header">
+<div class="header" class:dne={!exists}>
     <div class="container fl">
             <div class="logo grd-c">
                 <Logo />
             </div>
+    {#if exists}
         {#if ready}
             <div class="menu grd-c">
             </div>
@@ -66,6 +68,7 @@ $: indexText = authenticated ? `Your feed` : `What's new`
                 </div>
             {/if}
         {/if}
+    {/if}
     </div>
 </div>
 
@@ -80,7 +83,9 @@ $: indexText = authenticated ? `Your feed` : `What's new`
     grid-template-columns: auto;
     grid-template-rows: auto;
 }
-
+.dne {
+    border-bottom: none;
+}
 .logo {
     display: none;
     padding-left: 0.5rem;

@@ -1,5 +1,5 @@
 :root {
-    --bg: #141414;
+    --bg: #1a1a1a;
     --text-1: #e1e1e1;
     --text-light: #dadada;
     --link: #a53131;
@@ -7,8 +7,8 @@
     --scrollbar-thumb: #323232;
     --scrollbar-track: #141414;
 
-    --shade-2: #0e0e0e;
-    --shade-3: #111111;
+    --shade-2: #242424;
+    --shade-3: #1f1f1f;
     --logo-bg: #000;
     --primary: #a53131;
     --secondary: #ff2a2a;
@@ -177,7 +177,6 @@ button {
     border-radius: 6px;
     border: 0px;
     padding: 6px 12px;
-    font-family: monospace;
     background-color: var(--primary);
     border: 1px solid var(--primary);
     color: var(--text);
@@ -192,7 +191,6 @@ button:hover {
     border-radius: 300px;
     border: 0px;
     padding: 6px 12px;
-    font-family: monospace;
     background-color: var(--primary);
     color: black;
 }
@@ -202,7 +200,6 @@ button:hover {
     border-radius: 300px;
     border: 0px;
     padding: 6px 12px;
-    font-family: monospace;
     background-color: var(--primary);
     color: black;
 }
@@ -219,7 +216,6 @@ input, textarea {
     background: var(--black);
     border: 1px solid var(--text-input);
     color: var(--text);
-    font-family: monospace;
     font-size: 16px;
     box-sizing: border-box;
 }
@@ -359,6 +355,13 @@ textarea {
 }
 .c-ico:hover {
     opacity: 1;
+}
+
+.ico {
+    fill: var(--action-icon);
+    height: 28px;
+    width: 28px;
+    opacity: 0.8;
 }
 
 .hourglass {

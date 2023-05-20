@@ -16,6 +16,9 @@ let ready = false;
 let lastRoom = null;
 
 $: if($page.params.room != lastRoom) {
+    console.log("yikes")
+}
+$: if($page.params.room != lastRoom && ready) {
     loadEvents()
 }
 
@@ -65,6 +68,9 @@ let down = false;
 
 let data = null;
 
+$: exists = data?.exists == null
+    false
+
 $: if(data) {
     ready = true
 }
@@ -84,9 +90,6 @@ function toggleTheme() {
 function link(space) {
         return `/${$page.params.space}/p/${space}`
 }
-
-$: error = data?.error
-$: exists = data?.exists
 
 $: isPost = $page.params.post !== undefined && $page.params.post !== null &&
     $page.params.post !== ''
@@ -181,7 +184,7 @@ $: if($store.refreshingFeed) {
     </div>
 
     <div class="sidebar-container grd">
-        <Sidebar data={data}/>
+        <Sidebar data={data} exists={exists} />
     </div>
 
     <div class="content">
@@ -191,7 +194,7 @@ $: if($store.refreshingFeed) {
 
         <div class="inner-area" class:ina={isPost}>
 
-            <Header ready={ready} data={data}/>
+            <Header ready={ready} data={data} exists={exists}/>
 
             <div class="inner-content" bind:this={scrollable}>
 
@@ -201,7 +204,7 @@ $: if($store.refreshingFeed) {
                             <Event event={event} />
                         {/each}
                     </section>
-                {:else}
+                {:else if exists && data?.events == null}
                     <div class="grd">
                         <div class="grd-c">
                             This space does not have any posts yet.
@@ -209,7 +212,7 @@ $: if($store.refreshingFeed) {
                     </div>
                 {/if}
 
-                {#if data?.error && !data?.exists}
+                {#if !exists}
                     <section class="grd">
                         <section class="grd-c">
                             This space does not exist.
@@ -217,7 +220,9 @@ $: if($store.refreshingFeed) {
                     </section>
                 {/if}
 
-                <div class="obs" bind:this={obs}></div>
+                {#if exists && data?.events !== null}
+                    <div class="obs" bind:this={obs}></div>
+                {/if}
 
             </div>
 

@@ -2,20 +2,49 @@
 import Event from '../../../../../components/event/event.svelte'
 import Header from '../../../../../components/header/replies-header.svelte'
 import { onMount } from 'svelte';
-
+import { APIRequest } from '../../../../../utils/request.js'
+import { PUBLIC_BASE_URL } from '$env/static/public';
 import { page } from '$app/stores';
 
 
-export let data;
+let ready = false;
+
+function loadEvents() {
+    APIRequest({
+      url: `${PUBLIC_BASE_URL}/${$page.params.space}/${$page.params.room}/post/${$page.params.post}`,
+      method: 'GET',
+    })
+    .then(resp => {
+        if(resp && resp?.event) {
+            //
+            data = resp
+            lastPost = $page.params.post
+            ready = true
+        }
+        if(!resp) {
+            down = true
+        }
+    })
+
+}
+
+let data = null;
+let down = false;
 
 $: replies = data?.replies
 
-$: error = data?.error
-$: exists = data?.exists
+let lastPost = null;
 
 onMount(() => {
-    console.log(data)
+    if($page.params.post) {
+        loadEvents()
+    }
 })
+
+$: if(lastPost != null && $page.params.post != lastPost) {
+    ready = false
+    loadEvents()
+}
 
 function goBack() {
     history.back()
@@ -23,21 +52,10 @@ function goBack() {
 
 </script>
 
-{#if error && !exists}
-
-<section class="error grd">
-    <div class="grd-c">
-        It looks like that post doesn't exist.
-    </div>
-</section>
-
-{:else}
-
 <section class="content">
-
     <Header />
 
-
+    {#if ready}
     <section class="events">
         <Event event={data.event} />
 
@@ -47,15 +65,22 @@ function goBack() {
 
         {#if replies}
             {#each replies as reply}
-                    <Event isReply={true} event={reply} />
+                <Event isReply={true} event={reply} />
             {/each}
+        {:else}
+                No replies
         {/if}
 
-
     </section>
+    {:else}
+        <section class="grd">
+            <section class="grd-c">
+                <div class="loader"></div>
+            </section>
+        </section>
+    {/if}
 </section>
 
-{/if}
 
 <style>
 .content {
@@ -67,6 +92,4 @@ function goBack() {
 .events {
     overflow-y: scroll;
 }
-
 </style>
-
