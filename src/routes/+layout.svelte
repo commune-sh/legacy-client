@@ -15,9 +15,6 @@ let ready = false;
 
 let lastRoom = null;
 
-$: if($page.params.room != lastRoom) {
-    console.log("yikes")
-}
 $: if($page.params.room != lastRoom && ready) {
     loadEvents()
 }
@@ -100,7 +97,6 @@ let obs;
 
 
 $: if(obs) {
-    console.log("obs element mounted", obs)
     setupObserver()
 }
 
@@ -115,7 +111,6 @@ onMount(() => {
 
 function setupObserver() {
     scrollHeight = scrollable?.scrollHeight;
-    console.log(scrollHeight)
     handleScroll();
 }
 

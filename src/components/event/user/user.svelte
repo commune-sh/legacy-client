@@ -1,13 +1,16 @@
 <script>
 export let user;
+export let hideAvatar = false;
 </script>
 
 <div class="fl">
-    <div class="grd">
-        <div class="grd-c avatar-base">
+    {#if !hideAvatar}
+        <div class="grd ml1">
+            <div class="grd-c avatar-base">
+            </div>
         </div>
-    </div>
-    <div class="ml1">
+    {/if}
+    <div class="">
         {user.username}
     </div>
 </div>

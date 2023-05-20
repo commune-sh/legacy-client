@@ -2,8 +2,10 @@
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 import Reactions from '../../components/event/reactions/reactions.svelte'
+import Replies from '../../components/event/replies/replies.svelte'
 import User from './user/user.svelte'
 import Date from './date/date.svelte'
+import Menu from './menu/menu.svelte'
 
 export let isPost = false;
 export let isReply = false;
@@ -90,22 +92,25 @@ $: user = {
             {@html content}
         </div>
         <div class="pt2 fl">
-            <User user={user} /> <span class="ml1"> in {event?.room_alias}</span>
+            <User hideAvatar={true} user={user} />
             <div class="fl-o">
             </div>
             <div class="">
                 <Reactions reactions={event?.reactions} />
             </div>
             {#if event?.reply_count > 0}
-                <div class="rep ml3" on:click={fetchReplies}>
-                    {event?.reply_count} replies
-                </div>
+                <Replies count={event?.reply_count} />
             {/if}
         </div>
-        <div class="pt1">
-        </div>
-        <div class="pt1">
-            <Date date={event?.origin_server_ts} />
+        <div class="pt1 fl">
+            <div class="">
+                <Date date={event?.origin_server_ts} />
+            </div>
+            <div class="fl-o">
+            </div>
+            <div class="menu">
+                <Menu event={event} />
+            </div>
         </div>
     </div>
 </div>
@@ -120,6 +125,9 @@ $: user = {
     border-bottom: 1px solid var(--ev-bb);
 }
 
+.event:hover .menu {
+    opacity: 1;
+}
 
 
 :global(:root) {
@@ -144,22 +152,7 @@ $: user = {
     background-color: var(--event-bg-hover);
 }
 
-.rep {
-    font-size: small;
-    line-height: 1;
-    color: var(--text-light);
-    border: 2px solid var(--rep-bb);
-    padding-left: 0.25rem;
-    padding-right: 0.25rem;
-}
-
-
-.time {
-    font-size: small;
-    color: var(--text-light);
-}
-
-.time[title]:hover::after {
-    background-color: red;
+.menu {
+    opacity: 0;
 }
 </style>

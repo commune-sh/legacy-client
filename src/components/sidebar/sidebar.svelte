@@ -52,6 +52,6 @@ $: isNotIndex = $page.params.space || $page.params.room
 }
 
 .content {
-    padding: 1rem;
+    padding: 0.5rem;
 }
 </style>

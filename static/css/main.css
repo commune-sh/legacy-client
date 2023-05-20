@@ -61,14 +61,9 @@
     --text-input: #fff;
 }
 
-
 @font-face {
     font-family: 'Twemoji';
-    font-style: normal;
-    font-weight: normal;
-    font-size: 1.8rem;
-    vertical-align: middle;
-    src: local('Twemoji'), url('/fonts/TwemojiMozilla-colr.4d2d834.woff2') format('woff');
+    src: url('/fonts/TwemojiMozilla-colr.4d2d834.woff2');
 }
 
 
@@ -78,7 +73,7 @@ html {
 }
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Arial, Helvetica, Verdana, sans-serif, Twemoji;
     font-weight: normal;
     font-size: 16px;
     line-height: 1.5;

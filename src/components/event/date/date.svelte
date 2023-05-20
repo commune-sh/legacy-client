@@ -18,4 +18,7 @@ $: created = dayjs(date)?.format('MMM D')
 {/if}
 
 <style>
+.time {
+    font-size: small;
+}
 </style>

@@ -1,8 +1,7 @@
 <script>
 import { createEventDispatcher } from 'svelte'
 import Logo from '../../components/logo/logo.svelte'
-import { close } from '../../assets/icons.js'
-import ArrowLeft from '../../assets/icons/arrow-left-s-line.svg'
+import { close, arrowLeftSmall } from '../../assets/icons.js'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 
@@ -37,7 +36,7 @@ function kill() {
             {@html close}
         </div>
         <div class="back c-ico pd grd-c" on:click={kill}>
-            <img src={ArrowLeft} alt="arrow-left" />
+            {@html arrowLeftSmall}
         </div>
     </div>
 </div>

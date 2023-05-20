@@ -3,8 +3,8 @@ import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 import { hash, home } from '../../../assets/icons.js'
 
-export let isSpace
-export let item
+export let isSpace;
+export let item;
 
 $: space = $page.params?.space
 $: room = $page.params?.room
