@@ -10,6 +10,9 @@ function createApp() {
     refreshingFeed: false,
     verifiedSession: false,
     credentials: null,
+    rooms: [],
+    spaces: [],
+    pageParams: [],
     events: [],
   }
 
@@ -95,6 +98,27 @@ function createApp() {
     })
   }
 
+  let addPageParams = (params) => {
+    update(p => {
+      console.log("adding page params", params)
+      return p
+    })
+  }
+
+  let saveRooms = (x) => {
+    update(p => {
+      p.rooms = x
+      return p
+    })
+  }
+
+  let saveSpaces = (x) => {
+    update(p => {
+      p.spaces = x
+      return p
+    })
+  }
+
 
   const { subscribe, set, update } = writable(app);
 
@@ -104,6 +128,8 @@ function createApp() {
     set,
     saveCredentials,
     removeCredentials,
+    saveRooms,
+    saveSpaces,
     startAuthenticating,
     stopAuthenticating,
     startRefreshingFeed,
@@ -113,6 +139,7 @@ function createApp() {
     verifiedSession,
     logout,
     addRoomEvents,
+    addPageParams,
   };
 }
 

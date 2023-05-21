@@ -1,8 +1,8 @@
 <script>
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
-import Reactions from '../../components/event/reactions/reactions.svelte'
-import Replies from '../../components/event/replies/replies.svelte'
+import Reactions from '$lib/event/reactions/reactions.svelte'
+import Replies from '$lib/event/replies/replies.svelte'
 import User from './user/user.svelte'
 import Date from './date/date.svelte'
 import Menu from './menu/menu.svelte'
@@ -24,7 +24,7 @@ $: isRoom = $page.params.room !== undefined && $page.params.room !== null &&
 function goToEvent() {
 
 
-    if(isPost || isReply) {
+    if(isPost || isReply || menuActive) {
         return
     }
 
@@ -80,11 +80,22 @@ $: user = {
     username: event?.sender?.username
 }
 
+let menuActive = false;
+
+function showMenu() {
+    menuActive = true
+}
+function killMenu() {
+    setTimeout(() => {
+        menuActive = false
+    }, 100)
+}
 
 </script>
 
 <div class="event" 
     class:h={!isReply && !isPost}
+    class:ma={menuActive}
     on:click={goToEvent} 
     class:highlight={highlight}>
     <div class="fl-co">
@@ -108,8 +119,11 @@ $: user = {
             </div>
             <div class="fl-o">
             </div>
-            <div class="menu">
-                <Menu event={event} />
+            <div class="menu" class:men={menuActive}>
+                <Menu 
+                    on:active={showMenu} 
+                    on:kill={killMenu} 
+                    event={event} />
             </div>
         </div>
     </div>
@@ -144,7 +158,12 @@ $: user = {
 .h {
     cursor: pointer;
 }
+
 .h:hover {
+    background-color: var(--event-bg-hover);
+}
+
+.ma {
     background-color: var(--event-bg-hover);
 }
 
@@ -154,5 +173,8 @@ $: user = {
 
 .menu {
     opacity: 0;
+}
+.men {
+    opacity: 1;
 }
 </style>

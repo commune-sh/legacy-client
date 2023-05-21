@@ -1,5 +1,5 @@
 <script>
-import Search from '../../components/sidebar/search/search.svelte'
+import Header from './header/header.svelte'
 import Auth from '../auth/auth.svelte'
 import { page } from '$app/stores';
 import RoomList from './room-list/room-list.svelte'
@@ -17,9 +17,7 @@ $: isNotIndex = $page.params.space || $page.params.room
 </script>
 
 <div class="sidebar">
-    <div class="header fl">
-        <Search />
-    </div>
+    <Header data={data} />
 
     <div class="content fl-co">
         {#if exists}

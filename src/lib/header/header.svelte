@@ -2,7 +2,7 @@
 import { createEventDispatcher } from 'svelte'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
-import Logo from '../../components/logo/logo.svelte'
+import Logo from '$lib/logo/logo.svelte'
 import { store } from '../../store/store.js'
 
 $: authenticated = $store?.authenticated && 
@@ -31,12 +31,47 @@ function newPost() {
     dispatch('newPost')
 }
 
-$: joined = state?.joined === true
 
 $: isIndex = !$page.params.space && !$page.params.room
 
 $: authDone = $store.verifiedSession
 $: indexText = authenticated ? `Your feed` : `What's new`
+
+
+function sortItems() {
+    let items = [
+        {
+            path: undefined,
+            name: `general`,
+            room_id: data?.state?.room_id,
+        }
+    ]
+    if(data?.state?.children?.length > 0) {
+        data?.state?.children.forEach(child => {
+            items.push({
+                path: child?.alias,
+                name: child?.name,
+                room_id: child?.room_id,
+            })
+        })
+    }
+    return items
+}
+
+$: items = sortItems(data)
+
+function findActive(x) {
+    return items?.filter(item => {
+        return item?.path === x
+    })[0]
+}
+
+$: selected = findActive($page.params.room)
+
+$: room_id = selected?.room_id
+
+
+$: joined = $store?.rooms?.includes(room_id)
 
 </script>
 
@@ -58,7 +93,7 @@ $: indexText = authenticated ? `Your feed` : `What's new`
                     <span class="n">{indexText}</span>
                     {/if}
                 {:else}
-                    <span class="n" on:click={goToSpace}>{state?.space?.name}</span>
+                    <span class="n" on:click={goToSpace}>{selected?.name}</span>
                 {/if}
             </div>
             <div class="fl-o"></div>

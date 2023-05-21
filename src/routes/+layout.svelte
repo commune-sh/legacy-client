@@ -1,14 +1,18 @@
 <script>
-import Authentication from '../components/auth/authentication.svelte'
-import Switcher from '../components/switcher/switcher.svelte'
-import Sidebar from '../components/sidebar/sidebar.svelte'
+import Authentication from '$lib/auth/authentication.svelte'
+import Switcher from '$lib/switcher/switcher.svelte'
+import Sidebar from '$lib/sidebar/sidebar.svelte'
 import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { APIRequest } from '../utils/request.js'
 import { onMount, tick } from 'svelte'
 import { page } from '$app/stores';
 import { store } from '../store/store.js'
-import Event from '../components/event/event.svelte'
-import Header from '../components/header/header.svelte'
+import Event from '$lib/event/event.svelte'
+import Header from '$lib/header/header.svelte'
+
+$: if($page.params) {
+    store.addPageParams($page)
+}
 
 let ready = false;
 
@@ -236,9 +240,9 @@ $: if($store.refreshingFeed) {
 
 
 
+        <Authentication />
 
 <div class="theme-switcher">
-        <Authentication />
 <button on:click={toggleTheme}>Toggle</button>
 </div>
 

@@ -1,6 +1,6 @@
 <script>
 import { createEventDispatcher } from 'svelte'
-import Logo from '../../components/logo/logo.svelte'
+import Logo from '$lib/logo/logo.svelte'
 import { close, arrowLeftSmall } from '../../assets/icons.js'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
@@ -29,7 +29,7 @@ function kill() {
             <Logo />
         </div>
         <div class="pd grd-c">
-            <span class="n">Replies</span>
+            <span class="n">Discussion</span>
         </div>
         <div class="fl-o"></div>
         <div class="close c-ico pd grd-c" on:click={kill}>

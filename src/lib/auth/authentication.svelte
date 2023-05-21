@@ -37,6 +37,8 @@ let syncCreds = (token) => {
             console.log('Response:', resp);
             if(resp?.valid && resp?.credentials) {
                 store.saveCredentials(resp.credentials)
+                store.saveRooms(resp.rooms)
+                store.saveSpaces(resp.spaces)
                 store.isAuthenticated()
                 store.verifiedSession(true)
             } else {

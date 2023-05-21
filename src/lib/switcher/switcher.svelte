@@ -1,5 +1,5 @@
 <script>
-import Logo from '../../components/logo/logo.svelte'
+import Logo from '$lib/logo/logo.svelte'
 import { page } from '$app/stores';
 
 $: isIndex = $page.route.id === '/'

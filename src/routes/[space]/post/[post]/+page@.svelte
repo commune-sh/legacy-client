@@ -1,5 +1,5 @@
 <script>
-import Replies from '../../../../components/replies/replies.svelte'
+import Replies from '$lib/replies/replies.svelte'
 </script>
 
 <Replies />

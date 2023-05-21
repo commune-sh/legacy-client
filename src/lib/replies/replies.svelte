@@ -1,6 +1,6 @@
 <script>
-import Event from '../../components/event/event.svelte'
-import Header from '../../components/header/post-header.svelte'
+import Event from '$lib/event/event.svelte'
+import Header from '$lib/header/post-header.svelte'
 import { onMount } from 'svelte';
 import { APIRequest } from '../../utils/request.js'
 import { PUBLIC_BASE_URL } from '$env/static/public';
@@ -89,7 +89,7 @@ function goBack() {
     overflow-y: hidden;
 }
 .events {
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 </style>
 
