@@ -15,7 +15,6 @@ export let data;
 $: state = data?.state
 export let type = 'space';
 
-export let ready = false;
 export let exists;
 
 $: space = $page.params.space
@@ -38,16 +37,16 @@ $: authDone = $store.verifiedSession
 $: indexText = authenticated ? `Your feed` : `What's new`
 
 
-function sortItems() {
+function sortItems(d) {
     let items = [
         {
             path: undefined,
             name: `general`,
-            room_id: data?.state?.room_id,
+            room_id: d?.state?.room_id,
         }
     ]
-    if(data?.state?.children?.length > 0) {
-        data?.state?.children.forEach(child => {
+    if(d?.state?.children?.length > 0) {
+        d?.state?.children.forEach(child => {
             items.push({
                 path: child?.alias,
                 name: child?.name,
@@ -60,16 +59,9 @@ function sortItems() {
 
 $: items = sortItems(data)
 
-function findActive(x) {
-    return items?.filter(item => {
-        return item?.path === x
-    })[0]
-}
-
-$: selected = findActive($page.params.room)
+$: selected = items?.filter(x => x?.path === $page?.params?.room)[0]
 
 $: room_id = selected?.room_id
-
 
 $: joined = $store?.rooms?.includes(room_id)
 
@@ -82,7 +74,6 @@ $: joined = $store?.rooms?.includes(room_id)
                 <Logo />
             </div>
     {#if exists}
-        {#if ready}
             <div class="menu grd-c">
             </div>
             <div class="name grd-c">
@@ -102,7 +93,6 @@ $: joined = $store?.rooms?.includes(room_id)
                     <button class="" on:click={newPost}>New Post</button>
                 </div>
             {/if}
-        {/if}
     {/if}
     </div>
 </div>

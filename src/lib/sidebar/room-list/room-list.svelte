@@ -1,18 +1,15 @@
 <script>
-import { page } from '$app/stores';
-
 import RoomListItem from './room-list-item.svelte'
 
-export let children;
+export let items;
 
 
 
 </script>
 
-<RoomListItem isSpace={true} />
-{#if children?.length > 0}
-    {#each children as child}
-        <RoomListItem item={child} />
+{#if items?.length > 0}
+    {#each items as item}
+        <RoomListItem item={item} />
     {/each}
 {/if}
 

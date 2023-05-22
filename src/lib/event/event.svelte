@@ -20,13 +20,7 @@ $: isSpace = $page.params.space !== undefined && $page.params.space !== null &&
 $: isRoom = $page.params.room !== undefined && $page.params.room !== null &&
     $page.params.room !== ''
 
-
-function goToEvent() {
-
-
-    if(isPost || isReply || menuActive) {
-        return
-    }
+function makeURL() {
 
     let url = `/post/${event?.slug}`
     if(isSpace) {
@@ -49,10 +43,16 @@ function goToEvent() {
             url = `/${$page.params.space}/${$page.params.room}`
         }
 
-        goto(url, {
-            noscroll: true,
-        })
+    }
 
+    return url
+}
+
+
+function goToEvent() {
+
+
+    if(isPost || isReply || menuActive) {
         return
     }
 
@@ -61,6 +61,8 @@ function goToEvent() {
     })
 }
 
+
+$: url = makeURL(event)
 
 $: content = event?.content?.formatted_body ? event?.content?.formatted_body :
     event?.content?.body
@@ -99,7 +101,7 @@ function killMenu() {
     on:click={goToEvent} 
     class:highlight={highlight}>
     <div class="fl-co">
-        <div class="">
+        <div class="body">
             {@html content}
         </div>
         <div class="pt2 fl">
@@ -176,5 +178,9 @@ function killMenu() {
 }
 .men {
     opacity: 1;
+}
+
+.body {
+    line-height: 1.5;
 }
 </style>

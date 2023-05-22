@@ -9,17 +9,17 @@ import { page } from '$app/stores';
 import { store } from '../store/store.js'
 import Event from '$lib/event/event.svelte'
 import Header from '$lib/header/header.svelte'
+import Replies from '$lib/replies/replies.svelte'
 
 $: if($page.params) {
-    store.addPageParams($page)
+    //store.addPageParams($page)
 }
 
 let ready = false;
 
+let lastPath = null;
 
-let lastRoom = null;
-
-$: if($page.params.room != lastRoom && ready) {
+$: if($page?.url?.pathname != lastPath) {
     loadEvents()
 }
 
@@ -56,7 +56,10 @@ function loadEvents() {
     .then(resp => {
         if(resp) {
             data = resp
-            lastRoom = $page.params.room
+            if($page?.url?.pathname != lastPath) {
+                console.log("settings last path to ", $page?.url?.pathname)
+                lastPath = $page?.url?.pathname
+            }
         }
         if(!resp) {
             down = true
@@ -66,14 +69,14 @@ function loadEvents() {
 
 let down = false;
 
-
 let data = null;
 
 $: exists = data?.exists == null
     false
 
 $: if(data) {
-    ready = true
+    //ready = true
+    setTimeout(() => ready = true, 1)
 }
 
 function toggleTheme() {
@@ -173,7 +176,7 @@ $: if($store.refreshingFeed) {
 </script>
 
 
-{#if ready && !down}
+{#if !down}
 
 <div class="root">
     <div class="container">
@@ -193,13 +196,13 @@ $: if($store.refreshingFeed) {
 
         <div class="inner-area" class:ina={isPost}>
 
-            <Header ready={ready} data={data} exists={exists}/>
+            <Header data={data} exists={exists}/>
 
             <div class="inner-content" bind:this={scrollable}>
 
-                {#if data.events}
+                {#if data?.events}
                     <section class="events">
-                        {#each data.events as event}
+                        {#each data?.events as event}
                             <Event event={event} />
                         {/each}
                     </section>
@@ -228,7 +231,9 @@ $: if($store.refreshingFeed) {
 
         </div>
 
-        <slot></slot>
+        {#if isPost}
+            <Replies />
+        {/if}
 
     </section>
 
@@ -246,14 +251,15 @@ $: if($store.refreshingFeed) {
 <button on:click={toggleTheme}>Toggle</button>
 </div>
 
-{:else if !down}
-<section class="root">
+{/if}
+
+
+<section class="loading" class:hide={ready}>
     <section class="grd-c">
         <div class="loader"></div>
     </section>
 </section>
 
-{/if}
 
 {#if down}
 <section class="root">
@@ -264,6 +270,25 @@ $: if($store.refreshingFeed) {
 {/if}
 
 <style>
+
+.loading {
+    z-index: 3000;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg);
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 100%;
+}
+
+.hide {
+    display: none;
+}
 
 .root {
     height: 100vh;

@@ -8,13 +8,14 @@ export let item;
 
 $: space = $page.params?.space
 $: room = $page.params?.room
-$: active = room === item?.alias
 
-$: name = isSpace ? `general` : item?.alias
+$: isGeneral = item?.general === true
+
+$: active = (isGeneral && !room) || (room === item?.alias)
 
 function goToRoom() {
     let url = `/${space}/${item?.alias}`
-    if(isSpace) {
+    if(isGeneral) {
         url = `/${space}`
     }
     goto(url, {
@@ -40,7 +41,7 @@ $: isBoard = item?.type === 'board'
     </div>
 
     <div class="sl">
-        {name}
+        {item?.alias}
     </div>
 </div>
 

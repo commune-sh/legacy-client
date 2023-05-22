@@ -14,6 +14,34 @@ $: children = data?.state?.children
 
 $: isNotIndex = $page.params.space || $page.params.room
 
+function buildItems(d) {
+    let items = [
+        {
+            alias: `general`,
+            avatar: data?.state?.space?.avatar,
+            header: data?.state?.space?.header,
+            name: data?.state?.space?.name,
+            topic: data?.state?.space?.topic,
+            room_id: data?.state?.room_id,
+            type: data?.state?.space?.type,
+            general: true,
+        }
+    ]
+
+    if(d?.state?.children?.length > 0) {
+        d?.state?.children.forEach(child => {
+            items.push(child)
+        })
+    }
+    return items
+}
+
+$: items = buildItems(data)
+
+$: if(items) {
+    console.log("items are ", items)
+}
+
 </script>
 
 <div class="sidebar">
@@ -24,7 +52,7 @@ $: isNotIndex = $page.params.space || $page.params.room
 
             {#if isNotIndex}
                 <div class="">
-                    <RoomList children={children} />
+                    <RoomList items={items} />
                 </div>
             {/if}
 
