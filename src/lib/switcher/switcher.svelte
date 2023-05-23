@@ -38,7 +38,6 @@ let spaces = ["animals","games", "conspiracy", "poems"]
     <Logo large={true} />
 
     <div class="content">
-        <SpaceItems spaces={spaces}/>
     </div>
 </div>
 
