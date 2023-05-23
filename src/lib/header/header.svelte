@@ -11,8 +11,9 @@ $: authenticated = $store?.authenticated &&
 
 const dispatch = createEventDispatcher()
 
-export let data;
-$: state = data?.state
+
+$: state = $store?.states[$page?.params?.space]
+
 export let type = 'space';
 
 export let exists;
@@ -37,16 +38,19 @@ $: authDone = $store.verifiedSession
 $: indexText = authenticated ? `Your feed` : `What's new`
 
 
-function sortItems(d) {
+function sortItems(state) {
+    if(!state && !state?.room_id) {
+        return []
+    }
     let items = [
         {
             path: undefined,
             name: `general`,
-            room_id: d?.state?.room_id,
+            room_id: state?.room_id,
         }
     ]
-    if(d?.state?.children?.length > 0) {
-        d?.state?.children.forEach(child => {
+    if(state?.children?.length > 0) {
+        state?.children.forEach(child => {
             items.push({
                 path: child?.alias,
                 name: child?.name,
@@ -57,7 +61,7 @@ function sortItems(d) {
     return items
 }
 
-$: items = sortItems(data)
+$: items = sortItems(state)
 
 $: selected = items?.filter(x => x?.path === $page?.params?.room)[0]
 
@@ -68,12 +72,11 @@ $: joined = $store?.rooms?.includes(room_id)
 </script>
 
 
-<div class="header" class:dne={!exists}>
+<div class="header">
     <div class="container fl">
             <div class="logo grd-c">
                 <Logo />
             </div>
-    {#if exists}
             <div class="menu grd-c">
             </div>
             <div class="name grd-c">
@@ -83,7 +86,7 @@ $: joined = $store?.rooms?.includes(room_id)
                     {#if authDone}
                     <span class="n">{indexText}</span>
                     {/if}
-                {:else}
+                {:else if selected}
                     <span class="n" on:click={goToSpace}>{selected?.name}</span>
                 {/if}
             </div>
@@ -93,7 +96,6 @@ $: joined = $store?.rooms?.includes(room_id)
                     <button class="" on:click={newPost}>New Post</button>
                 </div>
             {/if}
-    {/if}
     </div>
 </div>
 

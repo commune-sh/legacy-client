@@ -3,52 +3,51 @@ import Header from './header/header.svelte'
 import Auth from '../auth/auth.svelte'
 import { page } from '$app/stores';
 import RoomList from './room-list/room-list.svelte'
-
-export let data;
-
-export let exists;
-
+import { store } from '../../store/store.js'
+import { onMount } from 'svelte'
 import { goto } from '$app/navigation';
+import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
+import { APIRequest } from '../../utils/request.js'
 
-$: children = data?.state?.children
+$: state = $store?.states[$page?.params?.space]
+
+$: children = state?.children
 
 $: isNotIndex = $page.params.space || $page.params.room
 
-function buildItems(d) {
+function buildItems(state) {
+    if(!state && !state?.room_id) {
+        return []
+    }
     let items = [
         {
             alias: `general`,
-            avatar: data?.state?.space?.avatar,
-            header: data?.state?.space?.header,
-            name: data?.state?.space?.name,
-            topic: data?.state?.space?.topic,
-            room_id: data?.state?.room_id,
-            type: data?.state?.space?.type,
+            avatar: state?.space?.avatar,
+            header: state?.space?.header,
+            name: state?.space?.name,
+            topic: state?.space?.topic,
+            room_id: state?.room_id,
+            type: state?.space?.type,
             general: true,
         }
     ]
 
-    if(d?.state?.children?.length > 0) {
-        d?.state?.children.forEach(child => {
+    if(children?.length > 0) {
+        children.forEach(child => {
             items.push(child)
         })
     }
     return items
 }
 
-$: items = buildItems(data)
-
-$: if(items) {
-    console.log("items are ", items)
-}
+$: items = buildItems(state)
 
 </script>
 
 <div class="sidebar">
-    <Header data={data} />
+    <Header state={state} />
 
     <div class="content fl-co">
-        {#if exists}
 
             {#if isNotIndex}
                 <div class="">
@@ -58,8 +57,6 @@ $: if(items) {
 
             <div class="">
             </div>
-
-        {/if}
 
 
     </div>

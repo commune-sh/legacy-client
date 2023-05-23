@@ -12,7 +12,9 @@ function createApp() {
     credentials: null,
     rooms: [],
     spaces: [],
-    pageParams: [],
+    states: [],
+    spacePaths: [],
+    pageState: [],
     events: [],
   }
 
@@ -92,15 +94,13 @@ function createApp() {
 
   let addRoomEvents = (room_id, events) => {
     update(p => {
-      console.log("adding room events", room_id, events)
       p.events[room_id] = events
       return p
     })
   }
 
-  let addPageParams = (params) => {
+  let addPageState = (params) => {
     update(p => {
-      console.log("adding page params", params)
       return p
     })
   }
@@ -115,6 +115,33 @@ function createApp() {
   let saveSpaces = (x) => {
     update(p => {
       p.spaces = x
+      return p
+    })
+  }
+
+  let addSpaceState = (space, state) => {
+    update(p => {
+      p.states[space] = state
+      return p
+    })
+  }
+
+  let addSpacePath = (space, path) => {
+    update(p => {
+      let x = p.spacePaths[space]
+      if(x == undefined) {
+        p.spacePaths[space] = path
+      } else {
+        p.spacePaths[space].pathname = path?.pathname
+        p.spacePaths[space].params = path?.params
+      }
+      return p
+    })
+  }
+
+  let addSpaceRoomPath = (space, room, path) => {
+    update(p => {
+      let x = p.spacePaths[space].rooms[room] = path
       return p
     })
   }
@@ -139,7 +166,10 @@ function createApp() {
     verifiedSession,
     logout,
     addRoomEvents,
-    addPageParams,
+    addPageState,
+    addSpaceState,
+    addSpacePath,
+    addSpaceRoomPath,
   };
 }
 

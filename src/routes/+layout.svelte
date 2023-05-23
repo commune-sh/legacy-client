@@ -7,58 +7,34 @@ import { APIRequest } from '../utils/request.js'
 import { onMount, tick } from 'svelte'
 import { page } from '$app/stores';
 import { store } from '../store/store.js'
-import Event from '$lib/event/event.svelte'
-import Header from '$lib/header/header.svelte'
-import Replies from '$lib/replies/replies.svelte'
+import View from '$lib/view/view.svelte'
+import Sync from '$lib/sync/sync.svelte'
 
-$: if($page.params) {
-    //store.addPageParams($page)
-}
 
 let ready = false;
 
-let lastPath = null;
-
-$: if($page?.url?.pathname != lastPath) {
-    loadEvents()
+function viewReady() {
+    ready = true;
 }
 
-function loadEvents() {
+onMount(() => {
+    checkHealth()
+})
 
-    const token = localStorage.getItem('access_token')
+function checkHealth() {
 
-    let url = `${PUBLIC_BASE_URL}/events/`
-
-
-  let space = $page.params.space
-  let isSpace = space && space !== 'undefined' && space?.length > 0
-  if(isSpace) {
-    url = `${PUBLIC_BASE_URL}/${space}/events`
-  }
-
-  let room = $page.params.room
-  let isRoom = room && room !== 'undefined' && room?.length > 0
-  if(isRoom) {
-    url = `${PUBLIC_BASE_URL}/${space}/${room}/events`
-  }
+    let url = `${PUBLIC_BASE_URL}/health_check`
 
     let opt = {
       url: url,
       method: 'GET',
     }
 
-    if(token && !isSpace && !isRoom) {
-        opt.url = `${PUBLIC_BASE_URL}/feed`
-        opt.token = token
-    }
-
     APIRequest(opt)
     .then(resp => {
         if(resp) {
-            data = resp
-            if($page?.url?.pathname != lastPath) {
-                console.log("settings last path to ", $page?.url?.pathname)
-                lastPath = $page?.url?.pathname
+            if(resp?.healthy) {
+                down = false
             }
         }
         if(!resp) {
@@ -67,17 +43,9 @@ function loadEvents() {
     })
 }
 
+
 let down = false;
 
-let data = null;
-
-$: exists = data?.exists == null
-    false
-
-$: if(data) {
-    //ready = true
-    setTimeout(() => ready = true, 1)
-}
 
 function toggleTheme() {
     const theme = localStorage.getItem('theme')
@@ -90,90 +58,9 @@ function toggleTheme() {
     }
 }
 
-
-function link(space) {
-        return `/${$page.params.space}/p/${space}`
-}
-
-$: isPost = $page.params.post !== undefined && $page.params.post !== null &&
-    $page.params.post !== ''
-
-let scrollHeight;
-let scrollable
-let obs;
-
-
-$: if(obs) {
-    setupObserver()
-}
-
-onMount(() => {
-    loadEvents()
-    return
-    if(!data.error && !data.down) {
-        scrollHeight = scrollable?.scrollHeight;
-        handleScroll();
-    }
-})
-
-function setupObserver() {
-    scrollHeight = scrollable?.scrollHeight;
-    handleScroll();
-}
-
-function handleScroll() {
-    let options = {
-        root: scrollable,
-        rootMargin: `${scrollHeight/2}px`,
-    };
-
-    let callback = (entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                fetchMore()
-            }
-        });
-    };
-
-    let observer = new IntersectionObserver(callback, options);
-    observer.observe(obs);
-}
-
-$: isSpace = $page.params.space !== undefined && $page.params.space !== null &&
-    $page.params.space !== ''
-
-$: isRoom = $page.params.room !== undefined && $page.params.room !== null &&
-    $page.params.room !== ''
-
-let fetchMore = () => {
-    let events = data?.events;
-    const last = events?.[events?.length - 1]?.origin_server_ts
-
-    let url = `${PUBLIC_BASE_URL}/events?last=${last}`
-    if(isSpace) {
-        url = `${PUBLIC_BASE_URL}/${$page.params.space}/events?last=${last}`
-    }
-
-    if(isSpace && isRoom) {
-        url = `${PUBLIC_BASE_URL}/${$page.params.space}/${$page.params.room}/events?last=${last}`
-    }
-
-    APIRequest({
-        url: url,
-      method: 'GET',
-    }).then((res) => {
-        if(res && res?.events?.length > 0) {
-            data.events = [...data.events, ...res.events];
-        }
-    });
-}
-
-$: if($store.refreshingFeed) {
-    store.stopRefreshingFeed()
-    console.log("refreshing feeed....")
-}
-
 </script>
+
+<Sync />
 
 
 {#if !down}
@@ -186,57 +73,12 @@ $: if($store.refreshingFeed) {
     </div>
 
     <div class="sidebar-container grd">
-        <Sidebar data={data} exists={exists} />
+        <Sidebar />
     </div>
 
     <div class="content">
 
-
-    <section class="space-container" class:post={isPost}>
-
-        <div class="inner-area" class:ina={isPost}>
-
-            <Header data={data} exists={exists}/>
-
-            <div class="inner-content" bind:this={scrollable}>
-
-                {#if data?.events}
-                    <section class="events">
-                        {#each data?.events as event}
-                            <Event event={event} />
-                        {/each}
-                    </section>
-                {:else if exists && data?.events == null}
-                    <div class="grd">
-                        <div class="grd-c">
-                            This space does not have any posts yet.
-                        </div>
-                    </div>
-                {/if}
-
-                {#if !exists}
-                    <section class="grd">
-                        <section class="grd-c">
-                            This space does not exist.
-                        </section>
-                    </section>
-                {/if}
-
-                {#if exists && data?.events !== null}
-                    <div class="obs" bind:this={obs}></div>
-                {/if}
-
-            </div>
-
-
-        </div>
-
-        {#if isPost}
-            <Replies />
-        {/if}
-
-    </section>
-
+                <View on:ready={viewReady} />
 
     </div>
 
@@ -254,7 +96,7 @@ $: if($store.refreshingFeed) {
 {/if}
 
 
-<section class="loading" class:hide={ready}>
+<section class="loading" class:hide={ready || down}>
     <section class="grd-c">
         <div class="loader"></div>
     </section>
@@ -264,7 +106,7 @@ $: if($store.refreshingFeed) {
 {#if down}
 <section class="root">
     <section class="grd-c">
-            {PUBLIC_APP_NAME} is down.
+        {PUBLIC_APP_NAME} is down.
     </section>
 </section>
 {/if}

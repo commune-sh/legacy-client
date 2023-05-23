@@ -20,7 +20,13 @@ $: isSpace = $page.params.space !== undefined && $page.params.space !== null &&
 $: isRoom = $page.params.room !== undefined && $page.params.room !== null &&
     $page.params.room !== ''
 
-function makeURL() {
+
+function goToEvent() {
+
+
+    if(isPost || isReply || menuActive) {
+        return
+    }
 
     let url = `/post/${event?.slug}`
     if(isSpace) {
@@ -43,16 +49,10 @@ function makeURL() {
             url = `/${$page.params.space}/${$page.params.room}`
         }
 
-    }
+        goto(url, {
+            noscroll: true,
+        })
 
-    return url
-}
-
-
-function goToEvent() {
-
-
-    if(isPost || isReply || menuActive) {
         return
     }
 
@@ -61,8 +61,6 @@ function goToEvent() {
     })
 }
 
-
-$: url = makeURL(event)
 
 $: content = event?.content?.formatted_body ? event?.content?.formatted_body :
     event?.content?.body

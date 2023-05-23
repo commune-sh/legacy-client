@@ -45,10 +45,6 @@ $: if(lastPost != null && $page.params.post != lastPost) {
     loadEvents()
 }
 
-function goBack() {
-    history.back()
-}
-
 </script>
 
 <section class="content">

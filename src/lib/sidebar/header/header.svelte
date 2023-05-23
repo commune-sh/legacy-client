@@ -1,7 +1,7 @@
 <script>
-export let data;
+export let state;
 
-$: name = data?.state?.space?.name;
+$: name = state?.space?.name ? state.space.name : ``;
 </script>
 
 <div class="sidebar-header">

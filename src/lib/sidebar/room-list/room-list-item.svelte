@@ -2,22 +2,50 @@
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 import { hash, board } from '../../../assets/icons.js'
+import { store } from '../../../store/store.js'
 
-export let isSpace;
 export let item;
 
 $: space = $page.params?.space
 $: room = $page.params?.room
+$: post = $page.params?.post
 
 $: isGeneral = item?.general === true
 
 $: active = (isGeneral && !room) || (room === item?.alias)
 
-function goToRoom() {
-    let url = `/${space}/${item?.alias}`
-    if(isGeneral) {
-        url = `/${space}`
+let toggled = false;
+
+$: if(active) {
+    toggled = true
+}
+
+$: if(toggled) {
+    let path = item?.alias
+    if(post) {
+        path = `${item?.alias}/${post}`
     }
+    //store.addSpaceRoomPath(space, item?.alias, path)
+    toggled = false
+}
+
+$: spacePath = $store?.spacePaths[space]
+$: spaceRoomPath = $store?.spacePaths[space]?.rooms[item?.alias]
+
+function goToRoom() {
+
+    let url = `/`
+    let alias = `/${item.alias}`
+    if(isGeneral) {
+        alias = ''
+    }
+
+    if(spaceRoomPath == undefined || spaceRoomPath == '/') {
+        url = `/${space}${alias}`
+    } else {
+        url = `/${space}${alias}${spaceRoomPath}`
+    }
+
     goto(url, {
         noscroll: true,
     })
@@ -28,6 +56,7 @@ $: isBoard = item?.type === 'board'
 </script>
 
 <div class="item" 
+    draggable="true"
     on:click={goToRoom}
     class:active={active}>
 

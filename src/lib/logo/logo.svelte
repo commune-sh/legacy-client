@@ -1,12 +1,13 @@
 <script>
 import { logo } from '../../assets/logo.js'
 export let large = false;
+export let loader = false;
 </script>
 
 <div class="logo">
     <a class="" href="/">
-        <div class="l-c grd" class:lg={large}>
-            <div class="l-c-i grd-c">
+        <div class="l-c grd" class:lg={large} class:ldr={loader}>
+            <div class="l-c-i grd-c" class:lgr={loader}>
                 {@html logo}
             </div>
         </div>
@@ -30,6 +31,9 @@ export let large = false;
     border-radius: 6px;
     transition: 0.1s;
 }
+.ldr {
+    background-color: transparent;
+}
 
 .lg {
     height: 42px;
@@ -51,6 +55,12 @@ export let large = false;
     width: 34px;
     fill: var(--logo-shade-1);
 }
+
+.lgr {
+    height: 54px;
+    width: 54px;
+}
+
 
 .l-c-t {
     fill: var(--logo-shade-2);

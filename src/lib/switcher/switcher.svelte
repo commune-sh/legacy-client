@@ -1,4 +1,5 @@
 <script>
+import SpaceItems from '$lib/switcher/space-items.svelte'
 import Logo from '$lib/logo/logo.svelte'
 import { page } from '$app/stores';
 
@@ -29,12 +30,15 @@ function toggleFavicon() {
 
 }
 
+let spaces = ["animals","games", "conspiracy", "poems"]
+
 </script>
 <div class="switcher">
 
     <Logo large={true} />
 
     <div class="content">
+        <SpaceItems spaces={spaces}/>
     </div>
 </div>
 
@@ -49,7 +53,7 @@ function toggleFavicon() {
     border-right: 1px solid var(--border-1);
 }
 .content {
-    padding-top: 1rem;
+    padding: 0.5rem;
 }
 @media screen and (max-width: 1280px) {
     .switcher {
