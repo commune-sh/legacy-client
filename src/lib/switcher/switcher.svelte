@@ -1,5 +1,6 @@
 <script>
 import SpaceItems from '$lib/switcher/space-items.svelte'
+import { store } from '../../store/store.js'
 import Logo from '$lib/logo/logo.svelte'
 import { page } from '$app/stores';
 
@@ -30,33 +31,55 @@ function toggleFavicon() {
 
 }
 
-let spaces = ["animals","games", "conspiracy", "poems"]
+$: spaces = $store.spaces
+
 
 </script>
 <div class="switcher">
+    <div class="switcher-container fl-co">
 
-    <Logo large={true} />
+        <Logo large={true} />
 
-    <div class="content">
+        <div class="content">
+            <SpaceItems spaces={spaces}/>
+        </div>
     </div>
 </div>
 
 <style>
 .switcher {
-    position: sticky;
-    top: 0;
     height: 100vh;
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: [logo] 64px [content] auto;
+    grid-template-rows: auto;
     border-right: 1px solid var(--border-1);
+    overflow: hidden;
+}
+
+.switcher-container {
+    margin-top: 12px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 0px;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+}
+::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
 }
 .content {
-    padding: 0.5rem;
 }
+
 @media screen and (max-width: 1280px) {
-    .switcher {
-        grid-template-rows: [logo] 48px [content] auto;
+    .switcher-container {
+        grid-template-rows: [logo] 54px [content] auto;
+    }
+    .switcher-container {
+        margin-top: 10px;
     }
 }
 </style>

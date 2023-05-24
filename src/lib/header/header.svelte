@@ -2,8 +2,8 @@
 import { createEventDispatcher } from 'svelte'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
-import Logo from '$lib/logo/logo.svelte'
 import { store } from '../../store/store.js'
+import {menu} from '../../assets/icons.js'
 
 $: authenticated = $store?.authenticated && 
     $store?.credentials != null
@@ -74,11 +74,12 @@ $: joined = $store?.rooms?.includes(room_id)
 
 <div class="header">
     <div class="container fl">
-            <div class="logo grd-c">
-                <Logo />
+            <div class="menu c-ico grd-c">
+                {@html menu}
             </div>
-            <div class="menu grd-c">
-            </div>
+
+        <div class="fl">
+
             <div class="name grd-c">
                 {#if isStatic && name}
                     <span class="n">{name}</span>
@@ -96,43 +97,36 @@ $: joined = $store?.rooms?.includes(room_id)
                     <button class="" on:click={newPost}>New Post</button>
                 </div>
             {/if}
+        </div>
     </div>
 </div>
 
 <style>
 .header {
     border-bottom: 1px solid var(--border-1);
-    position: sticky;
-    z-index: 1;
-    top: 0;
     background-color: var(--bg);
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: auto;
 }
+
+.container {
+    display: grid;
+    grid-template-columns: 48px auto;
+    grid-template-rows: auto;
+}
+
 .dne {
     border-bottom: none;
 }
-.logo {
+.menu {
     display: none;
-    padding-left: 0.5rem;
 }
 
 .menu {
     display: none;
-    padding-left: 1rem;
 }
 
-@media screen and (max-width: 768px) {
-    .header {
-    }
-    .logo {
-        display: block;
-    }
-    .menu {
-        display: block;
-    }
-}
 .name {
     padding-left: 1rem;
     padding-right: 1rem;
@@ -142,5 +136,17 @@ $: joined = $store?.rooms?.includes(room_id)
     cursor: pointer;
     font-weight: bold;
     font-size: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+    .menu {
+        display: block;
+    }
+    .menu {
+        display: block;
+    }
+    .name {
+        padding-left: 0.5rem;
+    }
 }
 </style>

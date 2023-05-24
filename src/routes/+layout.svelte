@@ -208,10 +208,7 @@ function toggleTheme() {
 
 @media screen and (max-width: 1280px) {
     .container {
-        grid-template-columns: [switcher] 54px [content] 1fr;
-    }
-    .sidebar-container {
-            display: none;
+        grid-template-columns: [switcher] 54px [sidebar] 240px [content] 1fr;
     }
 }
 @media screen and (max-width: 768px) {
@@ -219,6 +216,9 @@ function toggleTheme() {
         grid-template-columns: auto;
     }
     .switcher-container {
+        display: none;
+    }
+    .sidebar-container {
         display: none;
     }
     .post {

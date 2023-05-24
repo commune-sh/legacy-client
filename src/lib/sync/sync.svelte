@@ -11,6 +11,27 @@ $: if($page?.params?.space !== lastSpace) {
     fetchSpaceState()
 }
 
+onMount(() => {
+    fetchDefaultSpaces()
+})
+
+function fetchDefaultSpaces() {
+
+    let opt = {
+      url: `${PUBLIC_BASE_URL}/default_spaces`,
+      method: 'GET',
+    }
+
+    APIRequest(opt)
+    .then(resp => {
+        if(resp) {
+            console.log(resp)
+            store.saveSpaces(resp.spaces)
+        }
+    })
+}
+
+
 function fetchSpaceState() {
 
     let opt = {

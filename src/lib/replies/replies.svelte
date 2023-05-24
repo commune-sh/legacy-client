@@ -83,9 +83,24 @@ $: if(lastPost != null && $page.params.post != lastPost) {
     grid-template-columns: auto;
     grid-template-rows: 48px auto;
     overflow-y: hidden;
+    background-color: var(--bg);
 }
 .events {
     overflow-y: auto;
+}
+@media screen and (max-width: 1280px) {
+    .content {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 294px;
+    }
+}
+@media screen and (max-width: 768px) {
+    .content {
+        position: static;
+    }
 }
 </style>
 
