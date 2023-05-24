@@ -32,6 +32,8 @@ $: if(toggled) {
 $: spacePath = $store?.spacePaths[space]
 $: spaceRoomPath = $store?.spacePaths[space]?.rooms[item?.alias]
 
+$: menuToggled = $store?.menuToggled
+
 function goToRoom() {
 
     let url = `/`
@@ -46,9 +48,17 @@ function goToRoom() {
         url = `/${space}${alias}${spaceRoomPath}`
     }
 
+    if(menuToggled) {
+        url = `/${space}${alias}`
+    }
+
     goto(url, {
         noscroll: true,
     })
+
+    if(menuToggled) {
+        store.toggleMenu()
+    }
 }
 
 $: isBoard = item?.type === 'board'

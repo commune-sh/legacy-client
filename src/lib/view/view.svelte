@@ -198,12 +198,31 @@ $: if($store.refreshingFeed) {
     console.log("refreshing feeed....")
 }
 
+let container;
+
+$: menuToggled = $store?.menuToggled
+
+onMount(() => {
+    let mq = window.matchMedia("(min-width: 768px)");
+    mq.addEventListener("change", (e) => {
+        if(e?.matches == true && menuToggled) {
+            store.toggleMenu()
+            container.style.width = `auto`
+        }
+        if(e?.matches == true) {
+            container.style.width = `auto`
+        }
+    });
+})
+
 </script>
 
 
 
 
-<section class="space-container" class:post={isPost}>
+<section class="space-container"
+    bind:this={container}
+    class:post={isPost}>
 
     <div class="inner-area" class:ina={isPost}>
 

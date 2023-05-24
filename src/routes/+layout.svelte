@@ -71,36 +71,33 @@ function collapse() {
 
 {#if !down}
 
-{#if menuToggled}
-<div class="floating-sidebar">
-        <Switcher />
-        <Sidebar />
-            <div class="outside grd" on:click={collapse}>
-    </div>
-</div>
-{/if}
 
 
 <div class="root">
-    <div class="container">
+    <div class="container" class:mt={menuToggled}>
 
-    <div class="switcher-container grd">
+    <div class="switcher-container grd" class:show={menuToggled}>
         <Switcher />
     </div>
 
-    <div class="sidebar-container grd">
+            <div class="sidebar-container grd" class:show={menuToggled}>
         <Sidebar />
     </div>
 
-    <div class="content">
+            <div class="content" class:split={menuToggled}>
 
                 <View on:ready={viewReady} />
 
     </div>
 
     </div>
+
+
 </div>
 
+{#if menuToggled}
+    <div class="collapse" on:click={collapse}></div>
+{/if}
 
 
 
@@ -177,7 +174,18 @@ function collapse() {
     overflow: hidden;
 }
 
+.collapse {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 294px;
+    right: 0;
+    background-color: var(--mask);
+}
 
+.split {
+    grid-template-columns: 304px auto;
+}
 
 .theme-switcher {
     position: fixed;
@@ -221,21 +229,12 @@ function collapse() {
     border-right: 1px solid var(--border-1);
 }
 
-.floating-sidebar {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 90000;
-    display: grid;
-    grid-template-columns: [switcher] 54px [sidebar] 240px [area] 1fr;
-    grid-template-rows: auto;
-    overflow: hidden;
+.show {
+    display: block;
 }
-.outside {
-    background-color: var(--mask);
+
+.mt {
+    grid-template-columns: [switcher] 54px [sidebar] 240px [content] 1fr;
 }
 
 @media screen and (max-width: 1280px) {
@@ -243,15 +242,21 @@ function collapse() {
         grid-template-columns: [switcher] 54px [sidebar] 240px [content] 1fr;
     }
 }
-@media screen and (min-width: 1280px) {
-    .floating-sidebar {
-        grid-template-columns: [switcher] 64px [sidebar] 240px [area] 1fr;
+
+@media screen and (min-width: 768px) {
+    .collapse {
+        left: 304px;
     }
 }
+
 @media screen and (max-width: 768px) {
     .container {
         grid-template-columns: auto;
     }
+.mt {
+    grid-template-columns: [switcher] 54px [sidebar] 240px [content] 1fr;
+}
+
     .switcher-container {
         display: none;
     }
@@ -263,6 +268,9 @@ function collapse() {
     }
     .ina {
         display: none;
+    }
+    .show {
+        display: block;
     }
 }
 

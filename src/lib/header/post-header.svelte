@@ -21,7 +21,15 @@ function kill() {
     })
 }
 
+$: menuToggled = $store?.menuToggled
 function toggleMenu() {
+    let el = document.querySelector('.space-container')
+    if(!menuToggled) {
+        let width = el.clientWidth
+        el.style.width = `${width}px`
+    } else {
+        el.style.width = `auto`
+    }
     store.toggleMenu()
 }
 

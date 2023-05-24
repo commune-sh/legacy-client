@@ -1,5 +1,5 @@
 <script>
-import { createEventDispatcher } from 'svelte'
+import { onMount, createEventDispatcher } from 'svelte'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 import { store } from '../../store/store.js'
@@ -69,9 +69,19 @@ $: room_id = selected?.room_id
 
 $: joined = $store?.rooms?.includes(room_id)
 
+$: menuToggled = $store?.menuToggled
+
 function toggleMenu() {
+    let el = document.querySelector('.space-container')
+    if(!menuToggled) {
+        let width = el.clientWidth
+        el.style.width = `${width}px`
+    } else {
+        el.style.width = `auto`
+    }
     store.toggleMenu()
 }
+
 
 </script>
 
@@ -142,6 +152,11 @@ function toggleMenu() {
     font-size: 1rem;
 }
 
+@media screen and (min-width: 768px) {
+    .container {
+        grid-template-columns: auto;
+    }
+}
 @media screen and (max-width: 768px) {
     .menu {
         display: block;
