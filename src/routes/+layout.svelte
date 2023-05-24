@@ -227,8 +227,7 @@ function collapse() {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 100vh;  
-    max-height: -webkit-fill-available;
+    height: 100%;
     z-index: 90000;
     display: grid;
     grid-template-columns: [switcher] 54px [sidebar] 240px [area] 1fr;
