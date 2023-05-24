@@ -16,6 +16,7 @@ function createApp() {
     spacePaths: [],
     pageState: [],
     events: [],
+    menuToggled: false,
   }
 
 
@@ -146,6 +147,13 @@ function createApp() {
     })
   }
 
+  let toggleMenu = () => {
+    update(p => {
+      p.menuToggled = !p.menuToggled
+      return p
+    })
+  }
+
 
   const { subscribe, set, update } = writable(app);
 
@@ -170,6 +178,7 @@ function createApp() {
     addSpaceState,
     addSpacePath,
     addSpaceRoomPath,
+    toggleMenu,
   };
 }
 

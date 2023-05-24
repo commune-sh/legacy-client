@@ -69,12 +69,16 @@ $: room_id = selected?.room_id
 
 $: joined = $store?.rooms?.includes(room_id)
 
+function toggleMenu() {
+    store.toggleMenu()
+}
+
 </script>
 
 
 <div class="header">
     <div class="container fl">
-            <div class="menu c-ico grd-c">
+            <div class="menu c-ico grd-c" on:click={toggleMenu}>
                 {@html menu}
             </div>
 

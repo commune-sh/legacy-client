@@ -4,6 +4,7 @@ import {menu} from '../../assets/icons.js'
 import { close, arrowLeftSmall } from '../../assets/icons.js'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
+import { store } from '../../store/store.js'
 
 const dispatch = createEventDispatcher()
 
@@ -20,13 +21,17 @@ function kill() {
     })
 }
 
+function toggleMenu() {
+    store.toggleMenu()
+}
+
 </script>
 
 
 <div class="header">
     <div class="container fl">
 
-        <div class="menu c-ico grd-c">
+        <div class="menu c-ico grd-c" on:click={toggleMenu}>
             {@html menu}
         </div>
 

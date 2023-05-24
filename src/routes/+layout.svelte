@@ -58,12 +58,28 @@ function toggleTheme() {
     }
 }
 
+$: menuToggled = $store.menuToggled
+
+function collapse() {
+    store.toggleMenu()
+}
+
 </script>
 
 <Sync />
 
 
 {#if !down}
+
+{#if menuToggled}
+<div class="floating-sidebar">
+        <Switcher />
+        <Sidebar />
+            <div class="outside grd" on:click={collapse}>
+    </div>
+</div>
+{/if}
+
 
 <div class="root">
     <div class="container">
@@ -84,6 +100,7 @@ function toggleTheme() {
 
     </div>
 </div>
+
 
 
 
@@ -204,11 +221,31 @@ function toggleTheme() {
     border-right: 1px solid var(--border-1);
 }
 
-
+.floating-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 90000;
+    display: grid;
+    grid-template-columns: [switcher] 54px [sidebar] 240px [area] 1fr;
+    grid-template-rows: auto;
+    overflow: hidden;
+}
+.outside {
+    background-color: var(--mask);
+}
 
 @media screen and (max-width: 1280px) {
     .container {
         grid-template-columns: [switcher] 54px [sidebar] 240px [content] 1fr;
+    }
+}
+@media screen and (min-width: 1280px) {
+    .floating-sidebar {
+        grid-template-columns: [switcher] 64px [sidebar] 240px [area] 1fr;
     }
 }
 @media screen and (max-width: 768px) {

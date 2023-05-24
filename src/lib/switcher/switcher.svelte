@@ -53,6 +53,7 @@ $: spaces = $store.spaces
     grid-template-columns: auto;
     grid-template-rows: auto;
     border-right: 1px solid var(--border-1);
+    background-color: var(--bg);
     overflow: hidden;
 }
 

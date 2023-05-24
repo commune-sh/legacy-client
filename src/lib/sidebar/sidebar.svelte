@@ -72,6 +72,7 @@ $: items = buildItems(state)
     grid-template-columns: auto;
     grid-template-rows: [search] 48px [content] auto [auth] 64px;
     border-right: 1px solid var(--border-1);
+    background-color: var(--bg);
 }
 
 .content {
