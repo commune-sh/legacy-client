@@ -31,7 +31,7 @@ function toggleFavicon() {
 
 }
 
-$: spaces = $store.spaces
+$: spaces = $store?.spaces
 
 
 </script>

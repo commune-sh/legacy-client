@@ -5,9 +5,11 @@ export let spaces;
 
 <div class="switcher-items">
     <div class="sep"></div>
-{#each spaces as space}
-    <SpaceItem space={space} />
-{/each}
+    {#if spaces?.length > 0}
+        {#each spaces as space}
+            <SpaceItem space={space} />
+        {/each}
+    {/if}
 </div>
 
 <style>
