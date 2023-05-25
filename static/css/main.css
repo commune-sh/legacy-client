@@ -83,8 +83,8 @@ html {
     -webkit-font-smoothing: antialiased;
     -webkit-text-size-adjust: none;
     font-size: 15px;
-    height: fill-available;
-    height: -webkit-fill-available;
+    height: 100%;
+    width: 100%;
 }
 
 body {
@@ -100,9 +100,8 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    min-height: 100vh;
-    min-height: fill-available;
-    min-height: -webkit-fill-available;
+    height: 100%;
+    width: 100%;
 }
 
 a, a:link, a:visited, a:active {
