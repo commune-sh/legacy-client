@@ -77,7 +77,7 @@ function collapse() {
 
     <div class="container">
 
-        <div class="inner-container grd">
+        <div class="inner-container grd" class:show={menuToggled}>
             <Switcher />
             <Sidebar />
         </div>
@@ -91,12 +91,6 @@ function collapse() {
 
 </div>
 
-{#if menuToggled}
-<div class="floating-sidebar tr">
-    <Switcher />
-    <Sidebar />
-</div>
-{/if}
 
 
 
@@ -178,6 +172,8 @@ function collapse() {
     grid-template-columns: auto;
     overflow: hidden;
     left: 0;
+    transition: 0.08s;
+    background-color: var(--bg);
 }
 
 .slide-in {
@@ -185,36 +181,10 @@ function collapse() {
     top: 0;
     bottom: 0;
     left: 304px;
-    transition: 0.05s;
+    transition: 0.08s;
 }
 
-.floating-sidebar {
-    display: grid;
-    grid-template-columns: [switcher] 64px [sidebar] 240px;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: -304px;
-    width: 304px;
-    transition: 0.05s;
-}
 
-.tr {
-    left: 0;
-}
-
-.collapse {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 304px;
-    right: 0;
-    background-color: var(--mask);
-}
-
-.split {
-    grid-template-columns: 304px auto;
-}
 
 .theme-switcher {
     position: fixed;
@@ -223,47 +193,7 @@ function collapse() {
     padding: 1rem;
     z-index: 1000;
 }
-.space-container {
-    display: grid;
-    grid-template-columns: auto;
-    grid-template-columns: auto;
-    overflow: hidden;
-}
 
-.inner-area {
-    display: grid;
-    grid-template-columns: auto;
-    grid-template-rows: 48px auto;
-    overflow: hidden;
-}
-
-.inner-content {
-    overflow-y: auto;
-    display: grid;
-}
-
-.post {
-    grid-template-columns: 50% 50%;
-}
-
-.events {
-    place-self: stretch;
-    width: 100%;
-    height: 100%;
-    justify-self: center;
-    align-self: start;
-}
-
-.ina {
-    border-right: 1px solid var(--border-1);
-}
-
-
-@media screen and (min-width: 768px) {
-    .collapse {
-        left: 304px;
-    }
-}
 
 @media screen and (max-width: 768px) {
     .container {
@@ -272,6 +202,9 @@ function collapse() {
 
     .inner-container {
         display: none;
+    }
+    .show {
+        display: grid;
     }
 
 }

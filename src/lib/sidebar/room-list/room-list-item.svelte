@@ -89,7 +89,7 @@ $: isBoard = item?.type === 'board'
     cursor: pointer;
     display: grid;
     grid-template-columns: auto 1fr;
-    height: 26px;
+    height: 30px;
     border-radius: 4px;
     font-size: 14px;
     margin-bottom: 0.15rem;
