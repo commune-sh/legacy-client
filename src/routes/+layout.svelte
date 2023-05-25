@@ -21,11 +21,6 @@ let root;
 
 onMount(() => {
     checkHealth()
-    let width = window.innerWidth;
-    let isMobile = width < 768
-    if(isMobile) {
-        document.body.style.height = `${window.innerHeight}px`
-    }
 })
 
 function checkHealth() {
@@ -147,7 +142,8 @@ function collapse() {
 }
 
 .root {
-    height: 100vh;
+    height: 100dvh;
+    width: 100%;
     display: grid;
     grid-template-columns: 100%;
     grid-template-rows: 100%;
