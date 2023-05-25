@@ -75,12 +75,4 @@ $: spaces = $store?.spaces
 .content {
 }
 
-@media screen and (max-width: 1280px) {
-    .switcher-container {
-        grid-template-rows: [logo] 54px [content] auto;
-    }
-    .switcher-container {
-        margin-top: 10px;
-    }
-}
 </style>

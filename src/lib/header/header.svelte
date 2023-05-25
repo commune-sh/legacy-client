@@ -137,10 +137,6 @@ function toggleMenu() {
     display: none;
 }
 
-.menu {
-    display: none;
-}
-
 .name {
     padding-left: 1rem;
     padding-right: 1rem;
@@ -152,11 +148,6 @@ function toggleMenu() {
     font-size: 1rem;
 }
 
-@media screen and (min-width: 768px) {
-    .container {
-        grid-template-columns: auto;
-    }
-}
 @media screen and (max-width: 768px) {
     .menu {
         display: block;

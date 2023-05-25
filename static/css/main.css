@@ -28,6 +28,8 @@
     --action-icon: #fff;
 
     --text-input: #fff;
+
+    --switcher-item: #000000;
 }
 
 :root.light {
@@ -59,6 +61,8 @@
     --action-icon: #000;
 
     --text-input: #fff;
+
+    --switcher-item: #e9ecef;
 }
 
 

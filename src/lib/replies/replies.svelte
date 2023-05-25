@@ -94,7 +94,7 @@ $: if(lastPost != null && $page.params.post != lastPost) {
         top: 0;
         right: 0;
         bottom: 0;
-        left: 294px;
+        left: 304px;
     }
 }
 @media screen and (max-width: 768px) {

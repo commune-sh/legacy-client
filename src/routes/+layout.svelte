@@ -74,21 +74,17 @@ function collapse() {
 
 
 <div class="root">
-    <div class="container" class:mt={menuToggled}>
 
-    <div class="switcher-container grd" class:show={menuToggled}>
-        <Switcher />
-    </div>
+    <div class="container">
 
-            <div class="sidebar-container grd" class:show={menuToggled}>
-        <Sidebar />
-    </div>
+        <div class="inner-container grd">
+            <Switcher />
+            <Sidebar />
+        </div>
 
-            <div class="content" class:split={menuToggled}>
-
-                <View on:ready={viewReady} />
-
-    </div>
+        <div class="content" class:slide-in={menuToggled}>
+            <View on:ready={viewReady} />
+        </div>
 
     </div>
 
@@ -96,7 +92,10 @@ function collapse() {
 </div>
 
 {#if menuToggled}
-    <div class="collapse" on:click={collapse}></div>
+<div class="floating-sidebar tr">
+    <Switcher />
+    <Sidebar />
+</div>
 {/if}
 
 
@@ -161,7 +160,13 @@ function collapse() {
     align-self: start;
     display: grid;
     grid-template-rows: auto;
-    grid-template-columns: [switcher] 64px [sidebar] 240px [content] 1fr;
+    grid-template-columns: [sidebar] 304px [content] 1fr;
+}
+
+.inner-container {
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: [switcher] 64px [sidebar] 240px;
 }
 
 .content {
@@ -172,13 +177,37 @@ function collapse() {
     grid-template-rows: auto;
     grid-template-columns: auto;
     overflow: hidden;
+    left: 0;
+}
+
+.slide-in {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 304px;
+    transition: 0.05s;
+}
+
+.floating-sidebar {
+    display: grid;
+    grid-template-columns: [switcher] 64px [sidebar] 240px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: -304px;
+    width: 304px;
+    transition: 0.05s;
+}
+
+.tr {
+    left: 0;
 }
 
 .collapse {
     position: fixed;
     top: 0;
     bottom: 0;
-    left: 294px;
+    left: 304px;
     right: 0;
     background-color: var(--mask);
 }
@@ -229,19 +258,6 @@ function collapse() {
     border-right: 1px solid var(--border-1);
 }
 
-.show {
-    display: block;
-}
-
-.mt {
-    grid-template-columns: [switcher] 54px [sidebar] 240px [content] 1fr;
-}
-
-@media screen and (max-width: 1280px) {
-    .container {
-        grid-template-columns: [switcher] 54px [sidebar] 240px [content] 1fr;
-    }
-}
 
 @media screen and (min-width: 768px) {
     .collapse {
@@ -253,25 +269,11 @@ function collapse() {
     .container {
         grid-template-columns: auto;
     }
-.mt {
-    grid-template-columns: [switcher] 54px [sidebar] 240px [content] 1fr;
-}
 
-    .switcher-container {
+    .inner-container {
         display: none;
     }
-    .sidebar-container {
-        display: none;
-    }
-    .post {
-        grid-template-columns: auto;
-    }
-    .ina {
-        display: none;
-    }
-    .show {
-        display: block;
-    }
+
 }
 
 </style>

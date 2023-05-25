@@ -1,6 +1,7 @@
 <script>
 import { store } from '../../store/store.js'
 import { goto } from '$app/navigation';
+import { page } from '$app/stores';
 
 export let space;
 
@@ -18,6 +19,8 @@ function goToSpace() {
 
 let hovered = false;
 
+$: active = $page.params?.space === space?.alias
+
 </script>
 
 <div class="i-c grd" 
@@ -29,7 +32,7 @@ let hovered = false;
             {initial}
         </div>
     </div>
-    <div class="tick" class:th={hovered}></div>
+    <div class="tick" class:th={hovered} class:ac={active}></div>
 </div>
 
 <style>
@@ -40,7 +43,7 @@ let hovered = false;
 }
 
 .item{
-    background-color: var(--black);
+    background-color: var(--switcher-item);
     border-radius: 50%;
     width: 42px;
     height: 42px;
@@ -60,21 +63,16 @@ let hovered = false;
     top: 13px;
     left: 0px;
     height: 15px;
-    width: 3px;
-    border-radius: 0 4px 4px 0;
+    width: 4px;
+    border-radius: 0 5px 5px 0;
     background-color: var(--white);
 }
 .th {
     opacity: 1;
 }
 
-@media screen and (max-width: 1280px) {
-    .item {
-        width: 38px;
-        height: 38px;
-    }
-    .tick {
-        top: 11px;
-    }
+.ac {
+    opacity: 1;
 }
+
 </style>

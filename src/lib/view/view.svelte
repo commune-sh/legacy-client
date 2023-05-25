@@ -215,9 +215,16 @@ onMount(() => {
     });
 })
 
+function toggleMenu() {
+    store.toggleMenu()
+}
 </script>
 
 
+{#if menuToggled}
+<div class="mask" on:click={toggleMenu}>
+</div>
+{/if}
 
 
 <section class="space-container"
@@ -280,6 +287,16 @@ onMount(() => {
 
 
 <style>
+
+.mask {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 304px;
+    height: 100%;
+    z-index: 10000;
+    width: 100vw;
+}
 
 .space-container {
     display: grid;

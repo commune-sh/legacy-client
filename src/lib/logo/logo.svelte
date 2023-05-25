@@ -73,22 +73,6 @@ export let loader = false;
     display: grid;
 }
 
-@media screen and (max-width: 1280px) {
-}
-
-@media screen and (max-width: 1280px) {
-    .l-c-i {
-        height: 28px;
-        width: 28px;
-    }
-    .lg {
-        height: 38px;
-        width: 38px;
-    }
-    .auth {
-        display: none;
-    }
-}
 
 @keyframes rainbow{
 		100%,0%{
