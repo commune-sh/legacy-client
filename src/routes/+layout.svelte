@@ -17,8 +17,15 @@ function viewReady() {
     ready = true;
 }
 
+let root;
+
 onMount(() => {
     checkHealth()
+    let width = window.innerWidth;
+    let isMobile = width < 768
+    if(isMobile) {
+        document.body.style.height = `${window.innerHeight}px`
+    }
 })
 
 function checkHealth() {
@@ -73,7 +80,7 @@ function collapse() {
 
 
 
-<div class="root">
+    <div class="root" bind:this={root}>
 
     <div class="container">
 
@@ -195,16 +202,8 @@ function collapse() {
 }
 
 
+
 @media screen and (max-width: 768px) {
-    .root {
-        position: fixed;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        height: 100vh;
-        width: 100vw;
-    }
     .container {
         grid-template-columns: auto;
     }

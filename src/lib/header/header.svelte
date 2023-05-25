@@ -126,7 +126,7 @@ function toggleMenu() {
 
 .container {
     display: grid;
-    grid-template-columns: 48px auto;
+    grid-template-columns: auto;
     grid-template-rows: auto;
 }
 
@@ -149,6 +149,9 @@ function toggleMenu() {
 }
 
 @media screen and (max-width: 768px) {
+    .container {
+        grid-template-columns: 48px auto;
+    }
     .menu {
         display: block;
     }
