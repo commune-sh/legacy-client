@@ -198,7 +198,7 @@ function collapse() {
     bottom: 0;
     right: 0;
     padding: 1rem;
-    z-index: 1000;
+    z-index: 10000;
 }
 
 

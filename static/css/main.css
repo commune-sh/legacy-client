@@ -80,21 +80,25 @@
     src: url('/fonts/TwemojiMozilla-colr.4d2d834.woff2');
 }
 
+html,
+body,
+body > root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 
 html {
     -webkit-font-smoothing: antialiased;
     -webkit-text-size-adjust: none;
     font-size: 16px;
-    height: 100%;
-    width: 100%;
 }
 
 body {
     font-family: 'Roboto', Arial, Helvetica, Verdana, sans-serif, Twemoji;
     font-weight: normal;
     line-height: 1;
-    margin: 0;
-    padding: 0;
     color: var(--text-1);
     background-color: var(--bg);
     overflow: hidden;
@@ -102,8 +106,6 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    height: 100%;
-    width: 100%;
 }
 
 a, a:link, a:visited, a:active {
@@ -370,6 +372,10 @@ textarea {
 
 .sm {
     font-size: small;
+}
+
+.md {
+    font-size: 14px;
 }
 
 .c-ico {

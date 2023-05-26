@@ -117,16 +117,19 @@ function pkey(e) {
 </script>
 
 
-<div class="b" >
-    <div class="co grd">
+<div class="container" >
+    <div class="inner grd">
         <div class="bi grd-c fl-co">
+            <div class="grd">
+                <div class="title grd-c">Log In</div>
+            </div>
                 {#if passwordWarning}
                     <div class="invalid">Password must be 8 characters long</div>
                 {:else if showInvalid}
                     <div class="invalid">Invalid Username or Password</div>
                 {/if}
-            <div class="mt3 pb2">
-                <span class="label">username or email</span><span class="req">*</span>
+            <div class="mt4 pb2" class:warn={usernameWarning || showInvalid}>
+                <span class="label">username or email</span>
                 {#if usernameWarning}
                     <span class="sm"> - <i>Username can't be empty</i></span>
                 {/if}
@@ -137,23 +140,24 @@ function pkey(e) {
                 on:keydown={rlw}
                 type="text" placeholder="" />
             </div>
-            <div class="mt2 pb2 label">
-                password<span class="req">*</span>
+            <div class="mt3 pb2 label">
+                password
             </div>
-            <div class="pb2">
+            <div class="">
                 <input bind:this={passwordInput}
                 on:keyup={pkey}
                 on:keydown={plw}
                 type="password" />
             </div>
-            <div class="">
+            <div class="mt3">
                 <span class="href sm" on:click={resetPass}>Forgot Password?</span>
             </div>
-            <div class="mt3">
+            <div class="mt4">
                 <button class="login" on:click={login} disabled={busy}>Login</button>
             </div>
-            <div class="mt2">
-                <span class="href sm" on:click={signup}>Sign up?</span>
+            <div class="mt3">
+                <span class="href sm" on:click={signup}>Need an account? Sign
+                    up!</span>
             </div>
         </div>
 
@@ -161,7 +165,7 @@ function pkey(e) {
 </div>
 
 <style>
-.b {
+.container {
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: auto;
@@ -169,7 +173,7 @@ function pkey(e) {
     height: 100%;
 }
 
-.co {
+.inner {
     margin-right: 2rem;
     margin-left: 2rem;
     margin-bottom: 2rem;
@@ -180,12 +184,22 @@ function pkey(e) {
     height: 40px;
 }
 
+.title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--text-1);
+}
+
 .bi {
     width: 450px;
 }
 
 .ts {
     height: 60px;
+}
+
+.warn {
+    color: var(--primary);
 }
 
 input {
