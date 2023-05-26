@@ -149,7 +149,7 @@ function collapse() {
 }
 
 .root {
-    height: 100vh;
+    height: 100%;
     display: grid;
     grid-template-columns: 100%;
     grid-template-rows: 100%;
