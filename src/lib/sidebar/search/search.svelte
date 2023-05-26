@@ -1,5 +1,5 @@
 <script>
-    import { search } from '../../../assets/icons.js'
+import { search } from '$lib/assets/icons.js'
 let searchInput;
 
 function focus() {

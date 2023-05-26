@@ -1,10 +1,10 @@
 <script>
 import { createEventDispatcher } from 'svelte'
-import {menu} from '../../assets/icons.js'
-import { close, arrowLeftSmall } from '../../assets/icons.js'
+import {menu} from '$lib/assets/icons.js'
+import { close, arrowLeftSmall } from '$lib/assets/icons.js'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
-import { store } from '../../store/store.js'
+import { store } from '$lib/store/store.js'
 
 const dispatch = createEventDispatcher()
 

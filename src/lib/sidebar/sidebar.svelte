@@ -3,11 +3,7 @@ import Header from './header/header.svelte'
 import Auth from '../auth/auth.svelte'
 import { page } from '$app/stores';
 import RoomList from './room-list/room-list.svelte'
-import { store } from '../../store/store.js'
-import { onMount } from 'svelte'
-import { goto } from '$app/navigation';
-import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
-import { APIRequest } from '../../utils/request.js'
+import { store } from '$lib/store/store.js'
 
 $: state = $store?.states[$page?.params?.space]
 

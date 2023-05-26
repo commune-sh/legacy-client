@@ -1,8 +1,8 @@
 <script>
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
-import { hash, board } from '../../../assets/icons.js'
-import { store } from '../../../store/store.js'
+import { hash, board } from '$lib/assets/icons.js'
+import { store } from '$lib/store/store.js'
 
 export let item;
 

@@ -1,10 +1,9 @@
 <script>
-import { logo }  from '../../assets/logo.js'
 import { onMount, createEventDispatcher } from 'svelte'
 import { PUBLIC_BASE_URL } from '$env/static/public';
-import { store } from '../../store/store.js'
+import { store } from '$lib/store/store.js'
 
-import { APIRequest } from '../../utils/request.js'
+import { APIRequest } from '$lib/utils/request.js'
 
 const dispatch = createEventDispatcher()
 
@@ -119,56 +118,45 @@ function pkey(e) {
 
 
 <div class="b" >
-    <div class="">
-    </div>
-    <div class="grd">
+    <div class="co grd">
         <div class="bi grd-c fl-co">
-            <div class="ts grd">
-                <div class="l-c grd grd-c">
-                    <div class="l-c-i grd-c">
-                        {@html logo}
-                    </div>
-                </div>
-            </div>
-            <div class="ts">
-                {#if usernameWarning}
-                    <div class="invalid">Username can't be empty</div>
-                {:else if passwordWarning}
+                {#if passwordWarning}
                     <div class="invalid">Password must be 8 characters long</div>
                 {:else if showInvalid}
                     <div class="invalid">Invalid Username or Password</div>
                 {/if}
-            </div>
             <div class="mt3 pb2">
+                <span class="label">username or email</span><span class="req">*</span>
+                {#if usernameWarning}
+                    <span class="sm"> - <i>Username can't be empty</i></span>
+                {/if}
+            </div>
+            <div class="mt1 pb2">
                 <input bind:this={usernameInput}
                 on:keyup={ukey}
                 on:keydown={rlw}
-                type="text" placeholder="Username or Email" />
+                type="text" placeholder="" />
             </div>
-            <div class="pb3">
+            <div class="mt2 pb2 label">
+                password<span class="req">*</span>
+            </div>
+            <div class="pb2">
                 <input bind:this={passwordInput}
                 on:keyup={pkey}
                 on:keydown={plw}
-                type="password" placeholder="Password" />
+                type="password" />
             </div>
-            <div class="pb4 fl">
-                <div class="">
-                    <button on:click={login} disabled={busy}>Login</button>
-                </div>
-                <div class="fl-o">
-                </div>
-                <div class="sm grd">
-                    <a class="grd-c" href="" on:click={resetPass}>Forgot Password?</a>
-                </div>
+            <div class="">
+                <span class="href sm" on:click={resetPass}>Forgot Password?</span>
             </div>
-            <div class="ts">
+            <div class="mt3">
+                <button class="login" on:click={login} disabled={busy}>Login</button>
+            </div>
+            <div class="mt2">
+                <span class="href sm" on:click={signup}>Sign up?</span>
             </div>
         </div>
-    </div>
-    <div class="grd">
-        <div class="grd-c">
-            <button on:click={signup}>Sign Up</button>
-        </div>
+
     </div>
 </div>
 
@@ -176,14 +164,24 @@ function pkey(e) {
 .b {
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: [header] 40px [content] 1fr [footer] 40px;
+    grid-template-rows: auto;
     place-self: stretch;
     height: 100%;
 }
 
+.co {
+    margin-right: 2rem;
+    margin-left: 2rem;
+    margin-bottom: 2rem;
+}
+
+.login {
+    width: 100%;
+    height: 40px;
+}
+
 .bi {
-    width: 400px;
-        padding: 2rem;
+    width: 450px;
 }
 
 .ts {
@@ -196,45 +194,36 @@ input {
     font-size: 17px;
 }
 
-input:focus {
-        outline: 1px solid var(--primary);
+
+.req {
+    color: red;
+    vertical-align: super;
+    font-size: 0.7rem;
+    margin-left: 0.25rem;
 }
 
+.ln {
+    font-size: small;
+}
 
 .invalid {
     padding: 1rem;
-    background-color: var(--primary);;
     outline: 1px solid var(--primary);
     border-radius: 3px;
     text-align: center;
 }
 
-@media screen and (max-width: 600px) {
+.label {
+    font-size: small;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: var(--text-2);
+}
+
+@media screen and (max-width: 550px) {
     .bi {
         width: 100%;
     }
-}
-.l-c {
-    height: 38px;
-    width: 38px;
-    background-color: var(--logo-bg);
-    border-radius: 6px;
-    transition: 0.1s;
-}
-
-.l-c-a {
-    background-color: var(--primary);
-}
-
-
-.l-c-i {
-    height: 20px;
-    width: 20px;
-    fill: var(--logo-shade-1);
-}
-
-.l-c-t {
-    fill: var(--logo-shade-2);
 }
 
 </style>

@@ -1,13 +1,13 @@
 <script>
 import { onMount, onDestroy } from 'svelte'
-import { APIRequest } from '../../utils/request.js'
+import { APIRequest } from '$lib/utils/request.js'
 import { PUBLIC_BASE_URL } from '$env/static/public';
 import Login from './login.svelte'
-import { close } from '../../assets/icons.js'
+import { close } from '$lib/assets/icons.js'
 import { page } from '$app/stores';
 import Signup from './signup.svelte'
 import Password from './password.svelte'
-import { store } from '../../store/store.js'
+import { store } from '$lib/store/store.js'
 
 let active = false;
 
@@ -121,9 +121,7 @@ function loggedin() {
 
         <div class="hed fl">
             <div class="c-ico grd-c pa2" on:click={kill}>
-                    {@html close}
-            </div>
-            <div class="fl-o">
+                {@html close}
             </div>
         </div>
 
@@ -161,12 +159,23 @@ function loggedin() {
     z-index: 11000;
     background-color: var(--modal);
     border-radius: 9px;
-    width: 550px;
-    height: 650px;
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: [header] auto [content] 1fr;
 }
 
+@media screen and (max-width: 550px) {
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+
+    }
+}
 
 </style>

@@ -3,10 +3,10 @@ import Authentication from '$lib/auth/authentication.svelte'
 import Switcher from '$lib/switcher/switcher.svelte'
 import Sidebar from '$lib/sidebar/sidebar.svelte'
 import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
-import { APIRequest } from '../utils/request.js'
+import { APIRequest } from '$lib/utils/request.js'
 import { onMount, tick } from 'svelte'
 import { page } from '$app/stores';
-import { store } from '../store/store.js'
+import { store } from '$lib/store/store.js'
 import View from '$lib/view/view.svelte'
 import Sync from '$lib/sync/sync.svelte'
 
@@ -18,9 +18,16 @@ function viewReady() {
 }
 
 let root;
+let dh;
 
 onMount(() => {
     checkHealth()
+    let width = window.innerWidth;
+    let isMobile = width < 768
+    if(isMobile) {
+        document.body.style.height = `${window.innerHeight}px`
+        root.style.height = `${window.innerHeight}px`
+    }
 })
 
 function checkHealth() {
@@ -142,8 +149,7 @@ function collapse() {
 }
 
 .root {
-    height: 100%;
-    width: 100%;
+    height: 100vh;
     display: grid;
     grid-template-columns: 100%;
     grid-template-rows: 100%;
@@ -175,7 +181,6 @@ function collapse() {
     grid-template-columns: auto;
     overflow: hidden;
     left: 0;
-    transition: 0.08s;
     background-color: var(--bg);
 }
 
@@ -184,7 +189,6 @@ function collapse() {
     top: 0;
     bottom: 0;
     left: 304px;
-    transition: 0.08s;
 }
 
 

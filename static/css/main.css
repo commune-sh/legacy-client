@@ -1,6 +1,7 @@
 :root {
     --bg: #1a1a1a;
     --text-1: #e1e1e1;
+    --text-2: #9e9e9e;
     --text-light: #dadada;
     --link: #a53131;
     --border-color: #191919;
@@ -27,7 +28,7 @@
     --svg-fill-1: #e1e1e1;
     --action-icon: #fff;
 
-    --text-input: #fff;
+    --input-border: #000;
 
     --switcher-item: #000000;
 }
@@ -35,6 +36,7 @@
 :root.light {
     --bg: white;
     --text-1: black;
+    --text-2: #686868;
     --text-light: #4f4e4e;
     --link: #a53131;
     --border-color: #eaeaea;
@@ -60,7 +62,7 @@
     --svg-fill-1: #e1e1e1;
     --action-icon: #000;
 
-    --text-input: #fff;
+    --input-border: #aeaeae;
 
     --switcher-item: #e9ecef;
 }
@@ -82,7 +84,7 @@
 html {
     -webkit-font-smoothing: antialiased;
     -webkit-text-size-adjust: none;
-    font-size: 15px;
+    font-size: 16px;
     height: 100%;
     width: 100%;
 }
@@ -111,6 +113,15 @@ a, a:link, a:visited, a:active {
 }
 
 a:hover {
+    text-decoration: underline;
+}
+
+.href {
+    color: var(--link);
+    cursor: pointer;
+}
+
+.href:hover {
     text-decoration: underline;
 }
 
@@ -189,16 +200,17 @@ a:hover {
 
 button {
     cursor: pointer;
-    border-radius: 500px;
+    border-radius: 3px;
     border: 0px;
     padding: 6px 12px;
     background-color: var(--primary);
     font-weight: bold;
     color: white;
+    transition: 0.1s;
 }
 
 button:hover {
-    opacity: 0.8;
+    opacity: 0.9;
 }
 
 .btn-1 {
@@ -229,14 +241,13 @@ input, textarea {
     padding: 0.25rem;
     border-radius: 5px;
     background: var(--black);
-    border: 1px solid var(--text-input);
+    border: 1px solid var(--input-border);
     color: var(--text);
     font-size: 16px;
     box-sizing: border-box;
 }
 
 input:focus, textarea:focus {
-    border: 1px solid var(--primary-dark);
 }
 
 textarea {

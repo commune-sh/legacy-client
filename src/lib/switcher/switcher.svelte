@@ -1,6 +1,6 @@
 <script>
 import SpaceItems from '$lib/switcher/space-items.svelte'
-import { store } from '../../store/store.js'
+import { store } from '$lib/store/store.js'
 import Logo from '$lib/logo/logo.svelte'
 import { page } from '$app/stores';
 
@@ -40,6 +40,11 @@ $: spaces = $store?.spaces
 
         <Logo large={true} />
 
+        <div class="sepc grd">
+            <div class="sep grd-c">
+            </div>
+        </div>
+
         <div class="content">
             <SpaceItems spaces={spaces}/>
         </div>
@@ -75,4 +80,13 @@ $: spaces = $store?.spaces
 .content {
 }
 
+.sepc {
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+.sep {
+    width: 24px;
+    height: 3px;
+    background-color: var(--border-1);
+}
 </style>

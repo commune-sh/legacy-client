@@ -1,9 +1,9 @@
 <script>
 import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
-import { APIRequest } from '../../utils/request.js'
+import { APIRequest } from '$lib/utils/request.js'
 import { onMount, tick, createEventDispatcher } from 'svelte'
 import { page } from '$app/stores';
-import { store } from '../../store/store.js'
+import { store } from '$lib/store/store.js'
 import Event from '$lib/event/event.svelte'
 import Header from '$lib/header/header.svelte'
 import Replies from '$lib/replies/replies.svelte'

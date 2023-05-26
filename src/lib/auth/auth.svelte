@@ -1,9 +1,7 @@
 <script>
 import { PUBLIC_BASE_URL } from '$env/static/public';
-import { APIRequest } from '../../utils/request.js'
-import { onMount } from 'svelte'
 import { page } from '$app/stores';
-import { store } from '../../store/store.js'
+import { store } from '$lib/store/store.js'
 
 let authenticated = false
 

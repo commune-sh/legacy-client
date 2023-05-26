@@ -72,13 +72,21 @@ function passMode() {
 }
 
 .modal {
-    z-index: 11000;
-    background-color: var(--modal);
-    min-width: 450px;
-    min-height: 650px;
-    display: grid;
-    grid-template-columns: auto;
-    grid-template-rows: [header] 40px [content] 1fr;
+}
+
+
+@media screen and (max-width: 768px) {
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+
+    }
 }
 
 

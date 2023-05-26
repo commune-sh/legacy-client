@@ -1,5 +1,5 @@
 <script>
-import { logo } from '../../assets/logo.js'
+import { logo } from '$lib/assets/logo.js'
 export let large = false;
 export let loader = false;
 </script>

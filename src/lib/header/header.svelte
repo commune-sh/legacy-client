@@ -2,8 +2,8 @@
 import { onMount, createEventDispatcher } from 'svelte'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
-import { store } from '../../store/store.js'
-import {menu} from '../../assets/icons.js'
+import { store } from '$lib/store/store.js'
+import {menu} from '$lib/assets/icons.js'
 
 $: authenticated = $store?.authenticated && 
     $store?.credentials != null

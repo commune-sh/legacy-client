@@ -1,5 +1,5 @@
 <script>
-import {menu} from '../../assets/icons.js'
+import {menu} from '$lib/assets/icons.js'
 import { page } from '$app/stores';
 
 </script>

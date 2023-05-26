@@ -1,5 +1,5 @@
 <script>
-import { store } from '../../store/store.js'
+import { store } from '$lib/store/store.js'
 import { goto } from '$app/navigation';
 import { page } from '$app/stores';
 

@@ -1,5 +1,5 @@
 <script>
-import { replies } from '../../../assets/icons.js'
+import { replies } from '$lib/assets/icons.js'
 export let count;
 </script>
 

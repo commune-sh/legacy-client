@@ -1,6 +1,6 @@
 <script>
 import { onMount, createEventDispatcher } from 'svelte'
-import { more } from '../../../assets/icons.js'
+import { more } from '$lib/assets/icons.js'
 import tippy from 'tippy.js';
 
 const dispatch = createEventDispatcher();
