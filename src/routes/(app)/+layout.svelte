@@ -18,15 +18,20 @@ function viewReady() {
 }
 
 let root;
-let dh;
+
+let isMobile = false;
 
 onMount(() => {
     checkHealth()
     let width = window.innerWidth;
-    let isMobile = width < 768
-    if(isMobile) {
+    let sm = width < 768
+    console.log(sm)
+    if(sm) {
+        /*
         document.body.style.height = `${window.innerHeight}px`
         root.style.height = `${window.innerHeight}px`
+        */
+        isMobile = true
     }
 })
 
@@ -82,7 +87,7 @@ function collapse() {
 
 
 
-    <div class="root" bind:this={root}>
+    <div class="root" class:fixed={isMobile} bind:this={root}>
 
     <div class="container">
 
@@ -153,6 +158,14 @@ function collapse() {
     display: grid;
     grid-template-columns: 100%;
     grid-template-rows: 100%;
+}
+
+.fixed {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 .container {
