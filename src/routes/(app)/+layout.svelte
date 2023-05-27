@@ -141,8 +141,8 @@ function collapse() {
     right: 0;
     left: 0;
     position: fixed;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     background-color: var(--bg);
     display: grid;
     grid-template-columns: 100%;
