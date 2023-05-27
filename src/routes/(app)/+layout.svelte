@@ -27,10 +27,8 @@ onMount(() => {
     let sm = width < 768
     console.log(sm)
     if(sm) {
-        /*
         document.body.style.height = `${window.innerHeight}px`
         root.style.height = `${window.innerHeight}px`
-        */
         isMobile = true
     }
 })

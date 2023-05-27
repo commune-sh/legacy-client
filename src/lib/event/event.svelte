@@ -96,7 +96,7 @@ function killMenu() {
 <div class="event" 
     class:h={!isReply && !isPost}
     class:ma={menuActive}
-    on:click={goToEvent} 
+    on:mousedown={goToEvent} 
     class:highlight={highlight}>
     <div class="fl-co">
         <div class="body">
