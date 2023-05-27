@@ -85,8 +85,7 @@ html {
     -webkit-font-smoothing: antialiased;
     -webkit-text-size-adjust: none;
     font-size: 16px;
-    height: 100%;
-    height: -webkit-fill-available;
+    height: 100svh;
     width: 100%;
     overflow: hidden;
 }
@@ -104,8 +103,7 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    height: 100%;
-    height: -webkit-fill-available;
+    height: 100svh;
     width: 100%;
     overscroll-behavior: none;
 }

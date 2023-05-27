@@ -154,7 +154,7 @@ function collapse() {
 
 .root {
     position: absolute;
-    height: 100%;
+    height: 100svh;
     width: 100%;
     display: grid;
     grid-template-columns: 100%;
