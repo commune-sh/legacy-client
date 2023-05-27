@@ -193,7 +193,7 @@ function collapse() {
 .content {
     place-self: stretch;
     width: 100%;
-    height: 100vh;
+    height: 100%;
     display: grid;
     grid-template-rows: auto;
     grid-template-columns: auto;
