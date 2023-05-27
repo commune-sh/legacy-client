@@ -21,20 +21,14 @@ $: isRoom = $page.params.room !== undefined && $page.params.room !== null &&
     $page.params.room !== ''
 
 
-function goToEvent() {
-
-
-    if(isPost || isReply || menuActive) {
-        return
-    }
-
-    let url = `/post/${event?.slug}`
+function buildLink(e) {
+    let url = `/post/${e?.slug}`
     if(isSpace) {
-        url = `/${event?.room_alias}/post/${event?.slug}`
+        url = `/${e?.room_alias}/post/${e?.slug}`
     }
 
     if(isSpace && isRoom)  {
-        url = `/${event?.room_alias}/${$page.params.room}/post/${event?.slug}`
+        url = `/${e?.room_alias}/${$page.params.room}/post/${e?.slug}`
     }
 
     const pathname = $page.url.pathname
@@ -49,14 +43,19 @@ function goToEvent() {
             url = `/${$page.params.space}/${$page.params.room}`
         }
 
-        goto(url, {
-            noscroll: true,
-        })
+    }
 
+    return url
+}
+
+$: link = buildLink(event)
+
+function goToEvent() {
+    if(isPost || isReply || menuActive) {
         return
     }
 
-    goto(url, {
+    goto(link, {
         noscroll: true,
     })
 }
@@ -96,7 +95,7 @@ function killMenu() {
 <div class="event" 
     class:h={!isReply && !isPost}
     class:ma={menuActive}
-    on:mousedown={goToEvent} 
+    on:click={goToEvent} 
     class:highlight={highlight}>
     <div class="fl-co">
         <div class="body">
