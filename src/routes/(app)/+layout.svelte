@@ -154,9 +154,11 @@ function collapse() {
 }
 
 .root {
-    position: absolute;
-    height: 100%;
-    width: 100%;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
     display: grid;
     grid-template-columns: 100%;
     grid-template-rows: 100%;
