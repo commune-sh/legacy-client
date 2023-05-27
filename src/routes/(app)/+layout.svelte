@@ -22,6 +22,8 @@ let root;
 let isMobile = false;
 
 onMount(() => {
+    const doc = document.documentElement
+    doc.style.setProperty('--doc-height', `${window.innerHeight}px`)
     checkHealth()
     let width = window.innerWidth;
     let sm = width < 768
@@ -154,7 +156,7 @@ function collapse() {
 
 .root {
     position: absolute;
-    height: 100svh;
+    height: 100%;
     width: 100%;
     display: grid;
     grid-template-columns: 100%;
