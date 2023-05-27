@@ -11,7 +11,7 @@ import View from '$lib/view/view.svelte'
 import Sync from '$lib/sync/sync.svelte'
 
 
-let ready = false;
+let ready = true;
 
 function viewReady() {
     ready = true;
@@ -22,8 +22,6 @@ let root;
 let isMobile = false;
 
 onMount(() => {
-    const doc = document.documentElement
-    doc.style.setProperty('--doc-height', `${window.innerHeight}px`)
     checkHealth()
     let width = window.innerWidth;
     let sm = width < 768
@@ -33,6 +31,8 @@ onMount(() => {
         root.style.height = `${window.innerHeight}px`
         isMobile = true
         */
+    const doc = document.documentElement
+    doc.style.setProperty('--doc-height', `${window.innerHeight}px`)
     }
 })
 
@@ -98,7 +98,6 @@ function collapse() {
         </div>
 
         <div class="content" class:slide-in={menuToggled}>
-            <View on:ready={viewReady} />
         </div>
 
     </div>
@@ -224,11 +223,9 @@ function collapse() {
 
 @media screen and (max-width: 768px) {
     .container {
-        grid-template-columns: auto;
     }
 
     .inner-container {
-        display: none;
     }
     .show {
         display: grid;
