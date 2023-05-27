@@ -103,7 +103,7 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    height: 100vh;
+    height: 100%;
     height: -webkit-fill-available;
     width: 100%;
     overscroll-behavior: none;

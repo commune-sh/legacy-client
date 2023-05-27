@@ -13,7 +13,6 @@ import { page } from '$app/stores';
 
 <style>
 .menu {
-    height: 100vh;
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: [logo] 40px [content] auto;

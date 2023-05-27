@@ -324,7 +324,6 @@ function toggleMenu() {
 .events {
     place-self: stretch;
     width: 100%;
-    height: 100%;
     justify-self: center;
     align-self: start;
 }

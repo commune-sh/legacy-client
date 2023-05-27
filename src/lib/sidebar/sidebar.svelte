@@ -63,7 +63,6 @@ $: items = buildItems(state)
 
 <style>
 .sidebar {
-    height: 100%;
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: [search] 48px [content] auto [auth] 64px;

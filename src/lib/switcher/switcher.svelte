@@ -53,7 +53,6 @@ $: spaces = $store?.spaces
 
 <style>
 .switcher {
-    height: 100vh;
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: auto;
