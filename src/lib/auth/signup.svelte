@@ -179,15 +179,6 @@ function pkey(e) {
     width: 450px;
 }
 
-.title {
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: var(--text-1);
-}
-.ts {
-    height: 60px;
-}
-
 .warn {
     color: var(--primary);
 }

@@ -2,6 +2,7 @@
     --bg: #1a1a1a;
     --text-1: #e1e1e1;
     --text-2: #9e9e9e;
+    --text-2: #bababa;
     --text-light: #dadada;
     --link: #a53131;
     --border-color: #191919;
@@ -31,11 +32,16 @@
     --input-border: #000;
 
     --switcher-item: #000000;
+
+    --context-menu-bg: black;
+    --context-menu-border: black;
+    --context-menu-text: #e1e1e1;
 }
 
 :root.light {
     --bg: white;
     --text-1: black;
+    --text-2: #686868;
     --text-2: #686868;
     --text-light: #4f4e4e;
     --link: #a53131;
@@ -65,6 +71,10 @@
     --input-border: #aeaeae;
 
     --switcher-item: #e9ecef;
+
+    --context-menu-bg: white;
+    --context-menu-border: #a2a2a2;
+    --context-menu-text: black;
 }
 
 
@@ -214,6 +224,12 @@ button {
 
 button:hover {
     opacity: 0.9;
+}
+
+button:disabled,
+button[disabled]{
+    background-color: #622c2c;
+    cursor: not-allowed;
 }
 
 .btn-1 {
@@ -422,6 +438,7 @@ textarea {
     -webkit-animation: anim 0.7s infinite linear;
     animation: anim 0.7s infinite linear;
 }
+
 @-webkit-keyframes anim {
   0% {
     -webkit-transform: rotate(0deg);
@@ -443,6 +460,25 @@ textarea {
   }
 }
 
+.sloader,
+.sloader:after {
+    border-radius: 50%;
+    height: 16px;
+    width: 16px;
+}
+.sloader {
+    position: relative;
+    text-indent: -9999em;
+    border-top: 2px solid var(--bg);
+    border-right: 2px solid var(--bg);
+    border-bottom: 2px solid var(--bg);
+    border-left: 2px solid transparent;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-animation: anim 0.7s infinite linear;
+    animation: anim 0.7s infinite linear;
+}
 
 .tippy-box[data-animation="fade"][data-state="hidden"] {
     opacity: 0;
@@ -453,11 +489,10 @@ textarea {
 
 .tippy-box {
     position: relative;
-    background-color: #333;
-    color: #fff;
+    background-color: var(--context-menu-bg);
+    border: 1px solid var(--context-menu-border);
+    color: var(--context-menu-text);
     border-radius: 4px;
-    font-size: 14px;
-    line-height: 1.4;
     white-space: normal;
     outline: 0;
     transition-property: transform, visibility, opacity;
@@ -519,4 +554,11 @@ textarea {
     padding: 0;
     z-index: 1;
 }
+
+.title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--text-1);
+}
+
 

@@ -86,6 +86,7 @@ $: spaces = $store?.spaces
 .sep {
     width: 24px;
     height: 3px;
+    border-radius: 2px;
     background-color: var(--border-1);
 }
 </style>

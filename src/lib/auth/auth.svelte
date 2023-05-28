@@ -3,8 +3,6 @@ import { PUBLIC_BASE_URL } from '$env/static/public';
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
 
-let authenticated = false
-
 $: authenticated = $store?.authenticated && 
     $store?.credentials != null
     $store?.credentials?.access_token?.length > 0

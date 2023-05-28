@@ -21,26 +21,26 @@ $: isRoom = $page.params.room !== undefined && $page.params.room !== null &&
     $page.params.room !== ''
 
 
-function buildLink(e) {
+function buildLink(e, page) {
     let url = `/post/${e?.slug}`
     if(isSpace) {
         url = `/${e?.room_alias}/post/${e?.slug}`
     }
 
     if(isSpace && isRoom)  {
-        url = `/${e?.room_alias}/${$page.params.room}/post/${e?.slug}`
+        url = `/${e?.room_alias}/${page.params.room}/post/${e?.slug}`
     }
 
-    const pathname = $page.url.pathname
+    const pathname = page.url.pathname
     if(url == pathname) {
         url = '/'
 
         if(isSpace) {
-            url = `/${$page.params.space}`
+            url = `/${page.params.space}`
         }
 
         if(isSpace && isRoom)  {
-            url = `/${$page.params.space}/${$page.params.room}`
+            url = `/${page.params.space}/${page.params.room}`
         }
 
     }
@@ -48,9 +48,11 @@ function buildLink(e) {
     return url
 }
 
-$: link = buildLink(event)
+$: link = buildLink(event, $page)
 
 function goToEvent() {
+
+
     if(isPost || isReply || menuActive) {
         return
     }

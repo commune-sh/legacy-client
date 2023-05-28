@@ -2,7 +2,7 @@
 import { onMount, createEventDispatcher } from 'svelte'
 import { PUBLIC_BASE_URL } from '$env/static/public';
 import { store } from '$lib/store/store.js'
-
+import { eye, eyeoff } from '$lib/assets/icons.js'
 import { APIRequest } from '$lib/utils/request.js'
 
 const dispatch = createEventDispatcher()
@@ -35,7 +35,6 @@ let passwordWarning = false;
 let showInvalid = false;
 
 function login() {
-
     if(usernameInput.value.length < 1){
         usernameWarning = true
         usernameInput.focus()
@@ -114,6 +113,18 @@ function pkey(e) {
 
 }
 
+let showPass = false
+
+function togglePass() {
+    showPass = !showPass
+    if(showPass) {
+        passwordInput.type = 'text'
+    } else {
+        passwordInput.type = 'password'
+    }
+    passwordInput.focus()
+}
+
 </script>
 
 
@@ -123,15 +134,16 @@ function pkey(e) {
             <div class="grd">
                 <div class="title grd-c">Log In</div>
             </div>
-                {#if passwordWarning}
-                    <div class="invalid">Password must be 8 characters long</div>
-                {:else if showInvalid}
-                    <div class="invalid">Invalid Username or Password</div>
-                {/if}
             <div class="mt4 pb2" class:warn={usernameWarning || showInvalid}>
                 <span class="label">username or email</span>
                 {#if usernameWarning}
-                    <span class="sm"> - <i>Username can't be empty</i></span>
+                    <span class="sm ml2">Username can't be empty</span>
+                {/if}
+                {#if showInvalid}
+                    <span class="sm ml2">Invalid Username or Password</span>
+                {/if}
+                {#if passwordWarning}
+                    <span class="sm ml2">Password must be 8 characters long</span>
                 {/if}
             </div>
             <div class="mt1 pb2">
@@ -143,17 +155,33 @@ function pkey(e) {
             <div class="mt3 pb2 label">
                 password
             </div>
-            <div class="">
+            <div class="passc">
                 <input bind:this={passwordInput}
                 on:keyup={pkey}
                 on:keydown={plw}
                 type="password" />
+                <div class="showpass ico" 
+                    class:col={showPass}
+                    on:click={togglePass}>
+                    {#if showPass}
+                        {@html eye}
+                    {:else}
+                        {@html eyeoff}
+                    {/if}
+                </div>
             </div>
             <div class="mt3">
                 <span class="href sm" on:click={resetPass}>Forgot Password?</span>
             </div>
-            <div class="mt4">
-                <button class="login" on:click={login} disabled={busy}>Login</button>
+            <div class="loginc mt4">
+                <button class="login" on:click={login} disabled={busy}>
+                    {busy ? 'Logging in...' : 'Log In'}
+                </button>
+                {#if busy}
+                    <div class="spinner">
+                        <div class="sloader"></div>
+                    </div>
+                {/if}
             </div>
             <div class="mt3">
                 <span class="href sm" on:click={signup}>Need an account? Sign
@@ -184,12 +212,6 @@ function pkey(e) {
     height: 40px;
 }
 
-.title {
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: var(--text-1);
-}
-
 .bi {
     width: 450px;
 }
@@ -199,7 +221,7 @@ function pkey(e) {
 }
 
 .warn {
-    color: var(--primary);
+    color: red;
 }
 
 input {
@@ -208,6 +230,22 @@ input {
     font-size: 17px;
 }
 
+.passc {
+    position: relative;
+}
+
+.showpass {
+    position: absolute;
+    right: 10px;
+    top: 12px;
+    cursor: pointer;
+    height: 22px;
+    width: 22px;
+    fill: var(--text-2);
+}
+.col {
+    fill: var(--primary);
+}
 
 .req {
     color: red;
@@ -232,6 +270,16 @@ input {
     font-weight: bold;
     text-transform: uppercase;
     color: var(--text-2);
+}
+
+.loginc {
+    position: relative;
+}
+
+.spinner {
+    position: absolute;
+    top: 9px;
+    right: 9px;
 }
 
 @media screen and (max-width: 550px) {

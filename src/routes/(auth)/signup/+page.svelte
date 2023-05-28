@@ -10,7 +10,9 @@ function login() {
 </script>
 
 <section class="signup">
-    <Signup on:login={login}/>
+    <div class="container grd-c">
+        <Signup on:login={login}/>
+    </div>
 </section>
 
 <style>
@@ -18,5 +20,15 @@ function login() {
     width: 100%;
     height: 100%;
     display: grid;
+}
+.container {
+    background-color: var(--bg);
+    padding-top: 2rem;
+    border-radius: 9px;
+}
+@media screen and (max-width: 768px) {
+    .container {
+        width: 100%;
+    }
 }
 </style>

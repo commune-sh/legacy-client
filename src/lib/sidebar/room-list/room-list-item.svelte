@@ -63,11 +63,17 @@ function goToRoom() {
 
 $: isBoard = item?.type === 'board'
 
+function logItem(e) {
+    e.preventDefault()
+    console.log(item)
+}
+
 </script>
 
 <div class="item" 
     draggable="true"
     on:click={goToRoom}
+    on:contextmenu={logItem}
     class:active={active}>
 
     <div class="ico grd-c"
