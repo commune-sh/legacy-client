@@ -1,9 +1,12 @@
 <script>
 import { onMount, createEventDispatcher } from 'svelte'
-import { PUBLIC_BASE_URL } from '$env/static/public';
+import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { store } from '$lib/store/store.js'
 import { eye, eyeoff } from '$lib/assets/icons.js'
 import { APIRequest } from '$lib/utils/request.js'
+import Health from '$lib/sync/health.svelte'
+
+$: down = $store.down
 
 const dispatch = createEventDispatcher()
 
@@ -68,6 +71,8 @@ function login() {
             const cookieValue = `${encodeURIComponent(resp.access_token)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
             document.cookie = `token=${cookieValue}`;
             store.saveCredentials(resp.credentials)
+            store.saveRooms(resp.rooms)
+            store.saveSpaces(resp.spaces)
             store.isAuthenticated()
             dispatch('authenticated', true)
         }
@@ -127,6 +132,16 @@ function togglePass() {
 
 </script>
 
+<Health />
+
+{#if down}
+<section class="down">
+        <div class="grd-c">
+    {PUBLIC_APP_NAME} is down right now. You will not be able to log in.
+        Try again later.
+        </div>
+</section>
+{/if}
 
 <div class="container" >
     <div class="inner grd">
@@ -148,6 +163,7 @@ function togglePass() {
             </div>
             <div class="mt1 pb2">
                 <input bind:this={usernameInput}
+                disabled={down}
                 on:keyup={ukey}
                 on:keydown={rlw}
                 type="text" placeholder="" />
@@ -157,6 +173,7 @@ function togglePass() {
             </div>
             <div class="passc">
                 <input bind:this={passwordInput}
+                disabled={down}
                 on:keyup={pkey}
                 on:keydown={plw}
                 type="password" />
@@ -174,7 +191,7 @@ function togglePass() {
                 <span class="href sm" on:click={resetPass}>Forgot Password?</span>
             </div>
             <div class="loginc mt4">
-                <button class="login" on:click={login} disabled={busy}>
+                <button class="login" on:click={login} disabled={busy || down}>
                     {busy ? 'Logging in...' : 'Log In'}
                 </button>
                 {#if busy}
@@ -265,12 +282,6 @@ input {
     text-align: center;
 }
 
-.label {
-    font-size: small;
-    font-weight: bold;
-    text-transform: uppercase;
-    color: var(--text-2);
-}
 
 .loginc {
     position: relative;

@@ -1,8 +1,11 @@
+import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
+import { APIRequest } from '$lib/utils/request.js'
 import { writable } from 'svelte/store';
 
 function createApp() {
 
   let app = {
+    down: false,
     active: false,
     ready: false,
     authenticated: false,
@@ -19,6 +22,13 @@ function createApp() {
     menuToggled: false,
   }
 
+
+  let setDownState = (v) => {
+    update(p => {
+      p.down = v
+      return p
+    })
+  }
 
 
   let saveCredentials = (creds) => {
@@ -161,6 +171,7 @@ function createApp() {
     subscribe,
     writable,
     set,
+    setDownState,
     saveCredentials,
     removeCredentials,
     saveRooms,

@@ -28,6 +28,7 @@
 		"@tiptap/pm": "^2.0.3",
 		"@tiptap/starter-kit": "^2.0.3",
 		"dayjs": "^1.11.7",
-		"tippy.js": "^6.3.7"
+		"tippy.js": "^6.3.7",
+		"validator": "^13.9.0"
 	}
 }

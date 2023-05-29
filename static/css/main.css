@@ -36,6 +36,8 @@
     --context-menu-bg: black;
     --context-menu-border: black;
     --context-menu-text: #e1e1e1;
+
+    --warning: #9a1818;
 }
 
 :root.light {
@@ -75,6 +77,8 @@
     --context-menu-bg: white;
     --context-menu-border: #a2a2a2;
     --context-menu-text: black;
+
+    --warning: #9a1818;
 }
 
 
@@ -267,6 +271,11 @@ input, textarea {
 }
 
 input:focus, textarea:focus {
+}
+
+input:disabled,
+input[disabled]{
+    cursor: not-allowed;
 }
 
 textarea {
@@ -561,4 +570,24 @@ textarea {
     color: var(--text-1);
 }
 
+.down {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    left: 1rem;
+    text-align: center;
+    border: 1px solid var(--warning);
+    font-family: monospace;
+    border-radius: 4px;
+    padding: 0.5rem;
+    display: grid;
+    line-height: 1.5;
+}
+
+.label {
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: var(--text-2);
+}
 

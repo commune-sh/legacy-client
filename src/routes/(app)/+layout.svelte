@@ -9,6 +9,8 @@ import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
 import View from '$lib/view/view.svelte'
 import Sync from '$lib/sync/sync.svelte'
+import Health from '$lib/sync/health.svelte'
+import Down from '$lib/errors/down.svelte'
 
 
 let ready = false;
@@ -21,33 +23,10 @@ let root;
 
 
 onMount(() => {
-    checkHealth()
 })
 
-function checkHealth() {
 
-    let url = `${PUBLIC_BASE_URL}/health_check`
-
-    let opt = {
-      url: url,
-      method: 'GET',
-    }
-
-    APIRequest(opt)
-    .then(resp => {
-        if(resp) {
-            if(resp?.healthy) {
-                down = false
-            }
-        }
-        if(!resp) {
-            down = true
-        }
-    })
-}
-
-
-let down = false;
+$: down = $store.down
 
 
 function toggleTheme() {
@@ -70,6 +49,7 @@ function collapse() {
 </script>
 
 <Sync />
+<Health />
 
 
 {#if !down}
@@ -114,11 +94,7 @@ function collapse() {
 
 
 {#if down}
-<section class="root">
-    <section class="grd-c">
-        {PUBLIC_APP_NAME} is down.
-    </section>
-</section>
+    <Down />
 {/if}
 
 <style>

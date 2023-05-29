@@ -1,9 +1,15 @@
 <script>
 import { onMount, createEventDispatcher } from 'svelte'
-import { PUBLIC_BASE_URL } from '$env/static/public';
+import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { store } from '$lib/store/store.js'
-
+import { debounce } from '$lib/utils/utils.js'
 import { APIRequest } from '$lib/utils/request.js'
+import Health from '$lib/sync/health.svelte'
+
+import validator from 'validator';
+
+
+$: down = $store.down
 
 const dispatch = createEventDispatcher()
 
@@ -26,20 +32,37 @@ let passwordInput;
 
 let busy = false;
 
+let emailWarning = false;
 let usernameWarning = false;
 let passwordWarning = false;
 
 let showInvalid = false;
 
-function create() {
 
-    if(usernameInput.value.length < 1){
+function create() {
+    if(emailInput.value.length < 1){
+        //emailWarning = true
+        emailInput.focus()
+        return
+    }
+
+    let validEmail = validator.isEmail(emailInput?.value)
+    if(!validEmail) {
+        emailWarning = true
+        emailInput.focus()
+        return
+    }
+    emailWarning = false
+
+
+    if(usernameInput.value.length < 3){
         usernameWarning = true
         usernameInput.focus()
         return
     }
 
     if(passwordInput.value.length < 8) {
+        passwordWarning = true
         passwordInput.focus()
         return
     }
@@ -48,8 +71,9 @@ function create() {
     busy = true
 
     APIRequest({
-        url: `${PUBLIC_BASE_URL}/account/login`,
+        url: `${PUBLIC_BASE_URL}/account`,
         data: {
+            email: emailInput.value, 
             username: usernameInput.value, 
             password: passwordInput.value,
         }
@@ -58,16 +82,9 @@ function create() {
 
         console.log('Response:', resp);
 
-        if(resp?.authenticated == false) {
-            showInvalid = true
-            usernameInput.focus()
-        } else if (resp?.authenticated == true && resp?.access_token && resp?.credentials) {
+        if(resp?.created === true) {
             localStorage.setItem('access_token', resp.access_token)
-            const cookieValue = `${encodeURIComponent(resp.access_token)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
-            document.cookie = `token=${cookieValue}`;
-            store.saveCredentials(resp.credentials)
-            store.isAuthenticated()
-            dispatch('authenticated', true)
+            dispatch('created', true)
         }
 
         busy = false
@@ -78,8 +95,41 @@ function create() {
       });
 }
 
+
+let availableWarning = false;
+
+function validateUsername() {
+    debounce(usernameAvailable, 500)
+}
+
+
+function usernameAvailable() {
+    const username = usernameInput?.value
+    if(username.length == 0) return
+    APIRequest({
+        url: `${PUBLIC_BASE_URL}/account/username/${username}`,
+        method: 'GET',
+    })
+      .then(resp => {
+
+        console.log('Response:', resp);
+
+        if(resp?.available == false) {
+            availableWarning = true
+        } else {
+            availableWarning = false
+            usernameWarning = false
+        }
+
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+}
+
+
 function rlw() {
-    if(usernameInput.value.length > 0) {
+    if(usernameInput.value.length > 2) {
         usernameWarning = false
     }
 }
@@ -105,7 +155,7 @@ function pkey(e) {
             passwordInput.focus()
             return
         } else {
-            login()
+            create()
         }
     }
 
@@ -113,6 +163,16 @@ function pkey(e) {
 
 </script>
 
+<Health />
+
+{#if down}
+<section class="down">
+        <div class="grd-c">
+    {PUBLIC_APP_NAME} is down right now. You will not be able to create an
+        account. Try again later.
+        </div>
+</section>
+{/if}
 
 <div class="container" >
     <div class="inner grd">
@@ -120,32 +180,59 @@ function pkey(e) {
             <div class="grd">
                 <div class="title grd-c">Sign Up</div>
             </div>
-            <div class="mt3 pb2">
+            <div class="mt3 pb2" class:warn={emailWarning}>
                 <span class="label">email</span>
+                {#if emailWarning}
+                    <span class="sm ml2">That email doesn't look right</span>
+                {/if}
             </div>
             <div class="mt1 pb2">
                 <input bind:this={emailInput}
+                disabled={down}
+                class:red={emailWarning}
                 type="text" placeholder="" />
             </div>
-            <div class="mt3 pb2">
+            <div class="mt3 pb2" class:warn={availableWarning || usernameWarning}>
                 <span class="label">username</span>
+                {#if availableWarning}
+                    <span class="sm ml2">That username is not available</span>
+                {/if}
+                {#if usernameWarning}
+                    <span class="sm ml2">Username needs to be longer</span>
+                {/if}
             </div>
             <div class="mt1 pb2">
                 <input bind:this={usernameInput}
+                disabled={down}
+                class:red={availableWarning || usernameWarning}
+                on:keyup={ukey}
+                on:keydown={rlw}
+                on:keyup={validateUsername}
                 type="text" placeholder="" />
             </div>
-            <div class="mt3 pb2 label">
-                password
+            <div class="mt3 pb2" class:warn={passwordWarning}>
+                <span class="label">password</span>
+                {#if passwordWarning}
+                    <span class="sm ml2">Password needs to be longer</span>
+                {/if}
             </div>
             <div class="pb2">
                 <input bind:this={passwordInput}
+                disabled={down}
+                class:red={passwordWarning}
                 on:keyup={pkey}
                 on:keydown={plw}
                 type="password" />
             </div>
-            <div class="mt4">
-                <button class="create" on:click={create} disabled={busy}>Create
-                    Account</button>
+            <div class="createc mt4">
+                <button class="create" on:click={create} disabled={busy || down}>
+                    {busy ? 'Creating Account...' : 'Create Account'}
+                </button>
+                {#if busy}
+                    <div class="spinner">
+                        <div class="sloader"></div>
+                    </div>
+                {/if}
             </div>
             <div class="mt3">
                 <span class="href sm" on:click={login}>Already have an account?</span>
@@ -156,6 +243,7 @@ function pkey(e) {
 </div>
 
 <style>
+
 .container {
     display: grid;
     grid-template-columns: auto;
@@ -180,7 +268,7 @@ function pkey(e) {
 }
 
 .warn {
-    color: var(--primary);
+    color: red;
 }
 
 input {
@@ -190,11 +278,8 @@ input {
 }
 
 
-.req {
-    color: red;
-    vertical-align: super;
-    font-size: 0.7rem;
-    margin-left: 0.25rem;
+.red {
+    outline: 1px solid red;
 }
 
 .ln {
@@ -208,11 +293,15 @@ input {
     text-align: center;
 }
 
-.label {
-    font-size: small;
-    font-weight: bold;
-    text-transform: uppercase;
-    color: var(--text-2);
+
+.createc {
+    position: relative;
+}
+
+.spinner {
+    position: absolute;
+    top: 9px;
+    right: 9px;
 }
 
 @media screen and (max-width: 550px) {

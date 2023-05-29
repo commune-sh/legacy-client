@@ -7,11 +7,16 @@ function login() {
         noscroll: true,
     })
 }
+
+function success() {
+    goto(`/`)
+}
+
 </script>
 
 <section class="signup">
     <div class="container grd-c">
-        <Signup on:login={login}/>
+        <Signup on:created={success} on:login={login}/>
     </div>
 </section>
 

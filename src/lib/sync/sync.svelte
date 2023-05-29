@@ -5,15 +5,25 @@ import { onMount, tick } from 'svelte'
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
 
+$: down = $store.down
+
+$: authenticated = $store?.authenticated && 
+    $store?.credentials != null
+    $store?.credentials?.access_token?.length > 0
+$: active = $store.verifiedSession
+
 let lastSpace = null
 
-$: if($page?.params?.space !== lastSpace && $page?.params?.space) {
+$: if($page?.params?.space !== lastSpace && $page?.params?.space && !down) {
     fetchSpaceState()
 }
 
 onMount(() => {
-    fetchDefaultSpaces()
 })
+
+$: if(!down && !authenticated && active) {
+    fetchDefaultSpaces()
+}
 
 function fetchDefaultSpaces() {
 
