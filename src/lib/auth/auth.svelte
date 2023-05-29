@@ -80,7 +80,6 @@ let logout = () => {
     border: 0px;
     padding: 10px;
     font-weight: bold;
-    font-family: monospace;
     background-color: var(--primary);
     color: white;
 }
