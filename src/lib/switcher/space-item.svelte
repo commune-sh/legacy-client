@@ -1,7 +1,24 @@
 <script>
+import { onMount, createEventDispatcher } from 'svelte'
 import { store } from '$lib/store/store.js'
 import { goto } from '$app/navigation';
 import { page } from '$app/stores';
+import tippy from 'tippy.js';
+
+let el;
+let content;
+
+let menu;
+
+onMount(() => {
+    menu = tippy(el, {
+        content: content,
+        theme: 'light-border',
+        placement: 'right',
+        arrow: true,
+        duration: 1,
+    });
+})
 
 export let space;
 
@@ -23,7 +40,12 @@ $: active = $page.params?.space === space?.alias
 
 </script>
 
+<div class="pa2" bind:this={content}>
+    {space?.name}
+</div>
+
 <div class="i-c grd" 
+    bind:this={el}
     on:mouseover={() => hovered = true}
     on:mouseleave={() => hovered = false}
     on:click={goToSpace}>

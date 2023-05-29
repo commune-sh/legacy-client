@@ -10,12 +10,15 @@ import Replies from '$lib/replies/replies.svelte'
 
 $: state = $store?.states[$page?.params?.space]
 
-$: selectedRoomID = isRoom ? state?.children?.find(r => r?.alias ===
+$: roomID = isRoom ? state?.children?.find(r => r?.alias ===
     $page?.params?.room)?.room_id : isSpace ? state?.room_id : null
 
-$: if(selectedRoomID) {
-    //console.log("stattttt ", selectedRoomID)
-}
+$: selectedRoomType = isRoom ? state?.children?.find(r => r?.alias ===
+    $page?.params?.room)?.type : isSpace ? state?.space?.type : null
+
+$: isChat = selectedRoomType === 'chat'
+$: isBoard = selectedRoomType === 'board'
+
 
 const dispatch = createEventDispatcher()
 
@@ -87,9 +90,7 @@ function loadEvents(init) {
             }
             lastSpace = $page?.params?.space
             lastRoom = $page?.params?.room
-            if(init) {
-                loaded = true
-            }
+            loaded = true
             reloading = false
         }
         if(!resp) {
@@ -237,37 +238,40 @@ function toggleMenu() {
 
         <div class="inner-content" bind:this={scrollable}>
 
-            {#if data?.events}
 
-                {#if !reloading}
-
-                <section class="events">
-                    {#each data?.events as event}
-                        <Event event={event} />
-                    {/each}
+            {#if reloading}
+                <section class="grd-c">
+                    <div class="loader"></div>
                 </section>
+            {:else}
 
-                {:else}
-                    <section class="grd-c">
-                        <div class="loader"></div>
+                {#if data?.events}
+                    <section class="events">
+                        {#each data?.events as event}
+                            <Event event={event} />
+                        {/each}
                     </section>
                 {/if}
 
-            {:else if exists && data?.events == null}
-                <div class="grd">
-                    <div class="grd-c">
-                        This space does not have any posts yet.
+                {#if exists && data?.events == null}
+                    <div class="grd">
+                        <div class="grd-c">
+                            This space does not have any posts yet.
+                        </div>
                     </div>
-                </div>
+                {/if}
+
+                {#if !exists}
+                    <section class="grd">
+                        <section class="grd-c">
+                            This space does not exist.
+                        </section>
+                    </section>
+                {/if}
+
+
             {/if}
 
-            {#if !exists}
-                <section class="grd">
-                    <section class="grd-c">
-                        This space does not exist.
-                    </section>
-                </section>
-            {/if}
 
             {#if exists && data?.events !== null && !reloading}
                 <div class="obs" bind:this={obs}></div>

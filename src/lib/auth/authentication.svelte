@@ -110,6 +110,11 @@ function loggedin() {
     kill()
 }
 
+function created() {
+    store.startRefreshingFeed()
+    kill()
+}
+
 </script>
 
 
@@ -131,7 +136,7 @@ function loggedin() {
                 on:authenticated={loggedin}
                 on:resetPass={passMode}/>
         {:else if signupMode}
-            <Signup on:login={toggleMode}/>
+            <Signup on:created={created} on:login={toggleMode}/>
         {:else if passwordMode}
             <Password on:kill={toggleMode}/>
         {/if}

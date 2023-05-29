@@ -35,7 +35,6 @@ function fetchDefaultSpaces() {
     APIRequest(opt)
     .then(resp => {
         if(resp) {
-            console.log(resp)
             store.saveSpaces(resp.spaces)
         }
     })
@@ -52,11 +51,8 @@ function fetchSpaceState() {
     APIRequest(opt)
     .then(resp => {
         if(resp?.state) {
-            console.log(resp)
             store.addSpaceState($page?.params?.space, resp.state)
             lastSpace = $page?.params?.space
-        } else {
-            console.log(resp)
         }
     })
 }
