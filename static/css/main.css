@@ -99,7 +99,7 @@ html {
 }
 
 body {
-    font-family: monospace, Twemoji;
+    font-family: Arial, Helvetica, Verdana, sans-serif, Twemoji;
     font-weight: normal;
     line-height: 1;
     margin: 0;
