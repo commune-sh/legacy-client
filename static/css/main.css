@@ -127,6 +127,11 @@
 }
 
 
+@font-face {
+    font-family: 'Inter';
+    src: url('/fonts/Inter-Regular.ttf');
+}
+
 
 
 @font-face {
@@ -145,7 +150,7 @@ html {
 }
 
 body {
-    font-family: ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Twemoji,Noto Color Emoji;
+    font-family: "Inter", "Twemoji", "Apple Color Emoji", "Segoe UI Emoji", "Arial", "Helvetica", sans-serif, "STIXGeneral", "Noto Color Emoji";
     font-weight: normal;
     line-height: 1;
     margin: 0;

@@ -3,22 +3,19 @@ import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 import { hash, board } from '$lib/assets/icons.js'
 import { store } from '$lib/store/store.js'
-import StreamItem from './stream-item.svelte'
 
 export let item;
+export let isGeneral;
+export let alias;
 
 $: space = $page.params?.space
 $: room = $page.params?.room
 $: stream = $page.params?.stream
 $: post = $page.params?.post
 
-$: isGeneral = item?.general === true
 
-$: active = (isGeneral && !room && !stream) || 
-    (room === item?.alias && !stream)
-
-$: selected = (isGeneral && !room) || 
-    (room === item?.alias)
+$: active = (isGeneral && !room && stream == item) || 
+    (room === alias && stream == item)
 
 let toggled = false;
 
@@ -87,21 +84,14 @@ function logItem(e) {
 
     <div class="ico grd-c"
         class:inactive={!active}>
-        {@html hash}
     </div>
 
     <div class="sl">
-        {item?.alias}
+        {item}
     </div>
 </div>
-
-{#if item?.streams?.length > 0 && selected}
-    {#each item?.streams as stream}
-        <StreamItem 
-            isGeneral={isGeneral}
-            alias={item.alias}
-            item={stream} />
-    {/each}
+{#if item?.streams?.length > 0}
+    ok
 {/if}
 
 <style>

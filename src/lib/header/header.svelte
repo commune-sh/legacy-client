@@ -106,9 +106,11 @@ function toggleMenu() {
                 {/if}
             </div>
             <div class="fl-o"></div>
+            {#if joined}
                 <div class="grd-c">
                     <button class="light" on:click={newPost}>New Post</button>
                 </div>
+            {/if}
         </div>
     </div>
 </div>

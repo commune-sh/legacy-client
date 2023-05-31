@@ -25,6 +25,7 @@ function buildItems(state) {
             room_id: state?.room_id,
             type: state?.space?.type,
             general: true,
+            streams: state?.space?.streams,
         }
     ]
 
@@ -46,7 +47,7 @@ $: items = buildItems(state)
     <div class="content fl-co">
 
             {#if isNotIndex}
-                <div class="">
+                <div class="items">
                     <RoomList items={items} />
                 </div>
             {/if}
@@ -68,9 +69,17 @@ $: items = buildItems(state)
     grid-template-rows: [search] 48px [content] auto [auth] 64px;
     border-right: 1px solid var(--border-1);
     background-color: var(--bg);
+    overflow: hidden;
 }
 
 .content {
+    overflow: hidden;
+}
+.items {
     padding: 0.5rem;
+    overflow-y: auto;
+}
+::-webkit-scrollbar {
+    width: 3px;
 }
 </style>
