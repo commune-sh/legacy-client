@@ -25,7 +25,7 @@ function buildItems(state) {
             room_id: state?.room_id,
             type: state?.space?.type,
             general: true,
-            streams: state?.space?.streams,
+            topics: state?.space?.topics,
         }
     ]
 

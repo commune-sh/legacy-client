@@ -1,7 +1,7 @@
 <script>
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
-import { hash, board } from '$lib/assets/icons.js'
+import { pulse } from '$lib/assets/icons.js'
 import { store } from '$lib/store/store.js'
 
 export let item;
@@ -10,12 +10,12 @@ export let alias;
 
 $: space = $page.params?.space
 $: room = $page.params?.room
-$: stream = $page.params?.stream
+$: topic = $page.params?.topic
 $: post = $page.params?.post
 
 
-$: active = (isGeneral && !room && stream == item) || 
-    (room === alias && stream == item)
+$: active = (isGeneral && !room && topic == item) || 
+    (room === alias && topic == item)
 
 let toggled = false;
 
@@ -39,32 +39,16 @@ $: menuToggled = $store?.menuToggled
 
 function goToRoom() {
 
-    let url = `/`
-    let alias = `/${item.alias}`
+    let url = `/${space}/${alias}/topic/${item}`
     if(isGeneral) {
-        alias = ''
+        url = `/${space}/topic/${item}`
     }
 
-    if(spaceRoomPath == undefined || spaceRoomPath == '/') {
-        url = `/${space}${alias}`
-    } else {
-        url = `/${space}${alias}${spaceRoomPath}`
-        if(room == item?.alias) {
-            url = `/${space}${alias}`
-        }
-    }
-
-    if(menuToggled) {
-        url = `/${space}${alias}`
-    }
 
     goto(url, {
         noscroll: true,
     })
 
-    if(menuToggled) {
-        store.toggleMenu()
-    }
 }
 
 $: isBoard = item?.type === 'board'
@@ -84,13 +68,14 @@ function logItem(e) {
 
     <div class="ico grd-c"
         class:inactive={!active}>
+        {@html pulse}
     </div>
 
     <div class="sl">
         {item}
     </div>
 </div>
-{#if item?.streams?.length > 0}
+{#if item?.topics?.length > 0}
     ok
 {/if}
 
@@ -118,7 +103,7 @@ function logItem(e) {
 
 .ico {
     margin-right: 0.5rem;
-    margin-left: 0.5rem;
+    margin-left: 1.75rem;
     height: 14px;
     width: 14px;
 }

@@ -3,19 +3,19 @@ import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 import { hash, board } from '$lib/assets/icons.js'
 import { store } from '$lib/store/store.js'
-import StreamItem from './stream-item.svelte'
+import TopicItem from './topic-item.svelte'
 
 export let item;
 
 $: space = $page.params?.space
 $: room = $page.params?.room
-$: stream = $page.params?.stream
+$: topic = $page.params?.topic
 $: post = $page.params?.post
 
 $: isGeneral = item?.general === true
 
-$: active = (isGeneral && !room && !stream) || 
-    (room === item?.alias && !stream)
+$: active = (isGeneral && !room && !topic) || 
+    (room === item?.alias && !topic)
 
 $: selected = (isGeneral && !room) || 
     (room === item?.alias)
@@ -95,12 +95,12 @@ function logItem(e) {
     </div>
 </div>
 
-{#if item?.streams?.length > 0 && selected}
-    {#each item?.streams as stream}
-        <StreamItem 
+{#if item?.topics?.length > 0 && selected}
+    {#each item?.topics as topic}
+        <TopicItem 
             isGeneral={isGeneral}
             alias={item.alias}
-            item={stream} />
+            item={topic} />
     {/each}
 {/if}
 
