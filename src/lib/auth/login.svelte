@@ -4,7 +4,6 @@ import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { store } from '$lib/store/store.js'
 import { eye, eyeoff } from '$lib/assets/icons.js'
 import { APIRequest } from '$lib/utils/request.js'
-import Health from '$lib/sync/health.svelte'
 
 $: down = $store.down
 
@@ -132,16 +131,7 @@ function togglePass() {
 
 </script>
 
-<Health />
 
-{#if down}
-<section class="down">
-        <div class="grd-c">
-    {PUBLIC_APP_NAME} is down right now. You will not be able to log in.
-        Try again later.
-        </div>
-</section>
-{/if}
 
 <div class="container" >
     <div class="inner grd">

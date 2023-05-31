@@ -49,13 +49,17 @@ $: spaces = $store?.spaces
             <SpaceItems spaces={spaces}/>
         </div>
     </div>
+
+    <div class="">
+        tools
+    </div>
 </div>
 
 <style>
 .switcher {
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: auto;
+    grid-template-rows: 1fr auto;
     border-right: 1px solid var(--border-1);
     background-color: var(--bg);
     overflow: hidden;

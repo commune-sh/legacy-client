@@ -82,12 +82,12 @@ $: active = $page.params?.space === space?.alias
     opacity: 0;
     transition: 0.1s;
     position: absolute;
-    top: 13px;
+    top: 12px;
     left: 0px;
     height: 15px;
     width: 4px;
     border-radius: 0 5px 5px 0;
-    background-color: var(--white);
+    background-color: var(--switcher-pill);
 }
 .th {
     opacity: 1;

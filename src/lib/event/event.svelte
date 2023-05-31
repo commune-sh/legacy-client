@@ -181,5 +181,6 @@ function killMenu() {
 
 .body {
     line-height: 1.5;
+    user-select: text;
 }
 </style>

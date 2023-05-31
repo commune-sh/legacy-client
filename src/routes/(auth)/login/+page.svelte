@@ -2,10 +2,12 @@
 import { onMount } from 'svelte'
 import Login from '$lib/auth/login.svelte'
 import { APIRequest } from '$lib/utils/request.js'
-import { PUBLIC_BASE_URL } from '$env/static/public';
+import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
+import Health from '$lib/sync/health.svelte'
 
+$: down = $store.down
 
 function signup() {
     goto(`/signup`, {
@@ -48,6 +50,18 @@ let validateToken = () => {
 }
 
 </script>
+
+<Health />
+
+{#if down}
+<section class="down">
+        <div class="grd-c">
+    {PUBLIC_APP_NAME} is down right now. You will not be able to log in.
+        Try again later.
+        </div>
+</section>
+{/if}
+
 
 {#if ready}
 <section class="login">

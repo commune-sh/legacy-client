@@ -5,11 +5,11 @@ import { onMount, tick } from 'svelte'
 import { store } from '$lib/store/store.js'
 
 onMount(() => {
-    checkHealth()
+    checkHealth(true)
 })
 
 
-function checkHealth() {
+function checkHealth(init) {
     let url = `${PUBLIC_BASE_URL}/health_check`
 
     let opt = {
@@ -20,7 +20,16 @@ function checkHealth() {
     APIRequest(opt)
     .then(resp => {
         if(resp == undefined) {
-            store.setDownState(true)
+            if(init){
+                store.setDownState(true)
+            }
+            store.setHealth(false)
+        } else if(resp?.healthy == true) {
+            store.setHealth(true)
+            store.setDownState(false)
+        }
+        if(resp?.features) {
+            store.setFeatures(resp.features)
         }
     })
 }

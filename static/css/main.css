@@ -32,6 +32,50 @@
     --input-border: #000;
 
     --switcher-item: #000000;
+    --switcher-pill: #a53131;
+
+    --context-menu-bg: black;
+    --context-menu-border: black;
+    --context-menu-text: #e1e1e1;
+
+    --warning: #9a1818;
+}
+
+:root.black {
+    --bg: #000000;
+    --text-1: #e1e1e1;
+    --text-2: #9e9e9e;
+    --text-2: #bababa;
+    --text-light: #dadada;
+    --link: #a53131;
+    --border-color: #191919;
+    --scrollbar-thumb: #323232;
+    --scrollbar-track: #141414;
+
+    --shade-2: #242424;
+    --shade-3: #1f1f1f;
+    --logo-bg: #000;
+    --primary: #a53131;
+    --secondary: #ff2a2a;
+    --logo-shade-1: #ff2a2a;
+    --logo-shade-2: #000000;
+
+    --button-1: #0a0a0a;
+    --mask: #000000e8;
+    --modal: #141414;
+    --black: black;
+    --white: white;
+    --border-1: #272727;
+    --placeholder-color: #3e3e3e;
+
+    --light: #f7f7f7
+    --svg-fill-1: #e1e1e1;
+    --action-icon: #fff;
+
+    --input-border: #000;
+
+    --switcher-item: #000000;
+    --switcher-pill: #a53131;
 
     --context-menu-bg: black;
     --context-menu-border: black;
@@ -73,6 +117,7 @@
     --input-border: #aeaeae;
 
     --switcher-item: #e9ecef;
+    --switcher-pill: #a53131;
 
     --context-menu-bg: white;
     --context-menu-border: #a2a2a2;
@@ -81,11 +126,6 @@
     --warning: #9a1818;
 }
 
-
-@font-face {
-    font-family: 'Inter';
-    src: url('/fonts/Inter-Regular.ttf');
-}
 
 
 
@@ -98,14 +138,14 @@
 html {
     -webkit-font-smoothing: antialiased;
     -webkit-text-size-adjust: none;
-    font-size: 16px;
+    font-size: 15px;
     height: -webkit-fill-available;
     width: 100%;
     overflow: hidden;
 }
 
 body {
-    font-family: "Inter", "Twemoji", "Apple Color Emoji", "Segoe UI Emoji", "Arial", "Helvetica", sans-serif, "STIXGeneral", "Noto Color Emoji";
+    font-family: ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Twemoji,Noto Color Emoji;
     font-weight: normal;
     line-height: 1;
     margin: 0;
@@ -219,11 +259,12 @@ button {
     cursor: pointer;
     border-radius: 3px;
     border: 0px;
-    padding: 6px 12px;
+    padding: 0.5rem;
     background-color: var(--primary);
     font-weight: bold;
     color: white;
     transition: 0.1s;
+    display: inline-block;
 }
 
 button:hover {
@@ -234,6 +275,11 @@ button:disabled,
 button[disabled]{
     background-color: #622c2c;
     cursor: not-allowed;
+}
+
+.vb {
+    display: grid;
+    grid-template-columns: auto 1fr;
 }
 
 .btn-1 {
@@ -419,6 +465,13 @@ textarea {
     fill: var(--action-icon);
     height: 28px;
     width: 28px;
+    opacity: 0.8;
+}
+
+.ico-s {
+    fill: var(--action-icon);
+    height: 20px;
+    width: 20px;
     opacity: 0.8;
 }
 

@@ -6,8 +6,10 @@ function createApp() {
 
   let app = {
     down: false,
+    healthy: true,
     active: false,
     ready: false,
+    features: null,
     authenticated: false,
     authenticating: false,
     refreshingFeed: false,
@@ -26,6 +28,20 @@ function createApp() {
   let setDownState = (v) => {
     update(p => {
       p.down = v
+      return p
+    })
+  }
+
+  let setHealth = (v) => {
+    update(p => {
+      p.healthy = v
+      return p
+    })
+  }
+
+  let setFeatures = (v) => {
+    update(p => {
+      p.features = v
       return p
     })
   }
@@ -172,6 +188,8 @@ function createApp() {
     writable,
     set,
     setDownState,
+    setHealth,
+    setFeatures,
     saveCredentials,
     removeCredentials,
     saveRooms,

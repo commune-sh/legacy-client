@@ -1,6 +1,11 @@
 <script>
 import Signup from '$lib/auth/signup.svelte'
 import { goto } from '$app/navigation';
+import Health from '$lib/sync/health.svelte'
+import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
+import { store } from '$lib/store/store.js'
+
+$: down = $store.down
 
 function login() {
     goto(`/login`, {
@@ -14,11 +19,22 @@ function success() {
 
 </script>
 
+{#if down}
+<section class="down">
+    <div class="grd-c">
+    {PUBLIC_APP_NAME} is down right now. You will not be able to create an
+        account. Try again later.
+    </div>
+</section>
+{/if}
+
 <section class="signup">
     <div class="container grd-c">
         <Signup on:created={success} on:login={login}/>
     </div>
 </section>
+
+<Health />
 
 <style>
 .signup {

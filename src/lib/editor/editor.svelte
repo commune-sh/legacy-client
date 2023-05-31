@@ -25,7 +25,10 @@ onMount(() => {
       onTransaction: () => {
         // force re-render so `editor.isActive` works as expected
         editor = editor
-            dispatch('change', { value: editor.getHTML() })
+            dispatch('change', {
+                html: editor.getHTML(),
+                text: editor.state.doc.textContent,
+            })
       },
     })
     focus()
@@ -45,13 +48,8 @@ onDestroy(() => {
 </script>
 
 <section class="editor" on:click={focus}>
-    <div class="editor-area">
         <div class="container"  bind:this={composer}>
         </div>
-    </div>
-    <div class="">
-        tools
-    </div>
 </section>
 
 <style>
@@ -59,21 +57,14 @@ onDestroy(() => {
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: 1fr auto;
-    padding-right: 1rem;
-    padding-left: 1rem;
-    border-bottom: 1px solid var(--border-1);
-    min-height: 150px;
-    max-height: 350px;
     cursor: text;
-}
-
-.editor-area {
     overflow-y: scroll;
+    min-height: 150px;
+    max-height: 450px;
+    padding-left: 1rem;
 }
 
-.composer {
-    max-height: 200px;
-}
+
 
 :global(.ProseMirror p.is-editor-empty:first-child::before) {
   color: var(--placeholder-color);

@@ -4,7 +4,6 @@ import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { store } from '$lib/store/store.js'
 import { debounce } from '$lib/utils/utils.js'
 import { APIRequest } from '$lib/utils/request.js'
-import Health from '$lib/sync/health.svelte'
 
 import validator from 'validator';
 
@@ -169,16 +168,7 @@ function pkey(e) {
 
 </script>
 
-<Health />
 
-{#if down}
-<section class="down">
-        <div class="grd-c">
-    {PUBLIC_APP_NAME} is down right now. You will not be able to create an
-        account. Try again later.
-        </div>
-</section>
-{/if}
 
 <div class="container" >
     <div class="inner grd">

@@ -46,6 +46,9 @@ function goToRoom() {
         url = `/${space}${alias}`
     } else {
         url = `/${space}${alias}${spaceRoomPath}`
+        if(room == item?.alias) {
+            url = `/${space}${alias}`
+        }
     }
 
     if(menuToggled) {
@@ -78,11 +81,7 @@ function logItem(e) {
 
     <div class="ico grd-c"
         class:inactive={!active}>
-        {#if isBoard}
-            {@html board}
-        {:else}
-            {@html hash}
-        {/if}
+        {@html hash}
     </div>
 
     <div class="sl">

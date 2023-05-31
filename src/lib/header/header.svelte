@@ -92,7 +92,7 @@ function toggleMenu() {
                 {@html menu}
             </div>
 
-        <div class="fl">
+        <div class="fl mr3">
 
             <div class="name grd-c">
                 {#if isStatic && name}
@@ -106,11 +106,9 @@ function toggleMenu() {
                 {/if}
             </div>
             <div class="fl-o"></div>
-            {#if joined}
                 <div class="grd-c">
-                    <button class="" on:click={newPost}>New Post</button>
+                    <button class="light" on:click={newPost}>New Post</button>
                 </div>
-            {/if}
         </div>
     </div>
 </div>
