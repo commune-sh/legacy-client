@@ -139,12 +139,32 @@ function createApp() {
     })
   }
 
-  let saveSpaces = (x) => {
+  let addRoom = (x) => {
     update(p => {
-      p.spaces = x
+      p.rooms.push(x)
+      if(x == null) {
+        p.rooms = []
+      }
       return p
     })
   }
+
+  let saveSpaces = (x) => {
+    update(p => {
+      p.spaces = x
+      if(x == null) {
+        p.spaces = []
+      }
+      return p
+    })
+  }
+  let addSpace = (x) => {
+    update(p => {
+      p.spaces.push(x)
+      return p
+    })
+  }
+
 
   let addSpaceState = (space, state) => {
     update(p => {
@@ -193,7 +213,9 @@ function createApp() {
     saveCredentials,
     removeCredentials,
     saveRooms,
+    addRoom,
     saveSpaces,
+    addSpace,
     startAuthenticating,
     stopAuthenticating,
     startRefreshingFeed,

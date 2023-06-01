@@ -223,9 +223,16 @@ function toggleMenu() {
 }
 
 let editing = false;
+let postRoomID;
 
-function newPost() {
+function newPost(e) {
     editing = true
+    postRoomID = e.detail
+}
+
+function stopEditing() {
+    editing = false
+    postRoomID = null
 }
 
 </script>
@@ -243,7 +250,9 @@ function newPost() {
 
     <div class="inner-area" class:ina={isPost}>
 
-        <Header on:newPost={newPost} />
+        <Header 
+            editing={editing} 
+            on:newPost={newPost} />
 
         <div class="inner-content" bind:this={scrollable}>
 
@@ -254,7 +263,7 @@ function newPost() {
                 </section>
             {:else}
                 {#if editing}
-                    <Composer />
+                    <Composer postRoomID={postRoomID} on:kill={stopEditing}/>
                 {/if}
 
                 {#if data?.events}

@@ -319,6 +319,7 @@ input, textarea {
     color: var(--text);
     font-size: 16px;
     box-sizing: border-box;
+    font-family: sans-serif;
 }
 
 input:focus, textarea:focus {

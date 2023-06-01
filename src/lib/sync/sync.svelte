@@ -18,9 +18,6 @@ $: if($page?.params?.space !== lastSpace && $page?.params?.space && !down) {
     fetchSpaceState()
 }
 
-$: if($page.params) {
-    console.log('Page params:', $page.params)
-}
 
 onMount(() => {
 })

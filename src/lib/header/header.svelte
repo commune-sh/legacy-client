@@ -1,4 +1,6 @@
 <script>
+import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
+import { APIRequest } from '$lib/utils/request.js'
 import { onMount, createEventDispatcher } from 'svelte'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
@@ -15,8 +17,11 @@ const dispatch = createEventDispatcher()
 $: state = $store?.states[$page?.params?.space]
 
 export let type = 'space';
-
 export let exists;
+
+
+export let editing = false;
+
 
 $: space = $page.params.space
 
@@ -28,7 +33,7 @@ function goToSpace() {
 }
 
 function newPost() {
-    dispatch('newPost')
+    dispatch('newPost', room_id)
 }
 
 
@@ -66,8 +71,11 @@ $: items = sortItems(state)
 $: selected = items?.filter(x => x?.path === $page?.params?.room)[0]
 
 $: room_id = selected?.room_id
+$: space_room_id = state?.room_id
 
-$: joined = $store?.rooms?.includes(room_id)
+//$: joined = $store?.rooms?.includes(room_id)
+//$: joined = $store?.rooms?.includes(space_room_id)
+$: joined = $store?.spaces.find(x => x?.room_id === space_room_id) != null 
 
 $: menuToggled = $store?.menuToggled
 
@@ -82,6 +90,22 @@ function toggleMenu() {
     store.toggleMenu()
 }
 
+
+function join() {
+    console.log("joining")
+    let opt = {
+        url: `${PUBLIC_BASE_URL}/space/${space}/join`,
+        method: 'POST',
+    }
+
+    APIRequest(opt)
+    .then(resp => {
+        if(resp?.joined && resp?.space) {
+            console.log(resp)
+            store.addSpace(resp.space)
+        }
+    })
+}
 
 </script>
 
@@ -106,11 +130,17 @@ function toggleMenu() {
                 {/if}
             </div>
             <div class="fl-o"></div>
-            {#if joined}
-                <div class="grd-c">
-                    <button class="light" on:click={newPost}>New Post</button>
-                </div>
-            {/if}
+            <div class="grd-c">
+                {#if authenticated}
+                    {#if joined}
+                        {#if !editing}
+                        <button class="light" on:click={newPost}>New Post</button>
+                        {/if}
+                    {:else}
+                        <button class="light" on:click={join}>Join</button>
+                    {/if}
+                {/if}
+            </div>
         </div>
     </div>
 </div>

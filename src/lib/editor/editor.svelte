@@ -9,8 +9,11 @@ const dispatch = createEventDispatcher()
 
 
 
+
 let editor;
 let composer;
+
+export let initFocus = true;
 
 onMount(() => {
     editor = new Editor({
@@ -31,10 +34,21 @@ onMount(() => {
             })
       },
     })
-    focus()
+    if(initFocus) {
+        focusEditor()
+    }
+    composer.addEventListener('keydown', (e) => {
+        if(e.key === 'Backspace' && editor.state.doc.textContent === '') {
+            dispatch('focusTitle')
+        }
+    })
 })
 
-async function focus() {
+export function focus() {
+    focusEditor()
+}
+
+async function focusEditor() {
     await tick()
     editor.view.focus()
 }

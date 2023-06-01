@@ -4,6 +4,10 @@ import { store } from '$lib/store/store.js'
 import Logo from '$lib/logo/logo.svelte'
 import { page } from '$app/stores';
 
+$: authenticated = $store?.authenticated && 
+    $store?.credentials != null
+    $store?.credentials?.access_token?.length > 0
+
 $: isIndex = $page.route.id === '/'
 
 $: if(isIndex) {

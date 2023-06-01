@@ -1,18 +1,31 @@
 <script>
 import { tick, onMount, onDestroy, createEventDispatcher } from 'svelte'
 import Editor from '$lib/editor/editor.svelte'
-import { add, send } from '$lib/assets/icons.js'
+import { add, send, close } from '$lib/assets/icons.js'
 import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { APIRequest } from '$lib/utils/request.js'
+import autosize from 'autosize'
 
 
 const dispatch = createEventDispatcher()
 
+function kill() {
+    dispatch('kill')
+}
+
+export let postRoomID;
 
 let editor;
 
 onMount(() => {
+    autosize(titleInput)
+    focusTitleInput()
 })
+
+async function focusTitleInput() {
+    await tick()
+    titleInput.focus()
+}
 
 let fileInput;
 let files = [];
@@ -98,11 +111,41 @@ function updateContent(e) {
 function createPost() {
     console.log(content)
 }
+
+let titleInput;
+
+function handleEnter(e) {
+    if(e.key === 'Enter') {
+        e.preventDefault()
+        if(titleInput.value.length > 0) {
+            editor.focus()
+        }
+    }
+}
+
 </script>
 
 <section class="composer">
     <div class="editor-area">
-        <Editor on:change={updateContent}/>
+        <div class="title-container">
+            <div class="">
+            <textarea 
+                class="post-title"
+                bind:this={titleInput}
+                placeholder="Title"
+                maxlength="140"
+                on:keydown={handleEnter}
+            ></textarea>
+            </div>
+            <div class="c-ico ml2" on:click={kill}>
+                {@html close}
+            </div>
+        </div>
+        <Editor 
+            bind:this={editor} 
+            on:focusTitle={focusTitleInput}
+            initFocus={false} 
+            on:change={updateContent}/>
     </div>
     <div class="tools fl">
         <div class="c-ico" on:click={upload}>
@@ -133,11 +176,13 @@ function createPost() {
 }
 
 .editor-area {
+    display: grid;
+    grid-template-rows: auto 1fr;
     overflow-y: hidden;
 }
 
 .composer {
-    max-height: 280px;
+    max-height: 480px;
 }
 
 .tools {
@@ -146,5 +191,23 @@ function createPost() {
 .c-ico {
     height: 22px;
     width: 22px;
+}
+
+.title-container {
+    padding-right: 1rem;
+    padding-left: 1rem;
+    padding-top: 1rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+}
+
+.post-title {
+    background-color: transparent;
+    border: none;
+    font-size: 1.2rem;
+    width: 100%;
+    font-weight: bold;
+    padding: 0;
+    height: 22px;
 }
 </style>
