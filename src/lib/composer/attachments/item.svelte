@@ -6,6 +6,7 @@ import { close } from '$lib/assets/icons.js'
 export let item;
 export let roomID;
 export let index;
+export let uploading;
 
 let imageURL;
 
@@ -35,18 +36,36 @@ function deleteAttachment() {
     <div class="name">
         {item.name}
     </div>
+    {#if !uploading}
     <div class="close grd">
         <div class="grd-c c-ico" on:click={deleteAttachment}>
             {@html close}
         </div>
     </div>
+    {/if}
+    {#if uploading}
+        <div class="mask grd">
+            <div class="loader grd-c">
+            </div>
+        </div>
+    {/if}
 </div>
+
+
 {/if}
 
 <style>
+.mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--mask);
+}
 .item {
-    width: 200px;
-    height: 200px;
+    width: 170px;
+    height: 170px;
     margin-right: 1rem;
     margin-bottom: 1rem;
     display: grid;
@@ -63,6 +82,11 @@ function deleteAttachment() {
 .name {
     font-size: small;
     padding: 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+
 }
 .close {
     position: absolute;

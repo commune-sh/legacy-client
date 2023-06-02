@@ -240,33 +240,9 @@ function stopEditing() {
     store.deleteEditorState(roomID)
 }
 
-function createPost(e) {
-    console.log("creating new post, ", e.detail)
-
-    let body = {
-        room_id: roomID,
-        content: {
-            msgtype: 'm.text',
-            title: e.detail.title,
-            body: e.detail.body,
-        },
-    }
-
-    let opt = {
-        url: `${PUBLIC_BASE_URL}/event`,
-        body: body,
-    }
-
-    console.log(opt)
-
-    APIRequest(opt)
-    .then(resp => {
-        if(resp?.success && resp?.event != null) {
-            console.log(resp)
-            stopEditing()
-            data.events = [resp.event, ...data.events];
-        }
-    })
+function postSaved(e) {
+    stopEditing()
+    data.events = [e.detail, ...data.events];
 }
 
 </script>
@@ -301,7 +277,7 @@ function createPost(e) {
                 {#if editing}
                     <Composer 
                         roomID={roomID}
-                        on:create={createPost} 
+                        on:saved={postSaved} 
                         on:kill={stopEditing}/>
                 {/if}
 

@@ -4,6 +4,8 @@ import { add } from '$lib/assets/icons.js'
 import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { APIRequest } from '$lib/utils/request.js'
 
+export let busy;
+
 const dispatch = createEventDispatcher()
 
 let fileInput;
@@ -79,6 +81,9 @@ function uploadFile(file, url) {
 }
 
 function upload() {
+    if(busy) {
+        return
+    }
     fileInput.click()
 }
 

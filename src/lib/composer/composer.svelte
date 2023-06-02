@@ -2,7 +2,7 @@
 import { tick, onMount, onDestroy, createEventDispatcher } from 'svelte'
 import { add, send, close } from '$lib/assets/icons.js'
 import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
-import { APIRequest } from '$lib/utils/request.js'
+import { APIRequest, getPresignedURL, uploadAttachment, savePost } from '$lib/utils/request.js'
 import autosize from '$lib/vendor/autosize/autosize'
 import { store } from '$lib/store/store.js'
 import Attach from './attachments/attach.svelte'
@@ -16,6 +16,9 @@ $: state = $store.editorStates[roomID]
 const dispatch = createEventDispatcher()
 
 function kill() {
+    if(busy) {
+        return
+    }
     dispatch('kill')
 }
 
@@ -39,9 +42,7 @@ onMount(() => {
             bodyInput.selectionEnd = state.cursor;
             focusBodyInput()
             if(state.scroll) {
-                console.log(state.scroll)
                 bodyInput.scrollTop = state.scroll
-                console.log(bodyInput.scrollTop)
             }
         }
         if(state.focus == 'title') {
@@ -55,20 +56,19 @@ onMount(() => {
         autosize(titleInput)
         autosize(bodyInput)
         focusTitleInput()
+
+        store.addEditorState({
+            room_id: roomID,
+            state: {
+                title: '',
+                body: '',
+                focus: null,
+                cursor: 0,
+                scroll: 0,
+            }
+
+        })
     }
-
-
-    store.addEditorState({
-        room_id: roomID,
-        state: {
-            title: '',
-            body: '',
-            focus: null,
-            cursor: 0,
-            scroll: 0,
-        }
-
-    })
 
     bodyInput.addEventListener('scroll', handleScroll);
 })
@@ -94,8 +94,13 @@ function focusOnTitle(e) {
 
 
 
+let busy = false;
+let uploading = false;
 
-function createPost() {
+$: postText = uploading ? 'Uploading...' : busy ? 'Posting...' : 'Post'
+
+
+async function createPost() {
     if(titleInput.value.length === 0) {
         focusTitleInput()
         return
@@ -104,10 +109,57 @@ function createPost() {
         focusBodyInput()
         return
     }
+    busy = true
+
+    try {
+        let items = []
+        if(attachments) {
+            busy = true
+            uploading = true
+            for (const file of attachments) {
+                const extension = file.name.split('.').pop();
+                const presignedURL = await getPresignedURL(extension);
+                await uploadAttachment(file, presignedURL.url);
+                items.push({
+                    file: {
+                        name: file.name,
+                        size: file.size,
+                        type: file.type,
+                        key: presignedURL.key,
+                    }
+                })
+            }
+        }
+
+        let post = {
+            room_id: roomID,
+            content: {
+                msgtype: 'm.text',
+                title: titleInput.value,
+                body: bodyInput.value,
+            },
+        }
+        if(attachments && items.length > 0) {
+            post.content.attachments = items
+        }
+
+        console.log("saving post ", post)
+        const res = await savePost(post);
+        console.log(res)
+        if(res?.success && res?.event) {
+            dispatch('saved', res.event)
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+
+
+    /*
     dispatch('create', {
         title: titleInput.value,
         body: bodyInput.value,
     })
+    */
 }
 
 let titleInput;
@@ -175,6 +227,7 @@ function attachFiles(e) {
     })
 }
 
+$: attachments = $store.editorStates[roomID]?.attachments
 $: showAttachments = $store.editorStates[roomID]?.attachments?.length > 0;
 
 </script>
@@ -194,13 +247,14 @@ $: showAttachments = $store.editorStates[roomID]?.attachments?.length > 0;
                     on:click={updateContent}
                     on:focus={handleTitleFocus}
                     on:blur={handleTitleBlur}
+                    disabled={busy}
                 ></textarea>
             </div>
             <div class="c-ico ml2 kill" on:click={kill}>
                 {@html close}
             </div>
         </div>
-        <div class="body-container" on:click={focusBodyInput}>
+        <div class="body-container" class:bs={busy} on:click={focusBodyInput}>
                 <textarea 
                     class="post-body"
                     bind:this={bodyInput}
@@ -212,26 +266,25 @@ $: showAttachments = $store.editorStates[roomID]?.attachments?.length > 0;
                     on:click={updateContent}
                     on:focus={handleBodyFocus}
                     on:blur={handleBodyBlur}
+                    disabled={busy}
                 ></textarea>
         </div>
     </div>
 
     {#if showAttachments}
-        <div class="">
-            <Attachments roomID={roomID}/>
-        </div>
+        <Attachments uploading={uploading} roomID={roomID}/>
     {/if}
 
     <div class="tools fl">
-        <Attach on:attached={attachFiles}/>
+        <Attach busy={busy} on:attached={attachFiles}/>
         <div class="fl-o">
         </div>
-        <button class="vb" on:click={createPost}>
+        <button class="vb" disabled={busy} on:click={createPost}>
             <div class="ico-s">
                 {@html send}
             </div>
             <div class="grd-c ph2">
-                Post
+                {postText}
             </div>
         </button>
     </div>
@@ -289,6 +342,10 @@ $: showAttachments = $store.editorStates[roomID]?.attachments?.length > 0;
     padding-right: 1.5rem;
     cursor: text;
     min-height: 140px;
+}
+
+.bs {
+    cursor: auto;
 }
 
 .post-body {

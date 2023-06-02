@@ -231,7 +231,7 @@ function createApp() {
 
   let deleteAttachment = (room_id, index) => {
     update(p => {
-      delete p.editorStates[room_id]?.attachments[index]
+      p.editorStates[room_id]?.attachments.splice(index, 1)
       return p
     })
   }
