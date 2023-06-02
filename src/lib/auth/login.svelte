@@ -53,7 +53,7 @@ function login() {
 
     APIRequest({
         url: `${PUBLIC_BASE_URL}/account/login`,
-        data: {
+        body: {
             username: usernameInput.value, 
             password: passwordInput.value,
         }

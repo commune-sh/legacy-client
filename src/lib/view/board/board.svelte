@@ -52,6 +52,13 @@ $: if($page?.url?.pathname != lastPath) {
     }
 }
 
+$: if(loaded && roomID) {
+    let es = store.getEditorState(roomID)
+    if(es != undefined) {
+        editing = true
+    }
+}
+
 let loaded = false;
 
 function loadEvents(init) {
@@ -198,7 +205,6 @@ let fetchMore = () => {
 
 $: if($store.refreshingFeed) {
     store.stopRefreshingFeed()
-    console.log("refreshing feeed....")
 }
 
 let container;
@@ -223,16 +229,44 @@ function toggleMenu() {
 }
 
 let editing = false;
-let postRoomID;
+
 
 function newPost(e) {
     editing = true
-    postRoomID = e.detail
 }
 
 function stopEditing() {
     editing = false
-    postRoomID = null
+    store.deleteEditorState(roomID)
+}
+
+function createPost(e) {
+    console.log("creating new post, ", e.detail)
+
+    let body = {
+        room_id: roomID,
+        content: {
+            msgtype: 'm.text',
+            title: e.detail.title,
+            body: e.detail.body,
+        },
+    }
+
+    let opt = {
+        url: `${PUBLIC_BASE_URL}/event`,
+        body: body,
+    }
+
+    console.log(opt)
+
+    APIRequest(opt)
+    .then(resp => {
+        if(resp?.success && resp?.event != null) {
+            console.log(resp)
+            stopEditing()
+            data.events = [resp.event, ...data.events];
+        }
+    })
 }
 
 </script>
@@ -254,7 +288,9 @@ function stopEditing() {
             editing={editing} 
             on:newPost={newPost} />
 
-        <div class="inner-content" bind:this={scrollable}>
+        <div class="inner-content" 
+            class:sph={editing}
+            bind:this={scrollable}>
 
 
             {#if reloading}
@@ -263,7 +299,10 @@ function stopEditing() {
                 </section>
             {:else}
                 {#if editing}
-                    <Composer postRoomID={postRoomID} on:kill={stopEditing}/>
+                    <Composer 
+                        roomID={roomID}
+                        on:create={createPost} 
+                        on:kill={stopEditing}/>
                 {/if}
 
                 {#if data?.events}
@@ -340,6 +379,10 @@ function stopEditing() {
 .inner-content {
     overflow-y: auto;
     display: grid;
+    grid-template-rows: repeat(auto-fill, auto);
+}
+
+.sph {
 }
 
 .post {

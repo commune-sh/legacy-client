@@ -37,11 +37,13 @@ onMount(() => {
     if(initFocus) {
         focusEditor()
     }
+    /*
     composer.addEventListener('keydown', (e) => {
         if(e.key === 'Backspace' && editor.state.doc.textContent === '') {
             dispatch('focusTitle')
         }
     })
+    */
 })
 
 export function focus() {
@@ -76,8 +78,17 @@ onDestroy(() => {
     min-height: 150px;
     max-height: 450px;
     padding-left: 1rem;
+    padding-right: 1rem;
+    margin-right: 1.5rem;
 }
 
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg);
+}
 
 
 :global(.ProseMirror p.is-editor-empty:first-child::before) {

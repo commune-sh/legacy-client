@@ -131,7 +131,7 @@ function join() {
             </div>
             <div class="fl-o"></div>
             <div class="grd-c">
-                {#if authenticated}
+                {#if authenticated && space}
                     {#if joined}
                         {#if !editing}
                         <button class="light" on:click={newPost}>New Post</button>

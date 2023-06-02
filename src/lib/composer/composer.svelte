@@ -1,11 +1,17 @@
 <script>
 import { tick, onMount, onDestroy, createEventDispatcher } from 'svelte'
-import Editor from '$lib/editor/editor.svelte'
 import { add, send, close } from '$lib/assets/icons.js'
 import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { APIRequest } from '$lib/utils/request.js'
-import autosize from 'autosize'
+import autosize from '$lib/vendor/autosize/autosize'
+import { store } from '$lib/store/store.js'
+import Attach from './attachments/attach.svelte'
+import Attachments from './attachments/attachments.svelte'
 
+
+export let roomID;
+
+$: state = $store.editorStates[roomID]
 
 const dispatch = createEventDispatcher()
 
@@ -13,103 +19,95 @@ function kill() {
     dispatch('kill')
 }
 
-export let postRoomID;
 
 let editor;
+let ready = false;
 
 onMount(() => {
-    autosize(titleInput)
-    focusTitleInput()
+
+    if(state) {
+        if(state?.title) {
+            titleInput.value = state?.title
+        }
+        if(state?.body) {
+            bodyInput.value = state?.body
+        }
+        autosize(titleInput)
+        autosize(bodyInput)
+        if(state.focus == 'body') {
+            bodyInput.selectionStart = state.cursor;
+            bodyInput.selectionEnd = state.cursor;
+            focusBodyInput()
+            if(state.scroll) {
+                console.log(state.scroll)
+                bodyInput.scrollTop = state.scroll
+                console.log(bodyInput.scrollTop)
+            }
+        }
+        if(state.focus == 'title') {
+            titleInput.selectionStart = state.cursor;
+            titleInput.selectionEnd = state.cursor;
+            focusTitleInput()
+        }
+    }
+
+    if(!state) {
+        autosize(titleInput)
+        autosize(bodyInput)
+        focusTitleInput()
+    }
+
+
+    store.addEditorState({
+        room_id: roomID,
+        state: {
+            title: '',
+            body: '',
+            focus: null,
+            cursor: 0,
+            scroll: 0,
+        }
+
+    })
+
+    bodyInput.addEventListener('scroll', handleScroll);
 })
+
+onDestroy(() => {
+    bodyInput.removeEventListener('scroll', handleScroll);
+})
+
+const handleScroll = () => {
+    updateContent()
+};
 
 async function focusTitleInput() {
     await tick()
     titleInput.focus()
 }
+function focusOnTitle(e) {
+    if(e.key === 'Backspace' && bodyInput.value === '') {
+        e.preventDefault()
+        focusTitleInput()
+    }
+}
 
-let fileInput;
-let files = [];
 
-let items = [];
 
-let tooLarge = false;
 
-let build = (e) => {
-
-    if(e.target.files.length > 13) {
-        alert("That's too many attachments at once.")
+function createPost() {
+    if(titleInput.value.length === 0) {
+        focusTitleInput()
         return
     }
-
-    for(let i =0 ; i < e.target.files.length ; i++) {
-
-        const file = e.target.files[i]
-
-        if (file.size > 8388608) {
-            files = []
-            files = files
-            tooLarge = true
-            break
-        }
-        files = [...files, e.target.files[i]]
-
+    if(bodyInput.value.length === 0) {
+        focusBodyInput()
+        return
     }
-
-
-    for(let i =0 ; i < files.length; i++) {
-
-        var reader = new FileReader();
-        const file = files[i]
-        reader.readAsDataURL(file);
-
-        reader.onload = e => {
-
-            console.log(file)
-            APIRequest({
-                url: `${PUBLIC_BASE_URL}/media/presigned_url`,
-                method: 'GET',
-            }).then((res) => {
-                console.log(res)
-                if(res?.url) {
-                    uploadFile(file, res.url)
-                }
-            });
-        }
-    }
-
-
-    files = []
-    fileInput.value = ''
-}
-
-function uploadFile(file, url) {
-    fetch(url, {
-    method: "PUT",
-    body: file
-  })
-    .then(response => {
-      if (response.ok) {
-        console.log("File uploaded successfully!");
-      } else {
-        console.error("Error uploading file:", response.statusText);
-      }
+    dispatch('create', {
+        title: titleInput.value,
+        body: bodyInput.value,
     })
-    .catch(error => {
-      console.error("Error uploading file:", error);
-    });
-}
-
-function upload() {
-    fileInput.click()
-}
-
-let content = null;
-
-function updateContent(e) {
-    content = e.detail
-}
-function createPost() {
-    console.log(content)
 }
 
 let titleInput;
@@ -118,52 +116,124 @@ function handleEnter(e) {
     if(e.key === 'Enter') {
         e.preventDefault()
         if(titleInput.value.length > 0) {
-            editor.focus()
+            //editor.focus()
+            bodyInput.focus()
         }
     }
 }
 
+let bodyInput;
+
+function focusBodyInput() {
+    bodyInput.focus()
+    updateContent()
+}
+
+let titleFocused = false;
+let bodyFocused = false;
+
+const handleTitleFocus = () => {
+    titleFocused = true;
+    updateContent()
+};
+
+const handleTitleBlur = () => {
+    titleFocused = false;
+};
+
+const handleBodyFocus = () => {
+    bodyFocused = true;
+    updateContent()
+};
+
+const handleBodyBlur = () => {
+    bodyFocused = false;
+};
+
+function updateContent() {
+    let state = {
+        title: titleInput.value,
+        body: bodyInput.value,
+        focus: titleFocused ? 'title' : bodyFocused ? 'body' : null,
+        cursor: titleFocused ? titleInput.selectionStart : bodyFocused ? bodyInput.selectionStart : null,
+        scroll: bodyInput?.scrollTop > 0 ? bodyInput.scrollTop : null,
+    }
+
+    store.updateEditorState({
+        room_id: roomID,
+        state: state,
+    })
+}
+
+
+function attachFiles(e) {
+    e.detail.forEach(file => {
+        store.addAttachment({
+            room_id: roomID,
+            attachment: file,
+        })
+    })
+}
+
+$: showAttachments = $store.editorStates[roomID]?.attachments?.length > 0;
+
 </script>
 
-<section class="composer">
+<section class="composer" class:sf={showAttachments}>
     <div class="editor-area">
         <div class="title-container">
             <div class="">
-            <textarea 
-                class="post-title"
-                bind:this={titleInput}
-                placeholder="Title"
-                maxlength="140"
-                on:keydown={handleEnter}
-            ></textarea>
+                <textarea 
+                    class="post-title"
+                    bind:this={titleInput}
+                    placeholder="Title"
+                    maxlength="340"
+                    on:keydown={handleEnter}
+                    on:keydown={updateContent}
+                    on:input={updateContent}
+                    on:click={updateContent}
+                    on:focus={handleTitleFocus}
+                    on:blur={handleTitleBlur}
+                ></textarea>
             </div>
-            <div class="c-ico ml2" on:click={kill}>
+            <div class="c-ico ml2 kill" on:click={kill}>
                 {@html close}
             </div>
         </div>
-        <Editor 
-            bind:this={editor} 
-            on:focusTitle={focusTitleInput}
-            initFocus={false} 
-            on:change={updateContent}/>
-    </div>
-    <div class="tools fl">
-        <div class="c-ico" on:click={upload}>
-            {@html add}
-            <input 
-                type="file" 
-                name="images"
-                bind:this={fileInput} 
-                on:change={build} 
-                hidden 
-                multiple
-            >
+        <div class="body-container" on:click={focusBodyInput}>
+                <textarea 
+                    class="post-body"
+                    bind:this={bodyInput}
+                    placeholder="What's on your mind?"
+                    on:keydown={focusOnTitle}
+                    on:keydown={updateContent}
+                    maxlength="2000"
+                    on:input={updateContent}
+                    on:click={updateContent}
+                    on:focus={handleBodyFocus}
+                    on:blur={handleBodyBlur}
+                ></textarea>
         </div>
+    </div>
+
+    {#if showAttachments}
+        <div class="">
+            <Attachments roomID={roomID}/>
+        </div>
+    {/if}
+
+    <div class="tools fl">
+        <Attach on:attached={attachFiles}/>
         <div class="fl-o">
         </div>
-        <div class="c-ico" on:click={createPost}>
-            {@html send}
-        </div>
+        <button class="vb" on:click={createPost}>
+            <div class="ico-s">
+                {@html send}
+            </div>
+            <div class="grd-c ph2">
+                Post
+            </div>
+        </button>
     </div>
 </section>
 
@@ -174,15 +244,18 @@ function handleEnter(e) {
     grid-template-rows: 1fr auto;
     border-bottom: 1px solid var(--border-1);
 }
+.sf {
+    grid-template-rows: 1fr auto auto;
+}
 
 .editor-area {
     display: grid;
     grid-template-rows: auto 1fr;
     overflow-y: hidden;
+    max-height: 480px;
 }
 
 .composer {
-    max-height: 480px;
 }
 
 .tools {
@@ -196,7 +269,6 @@ function handleEnter(e) {
 .title-container {
     padding-right: 1rem;
     padding-left: 1rem;
-    padding-top: 1rem;
     display: grid;
     grid-template-columns: 1fr auto;
 }
@@ -208,6 +280,37 @@ function handleEnter(e) {
     width: 100%;
     font-weight: bold;
     padding: 0;
-    height: 22px;
+    height: 42px;
+    padding-top: 1rem;
+    padding-bottom: 0.5rem;
+}
+
+.body-container {
+    padding-right: 1.5rem;
+    cursor: text;
+    min-height: 140px;
+}
+
+.post-body {
+    background-color: transparent;
+    border: none;
+    width: 100%;
+    padding: 0;
+    padding-left: 1rem;
+    max-height: 200px;
+    overflow-x: hidden;
+}
+
+.ex {
+    font-size: small;
+    color: var(--primary);
+}
+
+.kill {
+    margin-top: 1rem;
+}
+
+button {
+    padding: 0.25rem;
 }
 </style>

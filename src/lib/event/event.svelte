@@ -27,9 +27,11 @@ function buildLink(e, page) {
         url = `/${e?.room_alias}/post/${e?.slug}`
     }
 
+    /*
     if(isSpace && isRoom)  {
         url = `/${e?.room_alias}/${page.params.room}/post/${e?.slug}`
     }
+    */
 
     const pathname = page.url.pathname
     if(url == pathname) {

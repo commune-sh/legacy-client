@@ -22,6 +22,7 @@ function createApp() {
     pageState: [],
     events: [],
     menuToggled: false,
+    editorStates: [],
   }
 
 
@@ -200,6 +201,54 @@ function createApp() {
     })
   }
 
+  let addEditorState = (x) => {
+    update(p => {
+      p.editorStates[x.room_id] = x.state
+      return p
+    })
+  }
+  let updateEditorState = (x) => {
+    update(p => {
+      p.editorStates[x.room_id].title = x.state.title
+      p.editorStates[x.room_id].body = x.state.body
+      p.editorStates[x.room_id].focus = x.state.focus
+      p.editorStates[x.room_id].cursor = x.state.cursor
+      p.editorStates[x.room_id].scroll = x.state.scroll
+      return p
+    })
+  }
+
+
+  let addAttachment = (x) => {
+    update(p => {
+      if(p.editorStates[x.room_id]?.attachments == undefined) {
+        p.editorStates[x.room_id].attachments = []
+      }
+      p.editorStates[x.room_id]?.attachments.push(x.attachment)
+      return p
+    })
+  }
+
+  let deleteAttachment = (room_id, index) => {
+    update(p => {
+      delete p.editorStates[room_id]?.attachments[index]
+      return p
+    })
+  }
+
+
+  let getEditorState = (room_id) => {
+      return app.editorStates[room_id]
+  }
+
+
+  let deleteEditorState = (room_id) => {
+    update(p => {
+      delete p.editorStates[room_id]
+      return p
+    })
+  }
+
 
   const { subscribe, set, update } = writable(app);
 
@@ -230,6 +279,12 @@ function createApp() {
     addSpacePath,
     addSpaceRoomPath,
     toggleMenu,
+    addEditorState,
+    updateEditorState,
+    getEditorState,
+    deleteEditorState,
+    deleteAttachment,
+    addAttachment,
   };
 }
 

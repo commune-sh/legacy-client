@@ -71,7 +71,7 @@ function create() {
 
     APIRequest({
         url: `${PUBLIC_BASE_URL}/account`,
-        data: {
+        body: {
             email: emailInput.value, 
             username: usernameInput.value, 
             password: passwordInput.value,

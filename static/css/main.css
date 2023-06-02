@@ -260,6 +260,10 @@ a:hover {
   flex-direction: row;
 }
 
+.fl-wr {
+    flex-wrap: wrap;
+}
+
 button {
     cursor: pointer;
     border-radius: 3px;

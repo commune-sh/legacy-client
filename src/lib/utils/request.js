@@ -22,8 +22,8 @@ export async function APIRequest(r) {
       options.method = r.method
     }
 
-    if(r.data) {
-      options.body = JSON.stringify(r.data)
+    if(r.body) {
+      options.body = JSON.stringify(r.body)
     }
     const response = await fetch(r.url, options);
 
