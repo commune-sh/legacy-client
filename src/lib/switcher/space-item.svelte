@@ -41,7 +41,7 @@ $: active = $page.params?.space === space?.alias
 
 </script>
 
-<div class="pa2" bind:this={content}>
+<div class="" bind:this={content}>
     {space?.name}
 </div>
 

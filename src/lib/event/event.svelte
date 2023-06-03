@@ -68,6 +68,9 @@ function goToEvent() {
 $: content = event?.content?.formatted_body ? event?.content?.formatted_body :
     event?.content?.body
 
+$: title = event?.content?.title ? event?.content?.title : `Untitled`
+
+
 function fetchReplies() {
     console.log("lol")
 }
@@ -103,7 +106,22 @@ function killMenu() {
     class:highlight={highlight}>
     <div class="fl-co">
         <div class="body">
-            {@html content}
+            {#if isPost}
+                <div class="post-title">
+                    {title}
+                </div>
+                <div class="post-body">
+                    {@html content}
+                </div>
+            {:else if isReply}
+                <div class="post-body">
+                    {@html content}
+                </div>
+            {:else}
+                <div class="post-title-default">
+                    {title}
+                </div>
+            {/if}
         </div>
         <div class="pt2 fl">
             <User hideAvatar={true} user={user} />
@@ -184,5 +202,8 @@ function killMenu() {
 .body {
     line-height: 1.5;
     user-select: text;
+}
+.post-title {
+    font-weight: bold;
 }
 </style>

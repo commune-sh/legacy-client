@@ -13,7 +13,6 @@ let menu;
 onMount(() => {
     menu = tippy(el, {
         content: content,
-        theme: 'light-border',
         placement: 'right',
         arrow: true,
         duration: 1,
@@ -32,7 +31,7 @@ function goToSpace() {
 
 </script>
 
-<div class="pa2" bind:this={content}>
+<div class="" bind:this={content}>
     Create Space
 </div>
 

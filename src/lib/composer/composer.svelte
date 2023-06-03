@@ -1,6 +1,6 @@
 <script>
 import { tick, onMount, onDestroy, createEventDispatcher } from 'svelte'
-import { add, send, close } from '$lib/assets/icons.js'
+import { eye, send, close } from '$lib/assets/icons.js'
 import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { APIRequest, getPresignedURL, uploadAttachment, savePost } from '$lib/utils/request.js'
 import { marked } from 'marked'
@@ -8,6 +8,7 @@ import autosize from '$lib/vendor/autosize/autosize'
 import { store } from '$lib/store/store.js'
 import Attach from './attachments/attach.svelte'
 import Attachments from './attachments/attachments.svelte'
+import tippy from 'tippy.js';
 
 
 export let roomID;
@@ -72,6 +73,13 @@ onMount(() => {
     }
 
     bodyInput.addEventListener('scroll', handleScroll);
+
+    tippy(preview, {
+        content: "Preview Markdown",
+        placement: 'top',
+        arrow: false,
+        duration: 1,
+    });
 })
 
 onDestroy(() => {
@@ -110,7 +118,7 @@ async function createPost() {
         focusBodyInput()
         return
     }
-    //busy = true
+    busy = true
 
     try {
         let items = []
@@ -143,8 +151,6 @@ async function createPost() {
             post.content.attachments = items
         }
 
-        console.log("saving post ", post.content.formatted_body)
-        return
         const res = await savePost(post);
         console.log(res)
         if(res?.success && res?.event) {
@@ -244,6 +250,13 @@ function trackCaret(e) {
 $: attachments = $store.editorStates[roomID]?.attachments
 $: showAttachments = $store.editorStates[roomID]?.attachments?.length > 0;
 
+let preview;
+let previewing = false;
+
+function togglePreview() {
+    previewing = !previewing
+}
+
 </script>
 
 <section class="composer" class:sf={showAttachments}>
@@ -294,6 +307,14 @@ $: showAttachments = $store.editorStates[roomID]?.attachments?.length > 0;
         <Attach busy={busy} on:attached={attachFiles}/>
         <div class="fl-o">
         </div>
+        <div class="grd mr3">
+            <div class:pact={previewing} 
+                on:click={togglePreview} 
+                bind:this={preview} 
+                class="prev c-ico grd-c ph2">
+                {@html eye}
+            </div>
+        </div>
         <button class="vb" disabled={busy} on:click={createPost}>
             <div class="ico-s">
                 {@html send}
@@ -320,7 +341,6 @@ $: showAttachments = $store.editorStates[roomID]?.attachments?.length > 0;
     display: grid;
     grid-template-rows: auto 1fr;
     overflow-y: hidden;
-    max-height: 480px;
 }
 
 .composer {
@@ -369,7 +389,7 @@ $: showAttachments = $store.editorStates[roomID]?.attachments?.length > 0;
     width: 100%;
     padding: 0;
     padding-left: 1rem;
-    max-height: 200px;
+    max-height: 400px;
     overflow-x: hidden;
 }
 
@@ -384,5 +404,15 @@ $: showAttachments = $store.editorStates[roomID]?.attachments?.length > 0;
 
 button {
     padding: 0.25rem;
+}
+.prev {
+    opacity: 0.4;
+    transition: 0.1s;
+}
+.prev:hover {
+    opacity: 0.8;
+}
+.pact {
+    opacity: 1;
 }
 </style>
