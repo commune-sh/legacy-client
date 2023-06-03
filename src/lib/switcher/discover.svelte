@@ -1,6 +1,7 @@
 <script>
 import { onMount, createEventDispatcher } from 'svelte'
 import { store } from '$lib/store/store.js'
+import { compass } from '$lib/assets/icons.js'
 import { goto } from '$app/navigation';
 import { page } from '$app/stores';
 import tippy from 'tippy.js';
@@ -28,31 +29,28 @@ $: spacePath = $store?.spacePaths[space?.alias]?.pathname
 $: initial = space?.alias?.charAt(0)?.toUpperCase()
 
 function goToSpace() {
-    let url = `/${space?.alias}`
-    if(spacePath != undefined) {
-        url = spacePath
-    }
+    let url = `/discover`
     goto(url, {noscroll: true})
 }
 
 let hovered = false;
 
-$: active = $page.params?.space === space?.alias
+$: active = $page?.route?.id === `/(app)/discover`
 
 </script>
 
 <div class="pa2" bind:this={content}>
-    {space?.name}
+    Discover Spaces
 </div>
 
 <div class="i-c grd">
-    <div class="item grd-c"
-    bind:this={el}
+    <div class="item grd-c" 
     on:mouseover={() => hovered = true}
     on:mouseleave={() => hovered = false}
-    on:click={goToSpace}>
-        <div class="grd-c">
-            {initial}
+    on:click={goToSpace}
+    bind:this={el}>
+        <div class="create ico grd-c">
+            {@html compass}
         </div>
     </div>
     <div class="tick" class:th={hovered} class:ac={active}></div>
@@ -74,7 +72,6 @@ $: active = $page.params?.space === space?.alias
     cursor: pointer;
     transition: 0.1s;
 }
-
 .item:hover {
     border-radius: 15px;
     background-color: var(--primary);
@@ -100,4 +97,8 @@ $: active = $page.params?.space === space?.alias
     opacity: 1;
 }
 
+.create {
+    height: 22px;
+    width: 22px;
+}
 </style>

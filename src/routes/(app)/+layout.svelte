@@ -46,6 +46,12 @@ function collapse() {
     store.toggleMenu()
 }
 
+$: discover = $page?.route?.id === `/(app)/discover`
+
+$: if(discover) {
+    ready = true
+}
+
 </script>
 
 <Sync />
@@ -66,7 +72,11 @@ function collapse() {
         </div>
 
         <div class="content" class:slide-in={menuToggled}>
-            <View on:ready={viewReady} />
+            {#if discover}
+                <slot></slot>
+            {:else}
+                <View on:ready={viewReady} />
+            {/if}
         </div>
 
     </div>

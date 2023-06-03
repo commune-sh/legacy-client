@@ -3,6 +3,7 @@ import { tick, onMount, onDestroy, createEventDispatcher } from 'svelte'
 import { add, send, close } from '$lib/assets/icons.js'
 import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { APIRequest, getPresignedURL, uploadAttachment, savePost } from '$lib/utils/request.js'
+import { marked } from 'marked'
 import autosize from '$lib/vendor/autosize/autosize'
 import { store } from '$lib/store/store.js'
 import Attach from './attachments/attach.svelte'
@@ -109,7 +110,7 @@ async function createPost() {
         focusBodyInput()
         return
     }
-    busy = true
+    //busy = true
 
     try {
         let items = []
@@ -121,12 +122,10 @@ async function createPost() {
                 const presignedURL = await getPresignedURL(extension);
                 await uploadAttachment(file, presignedURL.url);
                 items.push({
-                    file: {
-                        name: file.name,
-                        size: file.size,
-                        type: file.type,
-                        key: presignedURL.key,
-                    }
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                    key: presignedURL.key,
                 })
             }
         }
@@ -137,13 +136,15 @@ async function createPost() {
                 msgtype: 'm.text',
                 title: titleInput.value,
                 body: bodyInput.value,
+                formatted_body: marked.parse(bodyInput.value),
             },
         }
         if(attachments && items.length > 0) {
             post.content.attachments = items
         }
 
-        console.log("saving post ", post)
+        console.log("saving post ", post.content.formatted_body)
+        return
         const res = await savePost(post);
         console.log(res)
         if(res?.success && res?.event) {
@@ -227,6 +228,19 @@ function attachFiles(e) {
     })
 }
 
+function trackCaret(e) {
+  setTimeout(() => {
+    const cursorPosition = bodyInput.selectionStart;
+    const content = bodyInput.value;
+    const scp = content.substr(cursorPosition - 3, 1);
+    const space = content.substr(cursorPosition - 4, 1);
+    if(scp === ':' && space === ' ') {
+        //console.log('emoji')
+    }
+
+  }, 0);
+}
+
 $: attachments = $store.editorStates[roomID]?.attachments
 $: showAttachments = $store.editorStates[roomID]?.attachments?.length > 0;
 
@@ -261,6 +275,7 @@ $: showAttachments = $store.editorStates[roomID]?.attachments?.length > 0;
                     placeholder="What's on your mind?"
                     on:keydown={focusOnTitle}
                     on:keydown={updateContent}
+                    on:keydown={trackCaret}
                     maxlength="2000"
                     on:input={updateContent}
                     on:click={updateContent}

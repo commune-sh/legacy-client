@@ -2,6 +2,8 @@
 import SpaceItems from '$lib/switcher/space-items.svelte'
 import { store } from '$lib/store/store.js'
 import Logo from '$lib/logo/logo.svelte'
+import CreateSpace from './create-space.svelte'
+import Discover from './discover.svelte'
 import { page } from '$app/stores';
 
 $: authenticated = $store?.authenticated && 
@@ -52,6 +54,10 @@ $: spaces = $store?.spaces
         <div class="content">
             <SpaceItems spaces={spaces}/>
         </div>
+
+
+        <CreateSpace />
+        <Discover />
     </div>
 
     <div class="">

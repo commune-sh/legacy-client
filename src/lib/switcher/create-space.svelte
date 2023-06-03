@@ -1,7 +1,7 @@
 <script>
 import { onMount, createEventDispatcher } from 'svelte'
 import { store } from '$lib/store/store.js'
-import { goto } from '$app/navigation';
+import { addLine } from '$lib/assets/icons.js'
 import { page } from '$app/stores';
 import tippy from 'tippy.js';
 
@@ -28,34 +28,21 @@ $: spacePath = $store?.spacePaths[space?.alias]?.pathname
 $: initial = space?.alias?.charAt(0)?.toUpperCase()
 
 function goToSpace() {
-    let url = `/${space?.alias}`
-    if(spacePath != undefined) {
-        url = spacePath
-    }
-    goto(url, {noscroll: true})
 }
-
-let hovered = false;
-
-$: active = $page.params?.space === space?.alias
 
 </script>
 
 <div class="pa2" bind:this={content}>
-    {space?.name}
+    Create Space
 </div>
 
 <div class="i-c grd">
     <div class="item grd-c"
-    bind:this={el}
-    on:mouseover={() => hovered = true}
-    on:mouseleave={() => hovered = false}
-    on:click={goToSpace}>
-        <div class="grd-c">
-            {initial}
+    on:click={goToSpace} bind:this={el}>
+        <div class="create c-ico grd-c">
+            {@html addLine}
         </div>
     </div>
-    <div class="tick" class:th={hovered} class:ac={active}></div>
 </div>
 
 <style>
@@ -74,7 +61,6 @@ $: active = $page.params?.space === space?.alias
     cursor: pointer;
     transition: 0.1s;
 }
-
 .item:hover {
     border-radius: 15px;
     background-color: var(--primary);
@@ -100,4 +86,8 @@ $: active = $page.params?.space === space?.alias
     opacity: 1;
 }
 
+.create {
+    height: 22px;
+    width: 22px;
+}
 </style>
