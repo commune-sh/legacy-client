@@ -127,11 +127,6 @@
 }
 
 
-@font-face {
-    font-family: 'Inter';
-    src: url('/fonts/Inter-Regular.ttf');
-}
-
 
 
 @font-face {
@@ -150,7 +145,7 @@ html {
 }
 
 body {
-    font-family: monospace, "Twemoji";
+    font-family: system-ui, "Twemoji";
     font-weight: normal;
     line-height: 1;
     margin: 0;
