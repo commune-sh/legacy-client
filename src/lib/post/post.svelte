@@ -9,6 +9,14 @@ import { page } from '$app/stores';
 import SkeletonBoardEvents from '$lib/skeleton/skeleton-board-events.svelte'
 import Composer from '$lib/composer/composer.svelte'
 
+$: authenticated = $store?.authenticated && 
+    $store?.credentials != null
+    $store?.credentials?.access_token?.length > 0
+
+$: space_room_id = state?.room_id
+$: joined = $store?.spaces.find(x => x?.room_id === space_room_id) != null 
+
+
 export let post;
 
 
@@ -80,7 +88,7 @@ function replySaved(e) {
         <div class="sep">
         </div>
 
-        {#if ready}
+        {#if ready && authenticated && joined}
         <div class="com">
                 <Composer 
                     roomID={roomID}
