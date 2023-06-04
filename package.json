@@ -32,6 +32,7 @@
 		"dayjs": "^1.11.7",
 		"markdown-it": "^13.0.1",
 		"markdown-it-emoji": "^2.0.2",
+		"punycode": "^2.3.0",
 		"tippy.js": "^6.3.7",
 		"uuid": "^9.0.0",
 		"validator": "^13.9.0"
