@@ -1,4 +1,5 @@
 <script>
+import { PUBLIC_MEDIA_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 import Reactions from '$lib/event/reactions/reactions.svelte'
@@ -64,11 +65,23 @@ function goToEvent() {
     })
 }
 
+function getFirstParagraphNode(content) {
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = content;
+  const firstParagraphNode = tempDiv.querySelector('p');
+  return firstParagraphNode?.innerHTML || null;
+}
 
 $: content = event?.content?.formatted_body ? event?.content?.formatted_body :
     event?.content?.body
 
+
+$: clipped = getFirstParagraphNode(content)
+
 $: title = event?.content?.title ? event?.content?.title : `Untitled`
+
+$: attachments = event?.content?.attachments
+$: hasAttachments = event?.content?.attachments?.length > 0
 
 
 function fetchReplies() {
@@ -97,14 +110,19 @@ function killMenu() {
     }, 100)
 }
 
+function getURL(item) {
+    return `${PUBLIC_MEDIA_URL}/${item.key}`
+}
+
 </script>
 
 <div class="event" 
     class:h={!isReply && !isPost}
+    class:ha={!isReply && !isPost && hasAttachments}
     class:ma={menuActive}
     on:click={goToEvent} 
     class:highlight={highlight}>
-    <div class="fl-co">
+    <div class="ev-c fl-co">
         <div class="body">
             {#if isPost}
                 <div class="post-title">
@@ -121,8 +139,12 @@ function killMenu() {
                 <div class="post-title-default">
                     {title}
                 </div>
+                <div class="post-body clipped">
+                    {@html clipped}
+                </div>
             {/if}
         </div>
+
         <div class="pt2 fl">
             <User hideAvatar={true} user={user} />
             <div class="fl-o">
@@ -148,6 +170,15 @@ function killMenu() {
             </div>
         </div>
     </div>
+
+    {#if !isPost && !isReply && hasAttachments}
+    <div class="grd">
+        <div class="at-img grd-c" 
+            style="background-image: url({getURL(attachments[0])})">
+        </div>
+    </div>
+    {/if}
+
 </div>
 
 <style>
@@ -158,12 +189,21 @@ function killMenu() {
     grid-column-gap: 10px;
     padding: 1rem;
     border-bottom: 1px solid var(--ev-bb);
+    overflow: hidden;
+}
+
+.ha {
+    grid-template-columns: 1fr auto;
 }
 
 .event:hover .menu {
     opacity: 1;
 }
 
+
+.ev-c {
+    overflow: hidden;
+}
 
 :global(:root) {
     --ev-bb: #272727;
@@ -202,8 +242,34 @@ function killMenu() {
 .body {
     line-height: 1.5;
     user-select: text;
+    overflow: hidden;
 }
 .post-title {
     font-weight: bold;
+}
+.clipped {
+    font-size: 14px!important;
+    font-weight: 500;
+    height: 30px;
+    line-height: 30px!important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-break: break-word;
+}
+.clipped p {
+    margin-block-start: 0;
+    margin-block-end: 0;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+
+.at-img {
+    height: 100px;
+    width: 100px;
+    border-radius: 2px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 </style>

@@ -93,6 +93,13 @@
 
 
 
+@font-face {
+    font-family: 'Inter';
+    src: url('/fonts/Inter-Regular.ttf');
+}
+
+
+
 
 @font-face {
     font-family: 'Twemoji';
@@ -110,7 +117,7 @@ html {
 }
 
 body {
-    font-family: system-ui, "Twemoji";
+    font-family: "Inter", "Twemoji", "Apple Color Emoji", "Segoe UI Emoji", "Arial", "Helvetica", sans-serif, "STIXGeneral", "Noto Color Emoji";
     font-weight: normal;
     line-height: 1;
     margin: 0;
@@ -653,6 +660,5 @@ pre::-webkit-scrollbar-track {
 pre::-webkit-scrollbar-thumb {
   background-color: var(--code-block-scroll);
 }
-
 
 

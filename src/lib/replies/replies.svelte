@@ -2,9 +2,20 @@
 import Event from '$lib/event/event.svelte'
 import Header from '$lib/header/post-header.svelte'
 import { onMount } from 'svelte';
+import { store } from '$lib/store/store.js'
 import { APIRequest } from '$lib/utils/request.js'
 import { PUBLIC_BASE_URL } from '$env/static/public';
 import { page } from '$app/stores';
+import SkeletonBoardEvents from '$lib/skeleton/skeleton-board-events.svelte'
+import Composer from '$lib/composer/composer.svelte'
+
+
+$: state = $store?.states[$page?.params?.space]
+
+$: isSpace = $page?.params?.space !== undefined && $page?.params?.space !== null && $page?.params?.space !== '' 
+$: isRoom = $page?.params?.room !== undefined && $page?.params?.room !== null && $page?.params?.room !== '' 
+$: roomID = isRoom ? state?.children?.find(r => r?.alias ===
+    $page?.params?.room)?.room_id : isSpace ? state?.room_id : null
 
 let ready = false;
 
@@ -68,11 +79,7 @@ $: if(lastPost != null && $page.params.post != lastPost) {
 
     </section>
     {:else}
-        <section class="grd">
-            <section class="grd-c">
-                <div class="loader"></div>
-            </section>
-        </section>
+        <SkeletonBoardEvents />
     {/if}
 </section>
 

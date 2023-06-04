@@ -4,12 +4,16 @@ import Auth from '../auth/auth.svelte'
 import { page } from '$app/stores';
 import RoomList from './room-list/room-list.svelte'
 import { store } from '$lib/store/store.js'
+import SkeletonSidebar from '$lib/skeleton/skeleton-sidebar.svelte'
 
 $: state = $store?.states[$page?.params?.space]
+
+$: ready = state != undefined && state?.space != undefined
 
 $: children = state?.children
 
 $: isNotIndex = $page.params.space || $page.params.room
+$: isIndex = $page?.url?.pathname === '/'
 
 function buildItems(state) {
     if(!state && !state?.room_id) {
@@ -45,6 +49,7 @@ $: items = buildItems(state)
     <Header state={state} />
 
     <div class="content fl-co">
+        {#if ready || isIndex}
 
             {#if isNotIndex}
                 <div class="items">
@@ -55,6 +60,9 @@ $: items = buildItems(state)
             <div class="">
             </div>
 
+        {:else}
+            <SkeletonSidebar />
+        {/if}
 
     </div>
     <div class="auth">

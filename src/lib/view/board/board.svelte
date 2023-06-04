@@ -8,6 +8,7 @@ import Event from '$lib/event/event.svelte'
 import Header from '$lib/header/header.svelte'
 import Replies from '$lib/replies/replies.svelte'
 import Composer from '$lib/composer/composer.svelte'
+import SkeletonBoardEvents from '$lib/skeleton/skeleton-board-events.svelte'
 
 $: state = $store?.states[$page?.params?.space]
 
@@ -270,9 +271,9 @@ function postSaved(e) {
 
 
             {#if reloading}
-                <section class="grd-c">
-                    <div class="loader"></div>
-                </section>
+
+                <SkeletonBoardEvents />
+
             {:else}
                 {#if editing}
                     <Composer 
@@ -354,6 +355,7 @@ function postSaved(e) {
 
 .inner-content {
     overflow-y: auto;
+    overflow-x: hidden;
     display: grid;
     grid-template-rows: repeat(auto-fill, auto);
 }
@@ -370,6 +372,7 @@ function postSaved(e) {
     width: 100%;
     justify-self: center;
     align-self: start;
+    overflow: hidden;
 }
 
 .ina {

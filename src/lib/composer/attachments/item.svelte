@@ -33,9 +33,6 @@ function deleteAttachment() {
 <div class="item">
     <div class="image" style="background-image: url({imageURL})">
     </div>
-    <div class="name">
-        {item.name}
-    </div>
     {#if !uploading}
     <div class="close grd">
         <div class="grd-c c-ico" on:click={deleteAttachment}>
@@ -62,6 +59,7 @@ function deleteAttachment() {
     right: 0;
     bottom: 0;
     background-color: var(--mask);
+    border-radius: 14px;
 }
 .item {
     width: 170px;
@@ -71,31 +69,24 @@ function deleteAttachment() {
     display: grid;
     grid-template-rows: 1fr auto;
     position:relative;
-    border: 1px solid var(--border-1);
+    border-radius: 14px;
 }
 
 .image {
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
+    border-radius: 14px;
 }
-.name {
-    font-size: small;
-    padding: 0.5rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 
-
-}
 .close {
     position: absolute;
-    top: -8px;
-    right: -8px;
+    top: 6px;
+    right: 6px;
     height: 26px;
     width: 26px;
     fill: var(--primary);
-    border: 1px solid var(--border-1);
+    border-radius: 50%;
     background: var(--bg);
 }
 .c-ico {
