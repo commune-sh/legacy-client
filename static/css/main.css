@@ -661,4 +661,9 @@ pre::-webkit-scrollbar-thumb {
   background-color: var(--code-block-scroll);
 }
 
+img {
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+}
 

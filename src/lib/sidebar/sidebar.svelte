@@ -14,6 +14,7 @@ $: children = state?.children
 
 $: isNotIndex = $page.params.space || $page.params.room
 $: isIndex = $page?.url?.pathname === '/'
+$: isNotSpace = $page?.params?.space == undefined || $page?.params?.space == null
 
 function buildItems(state) {
     if(!state && !state?.room_id) {
@@ -49,7 +50,7 @@ $: items = buildItems(state)
     <Header state={state} />
 
     <div class="content fl-co">
-        {#if ready || isIndex}
+        {#if ready || isNotSpace}
 
             {#if isNotIndex}
                 <div class="items">

@@ -7,6 +7,9 @@ import { APIRequest } from '$lib/utils/request.js'
 import { PUBLIC_BASE_URL } from '$env/static/public';
 import { page } from '$app/stores';
 import SkeletonBoardEvents from '$lib/skeleton/skeleton-board-events.svelte'
+import Composer from '$lib/composer/composer.svelte'
+
+export let post;
 
 
 $: state = $store?.states[$page?.params?.space]
@@ -20,11 +23,11 @@ let ready = false;
 
 function loadEvents() {
     APIRequest({
-      url: `${PUBLIC_BASE_URL}/event/${$page.params.post}`,
+      url: `${PUBLIC_BASE_URL}/event/${post.event_id}/replies`,
       method: 'GET',
     })
     .then(resp => {
-        if(resp && resp?.event) {
+        if(resp) {
             //
             data = resp
             lastPost = $page.params.post
@@ -45,7 +48,7 @@ $: replies = data?.replies
 let lastPost = null;
 
 onMount(() => {
-    if($page.params.post) {
+    if(post?.event_id) {
         loadEvents()
     }
 })
@@ -55,31 +58,52 @@ $: if(lastPost != null && $page.params.post != lastPost) {
     loadEvents()
 }
 
+let placeholder = 'Leave a reply.'
+
+function replySaved(e) {
+    if(data == null) {
+        data = {}
+        data.replies = []
+    }
+    data.replies = [e.detail, ...data.replies];
+}
+
 </script>
 
 <section class="content">
     <Header />
 
-    {#if ready}
     <section class="events">
-            <Event isPost={true} event={data.event} />
 
-            <div class="sep">
-            </div>
+        <Event isPost={true} event={post} />
 
+        <div class="sep">
+        </div>
 
-        {#if replies}
-            {#each replies as reply}
-                <Event isReply={true} event={reply} />
-            {/each}
+        {#if ready}
+        <div class="com">
+                <Composer 
+                    roomID={roomID}
+                    reply={true} 
+                    replyTo={post.event_id}
+                    on:saved={replySaved} 
+                    placeholder={placeholder} />
+        </div>
+        {/if}
+
+        {#if ready}
+            {#if replies}
+                {#each replies as reply}
+                    <Event isReply={true} event={reply} />
+                {/each}
+            {/if}
         {:else}
-                No replies
+            <SkeletonBoardEvents />
         {/if}
 
     </section>
-    {:else}
-        <SkeletonBoardEvents />
-    {/if}
+
+
 </section>
 
 

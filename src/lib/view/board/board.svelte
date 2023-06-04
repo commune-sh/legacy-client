@@ -6,7 +6,7 @@ import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
 import Event from '$lib/event/event.svelte'
 import Header from '$lib/header/header.svelte'
-import Replies from '$lib/replies/replies.svelte'
+import Post from '$lib/post/post.svelte'
 import Composer from '$lib/composer/composer.svelte'
 import SkeletonBoardEvents from '$lib/skeleton/skeleton-board-events.svelte'
 
@@ -103,6 +103,7 @@ function loadEvents(init) {
             loaded = true
             reloading = false
         }
+
         if(!resp) {
             down = true
         }
@@ -144,7 +145,7 @@ let scrollable
 let obs;
 
 
-$: if(obs) {
+$: if(obs && loaded && ready) {
     setupObserver()
 }
 
@@ -158,11 +159,11 @@ onMount(() => {
 })
 
 function setupObserver() {
-    scrollHeight = scrollable?.scrollHeight;
     handleScroll();
 }
 
 function handleScroll() {
+    scrollHeight = scrollable?.scrollHeight;
     let options = {
         root: scrollable,
         rootMargin: `${scrollHeight/2}px`,
@@ -246,6 +247,10 @@ function postSaved(e) {
     data.events = [e.detail, ...data.events];
 }
 
+
+$: selectedPost = data?.events?.find(e => e.slug == $page.params.post)
+
+
 </script>
 
 
@@ -266,7 +271,6 @@ function postSaved(e) {
             on:newPost={newPost} />
 
         <div class="inner-content" 
-            class:sph={editing}
             bind:this={scrollable}>
 
 
@@ -319,8 +323,8 @@ function postSaved(e) {
 
     </div>
 
-    {#if isPost}
-        <Replies />
+    {#if isPost && selectedPost}
+        <Post post={selectedPost} />
     {/if}
 
 </section>
@@ -372,7 +376,6 @@ function postSaved(e) {
     width: 100%;
     justify-self: center;
     align-self: start;
-    overflow: hidden;
 }
 
 .ina {

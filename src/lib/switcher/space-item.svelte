@@ -51,8 +51,8 @@ $: active = $page.params?.space === space?.alias
     on:mouseover={() => hovered = true}
     on:mouseleave={() => hovered = false}
     on:click={goToSpace}>
-        <div class="grd-c">
-            {initial}
+        <div class="initial grd-c">
+            <b>{initial}</b>
         </div>
     </div>
     <div class="tick" class:th={hovered} class:ac={active}></div>
@@ -73,6 +73,11 @@ $: active = $page.params?.space === space?.alias
     display: grid;
     cursor: pointer;
     transition: 0.1s;
+}
+
+.initial {
+    opacity: 0.8;
+    font-size: 0.9rem;
 }
 
 .item:hover {

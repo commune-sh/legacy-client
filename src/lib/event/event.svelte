@@ -179,6 +179,14 @@ function getURL(item) {
     </div>
     {/if}
 
+    {#if (isPost || isReply) && hasAttachments}
+    <div class="grd">
+        <div class="at-img grd-c" 
+            style="background-image: url({getURL(attachments[0])})">
+        </div>
+    </div>
+    {/if}
+
 </div>
 
 <style>
@@ -272,4 +280,5 @@ function getURL(item) {
     background-size: cover;
     background-position: center;
 }
+
 </style>

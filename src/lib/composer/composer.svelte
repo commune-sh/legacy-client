@@ -3,7 +3,8 @@ import { tick, onMount, onDestroy, createEventDispatcher } from 'svelte'
 import { eye, send, close } from '$lib/assets/icons.js'
 import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { APIRequest, getPresignedURL, uploadAttachment, savePost } from '$lib/utils/request.js'
-import { marked } from 'marked'
+import MarkdownIt from 'markdown-it'
+import MarkdownItEmoji from 'markdown-it-emoji'
 import autosize from '$lib/vendor/autosize/autosize'
 import { store } from '$lib/store/store.js'
 import Attach from './attachments/attach.svelte'
@@ -12,8 +13,13 @@ import tippy from 'tippy.js';
 
 
 export let roomID;
+export let placeholder = `What's on your mind?`;
+export let replyTo;
+export let reply = false;
 
-$: state = $store.editorStates[roomID]
+$: stateKey = !reply ? roomID : roomID + replyTo
+
+$: state = $store.editorStates[stateKey]
 
 const dispatch = createEventDispatcher()
 
@@ -27,6 +33,8 @@ function kill() {
 
 let editor;
 let ready = false;
+
+let md;
 
 onMount(() => {
 
@@ -60,7 +68,7 @@ onMount(() => {
         focusTitleInput()
 
         store.addEditorState({
-            room_id: roomID,
+            room_id: stateKey,
             state: {
                 title: '',
                 body: '',
@@ -72,6 +80,7 @@ onMount(() => {
         })
     }
 
+
     bodyInput.addEventListener('scroll', handleScroll);
 
     tippy(preview, {
@@ -80,6 +89,9 @@ onMount(() => {
         arrow: false,
         duration: 1,
     });
+
+    md = new MarkdownIt();
+    md.use(MarkdownItEmoji);
 })
 
 onDestroy(() => {
@@ -110,10 +122,14 @@ $: postText = uploading ? 'Uploading...' : busy ? 'Posting...' : 'Post'
 
 
 async function createPost() {
-    if(titleInput.value.length === 0) {
+    if(titleInput.value.length === 0 && !reply) {
         focusTitleInput()
         return
     }
+    if(reply && replyTo == null) {
+        return
+    }
+
     if(bodyInput.value.length === 0) {
         focusBodyInput()
         return
@@ -123,7 +139,6 @@ async function createPost() {
     try {
         let items = []
         if(attachments) {
-            busy = true
             uploading = true
             for (const file of attachments) {
                 const extension = file.name.split('.').pop();
@@ -144,17 +159,31 @@ async function createPost() {
                 msgtype: 'm.text',
                 title: titleInput.value,
                 body: bodyInput.value,
-                formatted_body: marked.parse(bodyInput.value),
+                formatted_body: md.render(bodyInput.value),
             },
         }
+
+        if(reply) {
+            post.content['m.relates_to'] = {
+                event_id: replyTo,
+                'rel_type': 'm.thread',
+                'm.in_reply_to': {
+                    event_id: replyTo,
+                }
+            }
+        }
+
         if(attachments && items.length > 0) {
             post.content.attachments = items
         }
+
+
 
         const res = await savePost(post);
         console.log(res)
         if(res?.success && res?.event) {
             dispatch('saved', res.event)
+            reset()
         }
     } catch (error) {
         console.error('Error:', error);
@@ -167,6 +196,25 @@ async function createPost() {
         body: bodyInput.value,
     })
     */
+}
+
+function reset() {
+    busy = false
+    uploading = false
+    bodyInput.value = ''
+    attachments = []
+    autosize.update(bodyInput)
+    store.addEditorState({
+        room_id: stateKey,
+        state: {
+            title: '',
+            body: '',
+            focus: null,
+            cursor: 0,
+            scroll: 0,
+        }
+
+    })
 }
 
 let titleInput;
@@ -210,6 +258,9 @@ const handleBodyBlur = () => {
 };
 
 function updateContent() {
+    if(reply) {
+        return
+    }
     let state = {
         title: titleInput.value,
         body: bodyInput.value,
@@ -219,7 +270,7 @@ function updateContent() {
     }
 
     store.updateEditorState({
-        room_id: roomID,
+        room_id: stateKey,
         state: state,
     })
 }
@@ -228,27 +279,51 @@ function updateContent() {
 function attachFiles(e) {
     e.detail.forEach(file => {
         store.addAttachment({
-            room_id: roomID,
+            room_id: stateKey,
             attachment: file,
         })
     })
 }
 
+function insertEmoji(textarea, emoji, sub) {
+  // Get the current caret position in the textarea
+  var caretPos = textarea.selectionStart;
+  
+  // Get the textarea's current value
+  var currentValue = textarea.value;
+
+  // Construct the updated value with the emoji inserted at the caret position
+  var updatedValue = currentValue.substring(0, caretPos - sub) + emoji + currentValue.substring(caretPos);
+
+  // Update the textarea's value with the updatedValue
+  textarea.value = updatedValue;
+
+  // Move the caret position after the inserted emoji
+  textarea.selectionStart = caretPos + emoji.length;
+  textarea.selectionEnd = caretPos + emoji.length;
+
+  // Focus the textarea
+  textarea.focus();
+}
+
+let emojiListActive = false;
+let shortCode = '';
+
 function trackCaret(e) {
   setTimeout(() => {
-    const cursorPosition = bodyInput.selectionStart;
-    const content = bodyInput.value;
-    const scp = content.substr(cursorPosition - 3, 1);
-    const space = content.substr(cursorPosition - 4, 1);
-    if(scp === ':' && space === ' ') {
-        //console.log('emoji')
+    const pt = bodyInput.value.substring(0, bodyInput.selectionStart);
+    const pattern = /:\S{1,}$/;
+    if (pattern.test(pt)) {
+        let et = pt.match(pattern)[0];
+        et = et.substring(1);
+        shortCode = et;
+        emojiListActive = true
     }
-
   }, 0);
 }
 
-$: attachments = $store.editorStates[roomID]?.attachments
-$: showAttachments = $store.editorStates[roomID]?.attachments?.length > 0;
+$: attachments = $store.editorStates[stateKey]?.attachments
+$: showAttachments = $store.editorStates[stateKey]?.attachments?.length > 0;
 
 let preview;
 let previewing = false;
@@ -261,7 +336,7 @@ function togglePreview() {
 
 <section class="composer" class:sf={showAttachments}>
     <div class="editor-area">
-        <div class="title-container">
+        <div class="title-container" class:hide={reply}>
             <div class="">
                 <textarea 
                     class="post-title"
@@ -281,11 +356,15 @@ function togglePreview() {
                 {@html close}
             </div>
         </div>
-        <div class="body-container" class:bs={busy} on:click={focusBodyInput}>
+        <div class="body-container" 
+            class:rp={reply}
+            class:bs={busy} 
+            on:click={focusBodyInput}>
                 <textarea 
                     class="post-body"
+                    class:sh={reply}
                     bind:this={bodyInput}
-                    placeholder="What's on your mind?"
+                    placeholder={placeholder}
                     on:keydown={focusOnTitle}
                     on:keydown={updateContent}
                     on:keydown={trackCaret}
@@ -300,7 +379,7 @@ function togglePreview() {
     </div>
 
     {#if showAttachments}
-        <Attachments uploading={uploading} roomID={roomID}/>
+        <Attachments uploading={uploading} roomID={stateKey}/>
     {/if}
 
     <div class="tools fl">
@@ -379,6 +458,12 @@ function togglePreview() {
     min-height: 140px;
 }
 
+.rp {
+    padding-right: calc(1rem - 6px);
+    padding-top: 1rem;
+    min-height: 100px;
+}
+
 .bs {
     cursor: auto;
 }
@@ -391,6 +476,10 @@ function togglePreview() {
     padding-left: 1rem;
     max-height: 400px;
     overflow-x: hidden;
+}
+
+.sh {
+    max-height: 300px;
 }
 
 .ex {
@@ -414,5 +503,9 @@ button {
 }
 .pact {
     opacity: 1;
+}
+
+.hide {
+    display: none;
 }
 </style>
