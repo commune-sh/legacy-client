@@ -90,7 +90,7 @@ $: if(discover) {
         <Authentication />
 
 <div class="theme-switcher">
-<button on:click={toggleTheme}>Toggle</button>
+<button on:click={toggleTheme}>To</button>
 </div>
 
 {/if}
@@ -181,7 +181,7 @@ $: if(discover) {
 .theme-switcher {
     position: fixed;
     bottom: 0;
-    right: 0;
+    left: 0;
     padding: 1rem;
     z-index: 10000;
 }

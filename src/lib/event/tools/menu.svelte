@@ -12,6 +12,8 @@ let content;
 
 let menu;
 
+let active = false;
+
 onMount(() => {
     menu = tippy(el, {
         content: content,
@@ -23,12 +25,15 @@ onMount(() => {
         arrow: false,
         duration: 1,
         onShown(i) {
+            active = true
             dispatch('active', true)
         },
         onHide(i) {
+            active = false
             dispatch('kill', true)
         },
         onClickOutside(i) {
+            active = false
             dispatch('kill', true)
         },
     });
@@ -47,17 +52,33 @@ function viewSource() {
     </div>
 </div>
 
-<div class="more c-ico" on:click|stopPropagation bind:this={el}>
+<div class="more grd-c c-ico" 
+    class:ac={active}
+    on:click|stopPropagation bind:this={el}>
     {@html more}
 </div>
 
 <style>
 .menu {
     width: 160px;
+    z-index: 901;
 }
 .more {
     width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    padding: 0.25rem;
 }
+
+.more:hover {
+    background-color: var(--shade-2);
+}
+
+.ac {
+    background-color: var(--shade-2);
+}
+
+
 .m-item{
     padding: 0.5rem;
     cursor: pointer;

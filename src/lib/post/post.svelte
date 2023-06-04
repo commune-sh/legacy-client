@@ -71,45 +71,87 @@ let placeholder = 'Leave a reply.'
 function replySaved(e) {
     if(data == null) {
         data = {}
+        data.replies = [e.detail]
+    } else {
         data.replies = []
+        data.replies = [e.detail, ...data.replies];
     }
-    data.replies = [e.detail, ...data.replies];
+}
+
+let replying = false;
+let replyingTo = null;
+
+function replyToEvent(e) {
+    replying = true
+    replyingTo = e.detail.event_id
+}
+
+function replyToPost() {
+    replying = true
+    replyingTo = post.event_id
+}
+
+function cancelReply() {
+    replying = false
+    replyingTo = null;
 }
 
 </script>
 
-<section class="content">
+<section class="content" class:rep={replying}>
     <Header />
 
     <section class="events">
 
-        <Event isPost={true} event={post} />
+        <Event isPost={true} event={post} on:replyTo={replyToEvent}/>
 
         <div class="sep">
         </div>
 
-        {#if ready && authenticated && joined}
-        <div class="com">
-                <Composer 
-                    roomID={roomID}
-                    reply={true} 
-                    replyTo={post.event_id}
-                    on:saved={replySaved} 
-                    placeholder={placeholder} />
+        <div class="norep pa3 fl">
+            <div class="grd-c">
+                {#if replies?.length > 0}
+                    {replies.length} {replies.length == 1 ? 'reply' : 'replies'}
+                {:else}
+                No replies yet
+                {/if}
+            </div>
+            <div class="fl-o">
+            </div>
+            <div class="">
+                <button on:click={replyToPost}>Reply</button>
+            </div>
         </div>
-        {/if}
 
         {#if ready}
             {#if replies}
                 {#each replies as reply}
-                    <Event isReply={true} event={reply} />
+                    <Event isReply={true} 
+                        event={reply} 
+                        on:replyTo={replyToEvent} />
                 {/each}
             {/if}
+
+
         {:else}
             <SkeletonBoardEvents />
         {/if}
 
     </section>
+
+    {#if ready && authenticated && joined && replying}
+    <div class="com">
+            <Composer 
+                roomID={roomID}
+                reply={true} 
+                threadEvent={post.event_id}
+                replyTo={replyingTo}
+                on:saved={replySaved} 
+                on:kill={cancelReply}
+                placeholder={placeholder} />
+    </div>
+    {/if}
+
 
 
 </section>
@@ -123,9 +165,19 @@ function replySaved(e) {
     overflow-y: hidden;
     background-color: var(--bg);
 }
-.events {
-    overflow-y: auto;
+
+.rep {
+    grid-template-rows: 48px 1fr auto;
 }
+
+.events {
+    overflow-y: scroll;
+}
+
+.norep {
+    border-bottom: 1px solid var(--border-1);
+}
+
 @media screen and (max-width: 1280px) {
     .content {
         position: fixed;

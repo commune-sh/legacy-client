@@ -28,6 +28,7 @@ $: spacePath = $store?.spacePaths[space?.alias]?.pathname
 $: initial = space?.alias?.charAt(0)?.toUpperCase()
 
 function goToSpace() {
+    menu.hide()
     let url = `/${space?.alias}`
     if(spacePath != undefined) {
         url = spacePath

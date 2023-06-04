@@ -15,6 +15,7 @@ import tippy from 'tippy.js';
 export let roomID;
 export let placeholder = `What's on your mind?`;
 export let replyTo;
+export let threadEvent;
 export let reply = false;
 
 $: stateKey = !reply ? roomID : roomID + replyTo
@@ -28,6 +29,7 @@ function kill() {
         return
     }
     dispatch('kill')
+    reset()
 }
 
 
@@ -63,10 +65,6 @@ onMount(() => {
     }
 
     if(!state) {
-        autosize(titleInput)
-        autosize(bodyInput)
-        focusTitleInput()
-
         store.addEditorState({
             room_id: stateKey,
             state: {
@@ -78,6 +76,19 @@ onMount(() => {
             }
 
         })
+
+        if(!reply) {
+            autosize(titleInput)
+        }
+        autosize(bodyInput)
+
+        if(!reply) {
+            focusTitleInput()
+        }
+        if(reply) {
+            focusBodyInput()
+        }
+
     }
 
 
@@ -165,7 +176,7 @@ async function createPost() {
 
         if(reply) {
             post.content['m.relates_to'] = {
-                event_id: replyTo,
+                event_id: threadEvent,
                 'rel_type': 'm.thread',
                 'm.in_reply_to': {
                     event_id: replyTo,
@@ -183,7 +194,8 @@ async function createPost() {
         console.log(res)
         if(res?.success && res?.event) {
             dispatch('saved', res.event)
-            reset()
+            busy = false
+            kill()
         }
     } catch (error) {
         console.error('Error:', error);
@@ -204,17 +216,7 @@ function reset() {
     bodyInput.value = ''
     attachments = []
     autosize.update(bodyInput)
-    store.addEditorState({
-        room_id: stateKey,
-        state: {
-            title: '',
-            body: '',
-            focus: null,
-            cursor: 0,
-            scroll: 0,
-        }
-
-    })
+    store.deleteEditorState(stateKey)
 }
 
 let titleInput;
@@ -258,11 +260,8 @@ const handleBodyBlur = () => {
 };
 
 function updateContent() {
-    if(reply) {
-        return
-    }
     let state = {
-        title: titleInput.value,
+        title: titleInput.value || '',
         body: bodyInput.value,
         focus: titleFocused ? 'title' : bodyFocused ? 'body' : null,
         cursor: titleFocused ? titleInput.selectionStart : bodyFocused ? bodyInput.selectionStart : null,
@@ -334,7 +333,9 @@ function togglePreview() {
 
 </script>
 
-<section class="composer" class:sf={showAttachments}>
+<section class="composer" 
+    class:sf={showAttachments}
+    class:rep={reply}>
     <div class="editor-area">
         <div class="title-container" class:hide={reply}>
             <div class="">
@@ -394,6 +395,11 @@ function togglePreview() {
                 {@html eye}
             </div>
         </div>
+        {#if reply}
+            <div class="grd mr3">
+                <span class="href grd-c" on:click={kill}>cancel</span>
+            </div>
+        {/if}
         <button class="vb" disabled={busy} on:click={createPost}>
             <div class="ico-s">
                 {@html send}
@@ -412,6 +418,15 @@ function togglePreview() {
     grid-template-rows: 1fr auto;
     border-bottom: 1px solid var(--border-1);
 }
+
+.rep {
+    border-bottom: none;
+    border-top: 1px solid var(--border-1);
+    -webkit-box-shadow: 0px 0px 20px 20px rgba(0,0,0,0.10);
+    -moz-box-shadow: 0px 0px 20px 20px rgba(0,0,0,0.10);
+    box-shadow: 0px 0px 20px 20px rgba(0,0,0,0.10);
+}
+
 .sf {
     grid-template-rows: 1fr auto auto;
 }

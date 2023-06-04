@@ -1,12 +1,16 @@
 <script>
+import { createEventDispatcher } from 'svelte'
 import { PUBLIC_MEDIA_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
+import Composer from '$lib/composer/composer.svelte'
 import Reactions from '$lib/event/reactions/reactions.svelte'
 import Replies from '$lib/event/replies/replies.svelte'
 import User from './user/user.svelte'
 import Date from './date/date.svelte'
-import Menu from './menu/menu.svelte'
+import Tools from './tools/tools.svelte'
+
+const dispatch = createEventDispatcher()
 
 export let isPost = false;
 export let isReply = false;
@@ -56,7 +60,7 @@ $: link = buildLink(event, $page)
 function goToEvent() {
 
 
-    if(isPost || isReply || menuActive) {
+    if(isPost || isReply || toolsActive) {
         return
     }
 
@@ -99,27 +103,50 @@ $: user = {
     username: event?.sender?.username
 }
 
-let menuActive = false;
+let toolsActive = false;
 
-function showMenu() {
-    menuActive = true
+function activateTools() {
+    toolsActive = true
 }
-function killMenu() {
-    setTimeout(() => {
-        menuActive = false
-    }, 100)
+function killTools() {
+    toolsActive = false
+    displayTools = false
 }
 
 function getURL(item) {
     return `${PUBLIC_MEDIA_URL}/${item.key}`
 }
 
+let displayTools = false;
+
+function showTools() {
+    displayTools = true
+}
+
+function hideTools() {
+    if(toolsActive) {
+        return
+    }
+    displayTools = false
+}
+
+
+function replyToEvent() {
+    if(!isPost && !isReply && !isPost) {
+        //goToEvent()
+        return
+    }
+    dispatch('replyTo', event)
+}
+
 </script>
 
 <div class="event" 
+    on:mouseover={showTools}
+    on:mouseleave={hideTools}
     class:h={!isReply && !isPost}
     class:ha={!isReply && !isPost && hasAttachments}
-    class:ma={menuActive}
+    class:ma={toolsActive}
     on:click={goToEvent} 
     class:highlight={highlight}>
     <div class="ev-c fl-co">
@@ -162,12 +189,8 @@ function getURL(item) {
             </div>
             <div class="fl-o">
             </div>
-            <div class="menu" class:men={menuActive}>
-                <Menu 
-                    on:active={showMenu} 
-                    on:kill={killMenu} 
-                    event={event} />
-            </div>
+
+
         </div>
     </div>
 
@@ -187,6 +210,19 @@ function getURL(item) {
     </div>
     {/if}
 
+
+        {#if displayTools}
+            <div class="tools">
+                <Tools 
+                    on:reply={replyToEvent}
+                    active={toolsActive}
+                    on:active={activateTools} 
+                    on:kill={killTools} 
+                    event={event} />
+            </div>
+        {/if}
+
+
 </div>
 
 <style>
@@ -198,13 +234,14 @@ function getURL(item) {
     padding: 1rem;
     border-bottom: 1px solid var(--ev-bb);
     overflow: hidden;
+    position: relative;
 }
 
 .ha {
     grid-template-columns: 1fr auto;
 }
 
-.event:hover .menu {
+.event:hover .tools {
     opacity: 1;
 }
 
@@ -240,11 +277,10 @@ function getURL(item) {
     background-color: var(--event-bg-hover);
 }
 
-.menu {
-    opacity: 0;
-}
-.men {
-    opacity: 1;
+.tools {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
 }
 
 .body {
