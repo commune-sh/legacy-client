@@ -23,7 +23,32 @@ function createApp() {
     events: [],
     menuToggled: false,
     editorStates: [],
+    settings: {
+      active: false,
+    },
+    staticRoutes: [
+      {
+        path: '/discover',
+        name: 'Discover',
+        component: 'discover.svelte',
+      },
+      {
+        path: '/settings',
+        name: 'Settings',
+        component: 'settings.svelte',
+      },
+    ]
   }
+
+  let theme = localStorage.getItem(`theme`)
+  if(theme == 'light') {
+    app.settings.theme = 'light'
+  } else if(theme == 'black') {
+    app.settings.theme = 'black'
+  } else {
+    app.settings.theme = 'dark'
+  }
+
 
 
   let setDownState = (v) => {
@@ -201,6 +226,13 @@ function createApp() {
     })
   }
 
+  let toggleSettings = () => {
+    update(p => {
+      p.settings.active = !p.settings.active
+      return p
+    })
+  }
+
   let addEditorState = (x) => {
     update(p => {
       p.editorStates[x.room_id] = x.state
@@ -249,6 +281,25 @@ function createApp() {
     })
   }
 
+  let toggleTheme = () => {
+    update(p => {
+      if(p.settings.theme == 'light') {
+        p.settings.theme = 'black'
+        localStorage.setItem('theme', 'black')
+        document.documentElement.setAttribute('class', 'black')
+      } else if(p.settings.theme == 'black'){
+        p.settings.theme = 'dark'
+        localStorage.removeItem('theme')
+        document.documentElement.setAttribute('class', 'dark')
+      } else {
+        p.settings.theme = 'light'
+        localStorage.setItem('theme', 'light')
+        document.documentElement.setAttribute('class', 'light')
+      }
+      return p
+    })
+  }
+
 
   const { subscribe, set, update } = writable(app);
 
@@ -279,12 +330,14 @@ function createApp() {
     addSpacePath,
     addSpaceRoomPath,
     toggleMenu,
+    toggleSettings,
     addEditorState,
     updateEditorState,
     getEditorState,
     deleteEditorState,
     deleteAttachment,
     addAttachment,
+    toggleTheme,
   };
 }
 

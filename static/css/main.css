@@ -1,4 +1,4 @@
-:root {
+:root.dark {
     --bg: #1a1a1a;
     --text-1: #e1e1e1;
     --text-2: #9e9e9e;
@@ -27,7 +27,7 @@
 
     --light: #f7f7f7
     --svg-fill-1: #e1e1e1;
-    --action-icon: #fff;
+    --action-icon: #999;
 
     --input-border: #000;
 
@@ -43,6 +43,13 @@
     --code-block: #0c0c0c;
     --code-block-border: #0c0c0c;
     --code-block-scroll: #323232;
+
+
+    --ev-bb: #272727;
+    --rep-bb: #f2f2f2;
+    --event-bg-hover: #181818;
+
+
 }
 
 :root.light {
@@ -73,7 +80,7 @@
 
     --light: #f7f7f7
     --svg-fill-1: #e1e1e1;
-    --action-icon: #000;
+    --action-icon: #222;
 
     --input-border: #aeaeae;
 
@@ -89,6 +96,61 @@
     --code-block: white;
     --code-block-border: #e9e9e9;
     --code-block-scroll: #b9b9b9;
+
+    --ev-bb: #f2f2f2;
+    --rep-bb: #f2f2f2;
+    --event-bg-hover: #f7f7f7;
+}
+
+:root.black {
+    --bg: #000;
+    --text-1: #e1e1e1;
+    --text-2: #9e9e9e;
+    --text-2: #bababa;
+    --text-light: #dadada;
+    --link: #a53131;
+    --border-color: #191919;
+    --scrollbar-thumb: #323232;
+    --scrollbar-track: #141414;
+
+    --shade-2: #242424;
+    --shade-3: #1f1f1f;
+    --logo-bg: #000;
+    --primary: #a53131;
+    --secondary: #ff2a2a;
+    --logo-shade-1: #ff2a2a;
+    --logo-shade-2: #000000;
+
+    --button-1: #0a0a0a;
+    --mask: #000000e8;
+    --modal: #141414;
+    --black: black;
+    --white: white;
+    --border-1: #272727;
+    --placeholder-color: #3e3e3e;
+
+    --light: #f7f7f7
+    --svg-fill-1: #e1e1e1;
+    --action-icon: #999;
+
+    --input-border: #000;
+
+    --switcher-item: #000000;
+    --switcher-pill: #a53131;
+
+    --context-menu-bg: black;
+    --context-menu-border: black;
+    --context-menu-text: #e1e1e1;
+
+    --warning: #9a1818;
+
+    --code-block: #0c0c0c;
+    --code-block-border: #0c0c0c;
+    --code-block-scroll: #323232;
+
+    --ev-bb: #272727;
+    --rep-bb: #272727;
+    --event-bg-hover: #000;
 }
 
 
@@ -235,7 +297,7 @@ button {
     cursor: pointer;
     border-radius: 3px;
     border: 0px;
-    padding: 0.5rem;
+    padding: 0.25rem 0.5rem;
     background-color: var(--primary);
     font-weight: bold;
     color: white;
@@ -518,6 +580,10 @@ textarea {
     animation: anim 0.7s infinite linear;
 }
 
+.tippy-box[data-theme~='inline'] {
+    padding: 0.5rem 0.75rem;
+}
+
 .tippy-box[data-animation="fade"][data-state="hidden"] {
     opacity: 0;
 }
@@ -528,13 +594,12 @@ textarea {
 .tippy-box {
     position: relative;
     background-color: var(--context-menu-bg);
-    border: 1px solid var(--context-menu-border);
     color: var(--context-menu-text);
     border-radius: 4px;
     white-space: normal;
     outline: 0;
     transition-property: transform, visibility, opacity;
-    box-shadow: 4px 4px 18px -7px rgba(0, 0, 0, 0.31);
+    box-shadow: 4px 4px 18px -10px rgba(0, 0, 0, 0.21);
 }
 .tippy-box[data-placement^="top"] > .tippy-arrow {
     bottom: 0;
@@ -592,7 +657,6 @@ textarea {
 .tippy-content {
     position: relative;
     padding: 0;
-    padding: 0.5rem;
     z-index: 1;
     font-size: 14px;
 }

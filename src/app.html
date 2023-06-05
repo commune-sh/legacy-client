@@ -8,10 +8,16 @@
 		<meta name="viewport" content="width=device-width" />
 		%sveltekit.head%
     <script>
+        let showIndex = %sveltekit.env.PUBLIC_INDEX%
+    </script>
+    <script>
         let theme = localStorage.getItem(`theme`)
         switch (theme) {
             case `light`:
                 document.getElementsByTagName(`html`)[0].setAttribute(`class`,`light`)
+                break;
+            case `black`:
+                document.getElementsByTagName(`html`)[0].setAttribute(`class`,`black`)
                 break;
             default:
                 document.getElementsByTagName(`html`)[0].setAttribute(`class`,`dark`)

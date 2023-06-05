@@ -2,7 +2,7 @@
 import Authentication from '$lib/auth/authentication.svelte'
 import Switcher from '$lib/switcher/switcher.svelte'
 import Sidebar from '$lib/sidebar/sidebar.svelte'
-import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
+import { PUBLIC_BASE_URL, PUBLIC_APP_NAME, PUBLIC_INDEX } from '$env/static/public';
 import { APIRequest } from '$lib/utils/request.js'
 import { onMount, tick } from 'svelte'
 import { page } from '$app/stores';
@@ -11,6 +11,11 @@ import View from '$lib/view/view.svelte'
 import Sync from '$lib/sync/sync.svelte'
 import Health from '$lib/sync/health.svelte'
 import Down from '$lib/errors/down.svelte'
+
+let isIndex = $page?.route?.id === `/(app)`
+
+let showIndex = PUBLIC_INDEX === 'true'
+console.log("show index?", showIndex, isIndex)
 
 
 let ready = false;
@@ -29,16 +34,6 @@ onMount(() => {
 $: down = $store.down
 
 
-function toggleTheme() {
-    const theme = localStorage.getItem('theme')
-    if(theme === 'light') {
-        localStorage.removeItem('theme')
-        document.documentElement.setAttribute('class', 'dark')
-    } else {
-        localStorage.setItem('theme', 'light')
-        document.documentElement.setAttribute('class', 'light')
-    }
-}
 
 $: menuToggled = $store.menuToggled
 
@@ -46,10 +41,16 @@ function collapse() {
     store.toggleMenu()
 }
 
-$: discover = $page?.route?.id === `/(app)/discover`
+$: isStaticRoute = $store.staticRoutes.some(r => r.path === $page?.url?.pathname);
+$: staticRoute = $store.staticRoutes.find(r => r.path === $page?.url?.pathname);
 
-$: if(discover) {
+
+$: if(isStaticRoute) {
     ready = true
+}
+
+function switchToIndex() {
+    showIndex = true
 }
 
 </script>
@@ -58,7 +59,7 @@ $: if(discover) {
 <Health />
 
 
-{#if !down}
+{#if (!down && isIndex && showIndex) || (!down && !isIndex)}
 
 
 
@@ -72,7 +73,7 @@ $: if(discover) {
         </div>
 
         <div class="content" class:slide-in={menuToggled}>
-            {#if discover}
+            {#if isStaticRoute}
                 <slot></slot>
             {:else}
                 <View on:ready={viewReady} />
@@ -87,24 +88,27 @@ $: if(discover) {
 
 
 
-        <Authentication />
+<Authentication />
 
-<div class="theme-switcher">
-<button on:click={toggleTheme}>To</button>
-</div>
 
 {/if}
 
 
+{#if (isIndex && showIndex) || (!isIndex)}
 <section class="loading" class:hide={ready || down}>
     <section class="grd-c">
         <div class="loader"></div>
     </section>
 </section>
+{/if}
 
 
 {#if down}
     <Down />
+{/if}
+
+{#if isIndex && !showIndex}
+    <button on:click={switchToIndex}>Show Index</button>
 {/if}
 
 <style>

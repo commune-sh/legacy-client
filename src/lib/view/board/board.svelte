@@ -3,6 +3,7 @@ import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { APIRequest } from '$lib/utils/request.js'
 import { onMount, tick, createEventDispatcher } from 'svelte'
 import { page } from '$app/stores';
+import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
 import Event from '$lib/event/event.svelte'
 import Header from '$lib/header/header.svelte'
@@ -245,6 +246,10 @@ function stopEditing() {
 function postSaved(e) {
     stopEditing()
     data.events = [e.detail, ...data.events];
+    let url = `/${e.detail?.room_alias}/post/${e.detail?.slug}`
+    goto(url, {
+        noscroll: true,
+    })
 }
 
 

@@ -4,6 +4,8 @@ import { store } from '$lib/store/store.js'
 import Logo from '$lib/logo/logo.svelte'
 import CreateSpace from './create-space.svelte'
 import Discover from './discover.svelte'
+import Settings from './settings.svelte'
+import Theme from './theme.svelte'
 import { page } from '$app/stores';
 
 $: authenticated = $store?.authenticated && 
@@ -61,7 +63,8 @@ $: spaces = $store?.spaces
     </div>
 
     <div class="">
-        tools
+        <Theme />
+        <Settings />
     </div>
 </div>
 

@@ -1,12 +1,23 @@
 <script>
+import { page } from '$app/stores';
+import { store } from '$lib/store/store.js'
+
 export let state;
 
 $: name = state?.space?.name ? state.space.name : ``;
+
+$: isStaticRoute = $store.staticRoutes.some(r => r.path === $page?.url?.pathname);
+$: staticRoute = $store.staticRoutes.find(r => r.path === $page?.url?.pathname);
+
 </script>
 
 <div class="sidebar-header">
     <div class="in">
-        <b>{name}</b>
+        {#if isStaticRoute}
+            <b>{staticRoute.name}</b>
+        {:else}
+            <b>{name}</b>
+        {/if}
     </div>
 </div>
 

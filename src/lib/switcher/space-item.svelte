@@ -17,7 +17,8 @@ onMount(() => {
         placement: 'right',
         arrow: true,
         duration: 1,
-        offset: [0, 26]
+        offset: [0, 26],
+        theme: 'inline',
     });
 })
 

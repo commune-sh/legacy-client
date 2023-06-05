@@ -164,7 +164,7 @@ function replyToEvent() {
                 </div>
             {:else}
                 <div class="post-title-default">
-                    {title}
+                    <b>{title}</b>
                 </div>
                 <div class="post-body clipped">
                     {@html clipped}
@@ -250,16 +250,6 @@ function replyToEvent() {
     overflow: hidden;
 }
 
-:global(:root) {
-    --ev-bb: #272727;
-    --rep-bb: #f2f2f2;
-    --event-bg-hover: #181818;
-}
-:global(:root.light) {
-    --ev-bb: #f2f2f2;
-    --rep-bb: #f2f2f2;
-    --event-bg-hover: #f7f7f7;
-}
 
 .h {
     cursor: pointer;

@@ -7,6 +7,7 @@ import { APIRequest } from '$lib/utils/request.js'
 import { PUBLIC_BASE_URL } from '$env/static/public';
 import { page } from '$app/stores';
 import SkeletonBoardEvents from '$lib/skeleton/skeleton-board-events.svelte'
+import SkeletonSpan from '$lib/skeleton/skeleton-span.svelte'
 import Composer from '$lib/composer/composer.svelte'
 
 $: authenticated = $store?.authenticated && 
@@ -82,13 +83,21 @@ let replying = false;
 let replyingTo = null;
 
 function replyToEvent(e) {
+    if(!authenticated) {
+        store.startAuthenticating()
+        return
+    }
     replying = true
-    replyingTo = e.detail.event_id
+    replyingTo = e.detail
 }
 
 function replyToPost() {
+    if(!authenticated) {
+        store.startAuthenticating()
+        return
+    }
     replying = true
-    replyingTo = post.event_id
+    replyingTo = post
 }
 
 function cancelReply() {
@@ -110,10 +119,14 @@ function cancelReply() {
 
         <div class="norep pa3 fl">
             <div class="grd-c">
-                {#if replies?.length > 0}
-                    {replies.length} {replies.length == 1 ? 'reply' : 'replies'}
+                {#if ready}
+                    {#if replies?.length > 0}
+                        {replies.length} {replies.length == 1 ? 'reply' : 'replies'}
+                    {:else}
+                    No replies yet
+                    {/if}
                 {:else}
-                No replies yet
+                    <SkeletonSpan width={`150px`}/>
                 {/if}
             </div>
             <div class="fl-o">
@@ -140,16 +153,14 @@ function cancelReply() {
     </section>
 
     {#if ready && authenticated && joined && replying}
-    <div class="com">
-            <Composer 
-                roomID={roomID}
-                reply={true} 
-                threadEvent={post.event_id}
-                replyTo={replyingTo}
-                on:saved={replySaved} 
-                on:kill={cancelReply}
-                placeholder={placeholder} />
-    </div>
+        <Composer 
+            roomID={roomID}
+            reply={true} 
+            threadEvent={post.event_id}
+            replyTo={replyingTo}
+            on:saved={replySaved} 
+            on:kill={cancelReply}
+            placeholder={placeholder} />
     {/if}
 
 

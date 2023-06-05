@@ -18,7 +18,7 @@ export let replyTo;
 export let threadEvent;
 export let reply = false;
 
-$: stateKey = !reply ? roomID : roomID + replyTo
+$: stateKey = !reply ? roomID : roomID + replyTo?.event_id
 
 $: state = $store.editorStates[stateKey]
 
@@ -101,7 +101,13 @@ onMount(() => {
         duration: 1,
     });
 
-    md = new MarkdownIt();
+    md = new MarkdownIt({
+      html: true,
+      linkify: true,
+      breaks: true,
+      typographer: true
+    });
+
     md.use(MarkdownItEmoji);
 })
 
@@ -179,7 +185,7 @@ async function createPost() {
                 event_id: threadEvent,
                 'rel_type': 'm.thread',
                 'm.in_reply_to': {
-                    event_id: replyTo,
+                    event_id: replyTo.event_id,
                 }
             }
         }
@@ -336,6 +342,18 @@ function togglePreview() {
 <section class="composer" 
     class:sf={showAttachments}
     class:rep={reply}>
+
+    {#if reply && replyTo}
+        <div class="reply-header">
+            <div class="pa3">
+                Replying to {replyTo.sender.display_name}
+            </div>
+            <div class="grd-c c-ico ph2 mr2" on:click={kill}>
+                {@html close}
+            </div>
+        </div>
+    {/if}
+
     <div class="editor-area">
         <div class="title-container" class:hide={reply}>
             <div class="">
@@ -395,11 +413,6 @@ function togglePreview() {
                 {@html eye}
             </div>
         </div>
-        {#if reply}
-            <div class="grd mr3">
-                <span class="href grd-c" on:click={kill}>cancel</span>
-            </div>
-        {/if}
         <button class="vb" disabled={busy} on:click={createPost}>
             <div class="ico-s">
                 {@html send}
@@ -417,14 +430,22 @@ function togglePreview() {
     grid-template-columns: auto;
     grid-template-rows: 1fr auto;
     border-bottom: 1px solid var(--border-1);
+    position: relative;
 }
 
 .rep {
-    border-bottom: none;
     border-top: 1px solid var(--border-1);
-    -webkit-box-shadow: 0px 0px 20px 20px rgba(0,0,0,0.10);
-    -moz-box-shadow: 0px 0px 20px 20px rgba(0,0,0,0.10);
-    box-shadow: 0px 0px 20px 20px rgba(0,0,0,0.10);
+    grid-template-rows: auto 1fr auto;
+    border-bottom: none;
+    -webkit-box-shadow: 0px 20px 70px 30px rgba(0,0,0,0.1);
+    -moz-box-shadow: 0px 20px 70px 30px rgba(0,0,0,0.1);
+    box-shadow: 0px 20px 70px 30px rgba(0,0,0,0.1);
+}
+
+.reply-header {
+    border-bottom: 1px solid var(--border-1);
+    display: grid;
+    grid-template-columns: 1fr auto;
 }
 
 .sf {

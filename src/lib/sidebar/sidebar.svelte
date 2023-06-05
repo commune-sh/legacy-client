@@ -16,6 +16,9 @@ $: isNotIndex = $page.params.space || $page.params.room
 $: isIndex = $page?.url?.pathname === '/'
 $: isNotSpace = $page?.params?.space == undefined || $page?.params?.space == null
 
+$: isStaticRoute = $store.staticRoutes.some(r => r.path === $page?.url?.pathname);
+$: staticRoute = $store.staticRoutes.find(r => r.path === $page?.url?.pathname);
+
 function buildItems(state) {
     if(!state && !state?.room_id) {
         return []
