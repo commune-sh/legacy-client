@@ -39,7 +39,11 @@ $: active = $page?.route?.id === `/(app)/settings`
 
 $: isLight = $store.settings?.theme === 'light'
 $: isDark = $store.settings?.theme === 'dark'
-$: isBlack = $store.settings?.theme === 'black'
+
+function toggle() {
+    store.toggleTheme()
+    menu.hide()
+}
 
 </script>
 
@@ -51,7 +55,7 @@ $: isBlack = $store.settings?.theme === 'black'
     <div class="item grd-c" 
     on:mouseover={() => hovered = true}
     on:mouseleave={() => hovered = false}
-    on:click={store.toggleTheme}
+    on:click={toggle}
     bind:this={el}>
         <div class="create ico grd-c" class:ac={active}>
             {#if isLight}

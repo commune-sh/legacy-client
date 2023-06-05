@@ -69,9 +69,7 @@ $: items = buildItems(state)
         {/if}
 
     </div>
-    <div class="user">
-        <User/>
-    </div>
+    <User/>
 </div>
 
 <style>

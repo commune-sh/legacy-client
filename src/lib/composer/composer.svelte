@@ -186,6 +186,8 @@ async function createPost() {
         }
 
         if(reply) {
+            post.in_thread = threadEvent
+            post.is_reply = true
             post.content['m.relates_to'] = {
                 event_id: threadEvent,
                 'rel_type': 'm.thread',

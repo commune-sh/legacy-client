@@ -74,7 +74,10 @@ function replySaved(e) {
         data = {}
         data.replies = [e.detail]
     } else {
-        data.replies = []
+        //data.replies = []
+        if(!data?.replies) {
+            data.replies = []
+        }
         data.replies = [e.detail, ...data.replies];
     }
 }
@@ -82,8 +85,16 @@ function replySaved(e) {
 let replying = false;
 let replyingTo = null;
 
+let replyToEventAfterLogin = false;
+
+$: if(authenticated && replyToEventAfterLogin)  {
+    replyToPost()
+    replyToEventAfterLogin = false
+}
+
 function replyToEvent(e) {
     if(!authenticated) {
+        replyToEventAfterLogin = true
         store.startAuthenticating()
         return
     }
@@ -91,8 +102,16 @@ function replyToEvent(e) {
     replyingTo = e.detail
 }
 
+let replyToPostAfterLogin = false;
+
+$: if(authenticated && replyToPostAfterLogin)  {
+    replyToPost()
+    replyToPostAfterLogin = false
+}
+
 function replyToPost() {
     if(!authenticated) {
+        replyToPostAfterLogin = true
         store.startAuthenticating()
         return
     }

@@ -20,7 +20,6 @@ $: if(authenticated && active) {
 
 function SSE() {
     const token = $store?.credentials?.access_token
-    console.log("token issss", $store.credentials)
     const url = `${PUBLIC_BASE_URL}/sse?token=${token}`
     const eventSource = new EventSource(url);
     eventSource.onmessage = function(event) {
@@ -41,7 +40,6 @@ $: isSpace = $page.params.space !== undefined && $page.params.space !== null &&
 
 let logout = () => {
     store.logout()
-    console.log("logout", authenticated, isSpace)
     if(!isSpace) {
         //location.replace('/')
     }
@@ -53,7 +51,7 @@ let logout = () => {
 
 {#if active && !authenticated}
 <div class="grd">
-    <div class="in grd-c">
+    <div class="grd-c">
             <button class="btn" on:click={toggleFlow}>Log in • Sign up</button>
     </div>
 </div>
@@ -76,6 +74,7 @@ let logout = () => {
 <style>
 .user {
     border-top: 1px solid var(--border-1);
+    display: grid;
 }
 
 .btn {
