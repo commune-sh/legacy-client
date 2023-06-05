@@ -41,8 +41,13 @@ function collapse() {
     store.toggleMenu()
 }
 
-$: isStaticRoute = $store.staticRoutes.some(r => r.path === $page?.url?.pathname);
-$: staticRoute = $store.staticRoutes.find(r => r.path === $page?.url?.pathname);
+$: isStaticRoute = $store.staticRoutes.filter(r =>
+$page.url.pathname.startsWith(r.path))?.length > 0
+
+
+$: if(true) {
+    console.log("is static ", isStaticRoute)
+}
 
 
 $: if(isStaticRoute) {
@@ -62,6 +67,10 @@ function switchToIndex() {
 {#if (!down && isIndex && showIndex) || (!down && !isIndex)}
 
 
+{#if menuToggled}
+<div class="mask" on:click={collapse}>
+</div>
+{/if}
 
 <div class="root" bind:this={root}>
 
@@ -181,13 +190,14 @@ function switchToIndex() {
 }
 
 
-
-.theme-switcher {
+.mask {
     position: fixed;
+    top: 0;
     bottom: 0;
-    left: 0;
-    padding: 1rem;
+    left: 304px;
+    height: 100%;
     z-index: 10000;
+    width: 100vw;
 }
 
 

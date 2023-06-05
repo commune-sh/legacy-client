@@ -161,12 +161,17 @@ async function createPost() {
                 const extension = file.name.split('.').pop();
                 const presignedURL = await getPresignedURL(extension);
                 await uploadAttachment(file, presignedURL.url);
-                items.push({
+                let item = {
                     name: file.name,
                     size: file.size,
                     type: file.type,
+                    info: file.info,
                     key: presignedURL.key,
-                })
+                }
+                if(file.info) {
+                    item.info = file.info
+                }
+                items.push(item)
             }
         }
 

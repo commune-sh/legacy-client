@@ -107,6 +107,9 @@ function join() {
     })
 }
 
+$: isStaticRoute = $store.staticRoutes.some(r => r.path === $page?.url?.pathname);
+$: staticRoute = $store.staticRoutes.find(r => r.path === $page?.url?.pathname);
+
 </script>
 
 
@@ -119,7 +122,9 @@ function join() {
         <div class="fl mr3">
 
             <div class="name grd-c">
-                {#if isStatic && name}
+                {#if isStaticRoute && staticRoute}
+                    <span class="n">{staticRoute.name}</span>
+                {:else if isStatic && name}
                     <span class="n">{name}</span>
                 {:else if isIndex}
                     {#if authDone}

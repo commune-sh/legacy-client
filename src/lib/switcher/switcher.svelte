@@ -46,6 +46,8 @@ $: spaces = $store?.spaces
 <div class="switcher">
     <div class="switcher-container fl-co">
 
+        <div class="mt"></div>
+
         <Logo large={true} />
 
         <div class="sepc grd">
@@ -60,28 +62,36 @@ $: spaces = $store?.spaces
 
         <CreateSpace />
         <Discover />
+
+        <div class="fl-o">
+        </div>
+
+        <div class="">
+            <Theme />
+            <Settings />
+        </div>
     </div>
 
-    <div class="">
-        <Theme />
-        <Settings />
-    </div>
 </div>
 
 <style>
 .switcher {
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: 1fr auto;
+    grid-template-rows: auto;
     border-right: 1px solid var(--border-1);
     background-color: var(--bg);
     overflow: hidden;
 }
 
 .switcher-container {
-    margin-top: 12px;
     overflow-y: auto;
     overflow-x: hidden;
+}
+
+.mt {
+    margin-top: 12px;
+    width: 100%;
 }
 
 ::-webkit-scrollbar {

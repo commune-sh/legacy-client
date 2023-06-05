@@ -67,6 +67,21 @@ function login() {
             usernameInput.focus()
         } else if (resp?.authenticated == true && resp?.access_token && resp?.credentials) {
             localStorage.setItem('access_token', resp.access_token)
+
+            let accounts = localStorage.getItem('accounts')
+            if(!accounts) {
+                let accounts = []
+                accounts.push({
+                    username: resp.credentials.username,
+                    email: resp.credentials.email,
+                    display_name: resp.credentials.display_name,
+                    avatar_url: resp.credentials.avatar_url,
+                    token: resp.access_token,
+                })
+                localStorage.setItem('accounts', JSON.stringify(accounts))
+            }
+
+
             const cookieValue = `${encodeURIComponent(resp.access_token)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
             document.cookie = `token=${cookieValue}`;
             store.saveCredentials(resp.credentials)

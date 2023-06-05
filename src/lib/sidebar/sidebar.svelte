@@ -1,6 +1,6 @@
 <script>
 import Header from './header/header.svelte'
-import Auth from '../auth/auth.svelte'
+import User from './user/user.svelte'
 import { page } from '$app/stores';
 import RoomList from './room-list/room-list.svelte'
 import { store } from '$lib/store/store.js'
@@ -69,8 +69,8 @@ $: items = buildItems(state)
         {/if}
 
     </div>
-    <div class="auth">
-        <Auth/>
+    <div class="user">
+        <User/>
     </div>
 </div>
 
@@ -78,7 +78,7 @@ $: items = buildItems(state)
 .sidebar {
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: [search] 48px [content] auto [auth] 64px;
+    grid-template-rows: [search] 48px [content] auto [user] 64px;
     border-right: 1px solid var(--border-1);
     background-color: var(--bg);
     overflow: hidden;

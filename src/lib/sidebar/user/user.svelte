@@ -49,6 +49,8 @@ let logout = () => {
 
 </script>
 
+<section class="user">
+
 {#if active && !authenticated}
 <div class="grd">
     <div class="in grd-c">
@@ -69,8 +71,11 @@ let logout = () => {
 </div>
 {/if}
 
+</section>
+
 <style>
-.in {
+.user {
+    border-top: 1px solid var(--border-1);
 }
 
 .btn {

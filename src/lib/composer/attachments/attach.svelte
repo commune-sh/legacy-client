@@ -30,7 +30,17 @@ let build = (e) => {
             tooLarge = true
             break
         }
-        files = [...files, e.target.files[i]]
+            if(file.type.includes('image')) {
+                var image = new Image();
+                image.src = URL.createObjectURL(file)
+                image.onload = () => {
+                    file.info = {}
+                    file.info.h = image.height
+                    file.info.w = image.width
+                }
+            }
+
+        files = [...files, file]
     }
     dispatch('attached', files)
     files = []

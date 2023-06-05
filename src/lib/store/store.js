@@ -30,11 +30,13 @@ function createApp() {
       {
         path: '/discover',
         name: 'Discover',
+        route: 'discover',
         component: 'discover.svelte',
       },
       {
         path: '/settings',
         name: 'Settings',
+        route: 'settings',
         component: 'settings.svelte',
       },
     ]
@@ -138,6 +140,20 @@ function createApp() {
 
   let logout = () => {
     update(p => {
+      let accounts = localStorage.getItem('accounts')
+      if(accounts) {
+        accounts = JSON.parse(accounts)
+        let exists = accounts.find(x => x.username == p.credentials.username)
+        if(exists) {
+          //splice it out
+          accounts.splice(exists, 1)
+          if(accounts.length > 0) {
+            localStorage.setItem('accounts', JSON.stringify(accounts))
+          } else {
+            localStorage.removeItem('accounts')
+          }
+        }
+      }
       p.authenticated = false
       p.credentials = null
       localStorage.removeItem('access_token')
