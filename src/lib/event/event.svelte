@@ -73,8 +73,6 @@ function goToEvent() {
     })
 }
 
-$: shouldLink = !isPost && !isReply && !toolsActive
-
 function getFirstParagraphNode(content) {
   const tempDiv = document.createElement('div');
   tempDiv.innerHTML = content;
@@ -122,7 +120,7 @@ function killTools() {
 }
 
 function getURL(item) {
-    return `${PUBLIC_MEDIA_URL}/${item?.key}`
+    return `${PUBLIC_MEDIA_URL}/${item.key}`
 }
 
 let displayTools = false;
@@ -158,10 +156,10 @@ $: hasReplies = event?.children?.length > 0
     class:h={!isReply && !isPost}
     class:ha={!isReply && !isPost && hasAttachments}
     class:ma={toolsActive}
+    on:click={goToEvent} 
     class:highlight={highlight} role="button">
 
 
-    <a href={shouldLink ? link : ``}>
     <div class="ev-c fl-co">
         <div class="body">
 
@@ -221,7 +219,6 @@ $: hasReplies = event?.children?.length > 0
         {/if}
 
     </div>
-    </a>
 
     {#if !isPost && !isReply && hasAttachments && images}
     <div class="grd pr3">
@@ -261,7 +258,6 @@ $: hasReplies = event?.children?.length > 0
     </div>
 {/if}
 
-
 <style>
 .event {
     display: grid;
@@ -272,11 +268,6 @@ $: hasReplies = event?.children?.length > 0
     border-bottom: 1px solid var(--ev-bb);
     overflow: hidden;
     position: relative;
-}
-
-a {
-    text-decoration: none;
-    color: var(--text);
 }
 
 .replies {
