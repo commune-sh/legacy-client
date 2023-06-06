@@ -23,11 +23,24 @@ onMount(() => {
 
 export let space;
 
-$: spacePath = $store?.spacePaths[space?.alias]?.pathname
+$: authenticated = $store?.authenticated && 
+    $store?.credentials != null
+    $store?.credentials?.access_token?.length > 0
 
-$: initial = space?.alias?.charAt(0)?.toUpperCase()
+let createSpaceAfterLogin = false;
 
-function goToSpace() {
+$: if(authenticated && createSpaceAfterLogin)  {
+    store.toggleCreateSpace()
+    createSpaceAfterLogin = false
+}
+
+function createSpace() {
+    if(!authenticated) {
+        store.startAuthenticating()
+        createSpaceAfterLogin = true
+        return
+    }
+    store.toggleCreateSpace()
 }
 
 </script>
@@ -38,12 +51,14 @@ function goToSpace() {
 
 <div class="i-c grd">
     <div class="item grd-c"
-    on:click={goToSpace} bind:this={el}>
+    on:click={createSpace} bind:this={el}>
         <div class="create c-ico grd-c">
             {@html addLine}
         </div>
     </div>
 </div>
+
+
 
 <style>
 

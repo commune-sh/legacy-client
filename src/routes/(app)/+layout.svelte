@@ -11,6 +11,7 @@ import View from '$lib/view/view.svelte'
 import Sync from '$lib/sync/sync.svelte'
 import Health from '$lib/sync/health.svelte'
 import Down from '$lib/errors/down.svelte'
+import CreateSpace from '$lib/space/create-space.svelte'
 
 let isIndex = $page?.route?.id === `/(app)`
 
@@ -98,6 +99,7 @@ function switchToIndex() {
 
 
 <Authentication />
+    <CreateSpace />
 
 
 {/if}

@@ -19,6 +19,10 @@ export let showAlias = true;
 
 export let event;
 
+export let depth = 0;
+
+export let nested = false;
+
 $: isSpace = $page.params.space !== undefined && $page.params.space !== null &&
     $page.params.space !== ''
 
@@ -139,6 +143,8 @@ function replyToEvent() {
     dispatch('replyTo', event)
 }
 
+$: hasReplies = event?.children?.length > 0
+
 </script>
 
 <div class="event" 
@@ -149,8 +155,10 @@ function replyToEvent() {
     class:ma={toolsActive}
     on:click={goToEvent} 
     class:highlight={highlight}>
+
+
     <div class="ev-c fl-co">
-        <div class="body">
+        <div class="body ph3">
             {#if isPost}
                 <div class="post-title">
                     {title}
@@ -172,7 +180,7 @@ function replyToEvent() {
             {/if}
         </div>
 
-        <div class="pt2 fl">
+        <div class="pt2 fl ph3">
             <User hideAvatar={true} user={user} />
             <div class="fl-o">
             </div>
@@ -183,7 +191,7 @@ function replyToEvent() {
                 <Replies count={event?.reply_count} />
             {/if}
         </div>
-        <div class="pt1 fl">
+        <div class="pt1 fl ph3">
             <div class="">
                 <Date date={event?.origin_server_ts} />
             </div>
@@ -195,7 +203,7 @@ function replyToEvent() {
     </div>
 
     {#if !isPost && !isReply && hasAttachments}
-    <div class="grd">
+    <div class="grd ph3">
         <div class="at-img grd-c" 
             style="background-image: url({getURL(attachments[0])})">
         </div>
@@ -203,7 +211,7 @@ function replyToEvent() {
     {/if}
 
     {#if (isPost || isReply) && hasAttachments}
-    <div class="grd">
+    <div class="grd ph3">
         <div class="at-img grd-c" 
             style="background-image: url({getURL(attachments[0])})">
         </div>
@@ -222,8 +230,24 @@ function replyToEvent() {
             </div>
         {/if}
 
-
 </div>
+
+
+{#if hasReplies}
+    <div class="replies">
+        <div class="gap"></div>
+        <div class="events">
+        {#each event.children as reply}
+            <svelte:self 
+                isReply={true} 
+                depth={depth + 1}
+                nested={true}
+                event={reply} 
+                on:replyTo/>
+        {/each}
+        </div>
+    </div>
+{/if}
 
 <style>
 .event {
@@ -231,10 +255,21 @@ function replyToEvent() {
     grid-template-columns: auto;
     grid-template-rows: auto;
     grid-column-gap: 10px;
-    padding: 1rem;
+    padding-bottom: 1rem;
+    padding-top: 1rem;
     border-bottom: 1px solid var(--ev-bb);
     overflow: hidden;
     position: relative;
+}
+
+.replies {
+    display: grid;
+    grid-template-columns: 3px 1fr;
+    grid-column-gap: 1px;
+}
+.gap {
+    width: 3px;
+    background-color: var(--ev-bb);
 }
 
 .ha {
@@ -278,8 +313,14 @@ function replyToEvent() {
     user-select: text;
     overflow: hidden;
 }
+
+
 .post-title {
     font-weight: bold;
+}
+
+div.post-body p:first-of-type {
+  margin-block-start: 0;
 }
 .clipped {
     font-size: 14px!important;

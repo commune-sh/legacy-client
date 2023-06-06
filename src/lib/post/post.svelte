@@ -4,6 +4,7 @@ import Header from '$lib/header/post-header.svelte'
 import { onMount } from 'svelte';
 import { store } from '$lib/store/store.js'
 import { APIRequest } from '$lib/utils/request.js'
+import { nestEvents } from '$lib/utils/events.js'
 import { PUBLIC_BASE_URL } from '$env/static/public';
 import { page } from '$app/stores';
 import SkeletonBoardEvents from '$lib/skeleton/skeleton-board-events.svelte'
@@ -39,6 +40,7 @@ function loadEvents() {
         if(resp) {
             //
             data = resp
+                console.log(data.replies)
             lastPost = $page.params.post
             ready = true
         }
@@ -111,17 +113,23 @@ $: if(authenticated && replyToPostAfterLogin)  {
 
 function replyToPost() {
     if(!authenticated) {
+        console.log('not authenticated')
         replyToPostAfterLogin = true
         store.startAuthenticating()
         return
     }
     replying = true
     replyingTo = post
+    console.log("ready, authenticated, joined, replying)", ready, authenticated, joined, replying)
 }
 
 function cancelReply() {
     replying = false
     replyingTo = null;
+}
+
+
+$: if(replies) {
 }
 
 </script>

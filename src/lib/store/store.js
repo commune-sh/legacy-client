@@ -39,7 +39,8 @@ function createApp() {
         route: 'settings',
         component: 'settings.svelte',
       },
-    ]
+    ],
+    creatingSpace: false,
   }
 
   let theme = localStorage.getItem(`theme`)
@@ -316,6 +317,13 @@ function createApp() {
     })
   }
 
+  let toggleCreateSpace = () => {
+    update(p => {
+      p.creatingSpace = !p.creatingSpace
+      return p
+    })
+  }
+
 
   const { subscribe, set, update } = writable(app);
 
@@ -354,6 +362,7 @@ function createApp() {
     deleteAttachment,
     addAttachment,
     toggleTheme,
+    toggleCreateSpace,
   };
 }
 

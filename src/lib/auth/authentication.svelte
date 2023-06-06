@@ -147,40 +147,4 @@ function created() {
 {/if}
 
 <style>
-.mask {
-    position: fixed;
-    z-index: 10000;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    overflow-y: hidden;
-    background-color: var(--mask);
-}
-
-.modal {
-    z-index: 11000;
-    background-color: var(--modal);
-    border-radius: 9px;
-    display: grid;
-    grid-template-columns: auto;
-    grid-template-rows: [header] auto [content] 1fr;
-}
-
-@media screen and (max-width: 550px) {
-    .modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        width: 100%;
-        height: 100%;
-        border-radius: 0;
-
-    }
-}
-
 </style>

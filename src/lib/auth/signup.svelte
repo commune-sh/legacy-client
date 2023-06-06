@@ -3,6 +3,7 @@ import { onMount, createEventDispatcher } from 'svelte'
 import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { store } from '$lib/store/store.js'
 import { debounce } from '$lib/utils/utils.js'
+import { eye, eyeoff } from '$lib/assets/icons.js'
 import { APIRequest } from '$lib/utils/request.js'
 
 import validator from 'validator';
@@ -166,6 +167,18 @@ function pkey(e) {
 
 }
 
+let showPass = false
+
+function togglePass() {
+    showPass = !showPass
+    if(showPass) {
+        passwordInput.type = 'text'
+    } else {
+        passwordInput.type = 'password'
+    }
+    passwordInput.focus()
+}
+
 </script>
 
 
@@ -212,13 +225,22 @@ function pkey(e) {
                     <span class="sm ml2">Password needs to be longer</span>
                 {/if}
             </div>
-            <div class="pb2">
+            <div class="passc pb2">
                 <input bind:this={passwordInput}
                 disabled={down}
                 class:red={passwordWarning}
                 on:keyup={pkey}
                 on:keydown={plw}
                 type="password" />
+                <div class="showpass ico" 
+                    class:col={showPass}
+                    on:click={togglePass}>
+                    {#if showPass}
+                        {@html eye}
+                    {:else}
+                        {@html eyeoff}
+                    {/if}
+                </div>
             </div>
             <div class="createc mt4">
                 <button class="create" on:click={create} disabled={busy || down}>
@@ -298,6 +320,22 @@ input {
     position: absolute;
     top: 9px;
     right: 9px;
+}
+
+.passc {
+    position: relative;
+}
+.showpass {
+    position: absolute;
+    right: 10px;
+    top: 12px;
+    cursor: pointer;
+    height: 22px;
+    width: 22px;
+    fill: var(--text-2);
+}
+.col {
+    fill: var(--primary);
 }
 
 @media screen and (max-width: 550px) {

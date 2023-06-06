@@ -55,6 +55,9 @@ $: if(lastPost != null && $page.params.post != lastPost) {
     loadEvents()
 }
 
+
+
+
 </script>
 
 <section class="content">
