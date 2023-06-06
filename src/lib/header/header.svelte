@@ -1,5 +1,5 @@
 <script>
-import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
+import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { APIRequest } from '$lib/utils/request.js'
 import { onMount, createEventDispatcher } from 'svelte'
 import { page } from '$app/stores';
@@ -94,7 +94,7 @@ function toggleMenu() {
 function join() {
     console.log("joining")
     let opt = {
-        url: `${PUBLIC_BASE_URL}/space/${space}/join`,
+        url: `${PUBLIC_API_URL}/space/${space}/join`,
         method: 'POST',
     }
 

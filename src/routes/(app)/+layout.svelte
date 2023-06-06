@@ -2,7 +2,7 @@
 import Authentication from '$lib/auth/authentication.svelte'
 import Switcher from '$lib/switcher/switcher.svelte'
 import Sidebar from '$lib/sidebar/sidebar.svelte'
-import { PUBLIC_BASE_URL, PUBLIC_APP_NAME, PUBLIC_INDEX } from '$env/static/public';
+import { PUBLIC_API_URL, PUBLIC_APP_NAME, PUBLIC_INDEX } from '$env/static/public';
 import { APIRequest } from '$lib/utils/request.js'
 import { onMount, tick } from 'svelte'
 import { page } from '$app/stores';
@@ -16,7 +16,6 @@ import CreateSpace from '$lib/space/create-space.svelte'
 let isIndex = $page?.route?.id === `/(app)`
 
 let showIndex = PUBLIC_INDEX === 'true'
-console.log("show index?", showIndex, isIndex)
 
 
 let ready = false;
@@ -31,6 +30,9 @@ let root;
 onMount(() => {
 })
 
+$: if($page) {
+    console.log($page)
+}
 
 $: down = $store.down
 
@@ -45,10 +47,6 @@ function collapse() {
 $: isStaticRoute = $store.staticRoutes.filter(r =>
 $page.url.pathname.startsWith(r.path))?.length > 0
 
-
-$: if(true) {
-    console.log("is static ", isStaticRoute)
-}
 
 
 $: if(isStaticRoute) {

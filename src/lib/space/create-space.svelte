@@ -1,7 +1,7 @@
 <script>
 import { onMount, onDestroy } from 'svelte'
 import { APIRequest } from '$lib/utils/request.js'
-import { PUBLIC_BASE_URL } from '$env/static/public';
+import { PUBLIC_API_URL } from '$env/static/public';
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
 

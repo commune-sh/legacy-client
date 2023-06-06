@@ -15,7 +15,6 @@ export let count;
 <style>
 .rep {
     font-size: small;
-    font-weight: bold;
     line-height: 1;
     color: var(--text-light);
     background-color: var(--shade-2);

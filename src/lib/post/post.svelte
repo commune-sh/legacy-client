@@ -5,7 +5,7 @@ import { onMount } from 'svelte';
 import { store } from '$lib/store/store.js'
 import { APIRequest } from '$lib/utils/request.js'
 import { nestEvents } from '$lib/utils/events.js'
-import { PUBLIC_BASE_URL } from '$env/static/public';
+import { PUBLIC_API_URL } from '$env/static/public';
 import { page } from '$app/stores';
 import SkeletonBoardEvents from '$lib/skeleton/skeleton-board-events.svelte'
 import SkeletonSpan from '$lib/skeleton/skeleton-span.svelte'
@@ -33,7 +33,7 @@ let ready = false;
 
 function loadEvents() {
     APIRequest({
-      url: `${PUBLIC_BASE_URL}/event/${post.event_id}/replies`,
+      url: `${PUBLIC_API_URL}/event/${post.event_id}/replies`,
       method: 'GET',
     })
     .then(resp => {

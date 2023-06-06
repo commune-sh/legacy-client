@@ -6,18 +6,14 @@ export let reaction;
     <div class="emoji">
         {reaction?.key}
     </div>
-    {#if reaction?.senders?.length > 1}
-    <div class="t">
-        ×{reaction?.senders?.length}
+    <div class="t ml1">
+        {reaction?.senders?.length}
     </div>
-    {/if}
 </div>
 
 <style>
 .reaction {
     font-size: small;
-    font-weight: bold;
-    line-height: 1;
     color: var(--text-light);
     background-color: var(--shade-2);
     border-radius: 3px;
@@ -49,7 +45,6 @@ export let reaction;
 .t {
     font-size: small;
     color: var(--text-light);
-    line-height: 1;
-    margin-left: 2px;
+    line-height: 1.6;
 }
 </style>

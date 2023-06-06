@@ -1,5 +1,5 @@
 <script>
-import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
+import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { APIRequest } from '$lib/utils/request.js'
 import { onMount, tick, createEventDispatcher } from 'svelte'
 import { page } from '$app/stores';
@@ -67,19 +67,19 @@ function loadEvents(init) {
 
     const token = localStorage.getItem('access_token')
 
-    let url = `${PUBLIC_BASE_URL}/events/`
+    let url = `${PUBLIC_API_URL}/events/`
 
 
   let space = $page.params.space
   let isSpace = space && space !== 'undefined' && space?.length > 0
   if(isSpace) {
-    url = `${PUBLIC_BASE_URL}/${space}/events`
+    url = `${PUBLIC_API_URL}/${space}/events`
   }
 
   let room = $page.params.room
   let isRoom = room && room !== 'undefined' && room?.length > 0
   if(isRoom) {
-    url = `${PUBLIC_BASE_URL}/${space}/${room}/events`
+    url = `${PUBLIC_API_URL}/${space}/${room}/events`
   }
 
     let opt = {
@@ -88,7 +88,7 @@ function loadEvents(init) {
     }
 
     if(token && !isSpace && !isRoom) {
-        opt.url = `${PUBLIC_BASE_URL}/feed`
+        opt.url = `${PUBLIC_API_URL}/feed`
         opt.token = token
     }
 
@@ -187,13 +187,13 @@ let fetchMore = () => {
     let events = data?.events;
     const last = events?.[events?.length - 1]?.origin_server_ts
 
-    let url = `${PUBLIC_BASE_URL}/events?last=${last}`
+    let url = `${PUBLIC_API_URL}/events?last=${last}`
     if(isSpace) {
-        url = `${PUBLIC_BASE_URL}/${$page.params.space}/events?last=${last}`
+        url = `${PUBLIC_API_URL}/${$page.params.space}/events?last=${last}`
     }
 
     if(isSpace && isRoom) {
-        url = `${PUBLIC_BASE_URL}/${$page.params.space}/${$page.params.room}/events?last=${last}`
+        url = `${PUBLIC_API_URL}/${$page.params.space}/${$page.params.room}/events?last=${last}`
     }
 
     APIRequest({

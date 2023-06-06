@@ -2,7 +2,7 @@
 import { onMount } from 'svelte'
 import Login from '$lib/auth/login.svelte'
 import { APIRequest } from '$lib/utils/request.js'
-import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
+import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
 import Health from '$lib/sync/health.svelte'
@@ -33,7 +33,7 @@ onMount(() => {
 let validateToken = () => {
 
     APIRequest({
-        url: `${PUBLIC_BASE_URL}/account/token`,
+        url: `${PUBLIC_API_URL}/account/token`,
     })
       .then(resp => {
 

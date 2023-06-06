@@ -1,5 +1,5 @@
 <script>
-import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
+import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { APIRequest } from '$lib/utils/request.js'
 import { onMount, tick } from 'svelte'
 import { store } from '$lib/store/store.js'
@@ -10,7 +10,7 @@ onMount(() => {
 
 
 function checkHealth(init) {
-    let url = `${PUBLIC_BASE_URL}/health_check`
+    let url = `${PUBLIC_API_URL}/health_check`
 
     let opt = {
       url: url,

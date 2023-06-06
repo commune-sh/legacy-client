@@ -1,7 +1,7 @@
 <script>
 import { tick, onMount, onDestroy, createEventDispatcher } from 'svelte'
 import { eye, send, close } from '$lib/assets/icons.js'
-import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
+import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { APIRequest, getPresignedURL, uploadAttachment, savePost } from '$lib/utils/request.js'
 import MarkdownIt from 'markdown-it'
 import MarkdownItEmoji from 'markdown-it-emoji'

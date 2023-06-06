@@ -4,7 +4,7 @@ import Header from '$lib/header/post-header.svelte'
 import { onMount } from 'svelte';
 import { store } from '$lib/store/store.js'
 import { APIRequest } from '$lib/utils/request.js'
-import { PUBLIC_BASE_URL } from '$env/static/public';
+import { PUBLIC_API_URL } from '$env/static/public';
 import { page } from '$app/stores';
 import SkeletonBoardEvents from '$lib/skeleton/skeleton-board-events.svelte'
 
@@ -20,7 +20,7 @@ let ready = false;
 
 function loadEvents() {
     APIRequest({
-      url: `${PUBLIC_BASE_URL}/event/${$page.params.post}`,
+      url: `${PUBLIC_API_URL}/event/${$page.params.post}`,
       method: 'GET',
     })
     .then(resp => {

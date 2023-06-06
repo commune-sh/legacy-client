@@ -2,7 +2,7 @@
 import Signup from '$lib/auth/signup.svelte'
 import { goto } from '$app/navigation';
 import Health from '$lib/sync/health.svelte'
-import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
+import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { store } from '$lib/store/store.js'
 
 $: down = $store.down

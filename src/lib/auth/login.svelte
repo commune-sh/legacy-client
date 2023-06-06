@@ -1,6 +1,6 @@
 <script>
 import { onMount, createEventDispatcher } from 'svelte'
-import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
+import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { store } from '$lib/store/store.js'
 import { eye, eyeoff } from '$lib/assets/icons.js'
 import { APIRequest } from '$lib/utils/request.js'
@@ -52,7 +52,7 @@ function login() {
     busy = true
 
     APIRequest({
-        url: `${PUBLIC_BASE_URL}/account/login`,
+        url: `${PUBLIC_API_URL}/account/login`,
         body: {
             username: usernameInput.value, 
             password: passwordInput.value,

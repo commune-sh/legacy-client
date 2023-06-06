@@ -1,7 +1,7 @@
 <script>
 import { onMount, onDestroy } from 'svelte'
 import { APIRequest } from '$lib/utils/request.js'
-import { PUBLIC_BASE_URL } from '$env/static/public';
+import { PUBLIC_API_URL } from '$env/static/public';
 import Login from './login.svelte'
 import { close } from '$lib/assets/icons.js'
 import { page } from '$app/stores';
@@ -30,7 +30,7 @@ let syncCreds = (token) => {
     if(token) {
 
         APIRequest({
-            url: `${PUBLIC_BASE_URL}/account/session`,
+            url: `${PUBLIC_API_URL}/account/session`,
         })
           .then(resp => {
 

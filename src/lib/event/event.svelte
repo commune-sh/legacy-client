@@ -120,7 +120,7 @@ function killTools() {
 }
 
 function getURL(item) {
-    return `${PUBLIC_MEDIA_URL}/${item.key}`
+    return `${PUBLIC_MEDIA_URL}/${item?.key}` || ``
 }
 
 let displayTools = false;
@@ -201,22 +201,22 @@ $: hasReplies = event?.children?.length > 0
             {/if}
         </div>
 
-        {#if !isReply}
         <div class="fl ph3">
 
-            {#if event?.reply_count > 0}
-                <div class="pt2">
-                    <Replies count={event?.reply_count} />
-                </div>
+            {#if !isReply}
+                {#if event?.reply_count > 0}
+                    <div class="pt2 mr3">
+                        <Replies count={event?.reply_count} />
+                    </div>
+                {/if}
             {/if}
 
             {#if event?.reactions?.length > 0}
-                <div class="pt2 ml3">
+                <div class="pt2">
                     <Reactions reactions={event?.reactions} />
                 </div>
             {/if}
         </div>
-        {/if}
 
     </div>
 

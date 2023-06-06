@@ -1,6 +1,6 @@
 <script>
 import { onMount, createEventDispatcher } from 'svelte'
-import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
+import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { store } from '$lib/store/store.js'
 import { debounce } from '$lib/utils/utils.js'
 import { eye, eyeoff } from '$lib/assets/icons.js'
@@ -71,7 +71,7 @@ function create() {
     busy = true
 
     APIRequest({
-        url: `${PUBLIC_BASE_URL}/account`,
+        url: `${PUBLIC_API_URL}/account`,
         body: {
             email: emailInput.value, 
             username: usernameInput.value, 
@@ -113,7 +113,7 @@ function usernameAvailable() {
     const username = usernameInput?.value
     if(username.length == 0) return
     APIRequest({
-        url: `${PUBLIC_BASE_URL}/account/username/${username}`,
+        url: `${PUBLIC_API_URL}/account/username/${username}`,
         method: 'GET',
     })
       .then(resp => {

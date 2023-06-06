@@ -1,4 +1,4 @@
-import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
+import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
 
 export async function APIRequest(r) {
   try {
@@ -56,7 +56,7 @@ export async function getPresignedURL(extension) {
       headers: headers,
     }
 
-  const response = await fetch(`${PUBLIC_BASE_URL}/media/presigned_url?filetype=${extension}`,options)
+  const response = await fetch(`${PUBLIC_API_URL}/media/presigned_url?filetype=${extension}`,options)
   const data = await response.json();
   return data;
 }
@@ -91,7 +91,7 @@ export async function savePost(body) {
       body: JSON.stringify(body)
     }
 
-  const response = await fetch(`${PUBLIC_BASE_URL}/event`,options)
+  const response = await fetch(`${PUBLIC_API_URL}/event`,options)
   const data = await response.json();
   return data;
 }

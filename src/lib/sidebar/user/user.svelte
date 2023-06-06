@@ -1,5 +1,5 @@
 <script>
-import { PUBLIC_BASE_URL } from '$env/static/public';
+import { PUBLIC_API_URL } from '$env/static/public';
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
 
@@ -20,7 +20,7 @@ $: if(authenticated && active) {
 
 function SSE() {
     const token = $store?.credentials?.access_token
-    const url = `${PUBLIC_BASE_URL}/sse?token=${token}`
+    const url = `${PUBLIC_API_URL}/sse?token=${token}`
     const eventSource = new EventSource(url);
     eventSource.onmessage = function(event) {
         if(event.data) {

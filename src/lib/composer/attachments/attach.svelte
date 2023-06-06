@@ -1,7 +1,7 @@
 <script>
 import { onMount, onDestroy, createEventDispatcher } from 'svelte'
 import { add } from '$lib/assets/icons.js'
-import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
+import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { APIRequest } from '$lib/utils/request.js'
 
 export let busy;
@@ -56,7 +56,7 @@ let build = (e) => {
 
             console.log(file)
             APIRequest({
-                url: `${PUBLIC_BASE_URL}/media/presigned_url`,
+                url: `${PUBLIC_API_URL}/media/presigned_url`,
                 method: 'GET',
             }).then((res) => {
                 console.log(res)
