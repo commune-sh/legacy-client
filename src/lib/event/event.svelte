@@ -206,7 +206,7 @@ $: hasReplies = event?.children?.length > 0
 
     {#if !isPost && !isReply && hasAttachments}
     <div class="grd pr3">
-        <div class="at-img grd-c" 
+        <div class="at-img" 
             style="background-image: url({getURL(attachments[0])})">
         </div>
     </div>
@@ -346,9 +346,9 @@ $: hasReplies = event?.children?.length > 0
 }
 
 .at-img {
-    height: 100px;
-    width: 100px;
-    border-radius: 2px;
+    height: 85px;
+    width: 85px;
+    border-radius: 9px;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
