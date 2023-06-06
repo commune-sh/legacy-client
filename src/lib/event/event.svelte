@@ -161,66 +161,68 @@ $: hasReplies = event?.children?.length > 0
 
 
     <div class="ev-c fl-co">
-        <div class="body ph3">
+        <div class="body">
+
+            <div class="ph3 fl mb2">
+                <User hideAvatar={true} user={user} />
+                <div class="sm ph1"></div>
+                <Date date={event?.origin_server_ts} />
+            </div>
+
             {#if isPost}
-                <div class="post-title pb3">
+                <div class="post-title pb3 ph3">
                     {title}
                 </div>
 
-        {#if (isPost || isReply) && hasAttachments}
-        <div class="grd pr3 pb3">
-                        <img 
-                        width={attachments[0].info.w}
+                {#if (isPost || isReply) && hasAttachments}
+                    <div class="grd pb3 ph3">
+                        <img width={attachments[0].info.w}
                         height={attachments[0].info.h}
-                            src={getURL(attachments[0])}/>
-        </div>
-        {/if}
+                        src={getURL(attachments[0])}/>
+                    </div>
+                {/if}
 
-
-                <div class="post-body">
+                <div class="post-body ph3">
                     {@html content}
                 </div>
             {:else if isReply}
-                <div class="post-body">
+
+
+                <div class="post-body ph3">
                     {@html content}
                 </div>
             {:else}
-                <div class="post-title-default">
+                <div class="post-title-default ph3">
                     <b>{title}</b>
                 </div>
-                <div class="post-body clipped">
+                <div class="post-body clipped ph3">
                     {@html clipped}
                 </div>
             {/if}
         </div>
 
-        <div class="pt2 fl ph3">
-            <User hideAvatar={true} user={user} />
-            <div class="sm ph1"></div>
-            <Date date={event?.origin_server_ts} />
+        {#if !isReply}
+        <div class="fl ph3">
+
+            {#if event?.reply_count > 0}
+                <div class="pt2">
+                    <Replies count={event?.reply_count} />
+                </div>
+            {/if}
 
             <div class="fl-o">
             </div>
-            <div class="">
+            <div class="pt2">
                 <Reactions reactions={event?.reactions} />
             </div>
-            {#if event?.reply_count > 0}
-                <Replies count={event?.reply_count} />
-            {/if}
         </div>
-        <div class="pt1 fl ph3">
-            <div class="">
-            </div>
-            <div class="fl-o">
-            </div>
+        {/if}
 
-
-        </div>
     </div>
 
     {#if !isPost && !isReply && hasAttachments && images}
     <div class="grd pr3">
-        <div class="at-img" 
+        <div class="at-img grd-c" 
             style="background-image: url({getURL(images[0])})">
         </div>
     </div>
@@ -331,6 +333,10 @@ $: hasReplies = event?.children?.length > 0
 
 :global(.post-body p:first-of-type){
     margin-block-start: 0;
+}
+
+:global(.post-body p:last-of-type){
+    margin-block-end: 0;
 }
 
 .clipped {

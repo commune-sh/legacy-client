@@ -3,7 +3,7 @@ import { replies } from '$lib/assets/icons.js'
 export let count;
 </script>
 
-<div class="rep ml3 grd">
+<div class="rep grd">
     <div class="grd-c fl">
         <div class="ico">
             {@html replies}
