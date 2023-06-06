@@ -91,6 +91,8 @@ $: title = event?.content?.title ? event?.content?.title : `Untitled`
 $: attachments = event?.content?.attachments
 $: hasAttachments = event?.content?.attachments?.length > 0
 
+$: images = attachments?.filter(a => a?.type?.startsWith('image'))
+
 
 function fetchReplies() {
     console.log("lol")
@@ -145,6 +147,7 @@ function replyToEvent() {
 
 $: hasReplies = event?.children?.length > 0
 
+
 </script>
 
 <div class="event" 
@@ -163,6 +166,17 @@ $: hasReplies = event?.children?.length > 0
                 <div class="post-title pb3">
                     {title}
                 </div>
+
+        {#if (isPost || isReply) && hasAttachments}
+        <div class="grd pr3 pb3">
+                        <img 
+                        width={attachments[0].info.w}
+                        height={attachments[0].info.h}
+                            src={getURL(attachments[0])}/>
+        </div>
+        {/if}
+
+
                 <div class="post-body">
                     {@html content}
                 </div>
@@ -204,22 +218,13 @@ $: hasReplies = event?.children?.length > 0
         </div>
     </div>
 
-    {#if !isPost && !isReply && hasAttachments}
+    {#if !isPost && !isReply && hasAttachments && images}
     <div class="grd pr3">
         <div class="at-img" 
-            style="background-image: url({getURL(attachments[0])})">
+            style="background-image: url({getURL(images[0])})">
         </div>
     </div>
     {/if}
-
-    {#if (isPost || isReply) && hasAttachments}
-    <div class="grd pr3">
-        <div class="at-img grd-c" 
-            style="background-image: url({getURL(attachments[0])})">
-        </div>
-    </div>
-    {/if}
-
 
         {#if displayTools}
             <div class="tools">
