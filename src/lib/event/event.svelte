@@ -157,8 +157,7 @@ $: hasReplies = event?.children?.length > 0
     class:ha={!isReply && !isPost && hasAttachments}
     class:ma={toolsActive}
     on:click={goToEvent} 
-    on:touchend={goToEvent} 
-    class:highlight={highlight}>
+    class:highlight={highlight} role="button">
 
 
     <div class="ev-c fl-co">
