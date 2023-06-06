@@ -15,6 +15,17 @@ export let reaction;
 
 <style>
 .reaction {
+    font-size: small;
+    font-weight: bold;
+    line-height: 1;
+    color: var(--text-light);
+    background-color: var(--shade-2);
+    border-radius: 3px;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+    padding-top: 0;
+    padding-bottom: 0;
+    height: 20px;
 }
 
 .bg {
@@ -32,8 +43,8 @@ export let reaction;
 }
 
 .emoji {
-    font-size: 1rem;
-    line-height: 1;
+    font-size: small;
+    line-height: 1.6;
 }
 .t {
     font-size: small;

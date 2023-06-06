@@ -157,6 +157,7 @@ $: hasReplies = event?.children?.length > 0
     class:ha={!isReply && !isPost && hasAttachments}
     class:ma={toolsActive}
     on:click={goToEvent} 
+    on:touchstart={goToEvent} 
     class:highlight={highlight}>
 
 
@@ -210,11 +211,11 @@ $: hasReplies = event?.children?.length > 0
                 </div>
             {/if}
 
-            <div class="fl-o">
-            </div>
-            <div class="pt2">
-                <Reactions reactions={event?.reactions} />
-            </div>
+            {#if event?.reactions?.length > 0}
+                <div class="pt2 ml3">
+                    <Reactions reactions={event?.reactions} />
+                </div>
+            {/if}
         </div>
         {/if}
 
