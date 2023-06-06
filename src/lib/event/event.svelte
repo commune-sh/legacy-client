@@ -160,7 +160,7 @@ $: hasReplies = event?.children?.length > 0
     <div class="ev-c fl-co">
         <div class="body ph3">
             {#if isPost}
-                <div class="post-title">
+                <div class="post-title pb3">
                     {title}
                 </div>
                 <div class="post-body">
@@ -182,6 +182,9 @@ $: hasReplies = event?.children?.length > 0
 
         <div class="pt2 fl ph3">
             <User hideAvatar={true} user={user} />
+            <div class="sm ph1"></div>
+            <Date date={event?.origin_server_ts} />
+
             <div class="fl-o">
             </div>
             <div class="">
@@ -193,7 +196,6 @@ $: hasReplies = event?.children?.length > 0
         </div>
         <div class="pt1 fl ph3">
             <div class="">
-                <Date date={event?.origin_server_ts} />
             </div>
             <div class="fl-o">
             </div>
@@ -203,7 +205,7 @@ $: hasReplies = event?.children?.length > 0
     </div>
 
     {#if !isPost && !isReply && hasAttachments}
-    <div class="grd ph3">
+    <div class="grd pr3">
         <div class="at-img grd-c" 
             style="background-image: url({getURL(attachments[0])})">
         </div>
@@ -211,7 +213,7 @@ $: hasReplies = event?.children?.length > 0
     {/if}
 
     {#if (isPost || isReply) && hasAttachments}
-    <div class="grd ph3">
+    <div class="grd pr3">
         <div class="at-img grd-c" 
             style="background-image: url({getURL(attachments[0])})">
         </div>
@@ -254,7 +256,6 @@ $: hasReplies = event?.children?.length > 0
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: auto;
-    grid-column-gap: 10px;
     padding-bottom: 1rem;
     padding-top: 1rem;
     border-bottom: 1px solid var(--ev-bb);
@@ -319,9 +320,14 @@ $: hasReplies = event?.children?.length > 0
     font-weight: bold;
 }
 
-div.post-body p:first-of-type {
-  margin-block-start: 0;
+.post-body {
+
 }
+
+:global(.post-body p:first-of-type){
+    margin-block-start: 0;
+}
+
 .clipped {
     font-size: 14px!important;
     font-weight: 500;

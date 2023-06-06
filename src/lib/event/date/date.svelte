@@ -9,16 +9,18 @@ $: dayjsr = dayjs.extend(relativeTime)
 $: when = dayjsr(date)?.fromNow(true)
 $: created = dayjs(date)?.format('MMM D')
 
+
+$: title = isToday ? when : created
+
 </script>
 
-{#if isToday}
-    <span class="time" title={when}>{when}</span>
-{:else}
-    <span class="time" title={created}>{created}</span>
-{/if}
+<div class="time grd-c" title={title}>
+    {isToday ? when : created}
+</div>
 
 <style>
 .time {
     font-size: small;
+    color: var(--text-light);
 }
 </style>
