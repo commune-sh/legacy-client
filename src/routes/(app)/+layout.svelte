@@ -69,7 +69,7 @@ function switchToIndex() {
 
 
 {#if menuToggled}
-<div class="mask" on:click={collapse}>
+<div class="maskcontent" on:click={collapse}>
 </div>
 {/if}
 
@@ -192,7 +192,7 @@ function switchToIndex() {
 }
 
 
-.mask {
+.maskcontent {
     position: fixed;
     top: 0;
     bottom: 0;
