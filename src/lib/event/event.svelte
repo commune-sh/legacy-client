@@ -157,7 +157,7 @@ $: hasReplies = event?.children?.length > 0
     class:ha={!isReply && !isPost && hasAttachments}
     class:ma={toolsActive}
     on:click={goToEvent} 
-    on:touchstart={goToEvent} 
+    on:touchend={goToEvent} 
     class:highlight={highlight}>
 
 
