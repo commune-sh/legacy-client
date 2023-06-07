@@ -71,16 +71,51 @@ $: if(lastPost != null && $page.params.post != lastPost) {
 
 let placeholder = 'Leave a reply.'
 
+function insertReply(children, newReply) {
+  for (const reply of children) {
+    let in_reply_to = newReply?.content['m.relates_to']?.['m.in_reply_to']?.event_id
+    if (reply.event_id === in_reply_to) {
+      if (!reply.children) {
+        reply.children = [];
+      }
+            console.log("found parent reply", reply)
+      reply.children.push(newReply);
+      return;
+    }
+    if (reply.children) {
+      insertReply(reply.children, newReply);
+    }
+  }
+}
+
 function replySaved(e) {
+
+    let reply = e.detail
+
+    reply.just_posted = true
+
+
+    if(data?.replies?.length > 0) {
+        let in_reply_to = reply?.content['m.relates_to']?.['m.in_reply_to']?.event_id
+        if(in_reply_to == post.event_id) {
+            data.replies = [...data.replies, reply];
+            return
+        }
+
+        insertReply(data.replies, reply)
+        data = data
+        return
+    }
+
     if(data == null) {
         data = {}
-        data.replies = [e.detail]
+        data.replies = [reply]
     } else {
         //data.replies = []
         if(!data?.replies) {
             data.replies = []
         }
-        data.replies = [e.detail, ...data.replies];
+        data.replies = [reply, ...data.replies];
     }
 }
 
@@ -153,7 +188,7 @@ $: if(replies) {
         </div>
 
         <div class="norep pa3 fl">
-            <div class="rep grd-c">
+            <div class="rco grd-c">
                 {#if ready}
                     {#if post.reply_count > 0}
                         {post.reply_count} {post.reply_count == 1 ? 'reply' : 'replies'}
@@ -175,6 +210,7 @@ $: if(replies) {
             {#if replies}
                 {#each replies as reply}
                     <Event isReply={true} 
+                        sender={post.sender.id}
                         event={reply} 
                         on:replyTo={replyToEvent} />
                 {/each}
@@ -224,7 +260,7 @@ $: if(replies) {
     border-bottom: 1px solid var(--border-1);
 }
 
-.rep {
+.rco {
     font-size: small;
     font-weight: bold;
 }

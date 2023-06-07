@@ -1,5 +1,5 @@
 <script>
-import { createEventDispatcher } from 'svelte'
+import { onMount, createEventDispatcher } from 'svelte'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 import ImageThumbnail from './attachments/image-thumbnail.svelte'
@@ -18,6 +18,7 @@ export let showAlias = true;
 
 
 export let event;
+export let sender;
 
 export let depth = 0;
 
@@ -28,6 +29,24 @@ $: isSpace = $page.params.space !== undefined && $page.params.space !== null &&
 
 $: isRoom = $page.params.room !== undefined && $page.params.room !== null &&
     $page.params.room !== ''
+
+let el;
+
+onMount(() => {
+    if (isReplyEvent) {
+        if(el) {
+            el.scrollIntoView({ behavior: "smooth" });
+        }
+    }
+    if (event?.just_posted) {
+        if(el) {
+            el.scrollIntoView({ behavior: "smooth" });
+        }
+        setTimeout(() => {
+            event.just_posted = false
+        }, 6000)
+    }
+})
 
 
 function buildLink(e, page) {
@@ -143,24 +162,34 @@ function replyToEvent() {
 
 $: hasReplies = event?.children?.length > 0
 
+$: op = sender == user?.id
+
+$: replyParam = $page.params.reply !== undefined && $page.params.reply !== null && $page.params.reply !== ''
+$: isReplyEvent = replyParam && $page.params?.reply === event?.slug
+
 
 </script>
 
 <div class="event" 
+    bind:this={el}
     on:mouseover={showTools}
     on:mouseleave={hideTools}
     class:h={!isReply && !isPost}
     class:ha={!isReply && !isPost && hasAttachments}
     class:ma={toolsActive}
     on:click={goToEvent} 
+    class:fresh={event?.just_posted}
+    class:isrep={isReplyEvent}
     class:highlight={highlight} role="button">
 
 
+    {#if isReply}
+    {/if}
     <div class="ev-c fl-co">
         <div class="body">
 
             <div class="ph3 fl mb2">
-                <User hideAvatar={true} user={user} />
+                <User hideAvatar={true} user={user} op={op}/>
                 <div class="sm ph1"></div>
                 <Date date={event?.origin_server_ts} />
             </div>
@@ -242,6 +271,7 @@ $: hasReplies = event?.children?.length > 0
                 depth={depth + 1}
                 nested={true}
                 event={reply} 
+                sender={sender}
                 on:replyTo/>
         {/each}
         </div>
@@ -344,6 +374,25 @@ $: hasReplies = event?.children?.length > 0
     margin-block-end: 0;
     margin-inline-start: 0px;
     margin-inline-end: 0px;
+}
+
+.fresh {
+    animation-name: fadeOut;
+    animation-duration: 6s;
+}
+
+@keyframes fadeOut {
+  from {
+    background-color: var(--just-posted-bg);
+  }
+  to {
+    background-color: var(--bg);
+  }
+}
+
+
+.isrep {
+    border: 1px solid var(--primary);
 }
 
 </style>

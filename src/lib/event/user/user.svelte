@@ -2,6 +2,7 @@
 import { user as icon} from '$lib/assets/icons.js'
 
 export let user;
+export let op;
 export let hideAvatar = false;
 
 $: avatarExists = user?.avatar !== undefined && 
@@ -31,11 +32,11 @@ $: initial = user?.username?.charAt(0).toUpperCase();
             </div>
         </div>
     {/if}
-        <div class="name grd-c ml1" class:ml1={!hideAvatar}>
+        <div class="name grd-c ml1" class:op={op} class:ml1={!hideAvatar}>
             {#if nameExists}
                 {user.display_name}
             {:else}
-                @{user.username}
+                {user.username}
             {/if}
     </div>
 </div>
@@ -45,6 +46,13 @@ $: initial = user?.username?.charAt(0).toUpperCase();
 .user {
     font-size: small;
     font-weight: bold;
+}
+
+.op {
+    background-color: var(--avatar-bg);
+    border-radius: 4px;
+    padding: 0rem 0.25rem;
+    margin-left: -0.25rem;
 }
 
 .user:hover a:link{

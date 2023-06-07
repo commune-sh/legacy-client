@@ -25,3 +25,4 @@ export function nestEvents(flatEvents) {
 
   return nestedEvents;
 }
+

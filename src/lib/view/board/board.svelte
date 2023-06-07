@@ -260,6 +260,24 @@ function postSaved(e) {
 
 $: selectedPost = data?.events?.find(e => e.slug == $page.params.post)
 
+$: if(!selectedPost) {
+    console.log("fetching remote post")
+    fetchPost()
+}
+
+let fetchPost = () => {
+    let url = `${PUBLIC_API_URL}/event/${$page.params.post}`
+    APIRequest({
+        url: url,
+        method: 'GET',
+    }).then((res) => {
+        if(res && res?.event) {
+                selectedPost = res.event
+        }
+    });
+}
+
+
 
 </script>
 

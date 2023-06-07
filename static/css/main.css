@@ -52,6 +52,8 @@
 
     --avatar-bg: #000;
     --event-user: #2a2a2a;
+
+    --just-posted-bg: #3e1919;
 }
 
 :root.light {
@@ -774,4 +776,15 @@ img {
     }
 }
 
+blockquote {
+    margin: 0;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-left: 3px solid var(--primary);
+}
+
+blockquote p {
+    padding-top: 0;
+    padding-bottom: 0;
+}
 
