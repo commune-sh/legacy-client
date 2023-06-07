@@ -1,9 +1,9 @@
 <script>
 import { createEventDispatcher } from 'svelte'
-import { PUBLIC_MEDIA_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
-import Composer from '$lib/composer/composer.svelte'
+import ImageThumbnail from './attachments/image-thumbnail.svelte'
+import Images from './attachments/images.svelte'
 import Reactions from '$lib/event/reactions/reactions.svelte'
 import Replies from '$lib/event/replies/replies.svelte'
 import User from './user/user.svelte'
@@ -119,10 +119,6 @@ function killTools() {
     displayTools = false
 }
 
-function getURL(item) {
-    return `${PUBLIC_MEDIA_URL}/${item?.key}` || ``
-}
-
 let displayTools = false;
 
 function showTools() {
@@ -174,14 +170,6 @@ $: hasReplies = event?.children?.length > 0
                     {title}
                 </div>
 
-                {#if (isPost || isReply) && hasAttachments}
-                    <div class="grd pb3 ph3">
-                        <img width={attachments[0].info.w}
-                        height={attachments[0].info.h}
-                        src={getURL(attachments[0])}/>
-                    </div>
-                {/if}
-
                 <div class="post-body ph3">
                     {@html content}
                 </div>
@@ -199,6 +187,12 @@ $: hasReplies = event?.children?.length > 0
                     {@html clipped}
                 </div>
             {/if}
+
+            {#if (isPost || isReply) && hasAttachments && images}
+                <Images images={images} />
+            {/if}
+
+
         </div>
 
         <div class="fl ph3">
@@ -221,11 +215,7 @@ $: hasReplies = event?.children?.length > 0
     </div>
 
     {#if !isPost && !isReply && hasAttachments && images}
-    <div class="grd pr3">
-        <div class="at-img grd-c" 
-            style="background-image: url({getURL(images[0])})">
-        </div>
-    </div>
+        <ImageThumbnail images={images} />
     {/if}
 
         {#if displayTools}
@@ -354,15 +344,6 @@ $: hasReplies = event?.children?.length > 0
     margin-block-end: 0;
     margin-inline-start: 0px;
     margin-inline-end: 0px;
-}
-
-.at-img {
-    height: 85px;
-    width: 85px;
-    border-radius: 9px;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
 }
 
 </style>

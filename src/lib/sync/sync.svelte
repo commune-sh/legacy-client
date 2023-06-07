@@ -19,6 +19,13 @@ $: if($page?.params?.space !== lastSpace && $page?.params?.space && !down) {
 }
 
 
+$: isdomain = $page?.params?.domain != null && 
+    $page?.params?.domain?.length > 0
+
+$: if(isdomain) {
+    console.log("domaain is", $page?.params?.domain)
+}
+
 onMount(() => {
 })
 
