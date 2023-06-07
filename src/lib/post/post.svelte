@@ -38,9 +38,7 @@ function loadEvents() {
     })
     .then(resp => {
         if(resp) {
-            //
             data = resp
-                console.log(data.replies)
             lastPost = $page.params.post
             ready = true
         }
@@ -66,6 +64,18 @@ onMount(() => {
 
 $: if(lastPost != null && $page.params.post != lastPost) {
     ready = false
+    replying = false
+    loadEvents()
+}
+
+let isLastReply = false;
+
+$: if(isReply) {
+    isLastReply = true
+}
+
+$: if(!isReply && isLastReply) {
+    ready = false
     loadEvents()
 }
 
@@ -73,7 +83,7 @@ let placeholder = 'Leave a reply.'
 
 function insertReply(children, newReply) {
   for (const reply of children) {
-    let in_reply_to = newReply?.content['m.relates_to']?.['m.in_reply_to']?.event_id
+    let in_reply_to = newReply?.content['m.relates_to']?.event_id
     if (reply.event_id === in_reply_to) {
       if (!reply.children) {
         reply.children = [];
@@ -96,13 +106,15 @@ function replySaved(e) {
 
 
     if(data?.replies?.length > 0) {
-        let in_reply_to = reply?.content['m.relates_to']?.['m.in_reply_to']?.event_id
+        let in_reply_to = reply?.content['m.relates_to']?.event_id
         if(in_reply_to == post.event_id) {
             data.replies = [...data.replies, reply];
+            post.reply_count += 1
             return
         }
 
         insertReply(data.replies, reply)
+        post.reply_count += 1
         data = data
         return
     }
@@ -116,8 +128,11 @@ function replySaved(e) {
             data.replies = []
         }
         data.replies = [reply, ...data.replies];
+        post.reply_count += 1
     }
 }
+
+let reply_count = post.reply_count || 0
 
 let replying = false;
 let replyingTo = null;
@@ -164,16 +179,19 @@ function cancelReply() {
 }
 
 
+/*
 $: if(ready && authenticated && joined && roomID && post) {
     let stateKey = roomID + post?.event_id
     let es = store.getEditorState(stateKey)
     if(es != undefined) {
+        console.log(es)
+        replyingTo = es.replyingTo
         replying = true
     }
 }
+*/
 
-$: if(replies) {
-}
+$: isReply = $page.params.reply !== undefined && $page.params.reply !== null && $page.params.reply !== ''
 
 </script>
 
@@ -186,6 +204,7 @@ $: if(replies) {
 
         <div class="sep">
         </div>
+
 
         <div class="norep pa3 fl">
             <div class="rco grd-c">

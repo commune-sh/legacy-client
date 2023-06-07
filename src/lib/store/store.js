@@ -46,10 +46,10 @@ function createApp() {
   let theme = localStorage.getItem(`theme`)
   if(theme == 'light') {
     app.settings.theme = 'light'
-  } else if(theme == 'black') {
-    app.settings.theme = 'black'
-  } else {
+  } else if(theme == 'dark') {
     app.settings.theme = 'dark'
+  } else {
+    app.settings.theme = 'black'
   }
 
 
@@ -301,13 +301,13 @@ function createApp() {
   let toggleTheme = () => {
     update(p => {
       if(p.settings.theme == 'light') {
+        p.settings.theme = 'dark'
+        localStorage.setItem('theme', 'dark')
+        document.documentElement.setAttribute('class', 'dark')
+      } else if(p.settings.theme == 'dark'){
         p.settings.theme = 'black'
         localStorage.setItem('theme', 'black')
         document.documentElement.setAttribute('class', 'black')
-      } else if(p.settings.theme == 'black'){
-        p.settings.theme = 'dark'
-        localStorage.removeItem('theme')
-        document.documentElement.setAttribute('class', 'dark')
       } else {
         p.settings.theme = 'light'
         localStorage.setItem('theme', 'light')

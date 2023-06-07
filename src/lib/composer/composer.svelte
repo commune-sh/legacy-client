@@ -164,6 +164,7 @@ async function createPost() {
         focusTitleInput()
         return
     }
+    console.log(reply, replyTo)
     if(reply && replyTo == null) {
         return
     }
@@ -210,11 +211,8 @@ async function createPost() {
             post.in_thread = threadEvent
             post.is_reply = true
             post.content['m.relates_to'] = {
-                event_id: threadEvent,
-                'rel_type': 'm.thread',
-                'm.in_reply_to': {
-                    event_id: replyTo.event_id,
-                }
+                event_id: replyTo.event_id,
+                'rel_type': 'm.nested_reply',
             }
         }
 
@@ -300,6 +298,10 @@ function updateContent() {
         focus: titleFocused ? 'title' : bodyFocused ? 'body' : null,
         cursor: titleFocused ? titleInput.selectionStart : bodyFocused ? bodyInput.selectionStart : null,
         scroll: bodyInput?.scrollTop > 0 ? bodyInput.scrollTop : null,
+    }
+
+    if(replyTo) {
+        state.replyTo = replyTo
     }
 
     store.updateEditorState({

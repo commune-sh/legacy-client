@@ -58,8 +58,8 @@ function goToNext() {
 {/if}
 
 <div class="pa3">
-    <img width={selected.info.w}
-    height={selected.info.h}
+    <img width={selected?.info?.w}
+    height={selected?.info?.h}
     src={getURL(selected)} 
     loading="lazy"/>
 </div>

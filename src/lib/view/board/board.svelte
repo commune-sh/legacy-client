@@ -257,16 +257,25 @@ function postSaved(e) {
     })
 }
 
+$: isReply = $page.params.reply !== undefined && $page.params.reply !== null && $page.params.reply !== ''
 
-$: selectedPost = data?.events?.find(e => e.slug == $page.params.post)
+$: selectedPost = !isReply ? data?.events?.find(e => e.slug ==
+    $page.params.post) : null
 
 $: if(!selectedPost) {
     console.log("fetching remote post")
-    fetchPost()
+    if($page.params.reply) {
+        fetchPost($page.params.reply)
+    } else {
+        fetchPost()
+    }
 }
 
-let fetchPost = () => {
+let fetchPost = (reply) => {
     let url = `${PUBLIC_API_URL}/event/${$page.params.post}`
+    if(reply) {
+        url = `${PUBLIC_API_URL}/event/${reply}`
+    }
     APIRequest({
         url: url,
         method: 'GET',

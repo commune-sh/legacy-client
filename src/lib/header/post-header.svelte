@@ -21,6 +21,16 @@ function kill() {
     })
 }
 
+function goFull() {
+    let url = `/${$page.params.space}/post/${$page.params.post}`
+    if($page.params?.room) {
+        url = `/${$page.params?.space}/${$page.params?.room}/post/${$page.params.post}`
+    }
+    goto(url, {
+        noscroll: true,
+    })
+}
+
 $: menuToggled = $store?.menuToggled
 function toggleMenu() {
     let el = document.querySelector('.space-container')
@@ -32,6 +42,8 @@ function toggleMenu() {
     }
     store.toggleMenu()
 }
+
+$: isReply = $page.params.reply !== undefined && $page.params.reply !== null && $page.params.reply !== ''
 
 </script>
 
@@ -46,7 +58,12 @@ function toggleMenu() {
         <div class="fl">
 
             <div class="pd grd-c">
-                <span class="n">Discussion</span>
+                {#if isReply}
+                    <span class="n">Reply Thread</span>
+                    <span class="ml3 sfd" on:click={goFull}>See Full Discussion</span>
+                {:else}
+                    <span class="n">Discussion</span>
+                {/if}
             </div>
 
             <div class="fl-o"></div>
@@ -113,5 +130,17 @@ function toggleMenu() {
     .pd {
         padding-left: 0.5rem;
     }
+}
+
+.sfd {
+    font-size: small;
+    font-weight: bold;
+    background-color: var(--shade-4);
+    cursor: pointer;
+    border-radius: 500px;
+    padding: 0.125rem 0.5rem;
+}
+.sfd:hover {
+    opacity: 0.9;
 }
 </style>

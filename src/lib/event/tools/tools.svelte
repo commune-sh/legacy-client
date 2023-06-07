@@ -1,12 +1,16 @@
 <script>
-import { react, reply } from '$lib/assets/icons.js'
+import { react, reply, external } from '$lib/assets/icons.js'
 import Menu from './menu.svelte'
 import { createEventDispatcher } from 'svelte'
+import { goto } from '$app/navigation';
+import { page } from '$app/stores';
 
 const dispatch = createEventDispatcher();
 
 export let active;
 export let event;
+
+export let isReply;
 
 function kill() {
     dispatch('kill')
@@ -20,6 +24,16 @@ function reactToEvent() {
     dispatch('react')
 }
 
+function goToEvent() {
+    let url = `/${$page.params.space}/post/${$page.params.post}/reply/${event?.slug}`
+    if($page.params?.room) {
+        url = `/${$page.params.space}/${$page.params?.room}/post/${$page.params.post}/reply/${event?.slug}`
+    }
+    goto(url, {
+        noscroll: true,
+    })
+}
+
 </script>
 
 <div class="event-tools">
@@ -31,6 +45,12 @@ function reactToEvent() {
         on:click|stopPropagation={replyToEvent}>
         {@html reply}
     </div>
+    {#if isReply}
+    <div class="icon grd-c c-ico" 
+        on:click|stopPropagation={goToEvent}>
+        {@html external}
+    </div>
+    {/if}
     <Menu 
         on:active 
         on:kill 

@@ -11,6 +11,7 @@
 
     --shade-2: #242424;
     --shade-3: #1f1f1f;
+    --shade-4: #3e3e3e;
     --logo-bg: #000;
     --primary: #a53131;
     --secondary: #ff2a2a;
@@ -48,12 +49,15 @@
     --ev-bb: #272727;
     --rep-bb: #f2f2f2;
     --event-bg-hover: #181818;
+    --event-highlight: #181818;
 
 
     --avatar-bg: #000;
     --event-user: #2a2a2a;
 
     --just-posted-bg: #3e1919;
+
+    --reply-gap: #a53131;
 }
 
 :root.light {
@@ -69,6 +73,7 @@
 
     --shade-2: #E9ECEF;
     --shade-3: #f7f7f7;
+    --shade-4: #e2e2e2;
     --logo-bg: #2f2f2f;
     --primary: #a53131;
     --secondary: #ff2a2a;
@@ -103,10 +108,15 @@
 
     --ev-bb: #f2f2f2;
     --rep-bb: #f2f2f2;
-    --event-bg-hover: #f7f7f7;
+    --event-bg-hover: #f7f7f787;
+    --event-highlight: #f7f7f7;
 
     --avatar-bg: #eaeaea;
     --event-user: #eeeeee;
+
+    --just-posted-bg: #3e1919;
+
+    --reply-gap: #7f7f7f;
 }
 
 :root.black {
@@ -122,6 +132,7 @@
 
     --shade-2: #181818;
     --shade-3: #181818;
+    --shade-4: #333333;
     --logo-bg: #181818;
     --primary: #a53131;
     --secondary: #ff2a2a;
@@ -157,10 +168,14 @@
 
     --ev-bb: #141414;
     --rep-bb: #272727;
-    --event-bg-hover: #000;
+    --event-bg-hover: #0c0c0cb8;
+    --event-highlight: #0c0c0c;
 
     --avatar-bg: #252424;
     --event-user: #1a1a1a;
+
+    --just-posted-bg: #3e1919;
+    --reply-gap: #a53131;
 }
 
 

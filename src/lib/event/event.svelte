@@ -42,9 +42,6 @@ onMount(() => {
         if(el) {
             el.scrollIntoView({ behavior: "smooth" });
         }
-        setTimeout(() => {
-            event.just_posted = false
-        }, 6000)
     }
 })
 
@@ -118,7 +115,7 @@ function fetchReplies() {
 }
 
 
-$: highlight = $page.params.post === event?.slug
+$: highlight = $page.params.post === event?.slug && !isPost
 
 
 $: user = {
@@ -250,6 +247,7 @@ $: isReplyEvent = replyParam && $page.params?.reply === event?.slug
         {#if displayTools}
             <div class="tools">
                 <Tools 
+                    isReply={isReply} 
                     on:reply={replyToEvent}
                     active={toolsActive}
                     on:active={activateTools} 
@@ -293,11 +291,12 @@ $: isReplyEvent = replyParam && $page.params?.reply === event?.slug
 .replies {
     display: grid;
     grid-template-columns: 3px 1fr;
-    grid-column-gap: 1px;
+    grid-column-gap: 3px;
 }
 .gap {
-    width: 3px;
-    background-color: var(--ev-bb);
+    margin-left: 3px;
+    width: 1px;
+    background-color: var(--reply-gap);
 }
 
 .ha {
@@ -327,7 +326,7 @@ $: isReplyEvent = replyParam && $page.params?.reply === event?.slug
 }
 
 .highlight {
-    background-color: var(--event-bg-hover);
+    background-color: var(--event-highlight);
 }
 
 .tools {
@@ -392,7 +391,6 @@ $: isReplyEvent = replyParam && $page.params?.reply === event?.slug
 
 
 .isrep {
-    border: 1px solid var(--primary);
 }
 
 </style>
