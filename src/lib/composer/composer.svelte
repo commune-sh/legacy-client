@@ -18,7 +18,7 @@ export let replyTo;
 export let threadEvent;
 export let reply = false;
 
-$: stateKey = !reply ? roomID : roomID + replyTo?.event_id
+$: stateKey = !reply ? roomID : roomID + threadEvent
 
 $: state = $store.editorStates[stateKey]
 
@@ -109,7 +109,28 @@ onMount(() => {
     });
 
     md.use(MarkdownItEmoji);
+
+    setupLinkPasteListener()
 })
+
+function setupLinkPasteListener() {
+    bodyInput.addEventListener('paste', (e) => {
+        let expression = /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/g
+        let regex = new RegExp(expression);
+ 
+        let paste = (e.clipboardData || window.clipboardData).getData('text');
+        let matches = paste.match(regex);
+        if(matches && matches.length > 0) {
+            for(let i=0;i<matches.length; i++) {
+                if(i == 9) {
+                    break
+                }
+                console.log(matches[i])
+            }
+        }
+    }); 
+
+}
 
 onDestroy(() => {
     bodyInput.removeEventListener('scroll', handleScroll);
@@ -297,6 +318,14 @@ function attachFiles(e) {
     })
 }
 
+function handleTitlePaste(event) {
+    const clipboardData = event.clipboardData || window.clipboardData;
+    const pastedText = clipboardData.getData('text');
+    if (pastedText.includes('\n')) {
+        event.preventDefault(); 
+    }
+}
+
 function insertEmoji(textarea, emoji, sub) {
   // Get the current caret position in the textarea
   var caretPos = textarea.selectionStart;
@@ -369,6 +398,7 @@ function togglePreview() {
                     bind:this={titleInput}
                     placeholder="Title"
                     maxlength="340"
+                    on:paste={handleTitlePaste}
                     on:keydown={handleEnter}
                     on:keydown={updateContent}
                     on:input={updateContent}
@@ -438,6 +468,7 @@ function togglePreview() {
     grid-template-rows: 1fr auto;
     border-bottom: 1px solid var(--border-1);
     position: relative;
+    max-height: 514px;
 }
 
 .rep {

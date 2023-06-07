@@ -245,6 +245,11 @@ function stopEditing() {
 
 function postSaved(e) {
     stopEditing()
+    console.log("what is data?", data)
+    if(data.events == null) {
+        data.events = []
+    }
+
     data.events = [e.detail, ...data.events];
     let url = `/${e.detail?.room_alias}/post/${e.detail?.slug}`
     goto(url, {
@@ -272,6 +277,7 @@ $: selectedPost = data?.events?.find(e => e.slug == $page.params.post)
             on:newPost={newPost} />
 
         <div class="inner-content" 
+            class:splh={editing}
             bind:this={scrollable}>
 
 
@@ -353,6 +359,10 @@ $: selectedPost = data?.events?.find(e => e.slug == $page.params.post)
     overflow-x: hidden;
     display: grid;
     grid-template-rows: repeat(auto-fill, auto);
+}
+
+.splh {
+    grid-template-rows: auto 1fr;
 }
 
 .sph {

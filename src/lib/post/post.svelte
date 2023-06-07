@@ -129,6 +129,14 @@ function cancelReply() {
 }
 
 
+$: if(ready && authenticated && joined && roomID && post) {
+    let stateKey = roomID + post?.event_id
+    let es = store.getEditorState(stateKey)
+    if(es != undefined) {
+        replying = true
+    }
+}
+
 $: if(replies) {
 }
 
@@ -145,7 +153,7 @@ $: if(replies) {
         </div>
 
         <div class="norep pa3 fl">
-            <div class="grd-c">
+            <div class="rep grd-c">
                 {#if ready}
                     {#if post.reply_count > 0}
                         {post.reply_count} {post.reply_count == 1 ? 'reply' : 'replies'}
@@ -214,6 +222,11 @@ $: if(replies) {
 
 .norep {
     border-bottom: 1px solid var(--border-1);
+}
+
+.rep {
+    font-size: small;
+    font-weight: bold;
 }
 
 @media screen and (max-width: 1280px) {

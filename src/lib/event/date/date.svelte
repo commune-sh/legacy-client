@@ -1,12 +1,17 @@
 <script>
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import tz from 'dayjs/plugin/timezone'
 import relativeTime from 'dayjs/plugin/relativeTime'
+
+dayjs.extend(utc);
+dayjs.extend(tz)
+dayjs.extend(relativeTime)
 
 export let date;
 
 $: isToday = dayjs().isSame(dayjs(date), 'day')
-$: dayjsr = dayjs.extend(relativeTime)
-$: when = dayjsr(date)?.fromNow(true)
+$: when = dayjs(date)?.fromNow(true)
 $: created = dayjs(date)?.format('MMM D')
 
 
