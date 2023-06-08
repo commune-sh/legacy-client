@@ -48,6 +48,8 @@ function goToRoom() {
         alias = ''
     }
 
+
+    /*
     if(spaceRoomPath == undefined || spaceRoomPath == '/') {
         url = `/${space}${alias}`
     } else {
@@ -57,9 +59,14 @@ function goToRoom() {
         }
     }
 
-    if(menuToggled) {
+    if(menuToggled ) {
         url = `/${space}${alias}`
     }
+    */
+
+    url = `/${space}${alias}`
+
+
 
     goto(url, {
         noscroll: true,

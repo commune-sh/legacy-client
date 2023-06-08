@@ -352,6 +352,12 @@ function insertEmoji(textarea, emoji, sub) {
 let emojiListActive = false;
 let shortCode = '';
 
+function trackEnter(e) {
+    if(e.key === 'Enter' && emojiListActive) {
+        e.preventDefault()
+    }
+}
+
 function trackCaret(e) {
   setTimeout(() => {
     const pt = bodyInput.value.substring(0, bodyInput.selectionStart);
@@ -361,7 +367,10 @@ function trackCaret(e) {
         et = et.substring(1);
         shortCode = et;
         emojiListActive = true
-    }
+        console.log(shortCode)
+        } else{
+            emojiListActive = false
+        }
   }, 0);
 }
 
@@ -426,6 +435,7 @@ function togglePreview() {
                     on:keydown={focusOnTitle}
                     on:keydown={updateContent}
                     on:keydown={trackCaret}
+                    on:keydown={trackEnter}
                     maxlength="2000"
                     on:input={updateContent}
                     on:click={updateContent}

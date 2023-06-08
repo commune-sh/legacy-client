@@ -57,6 +57,17 @@ function switchToIndex() {
     showIndex = true
 }
 
+$: authenticated = $store?.authenticated && 
+    $store?.credentials != null
+    $store?.credentials?.access_token?.length > 0
+
+let EmojiPicker;
+$: if(authenticated) {
+    import('$lib/emoji/emoji-picker.svelte').then(m => {
+        EmojiPicker = m.default
+    })
+}
+
 </script>
 
 <Sync />
@@ -97,7 +108,12 @@ function switchToIndex() {
 
 
 <Authentication />
+
     <CreateSpace />
+
+{#if authenticated && EmojiPicker}
+    <EmojiPicker />
+{/if}
 
 
 {/if}

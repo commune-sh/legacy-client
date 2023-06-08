@@ -11,6 +11,8 @@ import validator from 'validator';
 
 $: down = $store.down
 
+$: signupDisabled = $store.features?.registration_enabled === false
+
 const dispatch = createEventDispatcher()
 
 let kill =() => {
@@ -30,7 +32,7 @@ let usernameInput;
 let passwordInput;
 
 
-let busy = false;
+$: busy = signupDisabled || false;
 
 let emailWarning = false;
 let usernameWarning = false;
@@ -189,6 +191,11 @@ function togglePass() {
             <div class="grd">
                 <div class="title grd-c">Sign Up</div>
             </div>
+            {#if signupDisabled}
+                <div class="grd-c mt4 mb3 warn">
+                    Signup is currently disabled
+                </div>
+            {/if}
             <div class="mt3 pb2" class:warn={emailWarning}>
                 <span class="label">email</span>
                 {#if emailWarning}
@@ -197,7 +204,7 @@ function togglePass() {
             </div>
             <div class="mt1 pb2">
                 <input bind:this={emailInput}
-                disabled={down}
+                disabled={down || busy}
                 class:red={emailWarning}
                 type="text" placeholder="" />
             </div>
@@ -212,7 +219,7 @@ function togglePass() {
             </div>
             <div class="mt1 pb2">
                 <input bind:this={usernameInput}
-                disabled={down}
+                disabled={down || busy}
                 class:red={availableWarning || usernameWarning}
                 on:keyup={ukey}
                 on:keydown={rlw}
@@ -227,7 +234,7 @@ function togglePass() {
             </div>
             <div class="passc pb2">
                 <input bind:this={passwordInput}
-                disabled={down}
+                disabled={down || busy}
                 class:red={passwordWarning}
                 on:keyup={pkey}
                 on:keydown={plw}
@@ -244,9 +251,9 @@ function togglePass() {
             </div>
             <div class="createc mt4">
                 <button class="create" on:click={create} disabled={busy || down}>
-                    {busy ? 'Creating Account...' : 'Create Account'}
+                    {busy && !signupDisabled ? 'Creating Account...' : 'Create Account'}
                 </button>
-                {#if busy}
+                {#if busy && !signupDisabled}
                     <div class="spinner">
                         <div class="sloader"></div>
                     </div>

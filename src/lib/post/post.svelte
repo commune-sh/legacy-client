@@ -9,11 +9,17 @@ import { PUBLIC_API_URL } from '$env/static/public';
 import { page } from '$app/stores';
 import SkeletonBoardEvents from '$lib/skeleton/skeleton-board-events.svelte'
 import SkeletonSpan from '$lib/skeleton/skeleton-span.svelte'
-import Composer from '$lib/composer/composer.svelte'
 
 $: authenticated = $store?.authenticated && 
     $store?.credentials != null
     $store?.credentials?.access_token?.length > 0
+
+let Composer;
+$: if(authenticated) {
+    import('$lib/composer/composer.svelte').then(m => {
+        Composer = m.default
+    })
+}
 
 $: space_room_id = state?.room_id
 $: joined = $store?.spaces.find(x => x?.room_id === space_room_id) != null 

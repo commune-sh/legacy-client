@@ -231,11 +231,9 @@ $: isReplyEvent = replyParam && $page.params?.reply === event?.slug
                 {/if}
             {/if}
 
-            {#if event?.reactions?.length > 0}
                 <div class="pt2">
                     <Reactions reactions={event?.reactions} />
                 </div>
-            {/if}
         </div>
 
     </div>

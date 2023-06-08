@@ -1,5 +1,6 @@
 <script>
 import Reaction from './reaction.svelte'
+import { react } from '$lib/assets/icons.js'
 export let reactions;
 
 $: processed = reactions?.sort((a,b) => b?.senders?.length - a?.senders?.length)

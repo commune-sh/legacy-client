@@ -8,8 +8,19 @@ import { store } from '$lib/store/store.js'
 import Event from '$lib/event/event.svelte'
 import Header from '$lib/header/header.svelte'
 import Post from '$lib/post/post.svelte'
-import Composer from '$lib/composer/composer.svelte'
 import SkeletonBoardEvents from '$lib/skeleton/skeleton-board-events.svelte'
+
+$: authenticated = $store?.authenticated && 
+    $store?.credentials != null
+    $store?.credentials?.access_token?.length > 0
+
+let Composer;
+$: if(authenticated) {
+    import('$lib/composer/composer.svelte').then(m => {
+        Composer = m.default
+    })
+}
+
 
 $: state = $store?.states[$page?.params?.space]
 
@@ -313,7 +324,7 @@ let fetchPost = (reply) => {
                 <SkeletonBoardEvents />
 
             {:else}
-                {#if editing}
+                {#if authenticated && editing}
                     <Composer 
                         roomID={roomID}
                         on:saved={postSaved} 
