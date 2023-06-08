@@ -1,6 +1,7 @@
 <script>
-import { react, reply, external } from '$lib/assets/icons.js'
+import { reply, external } from '$lib/assets/icons.js'
 import Menu from './menu.svelte'
+import React from './react.svelte'
 import { createEventDispatcher } from 'svelte'
 import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
@@ -21,14 +22,6 @@ function replyToEvent() {
     dispatch('reply')
 }
 
-let reactEl;
-function reactToEvent() {
-    store.activateEmojiPicker({
-        reacting_to: event,
-        target: reactEl,
-    })
-    dispatch('active')
-}
 
 function goToEvent() {
     let url = `/${$page.params.space}/post/${$page.params.post}/reply/${event?.slug}`
@@ -43,15 +36,14 @@ function goToEvent() {
 </script>
 
 <div class="event-tools">
-    <div class="icon grd-c c-ico" 
-        bind:this={reactEl}
-        on:click|stopPropagation={reactToEvent}>
-        {@html react}
-    </div>
+
+    <React event={event} on:active />
+
     <div class="icon grd-c c-ico" 
         on:click|stopPropagation={replyToEvent}>
         {@html reply}
     </div>
+
     {#if isReply}
     <div class="icon grd-c c-ico" 
         on:click|stopPropagation={goToEvent}>

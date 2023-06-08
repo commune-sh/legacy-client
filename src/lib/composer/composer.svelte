@@ -8,6 +8,7 @@ import MarkdownItEmoji from 'markdown-it-emoji'
 import autosize from '$lib/vendor/autosize/autosize'
 import { store } from '$lib/store/store.js'
 import Attach from './attachments/attach.svelte'
+import InsertEmoji from './insert-emoji.svelte'
 import Attachments from './attachments/attachments.svelte'
 import tippy from 'tippy.js';
 
@@ -328,6 +329,7 @@ function handleTitlePaste(event) {
     }
 }
 
+/*
 function insertEmoji(textarea, emoji, sub) {
   // Get the current caret position in the textarea
   var caretPos = textarea.selectionStart;
@@ -348,6 +350,7 @@ function insertEmoji(textarea, emoji, sub) {
   // Focus the textarea
   textarea.focus();
 }
+*/
 
 let emojiListActive = false;
 let shortCode = '';
@@ -372,6 +375,17 @@ function trackCaret(e) {
             emojiListActive = false
         }
   }, 0);
+}
+
+function insertEmoji(e) {
+    const emoji = e.detail
+    let startPosition = bodyInput.selectionStart;
+    let endPosition = bodyInput.selectionEnd;
+    bodyInput.value = bodyInput.value.substring(0, startPosition) + emoji + bodyInput.value.substring(endPosition);
+
+    let newCursorPosition = startPosition + emoji.length;
+    bodyInput.setSelectionRange(newCursorPosition, newCursorPosition);
+    focusBodyInput()
 }
 
 $: attachments = $store.editorStates[stateKey]?.attachments
@@ -452,6 +466,7 @@ function togglePreview() {
 
     <div class="tools fl">
         <Attach busy={busy} on:attached={attachFiles}/>
+        <InsertEmoji reply={reply} busy={busy} on:selected={insertEmoji}/>
         <div class="fl-o">
         </div>
         <div class="grd mr3">
@@ -544,6 +559,10 @@ function togglePreview() {
     min-height: 140px;
 }
 
+.post-body {
+    font-family: "Inter", "Twemoji", "Apple Color Emoji", "Segoe UI Emoji", "Arial", "Helvetica", sans-serif, "STIXGeneral", "Noto Color Emoji";
+}
+
 .rp {
     padding-right: calc(1rem - 6px);
     padding-top: 1rem;
@@ -594,4 +613,5 @@ button {
 .hide {
     display: none;
 }
+
 </style>

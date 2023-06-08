@@ -99,7 +99,7 @@ function upload() {
 
 </script>
 
-<div class="c-ico" on:click={upload}>
+<div class="c-ico grd-c" on:click={upload}>
     {@html add}
     <input 
         type="file" 
@@ -113,4 +113,8 @@ function upload() {
 </div>
 
 <style>
+.c-ico {
+    width: 28px;
+    height: 28px;
+}
 </style>

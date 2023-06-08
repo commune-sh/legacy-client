@@ -85,25 +85,40 @@ $: target = $store.emojiPicker.target
 
 
 $: active = $store.emojiPicker.active &&
-    $store.emojiPicker.target != null
+    $store.emojiPicker.target != null &&
+    $store.emojiPicker.reacting_to != undefined
 
 
-
-$: if(active) {
-    console.log($store.emojiPicker)
-}
 
 function kill() {
     store.killEmojiPicker()
 }
 
+
+let picker;
+
+$: position = $store.emojiPicker.position
+$: positionRight = position == 'right'
+$: positionLeft = position == 'left' || position == undefined
+
+
 $: bounding = target?.getBoundingClientRect()
 
-$: top = bounding?.top
-$: right = document.body.clientWidth - bounding?.right + target?.offsetWidth
+$: inside = bounding?.top + 550 < document.body.clientHeight 
+$: at = document.body.clientHeight - 600
 
-function log(item) {
-    console.log(item)
+
+$: top = inside ? bounding?.top - 4 : at
+
+$: right = document.body.clientWidth - bounding?.right + target?.offsetWidth +
+    10
+
+$: left = bounding?.left + target?.offsetWidth + 20
+
+function selectEmoji(item) {
+    $store.emojiPicker.selected = item.unicode
+    query = ''
+
 }
 
 $: hoveredEmoji = people[0].unicode
@@ -121,6 +136,7 @@ function changePlaceholder(e) {
 }
 
 function scrollToCategory(set) {
+    highlighted = `title-${set.name}`
     let el = document.getElementById(set.name)
     if(el) {
         el.scrollIntoView()
@@ -133,6 +149,10 @@ function isSelected(title) {
 }
 
 let highlighted = `title-people`;
+
+$: if(query == '') {
+    highlighted = `title-people`
+}
 
 onMount(() => {
   const contentSections = document.querySelectorAll('.emoji-title')
@@ -154,18 +174,53 @@ onMount(() => {
   });
 })
 
+let searchInput;
+let query;
+
+$: filtering = query?.length > 0
+
+$: if(filtering) {
+    console.log("hmm")
+    highlighted = ``
+}
+
+function killFilter() {
+    searchInput.value = null
+    query = ''
+    filterEmoji()
+    focusSearchInput()
+}
+
+$: filtered = EMOJIBASE.filter(x => x.shortcode.includes(query))
+
+function filterEmoji() {
+    if(searchInput.value.length == 0) {
+        highlighted = 'em-frequently'
+    }
+    let el = document.getElementById(`em-frequently`)
+    if(el) {
+        el.scrollIntoView(true)
+    }
+}
+
 </script>
 
-<div class="root" 
+<div class="em-root" 
     class:inactive={!active}
     bind:this={root} on:click|self={kill}>
 
     <div class="emoji-picker"
-        style="--top:{top}px;--right:{right}px">
+        class:right={positionRight}
+        class:left={positionLeft}
+        bind:this={picker}
+        style="--top:{top}px;--right:{right}px;--left:{left}px">
 
         <div class="header">
             <div class="search pa3">
-                <input placeholder={placeholder} />
+                <input bind:this={searchInput} 
+                    bind:value={query}
+                    on:keydown={filterEmoji}
+                    placeholder={placeholder} />
             </div>
         </div>
 
@@ -188,6 +243,27 @@ onMount(() => {
             on:mouseover={changePlaceholder}>
 
                 <div class="emojis">
+
+
+                {#if filtering}
+                        <div class="mt1 fl fl-co">
+                            <div class="con">
+                                {#each filtered as item (item.hexcode)}
+                                    <li class="emoji-item grd" 
+                                        on:click={selectEmoji(item)}>
+                                        <div class="emoji-key"
+                                        alt={item.unicode}
+                                        title={item.shortcode}>
+                                            {@html item.unicode}
+                                        </div>
+                                    </li>
+                                {/each}
+                            </div>
+                        </div>
+                {/if}
+
+
+                {#if !filtering}
                         {#each Object.entries(emojis) as [title, set] ,i}
                             <div id="em-{title}" class="fl fl-co mb3">
                                 <div id="title-{title}" class="emoji-title pl1 fl">
@@ -200,10 +276,10 @@ onMount(() => {
                                 </div>
                                 <div class="con">
                                     {#each set.emoji as item (item.order)}
-                                        <div class="emoji-item gr-default">
+                                        <div class="emoji-item gr-default"
+                                            on:click={selectEmoji(item)}>
                                             <div class="emoji-key"
                                             alt={item.unicode}
-                                            on:click={log(item)}
                                             title={item.shortcode}>
                                                 {@html item.unicode}
                                             </div>
@@ -212,6 +288,7 @@ onMount(() => {
                                 </div>
                             </div>
                         {/each}
+                {/if}
 
                 </div>
 
@@ -235,11 +312,11 @@ onMount(() => {
 
 <style>
 .inactive {
-    visibility: hidden;
+    display: none;
     pointer-events: none!important;
 }
 
-.root {
+.em-root {
     position: fixed;
     top: 0;
     left: 0;
@@ -250,8 +327,6 @@ onMount(() => {
 
 .emoji-picker {
     position: absolute;
-    top: var(--top);
-    right: var(--right);
     pointer-events: auto;
     overflow: hidden;
     height: 550px;
@@ -260,7 +335,20 @@ onMount(() => {
     border-radius: 8px;
     display: grid;
     grid-template-rows: auto 1fr;
+    box-shadow: 0px 1px 20px -5px rgba(0,0,0,0.1);
 }
+
+.left {
+    top: var(--top);
+    right: var(--right);
+}
+
+.right {
+    top: var(--top);
+    left: var(--left);
+}
+
+
 
 .header {
     border-bottom: 1px solid var(--bg);

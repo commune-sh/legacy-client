@@ -338,6 +338,7 @@ function createApp() {
     update(p => {
       p.emojiPicker.reacting_to = v.reacting_to
       p.emojiPicker.target = v.target
+      p.emojiPicker.position = v.position
       p.emojiPicker.active = true
       return p
     })
