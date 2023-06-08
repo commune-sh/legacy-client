@@ -84,12 +84,9 @@ let root;
 $: target = $store.emojiPicker.target 
 
 
-/*
 $: active = $store.emojiPicker.active &&
     $store.emojiPicker.target != null
-    */
 
-let active = true
 
 
 $: if(active) {
