@@ -58,6 +58,8 @@
     --just-posted-bg: #3e1919;
 
     --reply-gap: #a53131;
+
+    --emoji-picker: #101010;
 }
 
 :root.light {
@@ -117,6 +119,8 @@
     --just-posted-bg: #3e1919;
 
     --reply-gap: #7f7f7f;
+
+    --emoji-picker: #fff;
 }
 
 :root.black {
@@ -176,6 +180,8 @@
 
     --just-posted-bg: #3e1919;
     --reply-gap: #a53131;
+
+    --emoji-picker: #151515;
 }
 
 

@@ -3,6 +3,7 @@ import { react, reply, external } from '$lib/assets/icons.js'
 import Menu from './menu.svelte'
 import { createEventDispatcher } from 'svelte'
 import { goto } from '$app/navigation';
+import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';
 
 const dispatch = createEventDispatcher();
@@ -20,8 +21,13 @@ function replyToEvent() {
     dispatch('reply')
 }
 
+let reactEl;
 function reactToEvent() {
-    dispatch('react')
+    store.activateEmojiPicker({
+        reacting_to: event,
+        target: reactEl,
+    })
+    dispatch('active')
 }
 
 function goToEvent() {
@@ -38,6 +44,7 @@ function goToEvent() {
 
 <div class="event-tools">
     <div class="icon grd-c c-ico" 
+        bind:this={reactEl}
         on:click|stopPropagation={reactToEvent}>
         {@html react}
     </div>

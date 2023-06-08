@@ -1,5 +1,6 @@
 <script>
 import { onMount, createEventDispatcher } from 'svelte'
+import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 import ImageThumbnail from './attachments/image-thumbnail.svelte'
@@ -146,6 +147,16 @@ function hideTools() {
         return
     }
     displayTools = false
+}
+
+let emp = false;
+$: if($store.emojiPicker.active && toolsActive) {
+    emp = true
+}
+
+$: if(!$store.emojiPicker.active) {
+    killTools()
+    emp = false
 }
 
 

@@ -70,6 +70,10 @@ $: if(authenticated) {
 
 </script>
 
+{#if authenticated && EmojiPicker}
+    <EmojiPicker />
+{/if}
+
 <Sync />
 <Health />
 
@@ -111,9 +115,6 @@ $: if(authenticated) {
 
     <CreateSpace />
 
-{#if authenticated && EmojiPicker}
-    <EmojiPicker />
-{/if}
 
 
 {/if}

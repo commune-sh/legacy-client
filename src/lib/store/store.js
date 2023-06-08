@@ -41,6 +41,9 @@ function createApp() {
       },
     ],
     creatingSpace: false,
+    emojiPicker: {
+      active: false,
+    }
   }
 
   let theme = localStorage.getItem(`theme`)
@@ -324,6 +327,31 @@ function createApp() {
     })
   }
 
+  let toggleEmojiPicker = () => {
+    update(p => {
+      p.emojiPicker.active = !p.emojiPicker.active
+      return p
+    })
+  }
+
+  let activateEmojiPicker = (v) => {
+    update(p => {
+      p.emojiPicker.reacting_to = v.reacting_to
+      p.emojiPicker.target = v.target
+      p.emojiPicker.active = true
+      return p
+    })
+  }
+
+  let killEmojiPicker = () => {
+    update(p => {
+      p.emojiPicker = {
+        active: false,
+      }
+      return p
+    })
+  }
+
 
   const { subscribe, set, update } = writable(app);
 
@@ -363,6 +391,9 @@ function createApp() {
     addAttachment,
     toggleTheme,
     toggleCreateSpace,
+    toggleEmojiPicker,
+    activateEmojiPicker,
+    killEmojiPicker
   };
 }
 
