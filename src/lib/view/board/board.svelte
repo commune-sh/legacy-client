@@ -66,10 +66,8 @@ $: if($page?.url?.pathname != lastPath) {
 
         if(loaded) {
 
-            if(!events) {
                 editing = false
                 reloading = true
-            }
 
             loadEvents()
         }
@@ -127,12 +125,7 @@ function loadEvents(init) {
         if(resp) {
             data = resp
 
-            if(!events) {
                 store.addRoomEvents(roomID, resp.events)
-            } else {
-                    console.log("hmm")
-                store.updateRoomEvents(roomID, resp.events)
-            }
 
             if($page?.url?.pathname != lastPath) {
                 lastPath = $page?.url?.pathname
@@ -470,13 +463,6 @@ $: holder = isTopic ? 'topic' : 'space'
 }
 
 @media screen and (max-width: 1280px) {
-    .space-container {
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 304px;
-    }
     .post {
         grid-template-columns: auto;
     }
@@ -486,16 +472,6 @@ $: holder = isTopic ? 'topic' : 'space'
 @media screen and (max-width: 768px) {
     .inner-area {
         position: static;
-    }
-    .space-container {
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-    }
-    .mtog {
-        left: 304px;
     }
     .post {
         grid-template-columns: auto;
