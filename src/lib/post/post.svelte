@@ -8,6 +8,7 @@ import { nestEvents } from '$lib/utils/events.js'
 import { PUBLIC_API_URL } from '$env/static/public';
 import { page } from '$app/stores';
 import SkeletonBoardEvents from '$lib/skeleton/skeleton-board-events.svelte'
+import SkeletonBoardEvent from '$lib/skeleton/skeleton-board-event.svelte'
 import SkeletonSpan from '$lib/skeleton/skeleton-span.svelte'
 
 $: authenticated = $store?.authenticated && 
@@ -62,11 +63,9 @@ $: replies = data?.replies
 
 let lastPost = null;
 
-onMount(() => {
-    if(post?.event_id) {
+$: if(post?.event_id) {
         loadEvents()
-    }
-})
+}
 
 $: if(lastPost != null && $page.params.post != lastPost) {
     ready = false
@@ -138,7 +137,7 @@ function replySaved(e) {
     }
 }
 
-let reply_count = post.reply_count || 0
+let reply_count = post?.reply_count || 0
 
 let replying = false;
 let replyingTo = null;
@@ -206,7 +205,11 @@ $: isReply = $page.params.reply !== undefined && $page.params.reply !== null && 
 
     <section class="events">
 
-        <Event isPost={true} event={post} on:replyTo={replyToEvent}/>
+        {#if post}
+            <Event isPost={true} event={post} on:replyTo={replyToEvent}/>
+        {:else}
+            <SkeletonBoardEvent />
+        {/if}
 
         <div class="sep">
         </div>
@@ -214,7 +217,7 @@ $: isReply = $page.params.reply !== undefined && $page.params.reply !== null && 
 
         <div class="norep pa3 fl">
             <div class="rco grd-c">
-                {#if ready}
+                {#if ready && post}
                     {#if post.reply_count > 0}
                         {post.reply_count} {post.reply_count == 1 ? 'reply' : 'replies'}
                     {:else}
@@ -235,7 +238,7 @@ $: isReply = $page.params.reply !== undefined && $page.params.reply !== null && 
             {#if replies}
                 {#each replies as reply}
                     <Event isReply={true} 
-                        sender={post.sender.id}
+                        sender={post?.sender?.id}
                         event={reply} 
                         on:replyTo={replyToEvent} />
                 {/each}
@@ -252,7 +255,7 @@ $: isReply = $page.params.reply !== undefined && $page.params.reply !== null && 
         <Composer 
             roomID={roomID}
             reply={true} 
-            threadEvent={post.event_id}
+            threadEvent={post?.event_id}
             replyTo={replyingTo}
             on:saved={replySaved} 
             on:kill={cancelReply}

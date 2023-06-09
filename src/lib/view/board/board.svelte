@@ -398,7 +398,7 @@ $: holder = isTopic ? 'topic' : 'space'
 
     </div>
 
-    {#if isPost && selectedPost}
+    {#if isPost}
         <Post post={selectedPost} />
     {/if}
 
@@ -451,6 +451,11 @@ $: holder = isTopic ? 'topic' : 'space'
     border-right: 1px solid var(--border-1);
 }
 
+@media screen and (max-width: 1280px) {
+    .post {
+        grid-template-columns: auto;
+    }
+}
 
 
 @media screen and (max-width: 768px) {
