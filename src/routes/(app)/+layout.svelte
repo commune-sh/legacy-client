@@ -18,7 +18,7 @@ let isIndex = $page?.route?.id === `/(app)`
 let showIndex = PUBLIC_INDEX === 'true'
 
 
-let ready = false;
+let ready = true
 
 function viewReady() {
     ready = true;

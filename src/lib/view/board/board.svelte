@@ -119,6 +119,7 @@ function loadEvents(init) {
         opt.url = `${PUBLIC_API_URL}/feed`
         opt.token = token
     }
+    console.log(opt.url)
 
     APIRequest(opt)
     .then(resp => {
@@ -229,6 +230,11 @@ let fetchMore = () => {
         url = url + `?topic=${topic}`
     }
 
+    if(!isSpace && !isRoom) {
+        url = `${PUBLIC_API_URL}/feed?last=${last}`
+    }
+    console.log(url)
+
     APIRequest({
         url: url,
       method: 'GET',
@@ -319,6 +325,7 @@ let fetchPost = (reply) => {
     });
 }
 
+$: holder = isTopic ? 'topic' : 'space'
 
 
 </script>
@@ -341,7 +348,7 @@ let fetchPost = (reply) => {
             bind:this={scrollable}>
 
 
-            {#if reloading}
+            {#if !loaded || reloading}
 
                 <SkeletonBoardEvents />
 
@@ -365,7 +372,7 @@ let fetchPost = (reply) => {
                 {#if exists && data?.events == null}
                     <div class="grd">
                         <div class="grd-c">
-                            This space does not have any posts yet.
+                            This {holder} does not have any posts yet.
                         </div>
                     </div>
                 {/if}
