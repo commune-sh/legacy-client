@@ -64,7 +64,9 @@ $: replies = data?.replies
 let lastPost = null;
 
 $: if(post?.event_id) {
-        loadEvents()
+    loadEvents()
+} else {
+    ready = false
 }
 
 $: if(lastPost != null && $page.params.post != lastPost) {
