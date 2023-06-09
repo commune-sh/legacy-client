@@ -36,6 +36,7 @@ function img(i) {
     border-bottom: 1px solid var(--border-1);
     display: grid;
     grid-template-columns: 1fr auto;
+    min-height: 116px;
 }
 
 .title {

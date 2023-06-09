@@ -1,24 +1,30 @@
 <script>
+export let num = 20;
+export let reply;
+
 function rp() {
     const min = 30;
     const max = 100;
     const randomPercentage = Math.floor(Math.random() * (max - min + 1)) + min;
     return randomPercentage;
 }
+
 function img(i) {
     return Math.random() < 0.5;
 }
+
 </script>
 
 <section class="events">
-    {#each Array(20) as _, i}
+    {#each Array(num) as _, i}
         <div class="event pa3">
             <div class="fl-co">
-                <div class="title sklt" style="width:{rp()}%"></div>
-                <div class="body mt3 sklt"></div>
+                <div class="title sklt" style="width:20%"></div>
                 <div class="body mt2 sklt"></div>
+                <div class="body mt2 sklt"></div>
+                <div class="body mt2 sklt" style="width:{rp()}%"></div>
             </div>
-            {#if img(i)}
+            {#if !reply && img(i)}
                 <div class="img sklt"></div>
             {/if}
         </div>
@@ -41,7 +47,7 @@ function img(i) {
 .title {
     background: var(--shade-2);
     border-radius: 500px;
-    height: 18px;
+    height: 14px;
 }
 
 .body {

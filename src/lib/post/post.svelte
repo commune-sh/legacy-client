@@ -246,7 +246,7 @@ $: isReply = $page.params.reply !== undefined && $page.params.reply !== null && 
 
 
         {:else}
-            <SkeletonBoardEvents />
+            <SkeletonBoardEvents num={5} reply={true}/>
         {/if}
 
     </section>
