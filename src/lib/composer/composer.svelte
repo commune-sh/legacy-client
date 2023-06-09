@@ -1,23 +1,29 @@
 <script>
 import { tick, onMount, onDestroy, createEventDispatcher } from 'svelte'
 import { eye, send, close } from '$lib/assets/icons.js'
-import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
+import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { APIRequest, getPresignedURL, uploadAttachment, savePost } from '$lib/utils/request.js'
 import MarkdownIt from 'markdown-it'
 import MarkdownItEmoji from 'markdown-it-emoji'
+import MarkdownItLinkAttributes from 'markdown-it-link-attributes'
 import autosize from '$lib/vendor/autosize/autosize'
 import { store } from '$lib/store/store.js'
 import Attach from './attachments/attach.svelte'
 import InsertEmoji from './insert-emoji.svelte'
 import Attachments from './attachments/attachments.svelte'
+import EmojiList from './emoji-list.svelte'
 import tippy from 'tippy.js';
 
+import { v4 as uuidv4 } from 'uuid';
+
+let id = uuidv4()
 
 export let roomID;
 export let placeholder = `What's on your mind?`;
 export let replyTo;
 export let threadEvent;
 export let reply = false;
+export let topic;
 
 $: stateKey = !reply ? roomID : roomID + threadEvent
 
@@ -109,7 +115,94 @@ onMount(() => {
       typographer: true
     });
 
+    md.linkify.set({ fuzzyEmail: false })
+
+    md.linkify.add('/', {
+        validate: function (text, pos, self) {
+            var tail = text.slice(pos);
+
+            if (!self.re.space) {
+                self.re.space =  new RegExp(
+                    '^([a-zA-Z0-9_]){1,15}(?!_)(?=$|' + self.re.src_ZPCc + ')'
+                );
+            }
+            if (self.re.space.test(tail)) {
+                if (pos >= 2 && tail[pos - 2] === '/') {
+                    return false;
+                }
+                return tail.match(self.re.space)[0].length;
+            }
+            return 0;
+        },
+
+        normalize: function (match) {
+            match.url = `${PUBLIC_BASE_URL}/` + match.url.replace(/^\//, '');
+        }
+    });
+
+
+    md.linkify.add('@', {
+        validate: function (text, pos, self) {
+            var tail = text.slice(pos);
+
+            if (!self.re.mention) {
+                self.re.mention =  new RegExp(
+                    '^([a-zA-Z0-9_]){1,15}(?!_)(?=$|' + self.re.src_ZPCc + ')'
+                );
+            }
+            if (self.re.mention.test(tail)) {
+                if (pos >= 2 && tail[pos - 2] === '@') {
+                    return false;
+                }
+                return tail.match(self.re.mention)[0].length;
+            }
+            return 0;
+        },
+
+        normalize: function (match) {
+            match.url = `${PUBLIC_BASE_URL}/@` + match.url.replace(/^@/, '');
+        }
+    });
+
     md.use(MarkdownItEmoji);
+    md.use(MarkdownItLinkAttributes, [
+        {
+            matcher(href) {
+                return href.includes('@')
+            },
+            attrs: {
+                class: "mention"
+            },
+        },
+        {
+            matcher(href) {
+                return href.match(/^https?:\/\//);
+            },
+            attrs: {
+                class: "external",
+                target: "_blank",
+                rel: "noopener",
+            },
+        },
+        {
+            matcher(href) {
+                return href.startsWith("/");
+            },
+            attrs: {
+                class: "absolute-link",
+            },
+        },
+        {
+            matcher(href) {
+                return href.startsWith("/blue/");
+            },
+            attrs: {
+                class: "link-that-contains-the-word-blue",
+            },
+        },
+    ]);
+
+
 
     setupLinkPasteListener()
 })
@@ -148,7 +241,7 @@ async function focusTitleInput() {
 function focusOnTitle(e) {
     if(e.key === 'Backspace' && bodyInput.value === '') {
         e.preventDefault()
-        focusTitleInput()
+        //focusTitleInput()
     }
 }
 
@@ -208,6 +301,10 @@ async function createPost() {
             },
         }
 
+        if(topic) {
+            post.content['topic'] = topic
+        }
+
         if(reply) {
             post.in_thread = threadEvent
             post.is_reply = true
@@ -220,7 +317,6 @@ async function createPost() {
         if(attachments && items.length > 0) {
             post.content.attachments = items
         }
-
 
 
         const res = await savePost(post);
@@ -329,52 +425,64 @@ function handleTitlePaste(event) {
     }
 }
 
-/*
-function insertEmoji(textarea, emoji, sub) {
-  // Get the current caret position in the textarea
-  var caretPos = textarea.selectionStart;
-  
-  // Get the textarea's current value
-  var currentValue = textarea.value;
-
-  // Construct the updated value with the emoji inserted at the caret position
-  var updatedValue = currentValue.substring(0, caretPos - sub) + emoji + currentValue.substring(caretPos);
-
-  // Update the textarea's value with the updatedValue
-  textarea.value = updatedValue;
-
-  // Move the caret position after the inserted emoji
-  textarea.selectionStart = caretPos + emoji.length;
-  textarea.selectionEnd = caretPos + emoji.length;
-
-  // Focus the textarea
-  textarea.focus();
-}
-*/
 
 let emojiListActive = false;
-let shortCode = '';
+let shortcode = '';
 
-function trackEnter(e) {
+function bodyKeyDown(e) {
     if(e.key === 'Enter' && emojiListActive) {
-        e.preventDefault()
+        //e.preventDefault()
+    }
+     if (event.key === 'Escape' || event.key === 'Esc') {
     }
 }
 
+function addEmoji(e) {
+
+    const emoji = e.detail
+
+    const count = shortcode.length + 1;
+
+    const caretPos = bodyInput.selectionEnd;
+    const startPos = Math.max(0, caretPos - count);
+    const value = bodyInput.value;
+    const newValue = value.substring(0, startPos) + value.substring(caretPos);
+    bodyInput.value = newValue;
+    bodyInput.selectionEnd = startPos;
+
+
+    let startPosition = bodyInput.selectionStart;
+    let endPosition = bodyInput.selectionEnd;
+    bodyInput.value = bodyInput.value.substring(0, startPosition) + emoji + bodyInput.value.substring(endPosition);
+
+    let newCursorPosition = startPosition + emoji.length;
+    bodyInput.setSelectionRange(newCursorPosition, newCursorPosition);
+    killEmojiList()
+    focusBodyInput()
+}
+
 function trackCaret(e) {
-  setTimeout(() => {
-    const pt = bodyInput.value.substring(0, bodyInput.selectionStart);
-    const pattern = /:\S{1,}$/;
-    if (pattern.test(pt)) {
-        let et = pt.match(pattern)[0];
-        et = et.substring(1);
-        shortCode = et;
-        emojiListActive = true
-        console.log(shortCode)
+    setTimeout(() => {
+        const pt = bodyInput.value.substring(0, bodyInput.selectionStart);
+        const pattern = /:\S{2,}$/;
+        //const pattern = /(?<=\s):(\S{2,})$/;
+        //const pattern = /([ \n]?)[:](\S{2,})$/;
+
+        if (pattern.test(pt)) {
+            let et = pt.match(pattern)[0];
+            et = et.substring(1);
+            shortcode = et;
+            emojiListActive = true
         } else{
             emojiListActive = false
+            shortcode = '';
         }
-  }, 0);
+    }, 0);
+}
+
+function killEmojiList() {
+    emojiListActive = false
+    shortcode = '';
 }
 
 function insertEmoji(e) {
@@ -385,6 +493,7 @@ function insertEmoji(e) {
 
     let newCursorPosition = startPosition + emoji.length;
     bodyInput.setSelectionRange(newCursorPosition, newCursorPosition);
+    //killEmojiList()
     focusBodyInput()
 }
 
@@ -449,7 +558,7 @@ function togglePreview() {
                     on:keydown={focusOnTitle}
                     on:keydown={updateContent}
                     on:keydown={trackCaret}
-                    on:keydown={trackEnter}
+                    on:keydown={bodyKeyDown}
                     maxlength="2000"
                     on:input={updateContent}
                     on:click={updateContent}
@@ -485,10 +594,20 @@ function togglePreview() {
                 {postText}
             </div>
         </button>
+
     </div>
+
+    {#if emojiListActive && shortcode}
+        <EmojiList 
+            target={bodyInput}
+            reply={reply}
+            on:selected={addEmoji} 
+            shortcode={shortcode} />
+    {/if}
 </section>
 
 <style>
+
 .composer {
     display: grid;
     grid-template-columns: auto;
@@ -528,6 +647,7 @@ function togglePreview() {
 
 .tools {
     padding: 1rem;
+    position: relative;
 }
 .c-ico {
     height: 22px;
@@ -544,7 +664,6 @@ function togglePreview() {
 .post-title {
     background-color: transparent;
     border: none;
-    font-size: 1.2rem;
     width: 100%;
     font-weight: bold;
     padding: 0;
@@ -560,7 +679,6 @@ function togglePreview() {
 }
 
 .post-body {
-    font-family: "Inter", "Twemoji", "Apple Color Emoji", "Segoe UI Emoji", "Arial", "Helvetica", sans-serif, "STIXGeneral", "Noto Color Emoji";
 }
 
 .rp {
@@ -614,4 +732,7 @@ button {
     display: none;
 }
 
+* {
+    font-family: "Inter", "Twemoji", "Apple Color Emoji", "Segoe UI Emoji", "Arial", "Helvetica", sans-serif, "STIXGeneral", "Noto Color Emoji";
+}
 </style>

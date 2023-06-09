@@ -31,6 +31,9 @@ $: isSpace = $page.params.space !== undefined && $page.params.space !== null &&
 $: isRoom = $page.params.room !== undefined && $page.params.room !== null &&
     $page.params.room !== ''
 
+$: isTopic = $page.params.topic !== undefined && $page.params.topic !== null &&
+    $page.params.topic !== ''
+
 let el;
 
 onMount(() => {
@@ -47,10 +50,16 @@ onMount(() => {
 })
 
 
+$: topic = $page.params.topic
+
 function buildLink(e, page) {
     let url = `/post/${e?.slug}`
     if(isSpace) {
         url = `/${e?.room_alias}/post/${e?.slug}`
+    }
+
+    if(isTopic) {
+        url = `/${e?.room_alias}/topic/${topic}/post/${e?.slug}`
     }
 
     /*
@@ -59,6 +68,8 @@ function buildLink(e, page) {
     }
     */
 
+
+    //if post is opened, we close it and go to space or room
     const pathname = page.url.pathname
     if(url == pathname) {
         url = '/'
@@ -176,6 +187,7 @@ $: replyParam = $page.params.reply !== undefined && $page.params.reply !== null 
 $: isReplyEvent = replyParam && $page.params?.reply === event?.slug
 
 
+$: isSingleReply = $page.params.reply !== undefined && $page.params.reply !== null && $page.params.reply !== ''
 </script>
 
 <div class="event" 
@@ -203,9 +215,11 @@ $: isReplyEvent = replyParam && $page.params?.reply === event?.slug
             </div>
 
             {#if isPost}
+                {#if !isSingleReply}
                 <div class="post-title pb3 ph3">
                     {title}
                 </div>
+                {/if}
 
                 <div class="post-body ph3">
                     {@html content}

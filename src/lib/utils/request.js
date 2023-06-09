@@ -96,3 +96,46 @@ export async function savePost(body) {
   return data;
 }
 
+
+export async function joinSpace(space) {
+    let headers = { 
+      'Content-Type': 'application/json',
+    }
+
+    const token = localStorage.getItem('access_token')
+
+    if(token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+
+    let options = {
+      headers: headers,
+      method: "POST",
+    }
+
+  const response = await fetch(`${PUBLIC_API_URL}/space/${space}/join`, options)
+  const data = await response.json();
+  return data;
+}
+
+export async function joinRoom(room_id) {
+    let headers = { 
+      'Content-Type': 'application/json',
+    }
+
+    const token = localStorage.getItem('access_token')
+
+    if(token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+
+    let options = {
+      headers: headers,
+      method: "POST",
+    }
+
+  const response = await fetch(`${PUBLIC_API_URL}/room/join?id=${room_id}`, options)
+  const data = await response.json();
+  return data;
+}
+

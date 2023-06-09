@@ -44,19 +44,32 @@ let reloading = false;
 let lastPath = null;
 let lastSpace = null;
 let lastRoom = null;
+let lastTopic = null;
 
 let lastPageType = null;
 
 $: isIndex = $page?.url?.pathname === '/'
-$: isSpace = $page?.params?.space !== undefined && $page?.params?.space !== null && $page?.params?.space !== '' 
-$: isRoom = $page?.params?.room !== undefined && $page?.params?.room !== null &&
+$: isSpace = $page?.params?.space !== undefined && 
+    $page?.params?.space !== null && 
+    $page?.params?.space !== '' 
+$: isRoom = $page?.params?.room !== undefined && 
+    $page?.params?.room !== null &&
     $page?.params?.room !== '' 
-$: isPost = $page?.params?.post !== undefined && $page?.params?.post !== null &&
+$: isPost = $page?.params?.post !== undefined && 
+    $page?.params?.post !== null &&
     $page?.params?.post !== ''
+
+$: isTopic= $page?.params?.topic !== undefined && 
+    $page?.params?.topic !== null &&
+    $page?.params?.topic !== ''
+
+$: topic = $page?.params?.topic
 
 $: if($page?.url?.pathname != lastPath) {
     //reloading = true
-    if($page?.params?.room != lastRoom || $page?.params?.space != lastSpace) {
+    if($page?.params?.room != lastRoom || 
+        $page?.params?.topic != lastTopic ||
+        $page?.params?.space != lastSpace) {
         if(loaded) {
             editing = false
             reloading = true
@@ -81,21 +94,25 @@ function loadEvents(init) {
     let url = `${PUBLIC_API_URL}/events/`
 
 
-  let space = $page.params.space
-  let isSpace = space && space !== 'undefined' && space?.length > 0
-  if(isSpace) {
-    url = `${PUBLIC_API_URL}/${space}/events`
-  }
+    let space = $page.params.space
+    let isSpace = space && space !== 'undefined' && space?.length > 0
+    if(isSpace) {
+        url = `${PUBLIC_API_URL}/${space}/events`
+    }
 
-  let room = $page.params.room
-  let isRoom = room && room !== 'undefined' && room?.length > 0
-  if(isRoom) {
-    url = `${PUBLIC_API_URL}/${space}/${room}/events`
-  }
+    let room = $page.params.room
+    let isRoom = room && room !== 'undefined' && room?.length > 0
+    if(isRoom) {
+        url = `${PUBLIC_API_URL}/${space}/${room}/events`
+    }
 
     let opt = {
       url: url,
       method: 'GET',
+    }
+
+    if(isTopic) {
+        opt.url = url + `?topic=${topic}`
     }
 
     if(token && !isSpace && !isRoom) {
@@ -112,6 +129,7 @@ function loadEvents(init) {
             }
             lastSpace = $page?.params?.space
             lastRoom = $page?.params?.room
+            lastTopic = $page?.params?.topic
             loaded = true
             reloading = false
         }
@@ -205,6 +223,10 @@ let fetchMore = () => {
 
     if(isSpace && isRoom) {
         url = `${PUBLIC_API_URL}/${$page.params.space}/${$page.params.room}/events?last=${last}`
+    }
+
+    if(isTopic) {
+        url = url + `?topic=${topic}`
     }
 
     APIRequest({
@@ -327,6 +349,7 @@ let fetchPost = (reply) => {
                 {#if authenticated && editing}
                     <Composer 
                         roomID={roomID}
+                        topic={topic}
                         on:saved={postSaved} 
                         on:kill={stopEditing}/>
                 {/if}

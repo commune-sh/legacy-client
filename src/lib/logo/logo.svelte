@@ -59,6 +59,8 @@ export let loader = false;
 .lgr {
     height: 54px;
     width: 54px;
+    animation: rainbow 1.5s linear;
+    animation-iteration-count: infinite;
 }
 
 

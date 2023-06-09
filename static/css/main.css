@@ -60,6 +60,7 @@
     --reply-gap: #a53131;
 
     --emoji-picker: #101010;
+    --emoji-list: #2b2b2b;
 }
 
 :root.light {
@@ -121,6 +122,7 @@
     --reply-gap: #7f7f7f;
 
     --emoji-picker: #fff;
+    --emoji-list: #fff;
 }
 
 :root.black {
@@ -182,6 +184,7 @@
     --reply-gap: #a53131;
 
     --emoji-picker: #151515;
+    --emoji-list: #151515;
 }
 
 
@@ -383,7 +386,6 @@ input, textarea {
     color: var(--text);
     font-size: 16px;
     box-sizing: border-box;
-    font-family: "Inter", "Twemoji", "Apple Color Emoji", "Segoe UI Emoji", "Arial", "Helvetica", sans-serif, "STIXGeneral", "Noto Color Emoji";
 }
 
 input:focus, textarea:focus {
