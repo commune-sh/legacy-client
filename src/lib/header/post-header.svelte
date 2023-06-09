@@ -16,6 +16,11 @@ function kill() {
     if($page.params?.room) {
         url = `/${$page.params?.space}/${$page.params?.room}`
     }
+
+    if(isTopic) {
+        url = url + `/topic/${$page.params?.topic}`
+    }
+
     goto(url, {
         noscroll: true,
     })
@@ -44,6 +49,10 @@ function toggleMenu() {
 }
 
 $: isReply = $page.params.reply !== undefined && $page.params.reply !== null && $page.params.reply !== ''
+
+$: isTopic= $page?.params?.topic !== undefined && 
+    $page?.params?.topic !== null &&
+    $page?.params?.topic !== ''
 
 </script>
 

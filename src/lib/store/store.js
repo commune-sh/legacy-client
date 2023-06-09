@@ -171,6 +171,23 @@ function createApp() {
       return p
     })
   }
+  let addToRoomEvents = (room_id, events) => {
+    update(p => {
+      p.events[room_id]?.push(...events)
+      return p
+    })
+  }
+
+  let updateRoomEvents = (room_id, events) => {
+    update(p => {
+      const unique = events.filter(newEvent => !p.events.some(event => event.event_id === newEvent.event_id));
+
+      console.log("updating room events", unique)
+      p.events[room_id]?.unshift(...unique)
+      return p
+    })
+  }
+
 
   let addPageState = (params) => {
     update(p => {
@@ -378,6 +395,8 @@ function createApp() {
     verifiedSession,
     logout,
     addRoomEvents,
+    addToRoomEvents,
+    updateRoomEvents,
     addPageState,
     addSpaceState,
     addSpacePath,

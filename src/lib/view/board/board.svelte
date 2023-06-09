@@ -48,31 +48,29 @@ let lastTopic = null;
 
 let lastPageType = null;
 
-$: isIndex = $page?.url?.pathname === '/'
-$: isSpace = $page?.params?.space !== undefined && 
-    $page?.params?.space !== null && 
-    $page?.params?.space !== '' 
-$: isRoom = $page?.params?.room !== undefined && 
-    $page?.params?.room !== null &&
-    $page?.params?.room !== '' 
-$: isPost = $page?.params?.post !== undefined && 
-    $page?.params?.post !== null &&
-    $page?.params?.post !== ''
+$: isSpace = $page?.params?.space !== undefined 
+$: isRoom = $page?.params?.room !== undefined 
+$: isPost = $page?.params?.post !== undefined
 
-$: isTopic= $page?.params?.topic !== undefined && 
-    $page?.params?.topic !== null &&
-    $page?.params?.topic !== ''
+$: isTopic = $page?.params?.topic !== undefined
 
 $: topic = $page?.params?.topic
 
 $: if($page?.url?.pathname != lastPath) {
-    //reloading = true
+
     if($page?.params?.room != lastRoom || 
         $page?.params?.topic != lastTopic ||
         $page?.params?.space != lastSpace) {
+
+        console.log("params changed, let's refresh events")
+
         if(loaded) {
-            editing = false
-            reloading = true
+
+            if(!events) {
+                editing = false
+                reloading = true
+            }
+
             loadEvents()
         }
     }
@@ -86,6 +84,10 @@ $: if(loaded && roomID) {
 }
 
 let loaded = false;
+
+
+$: events = $store?.events?.[roomID]
+
 
 function loadEvents(init) {
 
@@ -119,15 +121,23 @@ function loadEvents(init) {
         opt.url = `${PUBLIC_API_URL}/feed`
         opt.token = token
     }
-    console.log(opt.url)
 
     APIRequest(opt)
     .then(resp => {
         if(resp) {
             data = resp
+
+            if(!events) {
+                store.addRoomEvents(roomID, resp.events)
+            } else {
+                    console.log("hmm")
+                store.updateRoomEvents(roomID, resp.events)
+            }
+
             if($page?.url?.pathname != lastPath) {
                 lastPath = $page?.url?.pathname
             }
+
             lastSpace = $page?.params?.space
             lastRoom = $page?.params?.room
             lastTopic = $page?.params?.topic
@@ -214,7 +224,9 @@ function handleScroll() {
 
 
 let fetchMore = () => {
-    let events = data?.events;
+    if(events?.length <30) {
+        return
+    }
     const last = events?.[events?.length - 1]?.origin_server_ts
 
     let url = `${PUBLIC_API_URL}/events?last=${last}`
@@ -240,7 +252,8 @@ let fetchMore = () => {
       method: 'GET',
     }).then((res) => {
         if(res && res?.events?.length > 0) {
-            data.events = [...data.events, ...res.events];
+            //data.events = [...data.events, ...res.events];
+            store.addToRoomEvents(roomID, res.events)
         }
     });
 }
@@ -291,6 +304,10 @@ function postSaved(e) {
 
     data.events = [e.detail, ...data.events];
     let url = `/${e.detail?.room_alias}/post/${e.detail?.slug}`
+    if(isTopic) {
+        url = `/${e.detail?.room_alias}/topic/${e.detail?.content?.topic}/post/${e.detail?.slug}`
+    }
+
     goto(url, {
         noscroll: true,
     })
@@ -298,10 +315,10 @@ function postSaved(e) {
 
 $: isReply = $page.params.reply !== undefined && $page.params.reply !== null && $page.params.reply !== ''
 
-$: selectedPost = !isReply ? data?.events?.find(e => e.slug ==
+$: selectedPost = (!isReply && isPost) ? events?.find(e => e.slug ==
     $page.params.post) : null
 
-$: if(!selectedPost) {
+$: if(!selectedPost && isPost) {
     console.log("fetching remote post")
     if($page.params.reply) {
         fetchPost($page.params.reply)
@@ -335,6 +352,7 @@ $: holder = isTopic ? 'topic' : 'space'
 
 <section class="space-container"
     bind:this={container}
+    class:mtog={menuToggled}
     class:post={isPost}>
 
     <div class="inner-area" class:ina={isPost}>
@@ -350,7 +368,7 @@ $: holder = isTopic ? 'topic' : 'space'
 
             {#if !loaded || reloading}
 
-                <SkeletonBoardEvents />
+                <SkeletonBoardEvents reply={false}/>
 
             {:else}
                 {#if authenticated && editing}
@@ -361,15 +379,15 @@ $: holder = isTopic ? 'topic' : 'space'
                         on:kill={stopEditing}/>
                 {/if}
 
-                {#if data?.events}
+                {#if events}
                     <section class="events">
-                        {#each data?.events as event}
-                            <Event event={event} />
+                        {#each events as event}
+                            <Event event={event} sender={null} />
                         {/each}
                     </section>
                 {/if}
 
-                {#if exists && data?.events == null}
+                {#if exists && events == null}
                     <div class="grd">
                         <div class="grd-c">
                             This {holder} does not have any posts yet.
@@ -389,7 +407,7 @@ $: holder = isTopic ? 'topic' : 'space'
             {/if}
 
 
-            {#if exists && data?.events !== null && !reloading}
+            {#if exists && events !== null && !reloading}
                 <div class="obs" bind:this={obs}></div>
             {/if}
 
@@ -452,6 +470,13 @@ $: holder = isTopic ? 'topic' : 'space'
 }
 
 @media screen and (max-width: 1280px) {
+    .space-container {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 304px;
+    }
     .post {
         grid-template-columns: auto;
     }
@@ -459,6 +484,16 @@ $: holder = isTopic ? 'topic' : 'space'
 
 
 @media screen and (max-width: 768px) {
+    .space-container {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+    .mtog {
+        left: 304px;
+    }
     .post {
         grid-template-columns: auto;
     }
