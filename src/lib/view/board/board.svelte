@@ -484,6 +484,9 @@ $: holder = isTopic ? 'topic' : 'space'
 
 
 @media screen and (max-width: 768px) {
+    .inner-area {
+        position: static;
+    }
     .space-container {
         position: fixed;
         top: 0;
