@@ -90,7 +90,8 @@ $: if(loaded && roomID) {
 let loaded = false;
 
 
-$: events = $store?.events?.[roomID]
+//$: events = $store?.events?.[roomID]
+$: events = data?.events
 //$: sorted = events?.sort((a, b) => b.origin_server_ts - a.origin_server_ts);
 
 
@@ -388,6 +389,21 @@ $: holder = isTopic ? 'topic' : 'space'
                     </section>
                 {/if}
 
+                {#if exists && events == null}
+                    <div class="grd">
+                        <div class="grd-c">
+                            This {holder} does not have any posts yet.
+                        </div>
+                    </div>
+                {/if}
+
+                {#if !exists}
+                    <section class="grd">
+                        <section class="grd-c">
+                            This space does not exist.
+                        </section>
+                    </section>
+                {/if}
 
 
             {/if}
