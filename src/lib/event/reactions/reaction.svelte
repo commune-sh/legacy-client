@@ -1,11 +1,8 @@
 <script>
+import { createEventDispatcher } from 'svelte'
 import { store } from '$lib/store/store.js'
-import { savePost, redactReaction } from '$lib/utils/request.js'
-import { page } from '$app/stores';
 
-$: authenticated = $store?.authenticated && 
-    $store?.credentials != null
-    $store?.credentials?.access_token?.length > 0
+const dispatch = createEventDispatcher()
 
 export let event;
 export let reaction;
@@ -16,45 +13,9 @@ $: sender= $store.credentials?.matrix_user_id
 $: reacted = reaction?.senders?.findIndex(s => s === sender) > -1
 
 function reactToEvent() {
-    console.log("reacting")
-    if(!authenticated) {
-        store.startAuthenticating()
-        return
-    }
-    if(!reacted) {
-        store.addReaction(event, reaction.key, sender, isReply, $page.params.post)
-        saveReaction()
-    } else {
-        store.removeReaction(event, reaction.key, sender, isReply, $page.params.post)
-        redact()
-    }
+    dispatch('react', reaction.key)
 }
 
-async function saveReaction() {
-    let post = {
-        room_id: event.room_id,
-        type: "m.reaction",
-        content: {
-            "m.relates_to": {
-                "rel_type": "m.annotation",
-                "event_id": event.event_id,
-                "key": reaction.key,
-            }
-        },
-    }
-    const res = await savePost(post);
-    console.log(res)
-}
-
-async function redact() {
-    let redaction = {
-        room_id: event.room_id,
-        event_id: event.event_id,
-        key: reaction.key,
-    }
-    const res = await redactReaction(redaction);
-    console.log(res)
-}
 </script>
 
 <div class="reaction fl mr1" 

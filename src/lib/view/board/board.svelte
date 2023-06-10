@@ -66,14 +66,14 @@ $: if($page?.url?.pathname != lastPath) {
 
         if(loaded) {
 
+            /*
             if(!events) {
                 editing = false
                 reloading = true
             }
-            /*
+            */
                 editing = false
                 reloading = true
-            */
 
             loadEvents()
         }
@@ -134,11 +134,13 @@ function loadEvents(init) {
             data = resp
                 console.log(data)
 
+                /*
             if(!events) {
                 store.addRoomEvents(roomID, resp.events)
             } else {
                 store.updateRoomEvents(roomID, resp.events)
             }
+                */
                 //store.addRoomEvents(roomID, resp.events)
 
             if($page?.url?.pathname != lastPath) {
@@ -304,6 +306,7 @@ function stopEditing() {
 function postSaved(e) {
     stopEditing()
 
+    data.events = [e.detail, ...data.events]
     store.addNewPostToRoom(roomID, e.detail)
 
     let url = `/${e.detail?.room_alias}/post/${e.detail?.slug}`

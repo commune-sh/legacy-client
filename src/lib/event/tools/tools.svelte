@@ -37,7 +37,11 @@ function goToEvent() {
 
 <div class="event-tools">
 
-    <React isReply={isReply} event={event} on:active />
+    <React inline={false} 
+        isReply={isReply} 
+        event={event} 
+        on:react
+        on:active />
 
     <div class="icon grd-c c-ico" 
         on:click|stopPropagation={replyToEvent}>

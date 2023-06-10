@@ -189,6 +189,14 @@ $: isReplyEvent = replyParam && $page.params?.reply === event?.slug
 
 $: isSingleReply = $page.params.reply !== undefined && $page.params.reply !== null && $page.params.reply !== ''
 
+$: sender_id = $store.credentials?.matrix_user_id
+
+
+let reactions;
+
+function reactToKey(e) {
+    reactions.process(e.detail)
+}
 
 </script>
 
@@ -259,6 +267,8 @@ $: isSingleReply = $page.params.reply !== undefined && $page.params.reply !== nu
 
                 <div class="">
                 <Reactions 
+                    bind:this={reactions}
+                    on:react={reactToKey}
                     event={event} 
                     isReply={isReply}
                     on:active={activateTools} 
@@ -278,6 +288,7 @@ $: isSingleReply = $page.params.reply !== undefined && $page.params.reply !== nu
                     isReply={isReply} 
                     on:reply={replyToEvent}
                     active={toolsActive}
+                    on:react={reactToKey}
                     on:active={activateTools} 
                     on:kill={killTools} 
                     event={event} />

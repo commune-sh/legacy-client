@@ -40,51 +40,11 @@ $: emojiSelected = $store.emojiPicker.reacting_to == event?.event_id &&
 
 
 $: sender= $store.credentials?.matrix_user_id
-
-let emojiKey = null;
-let rep;
 $: if(emojiSelected) {
-    emojiKey = selectedEmoji
-    rep = $store.emojiPicker.is_reply
+    dispatch('react', selectedEmoji)
     store.killEmojiPicker()
-
-    let exists = event.reactions?.findIndex(r => r.key === emojiKey &&
-        r.senders.includes(sender)) > -1
-    if(!exists) {
-        store.addReaction(event, selectedEmoji, sender, rep, $page.params.post)
-        saveReaction()
-    } else {
-        store.removeReaction(event, selectedEmoji, sender, rep, $page.params.post)
-        redact()
-    }
-    emojiKey = null
 }
 
-async function saveReaction() {
-    let post = {
-        room_id: event.room_id,
-        type: "m.reaction",
-        content: {
-            "m.relates_to": {
-                "rel_type": "m.annotation",
-                "event_id": event.event_id,
-                "key": emojiKey,
-            }
-        },
-    }
-    const res = await savePost(post);
-    console.log(res)
-}
-
-async function redact() {
-    let redaction = {
-        room_id: event.room_id,
-        event_id: event.event_id,
-        key: emojiKey,
-    }
-    const res = await redactReaction(redaction);
-    console.log(res)
-}
 
 </script>
     <div class="icon grd-c c-ico" 
