@@ -210,7 +210,7 @@ $: isSingleReply = $page.params.reply !== undefined && $page.params.reply !== nu
     <div class="ev-c fl-co">
         <div class="body">
 
-            <div class="ph3 fl mb2">
+            <div class="ph3 fl mb3">
                 <User hideAvatar={true} user={user} op={op}/>
                 <div class="sm ph1"></div>
                 <Date date={event?.origin_server_ts} />
@@ -251,7 +251,7 @@ $: isSingleReply = $page.params.reply !== undefined && $page.params.reply !== nu
         <div class="fl ph3 pt2">
 
             {#if !isReply}
-                    <div class="mr3">
+                    <div class="mr2">
                         <Replies count={event?.reply_count} />
                     </div>
             {/if}
