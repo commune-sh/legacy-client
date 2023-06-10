@@ -21,6 +21,8 @@ function createApp() {
     spacePaths: [],
     pageState: [],
     events: [],
+    events_cache: [],
+    replies: [],
     menuToggled: false,
     editorStates: [],
     settings: {
@@ -45,6 +47,8 @@ function createApp() {
       active: false,
     }
   }
+
+  window.app = app
 
   let theme = localStorage.getItem(`theme`)
   if(theme == 'light') {
@@ -171,6 +175,15 @@ function createApp() {
       return p
     })
   }
+
+  let addEventReplies = (post, replies) => {
+    update(p => {
+      console.log('adding replies', post, replies)
+      p.replies[post] = replies
+      return p
+    })
+  }
+
   let addToRoomEvents = (room_id, events) => {
     update(p => {
       p.events[room_id]?.push(...events)
@@ -205,6 +218,64 @@ function createApp() {
   let addNewPostToRoom = (room_id, events) => {
     update(p => {
       p.events[room_id]?.unshift(events)
+      return p
+    })
+  }
+
+  let addReaction = (event, key, sender, isReply, post) => {
+    update(p => {
+      let item = p.events[event.room_id].find(x => x.event_id == event.event_id)
+      if(isReply && post) {
+        item = p.replies[post].find(x => x.event_id == event.event_id)
+      }
+      if(item && item?.reactions) {
+        let i = item?.reactions?.findIndex(r => r.key === key);
+        if (i !== -1) {
+          item?.reactions[i].senders.push(sender);
+        } else {
+          let newReaction = {
+            key: key,
+            senders: [sender]
+          };
+
+          item.reactions.push(newReaction);
+        }
+      } else {
+        item.reactions = [
+          {
+            key: key,
+            senders: [sender]
+          }
+        ]
+        
+      } 
+
+      return p
+    })
+  }
+
+  let removeReaction = (event, key, sender, isReply, post) => {
+    update(p => {
+      let item = p.events[event.room_id].find(x => x.event_id == event.event_id)
+      if(isReply && post) {
+        item = p.replies[post].find(x => x.event_id == event.event_id)
+      }
+      if(item) {
+        let i = item.reactions?.findIndex(r => r.key === key);
+        if (i !== -1) {
+          let senders = item.reactions[i].senders;
+          let senderIndex = senders.indexOf(sender);
+
+          if (senderIndex !== -1) {
+            senders.splice(senderIndex, 1);
+
+            if (senders.length === 0) {
+              item.reactions.splice(i, 1);
+            }
+          }
+        }
+      }
+
       return p
     })
   }
@@ -377,6 +448,7 @@ function createApp() {
       p.emojiPicker.reacting_to = v.reacting_to
       p.emojiPicker.target = v.target
       p.emojiPicker.position = v.position
+      p.emojiPicker.is_reply = v.is_reply
       p.emojiPicker.active = true
       return p
     })
@@ -391,6 +463,17 @@ function createApp() {
     })
   }
 
+  let updateEventsCache = (events) => {
+    update(p => {
+      events.forEach(item => {
+        const exists = p.events_cache.some(event => event.id === item.id);
+        if (!exists) {
+          p.events_cache.push(item);
+        }
+      });
+      return p
+    })
+  }
 
   const { subscribe, set, update } = writable(app);
 
@@ -435,7 +518,11 @@ function createApp() {
     toggleCreateSpace,
     toggleEmojiPicker,
     activateEmojiPicker,
-    killEmojiPicker
+    killEmojiPicker,
+    addReaction,
+    removeReaction,
+    addEventReplies,
+    updateEventsCache,
   };
 }
 

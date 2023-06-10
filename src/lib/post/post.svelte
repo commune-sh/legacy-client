@@ -46,6 +46,9 @@ function fetchReplies() {
     .then(resp => {
         if(resp) {
             data = resp
+            if(resp?.replies) {
+                store.addEventReplies($page.params.post, resp.replies)
+            }
             lastPost = $page.params.post
             lastReply = $page.params.reply
             ready = true
@@ -60,8 +63,13 @@ function fetchReplies() {
 let data = null;
 let down = false;
 
-$: replies = data?.replies
+//$: replies = data?.replies
 
+$: replies = $store?.replies?.[$page.params.post]
+
+$: if(replies) {
+    console.log(replies)
+}
 
 onMount(() => {
     fetchReplies()

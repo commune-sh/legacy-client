@@ -96,6 +96,53 @@ export async function savePost(body) {
   return data;
 }
 
+export async function redactEvent(body) {
+
+    let headers = { 
+      'Content-Type': 'application/json',
+    }
+
+    const token = localStorage.getItem('access_token')
+
+    if(token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+
+    let options = {
+      headers: headers,
+      method: "POST",
+      body: JSON.stringify(body)
+    }
+
+  const response = await fetch(`${PUBLIC_API_URL}/event/redact`,options)
+  const data = await response.json();
+  return data;
+}
+
+
+export async function redactReaction(body) {
+
+    let headers = { 
+      'Content-Type': 'application/json',
+    }
+
+    const token = localStorage.getItem('access_token')
+
+    if(token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+
+    let options = {
+      headers: headers,
+      method: "POST",
+      body: JSON.stringify(body)
+    }
+
+  const response = await fetch(`${PUBLIC_API_URL}/event/redact/reaction`,options)
+  const data = await response.json();
+  return data;
+}
+
 
 export async function joinSpace(space) {
     let headers = { 

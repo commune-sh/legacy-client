@@ -8,7 +8,9 @@ export let count;
         <div class="ico">
             {@html replies}
         </div>
+        {#if count > 1}
         <div class="ml1">{count}</div>
+        {/if}
     </div>
 </div>
 
@@ -18,7 +20,8 @@ export let count;
     line-height: 1;
     color: var(--text-light);
     background-color: var(--shade-2);
-    border-radius: 3px;
+    border: 1px solid var(--shade-2);
+    border-radius: 5px;
     padding-left: 0.25rem;
     padding-right: 0.25rem;
     padding-top: 0;

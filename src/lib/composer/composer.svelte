@@ -293,6 +293,7 @@ async function createPost() {
 
         let post = {
             room_id: roomID,
+            type: 'm.room.message',
             content: {
                 msgtype: 'm.text',
                 title: titleInput.value,

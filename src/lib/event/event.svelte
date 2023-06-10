@@ -188,6 +188,8 @@ $: isReplyEvent = replyParam && $page.params?.reply === event?.slug
 
 
 $: isSingleReply = $page.params.reply !== undefined && $page.params.reply !== null && $page.params.reply !== ''
+
+
 </script>
 
 <div class="event" 
@@ -246,18 +248,21 @@ $: isSingleReply = $page.params.reply !== undefined && $page.params.reply !== nu
 
         </div>
 
-        <div class="fl ph3">
+        <div class="fl ph3 pt2">
 
             {#if !isReply}
-                {#if event?.reply_count > 0}
-                    <div class="pt2 mr3">
+                    <div class="mr3">
                         <Replies count={event?.reply_count} />
                     </div>
-                {/if}
             {/if}
 
-                <div class="pt2">
-                    <Reactions reactions={event?.reactions} />
+
+                <div class="">
+                <Reactions 
+                    event={event} 
+                    isReply={isReply}
+                    on:active={activateTools} 
+                hovered={displayTools}/>
                 </div>
         </div>
 
