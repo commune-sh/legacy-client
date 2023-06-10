@@ -160,7 +160,7 @@ let down = false;
 
 let data = null;
 
-$: exists = data?.exists || false
+$: exists = state != undefined && state?.space != undefined
 
 $: if(data) {
     //ready = true
@@ -388,21 +388,6 @@ $: holder = isTopic ? 'topic' : 'space'
                     </section>
                 {/if}
 
-                {#if exists && events == null}
-                    <div class="grd">
-                        <div class="grd-c">
-                            This {holder} does not have any posts yet.
-                        </div>
-                    </div>
-                {/if}
-
-                {#if !exists}
-                    <section class="grd">
-                        <section class="grd-c">
-                            This space does not exist.
-                        </section>
-                    </section>
-                {/if}
 
 
             {/if}
