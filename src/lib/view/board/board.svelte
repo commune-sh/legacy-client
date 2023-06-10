@@ -132,6 +132,7 @@ function loadEvents(init) {
     .then(resp => {
         if(resp) {
             data = resp
+                console.log(data)
 
             if(!events) {
                 store.addRoomEvents(roomID, resp.events)
@@ -257,7 +258,7 @@ let fetchMore = () => {
       method: 'GET',
     }).then((res) => {
         if(res && res?.events?.length > 0) {
-            //data.events = [...data.events, ...res.events];
+            data.events = [...data.events, ...res.events];
             store.addToRoomEvents(roomID, res.events)
         }
     });
