@@ -38,19 +38,30 @@ $: roomID = isRoom ? state?.children?.find(r => r?.alias ===
 
 let ready = false;
 
+$: r = $page.params.reply ? $page.params.reply : $page.params.post
+
+let route = null;
+
+$: if($page.route != route) {
+    console.log("route changed", $page.route, route)
+    ready = false
+    fetchReplies()
+}
+
 function fetchReplies() {
     APIRequest({
-      url: `${PUBLIC_API_URL}/event/${$page?.params.post}/replies`,
+      url: `${PUBLIC_API_URL}/event/${r}/replies`,
       method: 'GET',
     })
     .then(resp => {
         if(resp) {
             data = resp
             if(resp?.replies) {
-                store.addEventReplies($page.params.post, resp.replies)
+                let r = isReply ? $page.params.reply : $page.params.post
+                    console.log("what is r", r)
+                store.addEventReplies(r, resp.replies)
             }
-            lastPost = $page.params.post
-            lastReply = $page.params.reply
+            route = $page.route
             ready = true
         }
         if(!resp) {
@@ -65,39 +76,10 @@ let down = false;
 
 //$: replies = data?.replies
 
-$: replies = $store?.replies?.[$page.params.post]
+//$: replies = $store?.replies?.[$page.params.post]
+$: replies = isReply ? $store?.replies?.[$page.params.reply] : $store?.replies?.[$page.params.post]
 
-$: if(replies) {
-    console.log(replies)
-}
 
-onMount(() => {
-    fetchReplies()
-})
-
-let lastPost = null;
-let lastReply = null;
-
-$: if($page.params.post && post?.event_id && !ready) {
-    //fetchReplies()
-}
-
-$: if(lastPost != null && $page.params.post != lastPost) {
-    ready = false
-    replying = false
-    fetchReplies()
-}
-
-let isLastReply = false;
-
-$: if(isReply) {
-    isLastReply = true
-}
-
-$: if(!isReply && isLastReply) {
-    ready = false
-    fetchReplies()
-}
 
 let placeholder = 'Leave a reply.'
 

@@ -160,7 +160,7 @@ let down = false;
 
 let data = null;
 
-$: exists = data?.exists != false
+$: exists = data?.exists || false
 
 $: if(data) {
     //ready = true
