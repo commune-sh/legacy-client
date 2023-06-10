@@ -103,4 +103,21 @@ $: if(space && !room) {
     store.addSpaceRoomPath(space, 'general', path)
 }
 
+$: if(authenticated) {
+    console.log("setting up events sync")
+    //SyncEvents()
+}
+
+function SyncEvents() {
+    const token = $store?.credentials?.access_token
+    const url = `${PUBLIC_API_URL}/sync?token=${token}`
+    const eventSource = new EventSource(url);
+    eventSource.onmessage = function(event) {
+        if(event.data) {
+          console.log('Received event:', JSON.parse(event.data));
+        }
+    };
+
+}
+
 </script>

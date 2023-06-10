@@ -26,3 +26,38 @@ export function nestEvents(flatEvents) {
   return nestedEvents;
 }
 
+export function insertEvents(existingArray, newEvents) {
+  const mergedArray = [...existingArray];
+
+  for (const event of newEvents) {
+    const index = mergedArray.findIndex(
+      (item) => item.origin_server_ts === event.origin_server_ts
+    );
+
+    if (index === -1) {
+      let low = 0;
+      let high = mergedArray.length - 1;
+
+      while (low <= high) {
+        const mid = Math.floor((low + high) / 2);
+        const midTimestamp = mergedArray[mid].origin_server_ts;
+
+        if (event.origin_server_ts === midTimestamp) {
+          // If the event already exists in the array, skip insertion
+          return;
+        }
+
+        if (event.origin_server_ts > midTimestamp) {
+          low = mid + 1;
+        } else {
+          high = mid - 1;
+        }
+      }
+
+      mergedArray.splice(low, 0, event);
+    }
+  }
+
+  return mergedArray;
+}
+

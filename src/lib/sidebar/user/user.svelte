@@ -13,23 +13,6 @@ $: active = $store.verifiedSession
 
 $: username = $store?.credentials?.username
 
-$: if(authenticated && active) {
-    //Sync()
-    //SSE()
-}
-
-function SSE() {
-    const token = $store?.credentials?.access_token
-    const url = `${PUBLIC_API_URL}/sse?token=${token}`
-    const eventSource = new EventSource(url);
-    eventSource.onmessage = function(event) {
-        if(event.data) {
-          console.log('Received event:', JSON.parse(event.data));
-        }
-    };
-
-}
-
 
 let toggleFlow = () => {
     store.startAuthenticating()

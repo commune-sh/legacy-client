@@ -439,7 +439,7 @@ function bodyKeyDown(e) {
 
 function addEmoji(e) {
 
-    const emoji = e.detail
+    const emoji = e.detail + ` `
 
     const count = shortcode.length + 1;
 

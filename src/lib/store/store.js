@@ -1,5 +1,5 @@
 import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
-import { APIRequest } from '$lib/utils/request.js'
+import { insertEvents } from '$lib/utils/events.js'
 import { writable } from 'svelte/store';
 
 function createApp() {
@@ -180,10 +180,31 @@ function createApp() {
 
   let updateRoomEvents = (room_id, events) => {
     update(p => {
-      const unique = events.filter(newEvent => !p.events.some(event => event.event_id === newEvent.event_id));
+      for (const event of events) {
+        const exists = p.events[room_id].some(
+          (item) => item.event_id === event.event_id
+        );
 
-      console.log("updating room events", unique)
-      p.events[room_id]?.unshift(...unique)
+        if (!exists) {
+          let index = 0;
+          while (
+            index < p.events[room_id].length &&
+            p.events[room_id][index].origin_server_ts > event.origin_server_ts
+          ) {
+            index++;
+          }
+          console.log("inserting, at index", index)
+          p.events[room_id].splice(index, 0, event);
+        }
+      }
+
+      return p
+    })
+  }
+
+  let addNewPostToRoom = (room_id, events) => {
+    update(p => {
+      p.events[room_id]?.unshift(events)
       return p
     })
   }
@@ -397,6 +418,7 @@ function createApp() {
     addRoomEvents,
     addToRoomEvents,
     updateRoomEvents,
+    addNewPostToRoom,
     addPageState,
     addSpaceState,
     addSpacePath,

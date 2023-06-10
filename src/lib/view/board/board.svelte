@@ -66,8 +66,10 @@ $: if($page?.url?.pathname != lastPath) {
 
         if(loaded) {
 
+            if(!events) {
                 editing = false
                 reloading = true
+            }
 
             loadEvents()
         }
@@ -85,6 +87,7 @@ let loaded = false;
 
 
 $: events = $store?.events?.[roomID]
+//$: sorted = events?.sort((a, b) => b.origin_server_ts - a.origin_server_ts);
 
 
 function loadEvents(init) {
@@ -125,7 +128,11 @@ function loadEvents(init) {
         if(resp) {
             data = resp
 
+            if(!events) {
                 store.addRoomEvents(roomID, resp.events)
+            } else {
+                store.updateRoomEvents(roomID, resp.events)
+            }
 
             if($page?.url?.pathname != lastPath) {
                 lastPath = $page?.url?.pathname
@@ -290,12 +297,9 @@ function stopEditing() {
 
 function postSaved(e) {
     stopEditing()
-    console.log("what is data?", data)
-    if(data.events == null) {
-        data.events = []
-    }
 
-    data.events = [e.detail, ...data.events];
+    store.addNewPostToRoom(roomID, e.detail)
+
     let url = `/${e.detail?.room_alias}/post/${e.detail?.slug}`
     if(isTopic) {
         url = `/${e.detail?.room_alias}/topic/${e.detail?.content?.topic}/post/${e.detail?.slug}`
@@ -374,7 +378,7 @@ $: holder = isTopic ? 'topic' : 'space'
 
                 {#if events}
                     <section class="events">
-                        {#each events as event}
+                        {#each events as event (event.event_id)}
                             <Event event={event} sender={null} />
                         {/each}
                     </section>
