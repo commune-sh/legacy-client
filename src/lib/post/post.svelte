@@ -38,15 +38,16 @@ $: roomID = isRoom ? state?.children?.find(r => r?.alias ===
 
 let ready = false;
 
-function loadEvents() {
+function fetchReplies() {
     APIRequest({
-      url: `${PUBLIC_API_URL}/event/${post.event_id}/replies`,
+      url: `${PUBLIC_API_URL}/event/${$page?.params.post}/replies`,
       method: 'GET',
     })
     .then(resp => {
         if(resp) {
             data = resp
             lastPost = $page.params.post
+            lastReply = $page.params.reply
             ready = true
         }
         if(!resp) {
@@ -61,18 +62,22 @@ let down = false;
 
 $: replies = data?.replies
 
-let lastPost = null;
 
-$: if(post?.event_id) {
-    loadEvents()
-} else {
-    ready = false
+onMount(() => {
+    fetchReplies()
+})
+
+let lastPost = null;
+let lastReply = null;
+
+$: if($page.params.post && post?.event_id && !ready) {
+    //fetchReplies()
 }
 
 $: if(lastPost != null && $page.params.post != lastPost) {
     ready = false
     replying = false
-    loadEvents()
+    fetchReplies()
 }
 
 let isLastReply = false;
@@ -83,7 +88,7 @@ $: if(isReply) {
 
 $: if(!isReply && isLastReply) {
     ready = false
-    loadEvents()
+    fetchReplies()
 }
 
 let placeholder = 'Leave a reply.'

@@ -70,6 +70,10 @@ $: if($page?.url?.pathname != lastPath) {
                 editing = false
                 reloading = true
             }
+            /*
+                editing = false
+                reloading = true
+            */
 
             loadEvents()
         }
@@ -133,6 +137,7 @@ function loadEvents(init) {
             } else {
                 store.updateRoomEvents(roomID, resp.events)
             }
+                //store.addRoomEvents(roomID, resp.events)
 
             if($page?.url?.pathname != lastPath) {
                 lastPath = $page?.url?.pathname
@@ -155,8 +160,7 @@ let down = false;
 
 let data = null;
 
-$: exists = data?.exists == null
-    false
+$: exists = data?.exists || false
 
 $: if(data) {
     //ready = true
