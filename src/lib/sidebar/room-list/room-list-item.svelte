@@ -84,7 +84,7 @@ function logItem(e) {
     console.log(item)
 }
 
-$: topics = JSON.parse(item?.topics) || null
+$: topics = item?.topics != undefined ? JSON.parse(item?.topics) : null
 
 
 </script>

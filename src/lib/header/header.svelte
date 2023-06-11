@@ -54,7 +54,7 @@ function sortItems(state) {
             alias: ``,
             fullpath: `/${$page.params.space}`,
             room_id: state?.room_id,
-            pinned_events: JSON.parse(state.space?.pinned_events)
+            pinned_events: state.space?.pinned_events != undefined ? JSON.parse(state.space?.pinned_events) : null
         }
     ]
     if(state?.children?.length > 0) {
@@ -65,7 +65,7 @@ function sortItems(state) {
                 alias: child?.alias,
                 fullpath: `/${$page.params.space}/${child?.alias}`,
                 room_id: child?.room_id,
-                pinned_events: JSON.parse(child?.pinned_events)
+                pinned_events: child?.pinned_events != undefined ? JSON.parse(child?.pinned_events) : null,
             })
         })
     }
