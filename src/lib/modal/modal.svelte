@@ -1,29 +1,34 @@
 <script>
 import { onMount, createEventDispatcher } from 'svelte'
-import { fade, fly } from 'svelte/transition'
+import { store } from '$lib/store/store.js'
 
 const dispatch = createEventDispatcher()
 
 export let noStyle = false;
 
 let kill =() => {
-    dispatch('kill', true)
+    $store.modal = {
+        active: false,
+        content: null
+    }
 }
 
-onMount(() => {
-})
+
+$: active = $store.modal.active
+
 
 </script>
 
+{#if active}
 <div class="mask grd" 
-    on:click|self={kill}
-    transition:fade="{{duration: 100}}">
+    on:click|self|stopPropagation={kill}>
     <div class="modal grd-c" 
-        class:default={!noStyle}
-        in:fly="{{ y: -200, duration: 100 }}">
-        <slot></slot>
+    class:default={!noStyle}>
+            <svelte:component this={$store.modal.component}
+                {...$store.modal.props}/>
     </div>
 </div>
+{/if}
 
 
 <style>
@@ -44,11 +49,12 @@ onMount(() => {
     transition: 0.2s;
     box-shadow: 0 30px 60px rgba(0,0,0,.1);
 }
+
 .default {
-    background-color: var(--background-3);
+    background-color: var(--bg);
     border-radius: 7px;
-    min-wdith: 400px;
-    min-height: 300px;
+    max-width: 600px;
+    max-height: 500px;
 }
 
 </style>

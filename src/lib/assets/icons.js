@@ -189,3 +189,15 @@ export const em7 = `
 export const em8 = `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><defs><path id="twemojiWhiteFlag0" fill="#8899A6" d="M5 36a2 2 0 0 1-2-2V3a2 2 0 0 1 4 0v31a2 2 0 0 1-2 2z"/><path id="twemojiWhiteFlag1" fill="#AAB8C2" d="M5 1a2 2 0 0 0-2 2v31a.5.5 0 0 0 1 0V4.414C4 3.633 4.633 3 5.414 3H7a2 2 0 0 0-2-2z"/></defs><use href="#twemojiWhiteFlag0"/><use href="#twemojiWhiteFlag1"/><use href="#twemojiWhiteFlag0"/><use href="#twemojiWhiteFlag1"/><path fill="#E1E8ED" d="M32.415 3.09c-1.752-.799-3.615-1.187-5.698-1.187c-2.518 0-5.02.57-7.438 1.122c-2.418.551-4.702 1.072-6.995 1.072c-1.79 0-3.382-.329-4.868-1.006A1 1 0 0 0 6 4v19c0 .392.229.747.585.91c1.752.799 3.616 1.187 5.698 1.187c2.518 0 5.02-.57 7.438-1.122c2.418-.551 4.702-1.071 6.995-1.071c1.79 0 3.383.329 4.868 1.007A1.003 1.003 0 0 0 33 23V4a1 1 0 0 0-.585-.91z"/></svg>
 `
+
+export const up = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.9997 10.8284L7.04996 15.7782L5.63574 14.364L11.9997 8L18.3637 14.364L16.9495 15.7782L11.9997 10.8284Z"></path></svg>
+`
+
+export const down = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z"></path></svg>
+`
+
+export const arrowDropRight = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 12L10 16V8L14 12Z"></path></svg>
+`

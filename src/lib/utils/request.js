@@ -186,3 +186,11 @@ export async function joinRoom(room_id) {
   return data;
 }
 
+export async function getLinkMetadata(link) {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/link/metadata?href=${link}`,
+    method: 'GET'
+  })
+  return data
+}
+

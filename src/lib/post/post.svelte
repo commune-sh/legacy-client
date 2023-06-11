@@ -23,7 +23,7 @@ $: if(authenticated) {
 }
 
 $: space_room_id = state?.room_id
-$: joined = $store?.spaces.find(x => x?.room_id === space_room_id) != null 
+$: joined = $store?.rooms.find(x => x === roomID) != null 
 
 
 export let post;
@@ -32,9 +32,10 @@ export let post;
 $: state = $store?.states[$page?.params?.space]
 
 $: isSpace = $page?.params?.space !== undefined && $page?.params?.space !== null && $page?.params?.space !== '' 
+
 $: isRoom = $page?.params?.room !== undefined && $page?.params?.room !== null && $page?.params?.room !== '' 
-$: roomID = isRoom ? state?.children?.find(r => r?.alias ===
-    $page?.params?.room)?.room_id : isSpace ? state?.room_id : null
+
+$: roomID = post?.room_id
 
 let ready = false;
 
@@ -74,10 +75,10 @@ function fetchReplies() {
 let data = null;
 let down = false;
 
-//$: replies = data?.replies
+$: replies = data?.replies
 
 //$: replies = $store?.replies?.[$page.params.post]
-$: replies = isReply ? $store?.replies?.[$page.params.reply] : $store?.replies?.[$page.params.post]
+//$: replies = isReply ? $store?.replies?.[$page.params.reply] : $store?.replies?.[$page.params.post]
 
 
 
@@ -111,6 +112,7 @@ function replySaved(e) {
         let in_reply_to = reply?.content['m.relates_to']?.event_id
         if(in_reply_to == post.event_id) {
             data.replies = [...data.replies, reply];
+            console.log("added", data.replies)
             post.reply_count += 1
             return
         }
@@ -195,6 +197,17 @@ $: if(ready && authenticated && joined && roomID && post) {
 
 $: isReply = $page.params.reply !== undefined && $page.params.reply !== null && $page.params.reply !== ''
 
+function setReplyThread(e) {
+    console.log("setting reply thread", e.detail)
+    let event = e.detail
+    //post = e.detail
+    let children = event.children
+    delete event.children
+    post = event
+    data.replies = children
+    data.replies = data.replies
+}
+
 </script>
 
 <section class="content" class:rep={replying}>
@@ -236,6 +249,7 @@ $: isReply = $page.params.reply !== undefined && $page.params.reply !== null && 
                 {#each replies as reply}
                     <Event isReply={true} 
                         sender={post?.sender?.id}
+                        on:set-reply-thread={setReplyThread}
                         event={reply} 
                         on:replyTo={replyToEvent} />
                 {/each}

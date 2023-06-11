@@ -198,6 +198,9 @@ function reactToKey(e) {
     reactions.process(e.detail)
 }
 
+
+$: showRoomAlias = !isSpace && !isRoom && !isReply && !isTopic && !isPost
+
 </script>
 
 <div class="event" 
@@ -247,6 +250,11 @@ function reactToKey(e) {
                 <div class="post-body clipped ph3">
                     {@html clipped}
                 </div>
+                {#if showRoomAlias}
+                    <div class="href sm ml3 pt2">
+                        <a href={`/${event.room_alias}`}>{event.room_alias}</a>
+                    </div>
+                {/if}
             {/if}
 
             {#if (isPost || isReply) && hasAttachments && images}
@@ -274,6 +282,9 @@ function reactToKey(e) {
                     on:active={activateTools} 
                 hovered={displayTools}/>
                 </div>
+
+            <div class="fl-o"></div>
+
         </div>
 
     </div>
@@ -288,6 +299,7 @@ function reactToKey(e) {
                     isReply={isReply} 
                     on:reply={replyToEvent}
                     active={toolsActive}
+                    on:set-reply-thread
                     on:react={reactToKey}
                     on:active={activateTools} 
                     on:kill={killTools} 
@@ -308,6 +320,7 @@ function reactToKey(e) {
                 depth={depth + 1}
                 nested={true}
                 event={reply} 
+                on:set-reply-thread
                 sender={sender}
                 on:replyTo/>
         {/each}

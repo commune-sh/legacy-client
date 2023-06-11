@@ -68,5 +68,6 @@ $: if(emojiSelected) {
 .inline {
     width: 16px;
     height: 16px;
+    padding: 0;
 }
 </style>

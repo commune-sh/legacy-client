@@ -24,10 +24,8 @@ function replyToEvent() {
 
 
 function goToEvent() {
-    let url = `/${$page.params.space}/post/${$page.params.post}/reply/${event?.slug}`
-    if($page.params?.room) {
-        url = `/${$page.params.space}/${$page.params?.room}/post/${$page.params.post}/reply/${event?.slug}`
-    }
+    let url = `/${event.room_alias}/post/${$page.params.post}/reply/${event?.slug}`
+
     goto(url, {
         noscroll: true,
     })
@@ -67,7 +65,8 @@ function goToEvent() {
 <style>
 .event-tools {
     display: grid;
-    grid-template-columns: auto auto auto auto;
+    grid-auto-flow: column;
+    grid-column-gap: 0.25rem;
     border: 1px solid var(--border-1);
     z-index: 900;
     border-radius: 9px;

@@ -31,6 +31,7 @@
 		"autosize": "^6.0.1",
 		"dayjs": "^1.11.7",
 		"emojibase-data": "^7.0.1",
+		"highlight.js": "^11.8.0",
 		"markdown-it": "^13.0.1",
 		"markdown-it-emoji": "^2.0.2",
 		"markdown-it-link-attributes": "^4.0.1",

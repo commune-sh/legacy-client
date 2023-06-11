@@ -1,6 +1,8 @@
 <script>
 import { onMount, createEventDispatcher } from 'svelte'
+import { store } from '$lib/store/store.js'
 import { more } from '$lib/assets/icons.js'
+import ViewSource from './source.svelte'
 import tippy from 'tippy.js';
 
 const dispatch = createEventDispatcher();
@@ -39,12 +41,19 @@ onMount(() => {
     });
 })
 
+
+
 function viewSource() {
-    console.log(event)
+    store.showModal(ViewSource, {
+        event: event
+    })
     menu.hide()
 }
 
+
+
 </script>
+
 
 <div class="menu fl-co" bind:this={content}>
     <div class="m-item" on:click|stopPropagation={viewSource}>

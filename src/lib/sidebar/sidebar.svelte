@@ -8,7 +8,7 @@ import SkeletonSidebar from '$lib/skeleton/skeleton-sidebar.svelte'
 
 $: state = $store?.states[$page?.params?.space]
 
-$: ready = state != undefined && state?.space != undefined
+$: ready = state != undefined
 
 $: children = state?.children
 
@@ -18,6 +18,8 @@ $: isNotSpace = $page?.params?.space == undefined || $page?.params?.space == nul
 
 $: isStaticRoute = $store.staticRoutes.some(r => r.path === $page?.url?.pathname);
 $: staticRoute = $store.staticRoutes.find(r => r.path === $page?.url?.pathname);
+
+$: exists = $store?.states[$page?.params?.space]?.room_id != undefined
 
 function buildItems(state) {
     if(!state && !state?.room_id) {
@@ -53,7 +55,12 @@ $: items = buildItems(state)
     <Header state={state} />
 
     <div class="content fl-co">
-        {#if ready || isNotSpace}
+
+
+
+        {#if isNotSpace}
+
+        {:else if ready && exists}
 
             {#if isNotIndex}
                 <div class="items">
@@ -61,12 +68,13 @@ $: items = buildItems(state)
                 </div>
             {/if}
 
-            <div class="">
-            </div>
+        {:else if !exists}
 
         {:else}
             <SkeletonSidebar />
         {/if}
+
+
 
     </div>
     <User/>

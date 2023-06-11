@@ -107,11 +107,11 @@ async function redact(key) {
             <Reaction 
                 isReply={isReply} 
                 event={event} 
-                hovered={hovered} 
                 on:react
                 reaction={reaction} />
         {/each}
     {/if}
+    {#if hovered}
     <div class="grd re" class:ml2={ml}>
         <React 
             isReply={isReply} 
@@ -120,6 +120,7 @@ async function redact(key) {
             on:react
             on:active/>
     </div>
+    {/if}
 </div>
 
 <style>

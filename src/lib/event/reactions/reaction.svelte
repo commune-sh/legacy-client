@@ -2,6 +2,10 @@
 import { createEventDispatcher } from 'svelte'
 import { store } from '$lib/store/store.js'
 
+$: authenticated = $store?.authenticated && 
+    $store?.credentials != null
+    $store?.credentials?.access_token?.length > 0
+
 const dispatch = createEventDispatcher()
 
 export let event;
@@ -13,6 +17,10 @@ $: sender= $store.credentials?.matrix_user_id
 $: reacted = reaction?.senders?.findIndex(s => s === sender) > -1
 
 function reactToEvent() {
+    if(!authenticated) {
+        store.startAuthenticating()
+        return
+    }
     dispatch('react', reaction.key)
 }
 

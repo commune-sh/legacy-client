@@ -5,7 +5,7 @@ import { onMount, createEventDispatcher } from 'svelte'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
-import {menu} from '$lib/assets/icons.js'
+import { menu} from '$lib/assets/icons.js'
 
 $: authenticated = $store?.authenticated && 
     $store?.credentials != null
@@ -51,6 +51,8 @@ function sortItems(state) {
         {
             path: undefined,
             name: `general`,
+            alias: ``,
+            fullpath: `/${$page.params.space}`,
             room_id: state?.room_id,
         }
     ]
@@ -59,6 +61,8 @@ function sortItems(state) {
             items.push({
                 path: child?.alias,
                 name: child?.name,
+                alias: child?.alias,
+                fullpath: `/${$page.params.space}/${child?.alias}`,
                 room_id: child?.room_id,
             })
         })
@@ -120,6 +124,8 @@ async function join() {
 $: isStaticRoute = $store.staticRoutes.some(r => r.path === $page?.url?.pathname);
 $: staticRoute = $store.staticRoutes.find(r => r.path === $page?.url?.pathname);
 
+$: isMobile = window.innerWidth <= 768
+
 </script>
 
 
@@ -131,17 +137,35 @@ $: staticRoute = $store.staticRoutes.find(r => r.path === $page?.url?.pathname);
 
         <div class="fl mr3">
 
-            <div class="name grd-c">
+            <div class="name grd-c fl">
                 {#if isStaticRoute && staticRoute}
                     <span class="n">{staticRoute.name}</span>
                 {:else if isStatic && name}
                     <span class="n">{name}</span>
                 {:else if isIndex}
                     {#if authDone}
-                    <span class="n">{indexText}</span>
+                        <span class="n">{indexText}</span>
                     {/if}
                 {:else if selected}
-                    <span class="n" on:click={goToSpace}>{selected?.name}</span>
+                    {#if isMobile}
+                        {#if $page.params.room}
+                            <span class="n" on:click={goToSpace}>
+                                {$page.params.space}
+                            </span>
+                            <span class="mh3 light">🢒</span>
+                            <span class="n">
+                                {selected?.alias}
+                            </span>
+                        {:else}
+                            <span class="n">
+                                {$page.params.space}
+                            </span>
+                        {/if}
+                    {:else}
+                        <span class="n" on:click={goToSpace}>
+                            {selected?.name}
+                        </span>
+                    {/if}
                 {/if}
             </div>
             <div class="fl-o"></div>

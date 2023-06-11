@@ -45,6 +45,10 @@ function createApp() {
     creatingSpace: false,
     emojiPicker: {
       active: false,
+    },
+    modal: {
+      active: false,
+      content: null,
     }
   }
 
@@ -475,6 +479,17 @@ function createApp() {
     })
   }
 
+  let showModal = (component, props) => {
+    update(p => {
+      p.modal = {
+        active: true,
+        component: component,
+        props: props
+      }
+      return p
+    })
+  }
+
   const { subscribe, set, update } = writable(app);
 
   return {
@@ -523,6 +538,7 @@ function createApp() {
     removeReaction,
     addEventReplies,
     updateEventsCache,
+    showModal,
   };
 }
 

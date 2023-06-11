@@ -30,6 +30,7 @@ function topics(i) {
             {/each}
         {/if}
     {/each}
+    <div class="fade"></div>
 </section>
 
 <style>
@@ -38,6 +39,16 @@ function topics(i) {
     grid-template-rows: repeat(auto-fill, auto);
     overflow: hidden;
     padding: 0.5rem;
+    position: relative;
+}
+
+.fade {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(to bottom, transparent, black);
 }
 
 .item {

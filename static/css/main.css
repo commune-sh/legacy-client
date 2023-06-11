@@ -522,6 +522,10 @@ textarea {
     font-size: 14px;
 }
 
+.light {
+    color: var(--text-light);
+}
+
 .c-ico {
     fill: var(--action-icon);
     height: 28px;
@@ -737,7 +741,7 @@ pre {
 }
 
 pre code {
-    font-family: monospace;
+    font-family: monospace, 'Twemoji';
     background: transparent;
     border: none;
     padding: 0;

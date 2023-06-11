@@ -12,6 +12,7 @@ import Sync from '$lib/sync/sync.svelte'
 import Health from '$lib/sync/health.svelte'
 import Down from '$lib/errors/down.svelte'
 import CreateSpace from '$lib/space/create-space.svelte'
+import Modal from '$lib/modal/modal.svelte'
 
 let isIndex = $page?.route?.id === `/(app)`
 
@@ -77,6 +78,7 @@ $: if(authenticated) {
 <Sync />
 <Health />
 
+<Modal />
 
 {#if (!down && isIndex && showIndex) || (!down && !isIndex)}
 

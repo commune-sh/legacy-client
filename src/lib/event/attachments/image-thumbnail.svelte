@@ -12,17 +12,16 @@ function getURL(item) {
 <div class="thumbnail grd mr3">
     <div class="at-img grd-c" 
         style="background-image: url({getURL(images[0])})">
-    </div>
     {#if images?.length > 1}
     <div class="img-count">
         <b>+{images.length - 1}</b>
     </div>
     {/if}
+    </div>
 </div>
 
 <style>
 .thumbnail {
-    position: relative;
 }
 
 .img-count {
@@ -43,6 +42,7 @@ function getURL(item) {
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
+    position: relative;
 }
 
 </style>

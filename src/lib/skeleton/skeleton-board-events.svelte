@@ -29,6 +29,7 @@ function img(i) {
             {/if}
         </div>
     {/each}
+    <div class="fade"></div>
 </section>
 
 <style>
@@ -36,6 +37,17 @@ function img(i) {
     display: grid;
     grid-template-rows: repeat(auto-fill, auto);
     overflow: hidden;
+    pointer-events: none;
+    position: relative;
+}
+
+.fade {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(to bottom, transparent, black);
 }
 
 .event {

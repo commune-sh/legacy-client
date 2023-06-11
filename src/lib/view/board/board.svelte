@@ -123,7 +123,7 @@ function loadEvents(init) {
         opt.url = url + `?topic=${topic}`
     }
 
-    if(token && !isSpace && !isRoom) {
+    if(authenticated && !isSpace && !isRoom) {
         opt.url = `${PUBLIC_API_URL}/feed`
         opt.token = token
     }
@@ -250,7 +250,7 @@ let fetchMore = () => {
         url = url + `?topic=${topic}`
     }
 
-    if(!isSpace && !isRoom) {
+    if(authenticated && !isSpace && !isRoom) {
         url = `${PUBLIC_API_URL}/feed?last=${last}`
     }
     console.log(url)
@@ -401,7 +401,7 @@ $: holder = isTopic ? 'topic' : 'space'
                     </div>
                 {/if}
 
-                {#if !exists}
+                {#if isSpace && !exists}
                     <section class="grd">
                         <section class="grd-c">
                             This space does not exist.
@@ -413,7 +413,7 @@ $: holder = isTopic ? 'topic' : 'space'
             {/if}
 
 
-            {#if exists && events !== null && !reloading}
+            {#if (exists || !isSpace) && events !== null && !reloading}
                 <div class="obs" bind:this={obs}></div>
             {/if}
 
