@@ -152,7 +152,7 @@ $: isMobile = window.innerWidth <= 768
                             <span class="n" on:click={goToSpace}>
                                 {$page.params.space}
                             </span>
-                            <span class="mh3 light">🢒</span>
+                            <span class="slash">/</span>
                             <span class="n">
                                 {selected?.alias}
                             </span>
@@ -238,5 +238,11 @@ $: isMobile = window.innerWidth <= 768
     .name {
         padding-left: 0.5rem;
     }
+}
+.slash {
+    font-weight: bold;
+    opacity: 0.5;
+    margin-right: 0.75rem;
+    margin-left: 0.75rem;
 }
 </style>
