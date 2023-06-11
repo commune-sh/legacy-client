@@ -218,7 +218,7 @@ function setReplyThread(e) {
         {#if post}
             <Event on:update-reactions isPost={true} event={post} on:replyTo={replyToEvent}/>
         {:else}
-            <SkeletonBoardEvent />
+            <SkeletonBoardEvent image={false}/>
         {/if}
 
         <div class="sep">
@@ -237,9 +237,12 @@ function setReplyThread(e) {
             </div>
             <div class="fl-o">
             </div>
+
+            {#if post}
             <div class="">
                 <button on:click={replyToPost}>Reply</button>
             </div>
+            {/if}
         </div>
 
         {#if ready}

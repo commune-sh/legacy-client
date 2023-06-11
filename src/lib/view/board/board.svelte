@@ -373,7 +373,9 @@ function updateReactions(e) {
     class:mtog={menuToggled}
     class:post={isPost}>
 
-    <div class="inner-area" class:ina={isPost}>
+    <div class="inner-area" 
+        class:mtog={menuToggled}
+        class:ina={isPost}>
 
         <Header 
             editing={editing} 
@@ -498,7 +500,14 @@ function updateReactions(e) {
 
 @media screen and (max-width: 768px) {
     .inner-area {
-        position: static;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+    }
+    .mtog {
+        left: 304px;
     }
     .post {
         grid-template-columns: auto;

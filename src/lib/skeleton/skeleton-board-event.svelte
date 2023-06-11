@@ -1,7 +1,8 @@
 <script>
+export let image = true;
 function rp() {
     const min = 30;
-    const max = 100;
+    const max = 60;
     const randomPercentage = Math.floor(Math.random() * (max - min + 1)) + min;
     return randomPercentage;
 }
@@ -19,7 +20,7 @@ function img(i) {
             <div class="body mt2 sklt"></div>
             <div class="body mt2 sklt"></div>
         </div>
-        {#if img()}
+        {#if img() && image}
             <div class="img sklt"></div>
         {/if}
     </div>
@@ -36,7 +37,7 @@ function img(i) {
     border-bottom: 1px solid var(--border-1);
     display: grid;
     grid-template-columns: 1fr auto;
-    min-height: 116px;
+    min-height: 100px;
 }
 
 .title {
