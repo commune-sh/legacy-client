@@ -355,6 +355,14 @@ let fetchPost = (reply) => {
 $: holder = isTopic ? 'topic' : 'space'
 
 
+function updateReactions(e) {
+    console.log("updating reactions", e.detail)
+    let index = data.events.findIndex((event) => event.event_id == e.detail.event_id)
+    if(index > -1) {
+        data.events[index].content.reactions = e.detail.reactions
+    }
+}
+
 </script>
 
 
@@ -392,7 +400,8 @@ $: holder = isTopic ? 'topic' : 'space'
                 {#if events}
                     <section class="events">
                         {#each events as event (event.event_id)}
-                            <Event event={event} sender={null} />
+                            <Event 
+                                event={event} sender={null} />
                         {/each}
                     </section>
                 {/if}
@@ -427,7 +436,8 @@ $: holder = isTopic ? 'topic' : 'space'
     </div>
 
     {#if isPost}
-        <Post post={selectedPost} />
+        <Post on:update-reactions={updateReactions} 
+            post={selectedPost} />
     {/if}
 
 </section>

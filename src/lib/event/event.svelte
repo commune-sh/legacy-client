@@ -274,6 +274,7 @@ $: showRoomAlias = !isSpace && !isRoom && !isReply && !isTopic && !isPost
 
 
                 <Reactions 
+                    on:update-reactions
                     bind:this={reactions}
                     on:react={reactToKey}
                     event={event} 

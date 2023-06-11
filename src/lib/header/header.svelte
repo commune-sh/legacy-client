@@ -134,9 +134,6 @@ $: isMobile = window.innerWidth <= 768
 
 $: pinned_events = selected?.pinned_events
 
-$: if(pinned_events) {
-    console.log("pinned evets are", pinned_events)
-}
 
 </script>
 
@@ -150,7 +147,11 @@ $: if(pinned_events) {
         <div class="fl mr3">
 
             <div class="name grd-c fl">
-            {#if !ready}
+            {#if isIndex}
+                    {#if authDone}
+                        <span class="n">{indexText}</span>
+                    {/if}
+            {:else if !ready}
                     <SkeletonSpan />
             {:else}
 
@@ -158,10 +159,6 @@ $: if(pinned_events) {
                     <span class="n">{staticRoute.name}</span>
                 {:else if isStatic && name}
                     <span class="n">{name}</span>
-                {:else if isIndex}
-                    {#if authDone}
-                        <span class="n">{indexText}</span>
-                    {/if}
                 {:else if selected}
                     {#if isMobile}
                         {#if $page.params.room}

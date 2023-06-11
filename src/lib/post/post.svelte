@@ -216,7 +216,7 @@ function setReplyThread(e) {
     <section class="events">
 
         {#if post}
-            <Event isPost={true} event={post} on:replyTo={replyToEvent}/>
+            <Event on:update-reactions isPost={true} event={post} on:replyTo={replyToEvent}/>
         {:else}
             <SkeletonBoardEvent />
         {/if}

@@ -1,8 +1,11 @@
 <script>
+import { createEventDispatcher } from 'svelte'
 import { store } from '$lib/store/store.js'
 import Reaction from './reaction.svelte'
 import React from '$lib/event/tools/react.svelte'
 import { savePost, redactReaction } from '$lib/utils/request.js'
+
+const dispatch = createEventDispatcher()
 
 export let event;
 export let isReply;
@@ -88,6 +91,10 @@ async function saveReaction(key) {
 
     const res = await savePost(post);
     console.log(res)
+    dispatch('update-reactions', {
+        event_id: event.event_id,
+        reactions: event.reactions
+    })
 }
 
 async function redact(key) {
@@ -98,6 +105,10 @@ async function redact(key) {
     }
     const res = await redactReaction(redaction);
     console.log(res)
+    dispatch('update-reactions', {
+        event_id: event.event_id,
+        reactions: event.reactions
+    })
 }
 </script>
 

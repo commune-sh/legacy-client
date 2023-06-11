@@ -1,8 +1,7 @@
 <script>
 import { onMount, onDestroy, createEventDispatcher } from 'svelte'
 import { add } from '$lib/assets/icons.js'
-import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
-import { APIRequest } from '$lib/utils/request.js'
+
 
 export let busy;
 

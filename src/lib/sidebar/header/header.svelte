@@ -10,20 +10,21 @@ $: name = state?.space?.name ? state.space.name : ``;
 
 $: isStaticRoute = $store.staticRoutes.some(r => r.path === $page?.url?.pathname);
 $: staticRoute = $store.staticRoutes.find(r => r.path === $page?.url?.pathname);
+$: isNotSpace = $page?.params?.space == undefined || $page?.params?.space == null
 
 </script>
 
 <div class="sidebar-header">
     <div class="in">
-        {#if !ready}
+        {#if isNotSpace}
+        {:else if isStaticRoute}
+            <b>{staticRoute.name}</b>
+
+        {:else if !ready}
             <SkeletonSpan />
         {:else}
 
-            {#if isStaticRoute}
-                <b>{staticRoute.name}</b>
-            {:else}
                 <b>{name}</b>
-            {/if}
         {/if}
     </div>
 </div>

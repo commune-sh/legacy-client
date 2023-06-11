@@ -55,11 +55,12 @@ $: items = buildItems(state)
     <Header state={state} ready={ready}/>
 
     <div class="content fl-co">
+        {#if isNotSpace}
 
-        {#if !ready}
+        {:else if !ready}
             <SkeletonSidebar />
 
-        {:else if isNotSpace || !exists}
+        {:else if !exists}
 
         {:else if exists}
 
