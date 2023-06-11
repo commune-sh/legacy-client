@@ -52,15 +52,16 @@ $: items = buildItems(state)
 </script>
 
 <div class="sidebar">
-    <Header state={state} />
+    <Header state={state} ready={ready}/>
 
     <div class="content fl-co">
 
+        {#if !ready}
+            <SkeletonSidebar />
 
+        {:else if isNotSpace || !exists}
 
-        {#if isNotSpace}
-
-        {:else if ready && exists}
+        {:else if exists}
 
             {#if isNotIndex}
                 <div class="items">
@@ -68,10 +69,6 @@ $: items = buildItems(state)
                 </div>
             {/if}
 
-        {:else if !exists}
-
-        {:else}
-            <SkeletonSidebar />
         {/if}
 
 

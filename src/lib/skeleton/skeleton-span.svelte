@@ -12,6 +12,7 @@ export let height = '18px';
     background: var(--shade-2);
     border-radius: 500px;
     width: 100%;
+    min-width: 90px;
 }
 
 .sklt {

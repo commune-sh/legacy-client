@@ -1,8 +1,10 @@
 <script>
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
+import SkeletonSpan from '$lib/skeleton/skeleton-span.svelte'
 
 export let state;
+export let ready;
 
 $: name = state?.space?.name ? state.space.name : ``;
 
@@ -13,10 +15,15 @@ $: staticRoute = $store.staticRoutes.find(r => r.path === $page?.url?.pathname);
 
 <div class="sidebar-header">
     <div class="in">
-        {#if isStaticRoute}
-            <b>{staticRoute.name}</b>
+        {#if !ready}
+            <SkeletonSpan />
         {:else}
-            <b>{name}</b>
+
+            {#if isStaticRoute}
+                <b>{staticRoute.name}</b>
+            {:else}
+                <b>{name}</b>
+            {/if}
         {/if}
     </div>
 </div>

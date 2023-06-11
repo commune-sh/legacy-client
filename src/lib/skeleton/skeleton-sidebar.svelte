@@ -1,7 +1,7 @@
 <script>
 function rp() {
     const min = 30;
-    const max = 100;
+    const max = 60;
     const randomPercentage = Math.floor(Math.random() * (max - min + 1)) + min;
     return randomPercentage;
 }
@@ -18,7 +18,7 @@ function topics(i) {
 </script>
 
 <section class="items">
-    {#each Array(10) as _, i}
+    {#each Array(20) as _, i}
         <div class="item sklt"></div>
         {#if topics(i)}
             {#each Array(tp()) as _, i}

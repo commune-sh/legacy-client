@@ -6,6 +6,7 @@ import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
 import { menu} from '$lib/assets/icons.js'
+import SkeletonSpan from '$lib/skeleton/skeleton-span.svelte'
 
 $: authenticated = $store?.authenticated && 
     $store?.credentials != null
@@ -15,6 +16,8 @@ const dispatch = createEventDispatcher()
 
 
 $: state = $store?.states[$page?.params?.space]
+
+$: ready = state != undefined
 
 export let type = 'space';
 export let exists;
@@ -147,6 +150,10 @@ $: if(pinned_events) {
         <div class="fl mr3">
 
             <div class="name grd-c fl">
+            {#if !ready}
+                    <SkeletonSpan />
+            {:else}
+
                 {#if isStaticRoute && staticRoute}
                     <span class="n">{staticRoute.name}</span>
                 {:else if isStatic && name}
@@ -176,6 +183,8 @@ $: if(pinned_events) {
                         </span>
                     {/if}
                 {/if}
+            {/if}
+
             </div>
             <div class="fl-o"></div>
             <div class="grd-c">
