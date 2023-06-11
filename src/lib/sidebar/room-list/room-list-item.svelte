@@ -84,6 +84,9 @@ function logItem(e) {
     console.log(item)
 }
 
+$: topics = JSON.parse(item?.topics) || null
+
+
 </script>
 
 <div class="item" 
@@ -102,8 +105,8 @@ function logItem(e) {
     </div>
 </div>
 
-{#if item?.topics?.length > 0 && selected}
-    {#each item?.topics as topic}
+{#if topics?.length > 0 && selected}
+    {#each topics as topic}
         <TopicItem 
             isGeneral={isGeneral}
             alias={item.alias}

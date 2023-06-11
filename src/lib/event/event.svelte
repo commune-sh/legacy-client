@@ -273,7 +273,6 @@ $: showRoomAlias = !isSpace && !isRoom && !isReply && !isTopic && !isPost
             {/if}
 
 
-                <div class="">
                 <Reactions 
                     bind:this={reactions}
                     on:react={reactToKey}
@@ -281,7 +280,6 @@ $: showRoomAlias = !isSpace && !isRoom && !isReply && !isTopic && !isPost
                     isReply={isReply}
                     on:active={activateTools} 
                 hovered={displayTools}/>
-                </div>
 
             <div class="fl-o"></div>
 

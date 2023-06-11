@@ -54,6 +54,7 @@ function sortItems(state) {
             alias: ``,
             fullpath: `/${$page.params.space}`,
             room_id: state?.room_id,
+            pinned_events: JSON.parse(state.space?.pinned_events)
         }
     ]
     if(state?.children?.length > 0) {
@@ -64,6 +65,7 @@ function sortItems(state) {
                 alias: child?.alias,
                 fullpath: `/${$page.params.space}/${child?.alias}`,
                 room_id: child?.room_id,
+                pinned_events: JSON.parse(child?.pinned_events)
             })
         })
     }
@@ -125,6 +127,13 @@ $: isStaticRoute = $store.staticRoutes.some(r => r.path === $page?.url?.pathname
 $: staticRoute = $store.staticRoutes.find(r => r.path === $page?.url?.pathname);
 
 $: isMobile = window.innerWidth <= 768
+
+
+$: pinned_events = selected?.pinned_events
+
+$: if(pinned_events) {
+    console.log("pinned evets are", pinned_events)
+}
 
 </script>
 

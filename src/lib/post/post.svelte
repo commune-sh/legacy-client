@@ -227,14 +227,12 @@ function setReplyThread(e) {
 
         <div class="norep pa3 fl">
             <div class="rco grd-c">
-                {#if ready && post}
+                {#if post}
                     {#if post.reply_count > 0}
                         {post.reply_count} {post.reply_count == 1 ? 'reply' : 'replies'}
                     {:else}
                     No replies yet
                     {/if}
-                {:else}
-                    <SkeletonSpan width={`150px`}/>
                 {/if}
             </div>
             <div class="fl-o">

@@ -44,9 +44,12 @@ onMount(() => {
 
 
 function viewSource() {
+    /*
     store.showModal(ViewSource, {
         event: event
     })
+    */
+    console.log(event)
     menu.hide()
 }
 

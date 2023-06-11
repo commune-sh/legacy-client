@@ -97,7 +97,19 @@ $: items = buildItems(state)
     padding: 0.5rem;
     overflow-y: auto;
 }
+
 ::-webkit-scrollbar {
     width: 3px;
+}
+::-webkit-scrollbar-thumb {
+    background: transparent;
+    transition: 0.1s;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-track);
+}
+
+.items:hover::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
 }
 </style>

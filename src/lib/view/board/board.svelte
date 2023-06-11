@@ -306,6 +306,10 @@ function stopEditing() {
 function postSaved(e) {
     stopEditing()
 
+    if(!data.events) {
+        data.events = []
+    }
+
     data.events = [e.detail, ...data.events]
     store.addNewPostToRoom(roomID, e.detail)
 

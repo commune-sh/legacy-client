@@ -124,6 +124,9 @@ async function redact(key) {
 </div>
 
 <style>
+.reactions {
+    min-height: 22px;
+}
 .re {
     height: 22px;
 }
