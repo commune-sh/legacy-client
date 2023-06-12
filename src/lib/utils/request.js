@@ -54,7 +54,7 @@ export async function loadPostWithReplies(opt) {
 
 export async function getAPIEndpoint(domain) {
   const data = await APIRequest({
-    url: `https://${domain}/.well-known/api`,
+    url: `${PUBLIC_API_URL}/domain/${domain}/api`,
     method: 'GET'
   })
   return data

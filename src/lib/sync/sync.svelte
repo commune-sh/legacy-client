@@ -62,9 +62,10 @@ async function fetchSpaceState() {
     if(isDomain) {
 
         const endpoint = await getAPIEndpoint($page.params?.domain)
-        console.log("endpoint is", endpoint)
 
-        //opt.url = `https://${$page.params?.domain}/${$page?.params?.space}/state`
+        if(endpoint?.url) {
+            opt.url = `${endpoint.url}/${$page.params?.space}/state`
+        }
     }
 
     APIRequest(opt)

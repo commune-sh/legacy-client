@@ -221,7 +221,7 @@ $: showRoomAlias = !isSpace && !isRoom && !isReply && !isTopic && !isPost
     <div class="ev-c fl-co">
         <div class="body">
 
-            <div class="ph3 fl mb3">
+            <div class="ph3 fl mb2">
                 <User hideAvatar={true} user={user} op={op}/>
                 <div class="sm ph1"></div>
                 <Date date={event?.origin_server_ts} />
@@ -264,7 +264,7 @@ $: showRoomAlias = !isSpace && !isRoom && !isReply && !isTopic && !isPost
 
         </div>
 
-        <div class="fl ph3 pt2">
+        <div class="fl ph3">
 
             {#if !isReply && event?.reply_count > 0}
                     <div class="mr2">
@@ -332,8 +332,8 @@ $: showRoomAlias = !isSpace && !isRoom && !isReply && !isTopic && !isPost
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: auto;
-    padding-bottom: 1rem;
-    padding-top: 1rem;
+    padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
     border-bottom: 1px solid var(--ev-bb);
     overflow: hidden;
     position: relative;
@@ -398,7 +398,7 @@ $: showRoomAlias = !isSpace && !isRoom && !isReply && !isTopic && !isPost
 }
 
 .post-body {
-
+    padding-bottom: 0.5rem;
 }
 
 :global(.post-body p:first-of-type){
@@ -444,4 +444,12 @@ $: showRoomAlias = !isSpace && !isRoom && !isReply && !isTopic && !isPost
 .isrep {
 }
 
+@media screen and (max-width: 768px) {
+    .event {
+        border: none;
+    }
+    .post-body {
+        padding-bottom: 0.5rem;
+    }
+}
 </style>
