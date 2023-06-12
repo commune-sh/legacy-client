@@ -45,7 +45,8 @@ $: r = $page.params.reply ? $page.params.reply : $page.params.post
 
 let route = null;
 
-$: if($page.route != route) {
+$: if($page.route != route && r) {
+    post = null
     ready = false
     fetchPost()
 }
