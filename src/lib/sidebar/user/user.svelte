@@ -3,6 +3,8 @@ import { PUBLIC_API_URL } from '$env/static/public';
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
 import { more } from '$lib/assets/icons.js'
+import Popup from '$lib/popup/popup.svelte'
+import UserPopup from './user-popup.svelte'
 
 $: authenticated = $store?.authenticated && 
     $store?.credentials != null
@@ -29,6 +31,21 @@ let logout = () => {
     }
 }
 
+let menuActive = false
+
+let toggleMenu = () => {
+    menuActive = !menuActive
+}
+
+let killed = () => {
+    menuActive = false
+}
+
+let killPopup = () => {
+    popup.kill()
+}
+
+let popup;
 </script>
 
 <section class="user">
@@ -45,15 +62,31 @@ let logout = () => {
 
 <div class="con">
 
-    <div class="ui fl">
-        <div class="grd-c">
-            <div class="avatar">
+    <Popup
+    bind:this={popup}
+    trigger={"click"}
+    offset={[8, 10]}
+    on:killed={killed}
+    placement={"top-start"}>
+
+        <div class="ui fl" 
+            slot="reference"
+            class:active={menuActive}
+            on:click={toggleMenu}>
+            <div class="grd-c">
+                <div class="avatar">
+                </div>
+            </div>
+            <div class="grd-c">
+                {username}
             </div>
         </div>
-        <div class="grd-c">
-            {username}
+
+
+        <div class="component" slot="content">
+            <UserPopup on:kill={killPopup}/>
         </div>
-    </div>
+    </Popup>
 
     <div class="grd">
         <div class="c-ico grd-c ph2" on:click={logout}>
@@ -61,6 +94,8 @@ let logout = () => {
         </div>
     </div>
 </div>
+
+
 {/if}
 
 </section>
@@ -81,7 +116,7 @@ let logout = () => {
     cursor: pointer;
     border-radius: 60px;
     border: 0px;
-    padding: 10px;
+    padding: 0.5rem;
     font-weight: bold;
     background-color: var(--primary);
     color: white;
@@ -104,10 +139,15 @@ let logout = () => {
 .ui:hover {
     background-color: var(--shade-3);
 }
+
+.active {
+    background-color: var(--shade-3);
+}
+
 .avatar {
     margin-right: 0.75rem;
-    height: 36px;
-    width: 36px;
+    height: 30px;
+    width: 30px;
     border-radius: 50%;
     background-color: var(--avatar-bg);
 

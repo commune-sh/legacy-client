@@ -47,7 +47,7 @@ function img(i) {
     left: 0;
     bottom: 0;
     right: 0;
-    background: linear-gradient(to bottom, transparent, black);
+    background: linear-gradient(to bottom, transparent, var(--bg));
 }
 
 .event {
