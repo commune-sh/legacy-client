@@ -62,7 +62,6 @@ $: if($page?.url?.pathname != lastPath) {
         $page?.params?.topic != lastTopic ||
         $page?.params?.space != lastSpace) {
 
-        console.log("params changed, let's refresh events")
 
         if(loaded) {
 
@@ -129,7 +128,6 @@ async function loadEvents() {
     const resp = await loadPosts(opt)
     if(resp) {
         data = resp
-        console.log(data)
 
         if($page?.url?.pathname != lastPath) {
             lastPath = $page?.url?.pathname
@@ -241,7 +239,6 @@ let fetchMore = () => {
     if(authenticated && !isSpace && !isRoom) {
         url = `${PUBLIC_API_URL}/feed?last=${last}`
     }
-    console.log(url)
 
     APIRequest({
         url: url,
@@ -317,7 +314,6 @@ $: selectedPost = (!isReply && isPost) ? events?.find(e => e.slug ==
     $page.params.post) : null
 
 $: if(!selectedPost && isPost) {
-    console.log("fetching remote post")
     if($page.params.reply) {
         fetchPost($page.params.reply)
     } else {
@@ -344,7 +340,6 @@ $: holder = isTopic ? 'topic' : 'space'
 
 
 function updateReactions(e) {
-    console.log("updating reactions", e.detail)
     let index = data.events.findIndex((event) => event.event_id == e.detail.event_id)
     if(index > -1) {
         data.events[index].content.reactions = e.detail.reactions
@@ -352,7 +347,6 @@ function updateReactions(e) {
 }
 
 function updateReplyCount(e) {
-    console.log("updating deply count", e.detail)
     let index = data.events.findIndex((event) => event.event_id == e.detail)
     if(index > -1) {
         let count = data.events[index].reply_count
