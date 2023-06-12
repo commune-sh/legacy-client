@@ -123,7 +123,7 @@ function loadEvents(init) {
         opt.url = url + `?topic=${topic}`
     }
 
-    if(authenticated && !isSpace && !isRoom) {
+    if(token && !isSpace && !isRoom) {
         opt.url = `${PUBLIC_API_URL}/feed`
         opt.token = token
     }
@@ -370,11 +370,9 @@ function updateReactions(e) {
 
 <section class="space-container"
     bind:this={container}
-    class:mtog={menuToggled}
     class:post={isPost}>
 
     <div class="inner-area" 
-        class:mtog={menuToggled}
         class:ina={isPost}>
 
         <Header 
@@ -500,14 +498,7 @@ function updateReactions(e) {
 
 @media screen and (max-width: 768px) {
     .inner-area {
-        position: fixed;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-    }
-    .mtog {
-        left: 304px;
+        position: static;
     }
     .post {
         grid-template-columns: auto;
