@@ -78,4 +78,9 @@ function topics(i) {
   }
 }
 
+@media screen and (max-width: 768px) {
+    .item {
+        height: 12px;
+    }
+}
 </style>

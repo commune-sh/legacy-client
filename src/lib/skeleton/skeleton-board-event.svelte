@@ -74,4 +74,19 @@ function img(i) {
   }
 }
 
+@media screen and (max-width: 768px) {
+    .event { 
+        border: none;
+    }
+    .title {
+        height: 10px;
+    }
+    .body {
+        height: 10px;
+    }
+    .img {
+        height: 50px;
+        width: 50px;
+    }
+}
 </style>
