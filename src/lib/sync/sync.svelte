@@ -1,6 +1,6 @@
 <script>
 import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
-import { APIRequest } from '$lib/utils/request.js'
+import { APIRequest, getAPIEndpoint } from '$lib/utils/request.js'
 import { onMount, tick } from 'svelte'
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
@@ -50,7 +50,7 @@ function fetchDefaultSpaces() {
 }
 
 
-function fetchSpaceState() {
+async function fetchSpaceState() {
 
     let opt = {
       url: `${PUBLIC_API_URL}/${$page?.params?.space}/state`,
@@ -59,11 +59,13 @@ function fetchSpaceState() {
 
     let isDomain = $page?.params?.domain != null && $page?.params?.domain?.length > 0
 
-    /*
     if(isDomain) {
-        opt.url = `${page.params.domain}/${$page?.params?.space}/state`
+
+        const endpoint = await getAPIEndpoint($page.params?.domain)
+        console.log("endpoint is", endpoint)
+
+        //opt.url = `https://${$page.params?.domain}/${$page?.params?.space}/state`
     }
-    */
 
     APIRequest(opt)
     .then(resp => {

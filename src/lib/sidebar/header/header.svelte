@@ -1,4 +1,5 @@
 <script>
+import { PUBLIC_APP_NAME } from '$env/static/public';
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
 import SkeletonSpan from '$lib/skeleton/skeleton-span.svelte'
@@ -12,11 +13,14 @@ $: isStaticRoute = $store.staticRoutes.some(r => r.path === $page?.url?.pathname
 $: staticRoute = $store.staticRoutes.find(r => r.path === $page?.url?.pathname);
 $: isNotSpace = $page?.params?.space == undefined || $page?.params?.space == null
 
+$: isIndex = $page?.url?.pathname === '/'
+
 </script>
 
 <div class="sidebar-header">
     <div class="in">
         {#if isNotSpace}
+            {PUBLIC_APP_NAME}
         {:else if isStaticRoute}
             <b>{staticRoute.name}</b>
 

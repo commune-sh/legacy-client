@@ -1,5 +1,4 @@
 import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
-import { page } from '$app/stores';
 
 export async function APIRequest(r) {
   try {
@@ -50,6 +49,14 @@ export async function loadPosts(opt) {
 
 export async function loadPostWithReplies(opt) {
   const data = await APIRequest(opt)
+  return data
+}
+
+export async function getAPIEndpoint(domain) {
+  const data = await APIRequest({
+    url: `https://${domain}/.well-known/api`,
+    method: 'GET'
+  })
   return data
 }
 
