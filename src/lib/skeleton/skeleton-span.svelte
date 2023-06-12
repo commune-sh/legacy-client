@@ -28,4 +28,9 @@ export let height = '18px';
   }
 }
 
+@media screen and (max-width: 768px) {
+    .span { 
+        height: 10px;
+    }
+}
 </style>

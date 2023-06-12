@@ -79,14 +79,14 @@ function img(i) {
         border: none;
     }
     .title {
-        height: 10px;
+        height: 12px;
     }
     .body {
-        height: 10px;
+        height: 12px;
     }
     .img {
-        height: 50px;
-        width: 50px;
+        height: 65px;
+        width: 65px;
     }
 }
 </style>

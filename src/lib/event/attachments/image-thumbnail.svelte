@@ -45,4 +45,10 @@ function getURL(item) {
     position: relative;
 }
 
+@media screen and (max-width: 768px) {
+    .at-img {
+        height: 65px;
+        width: 65px;
+    }
+}
 </style>
