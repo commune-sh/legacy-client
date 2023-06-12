@@ -44,7 +44,6 @@ export async function APIRequest(r) {
 
 
 export async function loadPosts(opt) {
-  console.log(opt)
 
   const data = await APIRequest(opt)
   return data

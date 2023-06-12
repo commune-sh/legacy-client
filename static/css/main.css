@@ -188,6 +188,69 @@
 }
 
 
+:root.hacker {
+    --bg: #000;
+    --text-1: green;
+    --text-2: #9e9e9e;
+    --text-2: #bababa;
+    --text-light: #a7a7a7;
+    --link: #a53131;
+    --border-color: #191919;
+    --scrollbar-thumb: #282828;
+    --scrollbar-track: #141414;
+
+    --shade-2: #181818;
+    --shade-3: #181818;
+    --shade-4: #333333;
+    --logo-bg: #181818;
+    --primary: #a53131;
+    --secondary: #ff2a2a;
+    --logo-shade-1: #ff2a2a;
+    --logo-shade-2: #000000;
+
+    --button-1: #0a0a0a;
+    --mask: #000000e8;
+    --modal: #141414;
+    --black: black;
+    --white: white;
+    --border-1: #141414;
+    --placeholder-color: #3e3e3e;
+
+    --light: #f7f7f7
+    --svg-fill-1: #e1e1e1;
+    --action-icon: #999;
+
+    --input-border: #000;
+
+    --switcher-item: #181818;
+    --switcher-pill: #a53131;
+
+    --context-menu-bg: black;
+    --context-menu-border: black;
+    --context-menu-text: #e1e1e1;
+
+    --warning: #9a1818;
+
+    --code-block: #0c0c0c;
+    --code-block-border: #0c0c0c;
+    --code-block-scroll: #323232;
+
+    --ev-bb: #141414;
+    --rep-bb: #272727;
+    --event-bg-hover: #0c0c0cb8;
+    --event-highlight: #0c0c0c;
+
+    --avatar-bg: #252424;
+    --event-user: #1a1a1a;
+
+    --just-posted-bg: #3e1919;
+    --reply-gap: #a53131;
+
+    --emoji-picker: #151515;
+    --emoji-list: #151515;
+}
+
+
 
 @font-face {
     font-family: 'Inter';

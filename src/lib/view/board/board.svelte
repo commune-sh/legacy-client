@@ -354,6 +354,7 @@ function updateReplyCount(e) {
     }
 }
 
+$: isProfile = state?.space?.is_profile
 </script>
 
 
@@ -397,13 +398,22 @@ function updateReplyCount(e) {
                     </section>
                 {/if}
 
-                {#if exists && events == null}
+                {#if exists && !isProfile && events?.length == 0}
                     <div class="grd">
                         <div class="grd-c">
                             This {holder} does not have any posts yet.
                         </div>
                     </div>
                 {/if}
+
+                {#if isProfile && events?.length == 0}
+                    <section class="grd">
+                        <section class="grd-c">
+                            {$page.params.space} has not posted yet.
+                        </section>
+                    </section>
+                {/if}
+
 
                 {#if isSpace && !exists}
                     <section class="grd">

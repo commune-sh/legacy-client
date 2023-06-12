@@ -84,9 +84,15 @@ $: space_room_id = state?.room_id
 
 $: isSpaceRoom = room_id === space_room_id
 
+$: isProfile = state?.space?.is_profile 
+
+$: ownProfile = isProfile && state?.owner === $store?.credentials?.matrix_user_id
+
 $: joinedRoom = $store?.rooms?.includes(room_id)
 $: joinedSpace = $store?.spaces.find(x => x?.room_id === space_room_id) != null 
 $: joined = joinedSpace && joinedRoom
+
+$: following = isProfile && !ownProfile && joinedRoom
 //$: spaceRoomJoined = $store?.rooms?.includes(space_room_id)
 
 $: menuToggled = $store?.menuToggled
@@ -134,6 +140,11 @@ $: isMobile = window.innerWidth <= 768
 
 $: pinned_events = selected?.pinned_events
 
+
+$: normalText = isProfile ? 'Follow' : 'Join'
+$: busyText = isProfile ? 'Following' : 'Joining'
+
+$: buttonText = busy ? busyText : normalText
 
 </script>
 
@@ -186,19 +197,15 @@ $: pinned_events = selected?.pinned_events
             <div class="fl-o"></div>
             <div class="grd-c">
                 {#if authenticated && space}
-                    {#if joined}
+                    {#if (joined && !isProfile) || ownProfile}
                         {#if !editing}
                         <button class="light" on:click={newPost}>New Post</button>
                         {/if}
-                    {:else}
+                    {:else if !following}
                         <button class="light" 
                             disabled={busy}
                             on:click={join}>
-                            {#if busy}
-                                Joining...
-                            {:else}
-                                Join
-                            {/if}
+                            {buttonText}
                         </button>
                     {/if}
                 {/if}

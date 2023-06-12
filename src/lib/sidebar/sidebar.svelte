@@ -27,7 +27,7 @@ function buildItems(state) {
     }
     let items = [
         {
-            alias: `general`,
+            alias: state?.space?.is_profile ? `${$page.params.space}`:`general`,
             avatar: state?.space?.avatar,
             header: state?.space?.header,
             name: state?.space?.name,

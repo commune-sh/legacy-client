@@ -46,7 +46,6 @@ $: r = $page.params.reply ? $page.params.reply : $page.params.post
 let route = null;
 
 $: if($page.route != route) {
-    console.log("route changed", $page.route, route)
     ready = false
     fetchReplies()
 }
