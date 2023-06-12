@@ -313,25 +313,26 @@ $: isReply = $page.params.reply !== undefined && $page.params.reply !== null && 
 $: selectedPost = (!isReply && isPost) ? events?.find(e => e.slug ==
     $page.params.post) : null
 
-$: if(!selectedPost && isPost) {
-    if($page.params.reply) {
-        fetchPost($page.params.reply)
-    } else {
-        fetchPost()
-    }
+let postFetched = false;
+let fetchedPost;
+
+$: if(!selectedPost && !postFetched) {
+    postFetched = true
+    fetchPost()
 }
 
-let fetchPost = (reply) => {
+let fetchPost = () => {
     let url = `${PUBLIC_API_URL}/event/${$page.params.post}`
-    if(reply) {
-        url = `${PUBLIC_API_URL}/event/${reply}`
+    if($page.params.reply) {
+        url = `${PUBLIC_API_URL}/event/${$page.params.reply}`
     }
+
     APIRequest({
         url: url,
         method: 'GET',
     }).then((res) => {
         if(res && res?.event) {
-                selectedPost = res.event
+            fetchedPost = res.event
         }
     });
 }
@@ -439,7 +440,7 @@ $: isProfile = state?.space?.is_profile
     {#if isPost}
         <Post on:update-reactions={updateReactions} 
             on:reply-saved={updateReplyCount}
-            post={selectedPost} />
+            post={selectedPost || fetchedPost} />
     {/if}
 
 </section>
