@@ -3,7 +3,7 @@ import Event from '$lib/event/event.svelte'
 import Header from '$lib/header/post-header.svelte'
 import { onMount, createEventDispatcher } from 'svelte';
 import { store } from '$lib/store/store.js'
-import { APIRequest } from '$lib/utils/request.js'
+import { APIRequest, loadPostWithReplies } from '$lib/utils/request.js'
 import { nestEvents } from '$lib/utils/events.js'
 import { PUBLIC_API_URL } from '$env/static/public';
 import { page } from '$app/stores';
@@ -47,29 +47,31 @@ let route = null;
 
 $: if($page.route != route) {
     ready = false
-    fetchReplies()
+    fetchPost()
 }
 
-function fetchReplies() {
-    APIRequest({
-      url: `${PUBLIC_API_URL}/event/${r}/replies`,
+async function fetchPost() {
+    let opt = {
+      url: `${PUBLIC_API_URL}/event/${r}?replies=true`,
       method: 'GET',
-    })
-    .then(resp => {
-        if(resp) {
-            data = resp
-            if(resp?.replies) {
-                let r = isReply ? $page.params.reply : $page.params.post
-                    console.log("what is r", r)
-                store.addEventReplies(r, resp.replies)
-            }
-            route = $page.route
-            ready = true
+    }
+
+    const resp = await loadPostWithReplies(opt)
+    console.log(resp)
+
+    if(resp) {
+        post = resp.event
+        data = resp
+        if(resp?.replies) {
+            let r = isReply ? $page.params.reply : $page.params.post
+            store.addEventReplies(r, resp.replies)
         }
-        if(!resp) {
-            down = true
-        }
-    })
+        route = $page.route
+        ready = true
+    }
+    if(!resp) {
+        down = true
+    }
 
 }
 
@@ -229,7 +231,9 @@ function setReplyThread(e) {
 
         <div class="norep pa3 fl">
             <div class="rco grd-c">
-                {#if post}
+                {#if !ready}
+                    <SkeletonSpan />
+                {:else if post}
                     {#if post.reply_count > 0}
                         {post.reply_count} {post.reply_count == 1 ? 'reply' : 'replies'}
                     {:else}

@@ -310,32 +310,6 @@ function postSaved(e) {
 
 $: isReply = $page.params.reply !== undefined && $page.params.reply !== null && $page.params.reply !== ''
 
-$: selectedPost = (!isReply && isPost) ? events?.find(e => e.slug ==
-    $page.params.post) : null
-
-let postFetched = false;
-let fetchedPost;
-
-$: if(!selectedPost && !postFetched) {
-    postFetched = true
-    fetchPost()
-}
-
-let fetchPost = () => {
-    let url = `${PUBLIC_API_URL}/event/${$page.params.post}`
-    if($page.params.reply) {
-        url = `${PUBLIC_API_URL}/event/${$page.params.reply}`
-    }
-
-    APIRequest({
-        url: url,
-        method: 'GET',
-    }).then((res) => {
-        if(res && res?.event) {
-            fetchedPost = res.event
-        }
-    });
-}
 
 $: holder = isTopic ? 'topic' : 'space'
 
@@ -439,8 +413,7 @@ $: isProfile = state?.space?.is_profile
 
     {#if isPost}
         <Post on:update-reactions={updateReactions} 
-            on:reply-saved={updateReplyCount}
-            post={selectedPost || fetchedPost} />
+        on:reply-saved={updateReplyCount} />
     {/if}
 
 </section>

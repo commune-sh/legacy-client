@@ -44,7 +44,11 @@ export async function APIRequest(r) {
 
 
 export async function loadPosts(opt) {
+  const data = await APIRequest(opt)
+  return data
+}
 
+export async function loadPostWithReplies(opt) {
   const data = await APIRequest(opt)
   return data
 }
