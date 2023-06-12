@@ -1,6 +1,6 @@
 <script>
 import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
-import { APIRequest } from '$lib/utils/request.js'
+import { APIRequest, loadPosts } from '$lib/utils/request.js'
 import { onMount, tick, createEventDispatcher } from 'svelte'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
@@ -95,12 +95,11 @@ $: events = data?.events
 //$: sorted = events?.sort((a, b) => b.origin_server_ts - a.origin_server_ts);
 
 
-function loadEvents(init) {
+async function loadEvents() {
 
     const token = localStorage.getItem('access_token')
 
     let url = `${PUBLIC_API_URL}/events/`
-
 
     let space = $page.params.space
     let isSpace = space && space !== 'undefined' && space?.length > 0
@@ -125,39 +124,28 @@ function loadEvents(init) {
 
     if(token && !isSpace && !isRoom) {
         opt.url = `${PUBLIC_API_URL}/feed`
-        opt.token = token
     }
 
-    APIRequest(opt)
-    .then(resp => {
-        if(resp) {
-            data = resp
-                console.log(data)
+    const resp = await loadPosts(opt)
+    if(resp) {
+        data = resp
+        console.log(data)
 
-                /*
-            if(!events) {
-                store.addRoomEvents(roomID, resp.events)
-            } else {
-                store.updateRoomEvents(roomID, resp.events)
-            }
-                */
-                //store.addRoomEvents(roomID, resp.events)
-
-            if($page?.url?.pathname != lastPath) {
-                lastPath = $page?.url?.pathname
-            }
-
-            lastSpace = $page?.params?.space
-            lastRoom = $page?.params?.room
-            lastTopic = $page?.params?.topic
-            loaded = true
-            reloading = false
+        if($page?.url?.pathname != lastPath) {
+            lastPath = $page?.url?.pathname
         }
 
-        if(!resp) {
-            down = true
-        }
-    })
+        lastSpace = $page?.params?.space
+        lastRoom = $page?.params?.room
+        lastTopic = $page?.params?.topic
+        loaded = true
+        reloading = false
+    }
+
+    if(!resp) {
+        down = true
+    }
+
 }
 
 let down = false;

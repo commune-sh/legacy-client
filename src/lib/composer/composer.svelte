@@ -258,7 +258,7 @@ function focusOnTitle(e) {
 let busy = false;
 let uploading = false;
 
-$: postText = uploading ? 'Uploading...' : busy ? 'Posting...' : 'Post'
+$: postText = uploading ? 'Uploading...' : busy ? 'Saving...' : 'Save'
 
 
 async function createPost() {
@@ -371,7 +371,8 @@ function handleEnter(e) {
 
 let bodyInput;
 
-function focusBodyInput() {
+async function focusBodyInput() {
+    await tick()
     bodyInput.focus()
     updateContent()
 }
@@ -514,6 +515,9 @@ let previewing = false;
 
 function togglePreview() {
     previewing = !previewing
+    if(!previewing) {
+        focusBodyInput()
+    }
 }
 
 </script>
@@ -561,6 +565,7 @@ function togglePreview() {
             on:click={focusBodyInput}>
                 <textarea 
                     class="post-body"
+                    class:vis={previewing}
                     class:sh={reply}
                     bind:this={bodyInput}
                     placeholder={placeholder}
@@ -575,6 +580,14 @@ function togglePreview() {
                     on:blur={handleBodyBlur}
                     disabled={busy}
                 ></textarea>
+
+            {#if previewing}
+                <div class="preview">
+                    <div class="markdown-c">
+                        {@html md.render(bodyInput.value)}
+                    </div>
+                </div>
+            {/if}
         </div>
     </div>
 
@@ -595,13 +608,8 @@ function togglePreview() {
                 {@html eye}
             </div>
         </div>
-        <button class="vb" disabled={busy} on:click={createPost}>
-            <div class="ico-s">
-                {@html send}
-            </div>
-            <div class="grd-c ph2">
-                {postText}
-            </div>
+        <button class="ph3" disabled={busy} on:click={createPost}>
+            {postText}
         </button>
 
     </div>
@@ -685,6 +693,28 @@ function togglePreview() {
     padding-right: 1.5rem;
     cursor: text;
     min-height: 140px;
+    position: relative;
+}
+
+.preview {
+    margin-left: 1rem;
+    margin-right: 1.5rem;
+
+    font-size: 16px;
+    background-color: var(--bg);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    cursor: auto;
+}
+
+.markdown-c {
+    padding-right: 1rem;
+    overflow-y: auto;
+    height: 100%;
 }
 
 .post-body {
@@ -724,7 +754,7 @@ function togglePreview() {
 }
 
 button {
-    padding: 0.25rem;
+    padding: 0.25rem 0.5rem;
 }
 .prev {
     opacity: 0.4;
@@ -741,7 +771,16 @@ button {
     display: none;
 }
 
+.vis {
+    visibility: hidden;
+}
+
 * {
     font-family: "Inter", "Twemoji", "Apple Color Emoji", "Segoe UI Emoji", "Arial", "Helvetica", sans-serif, "STIXGeneral", "Noto Color Emoji";
+}
+
+:global(p) {
+    margin-block-start: 0;
+    margin-block-end: 0;
 }
 </style>

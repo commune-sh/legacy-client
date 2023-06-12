@@ -1,4 +1,5 @@
 import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
+import { page } from '$app/stores';
 
 export async function APIRequest(r) {
   try {
@@ -40,6 +41,15 @@ export async function APIRequest(r) {
     console.error('Error:', error.eessage);
   }
 }
+
+
+export async function loadPosts(opt) {
+  console.log(opt)
+
+  const data = await APIRequest(opt)
+  return data
+}
+
 
 export async function getPresignedURL(extension) {
     let headers = { 
