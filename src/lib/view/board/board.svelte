@@ -351,6 +351,15 @@ function updateReactions(e) {
     }
 }
 
+function updateReplyCount(e) {
+    console.log("updating deply count", e.detail)
+    let index = data.events.findIndex((event) => event.event_id == e.detail)
+    if(index > -1) {
+        let count = data.events[index].reply_count
+        data.events[index].content.reactions = count + 1
+    }
+}
+
 </script>
 
 
@@ -425,6 +434,7 @@ function updateReactions(e) {
 
     {#if isPost}
         <Post on:update-reactions={updateReactions} 
+            on:reply-saved={updateReplyCount}
             post={selectedPost} />
     {/if}
 

@@ -82,7 +82,7 @@ $: items = buildItems(state)
 .sidebar {
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: [search] 48px [content] auto [user] 64px;
+    grid-template-rows: [search] 48px [content] 1fr [user] auto;
     border-right: 1px solid var(--border-1);
     background-color: var(--bg);
     overflow: hidden;

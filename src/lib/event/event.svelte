@@ -266,7 +266,7 @@ $: showRoomAlias = !isSpace && !isRoom && !isReply && !isTopic && !isPost
 
         <div class="fl ph3 pt2">
 
-            {#if !isReply}
+            {#if !isReply && event?.reply_count > 0}
                     <div class="mr2">
                         <Replies count={event?.reply_count} />
                     </div>

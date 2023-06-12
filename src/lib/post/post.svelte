@@ -1,7 +1,7 @@
 <script>
 import Event from '$lib/event/event.svelte'
 import Header from '$lib/header/post-header.svelte'
-import { onMount } from 'svelte';
+import { onMount, createEventDispatcher } from 'svelte';
 import { store } from '$lib/store/store.js'
 import { APIRequest } from '$lib/utils/request.js'
 import { nestEvents } from '$lib/utils/events.js'
@@ -10,6 +10,8 @@ import { page } from '$app/stores';
 import SkeletonBoardEvents from '$lib/skeleton/skeleton-board-events.svelte'
 import SkeletonBoardEvent from '$lib/skeleton/skeleton-board-event.svelte'
 import SkeletonSpan from '$lib/skeleton/skeleton-span.svelte'
+
+const dispatch = createEventDispatcher();
 
 $: authenticated = $store?.authenticated && 
     $store?.credentials != null
@@ -91,7 +93,6 @@ function insertReply(children, newReply) {
       if (!reply.children) {
         reply.children = [];
       }
-            console.log("found parent reply", reply)
       reply.children.push(newReply);
       return;
     }
@@ -106,6 +107,7 @@ function replySaved(e) {
     let reply = e.detail
 
     reply.just_posted = true
+    dispatch('reply-saved', post.event_id)
 
 
     if(data?.replies?.length > 0) {
@@ -134,6 +136,7 @@ function replySaved(e) {
         data.replies = [reply, ...data.replies];
         post.reply_count += 1
     }
+
 }
 
 let reply_count = post?.reply_count || 0
