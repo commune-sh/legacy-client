@@ -113,7 +113,7 @@ async function redact(key) {
 </script>
 
 {#if processed?.length > 0}
-<div class="reactions fl">
+    <div class="reactions fl" class:mt2={isReply}>
         {#each processed as reaction}
             <Reaction 
                 isReply={isReply} 

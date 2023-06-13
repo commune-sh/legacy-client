@@ -1,6 +1,6 @@
 <script>
 export let width = '100%';
-export let height = '18px';
+export let height = '14px';
 </script>
 
 <div class="span sklt" style="width:{width};height:{height}"></div>

@@ -230,7 +230,7 @@ function setReplyThread(e) {
         </div>
 
 
-        <div class="norep pa3 fl">
+        <div class="norep ph3 pv2 fl">
             <div class="rco grd-c">
                 {#if !ready}
                     <SkeletonSpan />

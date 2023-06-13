@@ -345,7 +345,7 @@ function finishedEditing(e) {
 
     <div class="ev-c fl-co">
 
-        <div class="ph3 fl mb2">
+        <div class="ph3 fl mb2 pb1">
             <User hideAvatar={true} user={user} op={op}/>
             <div class="sm ph1"></div>
             <Date date={event?.origin_server_ts} />
@@ -374,7 +374,7 @@ function finishedEditing(e) {
 
                 {#if isPost}
                     {#if !isSingleReply}
-                    <div class="post-title ph3 mb2">
+                    <div class="post-title ph3 mb1">
                         {title}
                     </div>
                     {/if}
@@ -389,7 +389,7 @@ function finishedEditing(e) {
                         {@html content}
                     </div>
                 {:else}
-                    <div class="post-title ph3 mb2">
+                    <div class="post-title ph3 mb1">
                         <b>{title}</b>
                     </div>
                     <div class="post-body clipped ph3 ">
@@ -405,7 +405,7 @@ function finishedEditing(e) {
 
 
 
-            <div class="rec-a fl ph3 mt2">
+            <div class="rec-a fl ph3">
 
                 {#if !isReply}
                         <div class="mr2">
@@ -557,6 +557,7 @@ function finishedEditing(e) {
     text-overflow: ellipsis;
     white-space: nowrap;
     word-break: break-word;
+    margin-bottom: 0.5rem;
 }
 .clipped p {
     margin-block-start: 0;
@@ -595,7 +596,6 @@ function finishedEditing(e) {
     .event {
     }
     .post-body {
-        padding-bottom: 0.25rem;
     }
 }
 </style>
