@@ -332,6 +332,10 @@ function updateReplyCount(e) {
 }
 
 $: isProfile = state?.space?.is_profile
+
+
+$: noEvents = events?.length == 0 || events == null
+
 </script>
 
 
@@ -375,7 +379,7 @@ $: isProfile = state?.space?.is_profile
                     </section>
                 {/if}
 
-                {#if exists && !isProfile && events?.length == 0}
+                {#if exists && !isProfile && noEvents}
                     <div class="grd">
                         <div class="grd-c">
                             This {holder} does not have any posts yet.
@@ -383,7 +387,7 @@ $: isProfile = state?.space?.is_profile
                     </div>
                 {/if}
 
-                {#if isProfile && events?.length == 0}
+                {#if isProfile && noEvents}
                     <section class="grd">
                         <section class="grd-c">
                             {$page.params.space} has not posted yet.
