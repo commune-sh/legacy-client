@@ -8,7 +8,7 @@ export let count;
         <div class="ico">
             {@html replies}
         </div>
-        {#if count > 1}
+        {#if count > 0}
         <div class="ml1">{count}</div>
         {/if}
     </div>

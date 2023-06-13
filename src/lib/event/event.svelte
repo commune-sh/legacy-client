@@ -412,7 +412,7 @@ $: showRoomAlias = !isSpace && !isRoom && !isReply && !isTopic && !isPost
 .clipped {
     font-size: 14px!important;
     font-weight: 500;
-    height: 30px;
+    height: 24px;
     line-height: 30px!important;
     overflow: hidden;
     text-overflow: ellipsis;
