@@ -782,6 +782,4 @@ button {
     font-family: "Inter", "Twemoji", "Apple Color Emoji", "Segoe UI Emoji", "Arial", "Helvetica", sans-serif, "STIXGeneral", "Noto Color Emoji";
 }
 
-:global(p) {
-}
 </style>

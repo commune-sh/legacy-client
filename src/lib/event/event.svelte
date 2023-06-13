@@ -343,12 +343,12 @@ function editEvent() {
 
             {#if isPost}
                 {#if !isSingleReply}
-                <div class="post-title pb3 ph3">
+                <div class="post-title pb2 ph3">
                     {title}
                 </div>
                 {/if}
 
-                <div class="post-body ph3">
+                <div class="post-body ph3 pb2">
                     {@html content}
                 </div>
             {:else if isReply}
@@ -361,7 +361,7 @@ function editEvent() {
                 <div class="post-title-default ph3">
                     <b>{title}</b>
                 </div>
-                <div class="post-body clipped ph3">
+                <div class="post-body clipped ph3 pb2">
                     {@html clipped}
                 </div>
             {/if}
@@ -443,8 +443,8 @@ function editEvent() {
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: auto;
-    padding-bottom: 0.5rem;
-    padding-top: 0.5rem;
+    padding-bottom: 0.75rem;
+    padding-top: 0.75rem;
     border-bottom: 1px solid var(--ev-bb);
     overflow: hidden;
     position: relative;
@@ -509,14 +509,8 @@ function editEvent() {
 }
 
 .post-body {
-    padding-bottom: 0.5rem;
 }
 
-:global(.post-body p:first-of-type){
-}
-
-:global(.post-body p:last-of-type){
-}
 
 .clipped {
     font-weight: 500;
@@ -539,6 +533,17 @@ function editEvent() {
     animation-duration: 6s;
 }
 
+:global(p) {
+}
+
+:global(p:first-of-type){
+    margin-block-start: 0;
+}
+
+:global(p:last-of-type){
+    margin-block-end: 0;
+}
+
 @keyframes fadeOut {
   from {
     background-color: var(--just-posted-bg);
@@ -552,9 +557,11 @@ function editEvent() {
 @media screen and (max-width: 768px) {
     .event {
         border: none;
+        padding-bottom: 0.5rem;
+        padding-top: 0.5rem;
     }
     .post-body {
-        padding-bottom: 0.5rem;
+        padding-bottom: 0rem;
     }
 }
 </style>
