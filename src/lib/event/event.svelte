@@ -225,6 +225,11 @@ $: showRoomAlias = !isSpace && !isRoom && !isReply && !isTopic && !isPost
                 <User hideAvatar={true} user={user} op={op}/>
                 <div class="sm ph1"></div>
                 <Date date={event?.origin_server_ts} />
+                {#if showRoomAlias}
+                    <div class="href sm ml2">
+                        <a href={`/${event.room_alias}`}>{event.room_alias}</a>
+                    </div>
+                {/if}
             </div>
 
             {#if isPost}
@@ -250,11 +255,6 @@ $: showRoomAlias = !isSpace && !isRoom && !isReply && !isTopic && !isPost
                 <div class="post-body clipped ph3">
                     {@html clipped}
                 </div>
-                {#if showRoomAlias}
-                    <div class="href sm ml3 pt2">
-                        <a href={`/${event.room_alias}`}>{event.room_alias}</a>
-                    </div>
-                {/if}
             {/if}
 
             {#if (isPost || isReply) && hasAttachments && images}

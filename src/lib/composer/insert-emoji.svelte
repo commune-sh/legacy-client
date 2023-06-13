@@ -46,5 +46,6 @@ $: if(emojiSelected) {
 .c-ico {
     height: 24px;
     width: 24px;
+    filter: grayscale(1);
 }
 </style>

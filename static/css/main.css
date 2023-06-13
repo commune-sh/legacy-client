@@ -238,7 +238,6 @@ a, a:link, a:visited, a:active {
 }
 
 a:hover {
-    text-decoration: underline;
 }
 
 .href {
@@ -247,7 +246,6 @@ a:hover {
 }
 
 .href:hover {
-    text-decoration: underline;
 }
 
 * {
