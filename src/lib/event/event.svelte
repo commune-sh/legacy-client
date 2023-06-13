@@ -405,7 +405,7 @@ function finishedEditing(e) {
 
 
 
-            <div class="rec-a fl ph3">
+            <div class="rec-a fl ph3 mt2">
 
                 {#if !isReply}
                         <div class="mr2">

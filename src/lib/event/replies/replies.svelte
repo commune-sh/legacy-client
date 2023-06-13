@@ -24,7 +24,6 @@ export let count;
     border-radius: 5px;
     padding-left: 0.25rem;
     padding-right: 0.25rem;
-    margin-top: 0.5rem;
     padding-bottom: 0;
     height: 20px;
 }
