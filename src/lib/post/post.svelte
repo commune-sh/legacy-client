@@ -326,7 +326,6 @@ function setReplyThread(e) {
         position: static;
     }
     .norep {
-        border-top: 1px solid var(--border-1);
         padding-top: 0.5rem;
         padding-bottom: 0.5rem;
     }

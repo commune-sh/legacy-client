@@ -41,7 +41,6 @@ export let count;
 
 @media screen and (max-width: 768px) {
     .rep {
-        margin-top: 0.25rem;
     }
 }
 </style>

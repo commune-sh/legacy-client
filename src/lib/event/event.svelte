@@ -350,7 +350,7 @@ function finishedEditing(e) {
             <div class="sm ph1"></div>
             <Date date={event?.origin_server_ts} />
             {#if showRoomAlias}
-                <div class="href sm ml2">
+                <div class="sm ml2">
                     <a href={`/${event.room_alias}`}>{event.room_alias}</a>
                 </div>
             {/if}
@@ -374,12 +374,12 @@ function finishedEditing(e) {
 
                 {#if isPost}
                     {#if !isSingleReply}
-                    <div class="post-title pb2 ph3">
+                    <div class="post-title ph3 mb2">
                         {title}
                     </div>
                     {/if}
 
-                    <div class="post-body ph3 pb2">
+                    <div class="post-body ph3 mb2">
                         {@html content}
                     </div>
                 {:else if isReply}
@@ -389,10 +389,10 @@ function finishedEditing(e) {
                         {@html content}
                     </div>
                 {:else}
-                    <div class="post-title-default ph3">
+                    <div class="post-title ph3 mb2">
                         <b>{title}</b>
                     </div>
-                    <div class="post-body clipped ph3 pb2">
+                    <div class="post-body clipped ph3 ">
                         {@html clipped}
                     </div>
                 {/if}
@@ -407,7 +407,7 @@ function finishedEditing(e) {
 
             <div class="rec-a fl ph3">
 
-                {#if !isReply && event?.reply_count > 0}
+                {#if !isReply}
                         <div class="mr2">
                             <Replies count={event?.reply_count} />
                         </div>
@@ -551,8 +551,8 @@ function finishedEditing(e) {
 
 .clipped {
     font-weight: 500;
-    height: 24px;
-    line-height: 30px!important;
+    height: 22px;
+    line-height: 22px!important;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -593,12 +593,9 @@ function finishedEditing(e) {
 
 @media screen and (max-width: 768px) {
     .event {
-        border: none;
-        padding-bottom: 0.5rem;
-        padding-top: 0.5rem;
     }
     .post-body {
-        padding-bottom: 0rem;
+        padding-bottom: 0.25rem;
     }
 }
 </style>
