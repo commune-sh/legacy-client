@@ -15,6 +15,8 @@ import MarkdownIt from 'markdown-it'
 import MarkdownItEmoji from 'markdown-it-emoji'
 import MarkdownItLinkAttributes from 'markdown-it-link-attributes'
 
+import Composer from '$lib/composer/composer.svelte'
+
 const dispatch = createEventDispatcher()
 
 export let isPost = false;
@@ -96,7 +98,7 @@ $: link = buildLink(event, $page)
 function goToEvent() {
 
 
-    if(isPost || isReply || toolsActive) {
+    if(isPost || isReply || toolsActive || editing) {
         return
     }
 
@@ -111,6 +113,9 @@ function getFirstParagraphNode(content) {
   const firstParagraphNode = tempDiv.querySelector('p');
   return firstParagraphNode?.innerHTML || null;
 }
+
+$: edited = event?.content?.['m.new_content']?.body !== undefined &&
+        event?.content?.['m.new_content']?.title !== undefined
 
 $: formatted_body = md.render(event?.content?.body)
 
@@ -311,6 +316,16 @@ let editing = false;
 function editEvent() {
     editing = true
 }
+function stopEditing() {
+    setTimeout(() => {
+        editing = false
+    }, 10)
+}
+function finishedEditing(e) {
+    event.content.title = e.detail.content.title
+    event.content.body = e.detail.content.body
+    editing = false
+}
 
 </script>
 
@@ -327,43 +342,61 @@ function editEvent() {
     class:highlight={highlight} role="button">
 
 
+
     <div class="ev-c fl-co">
+
+        <div class="ph3 fl mb2">
+            <User hideAvatar={true} user={user} op={op}/>
+            <div class="sm ph1"></div>
+            <Date date={event?.origin_server_ts} />
+            {#if showRoomAlias}
+                <div class="href sm ml2">
+                    <a href={`/${event.room_alias}`}>{event.room_alias}</a>
+                </div>
+            {/if}
+        </div>
+
+
+
         <div class="body">
 
-            <div class="ph3 fl mb2">
-                <User hideAvatar={true} user={user} op={op}/>
-                <div class="sm ph1"></div>
-                <Date date={event?.origin_server_ts} />
-                {#if showRoomAlias}
-                    <div class="href sm ml2">
-                        <a href={`/${event.room_alias}`}>{event.room_alias}</a>
+            {#if editing}
+
+                <Composer 
+                editing={true}
+                    roomID={event.room_id}
+                    editingEvent={event} 
+                    editingReply={isReply}
+                    on:saved={finishedEditing}
+                    on:kill={stopEditing}/>
+
+            {:else}
+
+                {#if isPost}
+                    {#if !isSingleReply}
+                    <div class="post-title pb2 ph3">
+                        {title}
+                    </div>
+                    {/if}
+
+                    <div class="post-body ph3 pb2">
+                        {@html content}
+                    </div>
+                {:else if isReply}
+
+
+                    <div class="post-body ph3">
+                        {@html content}
+                    </div>
+                {:else}
+                    <div class="post-title-default ph3">
+                        <b>{title}</b>
+                    </div>
+                    <div class="post-body clipped ph3 pb2">
+                        {@html clipped}
                     </div>
                 {/if}
-            </div>
 
-            {#if isPost}
-                {#if !isSingleReply}
-                <div class="post-title pb2 ph3">
-                    {title}
-                </div>
-                {/if}
-
-                <div class="post-body ph3 pb2">
-                    {@html content}
-                </div>
-            {:else if isReply}
-
-
-                <div class="post-body ph3">
-                    {@html content}
-                </div>
-            {:else}
-                <div class="post-title-default ph3">
-                    <b>{title}</b>
-                </div>
-                <div class="post-body clipped ph3 pb2">
-                    {@html clipped}
-                </div>
             {/if}
 
             {#if (isPost || isReply) && hasAttachments && images}
@@ -371,33 +404,37 @@ function editEvent() {
             {/if}
 
 
+
+            <div class="rec-a fl ph3">
+
+                {#if !isReply && event?.reply_count > 0}
+                        <div class="mr2">
+                            <Replies count={event?.reply_count} />
+                        </div>
+                {/if}
+
+
+                    <Reactions 
+                        on:update-reactions
+                        bind:this={reactions}
+                        on:react={reactToKey}
+                        event={event} 
+                        isReply={isReply}
+                        on:active={activateTools} 
+                    hovered={displayTools}/>
+
+                <div class="fl-o"></div>
+
+            </div>
+
+
         </div>
 
-        <div class="rec-a fl ph3">
 
-            {#if !isReply && event?.reply_count > 0}
-                    <div class="mr2">
-                        <Replies count={event?.reply_count} />
-                    </div>
-            {/if}
-
-
-                <Reactions 
-                    on:update-reactions
-                    bind:this={reactions}
-                    on:react={reactToKey}
-                    event={event} 
-                    isReply={isReply}
-                    on:active={activateTools} 
-                hovered={displayTools}/>
-
-            <div class="fl-o"></div>
-
-        </div>
 
     </div>
 
-    {#if !isPost && !isReply && hasAttachments && images}
+    {#if !isPost && !isReply && hasAttachments && images && !editing}
         <ImageThumbnail images={images} />
     {/if}
 

@@ -26,6 +26,10 @@ export let threadEvent;
 export let reply = false;
 export let topic;
 
+export let editing;
+export let editingEvent;
+export let editingReply;
+
 $: stateKey = !reply ? roomID : roomID + threadEvent
 
 $: state = $store.editorStates[stateKey]
@@ -48,7 +52,15 @@ let md;
 
 onMount(() => {
 
-    if(state) {
+    if(editing && editingEvent) {
+        bodyInput.value = editingEvent?.content?.body
+        titleInput.value = editingEvent?.content?.title
+        autosize(titleInput)
+        autosize(bodyInput)
+        focusBodyInput()
+    }
+
+    if(state && !editing) {
         if(state?.title) {
             titleInput.value = state?.title
         }
@@ -72,7 +84,7 @@ onMount(() => {
         }
     }
 
-    if(!state) {
+    if(!state && !editing) {
         store.addEditorState({
             room_id: stateKey,
             state: {
@@ -265,7 +277,7 @@ $: postText = uploading ? 'Uploading...' : busy ? 'Saving...' : 'Save'
 
 
 async function createPost() {
-    if(titleInput.value.length === 0 && !reply) {
+    if(titleInput.value.length === 0 && !reply && !editingReply) {
         focusTitleInput()
         return
     }
@@ -326,10 +338,24 @@ async function createPost() {
             }
         }
 
+        if(editing) {
+            post.editing = true
+            post.content['m.new_content'] = {
+                msgtype: 'm.text',
+                title: titleInput.value,
+                body: bodyInput.value,
+            }
+            post.content['m.relates_to'] = {
+                event_id: editingEvent.event_id,
+                'rel_type': 'm.replace',
+            }
+        }
+
         if(attachments && items.length > 0) {
             post.content.attachments = items
         }
 
+        console.log("trying to save", post)
 
         const res = await savePost(post);
         console.log(res)
@@ -338,6 +364,7 @@ async function createPost() {
             busy = false
             kill()
         }
+
     } catch (error) {
         console.error('Error:', error);
     }
@@ -402,6 +429,10 @@ const handleBodyBlur = () => {
 };
 
 function updateContent() {
+    if(editing) {
+        return
+    }
+
     let state = {
         title: titleInput.value || '',
         body: bodyInput.value,
@@ -541,7 +572,7 @@ function togglePreview() {
     {/if}
 
     <div class="editor-area">
-        <div class="title-container" class:hide={reply}>
+        <div class="title-container" class:hide={reply || editingReply}>
             <div class="">
                 <textarea 
                     class="post-title"
