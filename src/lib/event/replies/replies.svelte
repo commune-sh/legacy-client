@@ -24,7 +24,7 @@ export let count;
     border-radius: 5px;
     padding-left: 0.25rem;
     padding-right: 0.25rem;
-    padding-top: 0;
+    margin-top: 0.5rem;
     padding-bottom: 0;
     height: 20px;
 }
@@ -39,4 +39,9 @@ export let count;
     opacity: 0.6;
 }
 
+@media screen and (max-width: 768px) {
+    .rep {
+        margin-top: 0.25rem;
+    }
+}
 </style>

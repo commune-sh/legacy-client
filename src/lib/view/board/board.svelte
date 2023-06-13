@@ -317,7 +317,8 @@ $: holder = isTopic ? 'topic' : 'space'
 function updateReactions(e) {
     let index = data.events.findIndex((event) => event.event_id == e.detail.event_id)
     if(index > -1) {
-        data.events[index].content.reactions = e.detail.reactions
+        console.log("updating reactions", e.detail)
+        data.events[index].reactions = e.detail.reactions
     }
 }
 

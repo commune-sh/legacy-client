@@ -1,5 +1,5 @@
 <script>
-import { reply, external } from '$lib/assets/icons.js'
+import { reply, external, edit } from '$lib/assets/icons.js'
 import Menu from './menu.svelte'
 import React from './react.svelte'
 import { createEventDispatcher } from 'svelte'
@@ -13,6 +13,7 @@ export let active;
 export let event;
 
 export let isReply;
+export let isAuthor;
 
 function kill() {
     dispatch('kill')
@@ -20,6 +21,10 @@ function kill() {
 
 function replyToEvent() {
     dispatch('reply')
+}
+
+function editEvent() {
+    dispatch('edit')
 }
 
 
@@ -47,11 +52,19 @@ function goToEvent() {
     </div>
 
     {#if isReply}
-    <div class="icon grd-c c-ico" 
-        on:click|stopPropagation={goToEvent}>
-        {@html external}
-    </div>
+        <div class="icon grd-c c-ico" 
+            on:click|stopPropagation={goToEvent}>
+            {@html external}
+        </div>
     {/if}
+
+    {#if isAuthor}
+        <div class="icon grd-c c-ico" 
+            on:click|stopPropagation={editEvent}>
+            {@html edit}
+        </div>
+    {/if}
+
     <Menu 
         on:active 
         on:kill 

@@ -11,6 +11,10 @@ import User from './user/user.svelte'
 import Date from './date/date.svelte'
 import Tools from './tools/tools.svelte'
 
+import MarkdownIt from 'markdown-it'
+import MarkdownItEmoji from 'markdown-it-emoji'
+import MarkdownItLinkAttributes from 'markdown-it-link-attributes'
+
 const dispatch = createEventDispatcher()
 
 export let isPost = false;
@@ -108,7 +112,9 @@ function getFirstParagraphNode(content) {
   return firstParagraphNode?.innerHTML || null;
 }
 
-$: content = event?.content?.formatted_body ? event?.content?.formatted_body :
+$: formatted_body = md.render(event?.content?.body)
+
+$: content = formatted_body ? formatted_body :
     event?.content?.body
 
 
@@ -201,13 +207,118 @@ function reactToKey(e) {
 
 $: showRoomAlias = !isSpace && !isRoom && !isReply && !isTopic && !isPost
 
+let md = new MarkdownIt("zero", {
+  html: true,
+  linkify: true,
+  breaks: true,
+  typographer: true
+});
+
+let enable = ["normalize", "block", "inline", "linkify", "autolink", 'link', 'backticks', 'emphasis', "paragraph", "text", "newline"]
+md.enable(enable)
+
+md.linkify.set({ fuzzyEmail: false })
+
+md.linkify.add('/', {
+    validate: function (text, pos, self) {
+        var tail = text.slice(pos);
+
+        if (!self.re.space) {
+            self.re.space =  new RegExp(
+                '^([a-zA-Z0-9_]){1,15}(?!_)(?=$|' + self.re.src_ZPCc + ')'
+            );
+        }
+        if (self.re.space.test(tail)) {
+            if (pos >= 2 && tail[pos - 2] === '/') {
+                return false;
+            }
+            return tail.match(self.re.space)[0].length;
+        }
+        return 0;
+    },
+
+    normalize: function (match) {
+        match.url = `${PUBLIC_BASE_URL}/` + match.url.replace(/^\//, '');
+    }
+});
+
+
+md.linkify.add('@', {
+    validate: function (text, pos, self) {
+        var tail = text.slice(pos);
+
+        if (!self.re.mention) {
+            self.re.mention =  new RegExp(
+                '^([a-zA-Z0-9_]){1,15}(?!_)(?=$|' + self.re.src_ZPCc + ')'
+            );
+        }
+        if (self.re.mention.test(tail)) {
+            if (pos >= 2 && tail[pos - 2] === '@') {
+                return false;
+            }
+            return tail.match(self.re.mention)[0].length;
+        }
+        return 0;
+    },
+
+    normalize: function (match) {
+        match.url = `${PUBLIC_BASE_URL}/@` + match.url.replace(/^@/, '');
+    }
+});
+
+md.use(MarkdownItEmoji);
+md.use(MarkdownItLinkAttributes, [
+    {
+        matcher(href) {
+            return href.includes('@')
+        },
+        attrs: {
+            class: "mention"
+        },
+    },
+    {
+        matcher(href) {
+            return href.match(/^https?:\/\//);
+        },
+        attrs: {
+            class: "external",
+            target: "_blank",
+            rel: "noopener",
+        },
+    },
+    {
+        matcher(href) {
+            return href.startsWith("/");
+        },
+        attrs: {
+            class: "absolute-link",
+        },
+    },
+    {
+        matcher(href) {
+            return href.startsWith("/blue/");
+        },
+        attrs: {
+            class: "link-that-contains-the-word-blue",
+        },
+    },
+]);
+
+
+$: isAuthor = sender_id === event?.sender?.id
+
+let editing = false;
+function editEvent() {
+    editing = true
+}
+
 </script>
 
 <div class="event" 
     bind:this={el}
     on:mouseover={showTools}
     on:mouseleave={hideTools}
-    class:h={!isReply && !isPost}
+    class:h={!isReply && !isPost && !editing}
     class:ha={!isReply && !isPost && hasAttachments}
     class:ma={toolsActive}
     on:click={goToEvent} 
@@ -216,8 +327,6 @@ $: showRoomAlias = !isSpace && !isRoom && !isReply && !isTopic && !isPost
     class:highlight={highlight} role="button">
 
 
-    {#if isReply}
-    {/if}
     <div class="ev-c fl-co">
         <div class="body">
 
@@ -264,7 +373,7 @@ $: showRoomAlias = !isSpace && !isRoom && !isReply && !isTopic && !isPost
 
         </div>
 
-        <div class="fl ph3">
+        <div class="rec-a fl ph3">
 
             {#if !isReply && event?.reply_count > 0}
                     <div class="mr2">
@@ -292,12 +401,14 @@ $: showRoomAlias = !isSpace && !isRoom && !isReply && !isTopic && !isPost
         <ImageThumbnail images={images} />
     {/if}
 
-        {#if displayTools}
+        {#if displayTools && !editing}
             <div class="tools">
                 <Tools 
                     isReply={isReply} 
                     on:reply={replyToEvent}
                     active={toolsActive}
+                    isAuthor={isAuthor}
+                    on:edit={editEvent}
                     on:set-reply-thread
                     on:react={reactToKey}
                     on:active={activateTools} 
@@ -402,15 +513,12 @@ $: showRoomAlias = !isSpace && !isRoom && !isReply && !isTopic && !isPost
 }
 
 :global(.post-body p:first-of-type){
-    margin-block-start: 0;
 }
 
 :global(.post-body p:last-of-type){
-    margin-block-end: 0;
 }
 
 .clipped {
-    font-size: 14px!important;
     font-weight: 500;
     height: 24px;
     line-height: 30px!important;
@@ -440,9 +548,6 @@ $: showRoomAlias = !isSpace && !isRoom && !isReply && !isTopic && !isPost
   }
 }
 
-
-.isrep {
-}
 
 @media screen and (max-width: 768px) {
     .event {

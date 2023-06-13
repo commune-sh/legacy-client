@@ -309,7 +309,7 @@ async function createPost() {
                 msgtype: 'm.text',
                 title: titleInput.value,
                 body: bodyInput.value,
-                formatted_body: md.render(bodyInput.value),
+                //formatted_body: md.render(bodyInput.value),
             },
         }
 
@@ -783,7 +783,5 @@ button {
 }
 
 :global(p) {
-    margin-block-start: 0;
-    margin-block-end: 0;
 }
 </style>

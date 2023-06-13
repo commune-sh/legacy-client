@@ -137,8 +137,14 @@ async function redact(key) {
 <style>
 .reactions {
     min-height: 22px;
+    padding-top: 0.5rem;
 }
 .re {
     height: 22px;
+}
+@media screen and (max-width: 768px) {
+    .reactions {
+        padding-top: 0.25rem;
+    }
 }
 </style>
