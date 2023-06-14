@@ -326,6 +326,13 @@ function finishedEditing(e) {
     event.content.title = e.detail.content.title
     event.content.body = e.detail.content.body
     editing = false
+    if(isPost) {
+        dispatch('edited', {
+            event_id: event.event_id,
+            title: event.content.title,
+            body: event.content.body
+        })
+    }
 }
 
 

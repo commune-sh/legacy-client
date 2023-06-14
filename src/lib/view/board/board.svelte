@@ -338,6 +338,15 @@ $: noEvents = events?.length == 0 || events == null
 
 $: selectedPost = events?.find(e => e?.slug == $page.params.post)
 
+function postEdited(e) {
+    let index = data.events.findIndex((event) => event.event_id == e.detail.event_id)
+    if(index > -1) {
+        console.log("updating edited content")
+        data.events[index].content.title = e.detail.title
+        data.events[index].content.body = e.detail.body
+    }
+}
+
 </script>
 
 
@@ -421,7 +430,8 @@ $: selectedPost = events?.find(e => e?.slug == $page.params.post)
 
     {#if isPost}
         <Post on:update-reactions={updateReactions} 
-            post={selectedPost}
+        post={selectedPost}
+        on:edited={postEdited}
         on:reply-saved={updateReplyCount} />
     {/if}
 

@@ -49,9 +49,12 @@ let route = null;
 $: routeChanged = route !== $page.route
 
 //$: if((routeChanged || post == null) && r) {
-$: if((routeChanged) && r) {
+$: if((routeChanged && !post) && r) {
+    console.log(post?.event_id)
     post = null
     ready = false
+    fetchPost()
+} else if(routeChanged && post && r) {
     fetchPost()
 }
 
@@ -225,7 +228,12 @@ function setReplyThread(e) {
     <section class="events">
 
         {#if post}
-            <Event on:update-reactions isPost={true} event={post} on:replyTo={replyToEvent}/>
+            <Event 
+                on:update-reactions 
+                on:edited
+                isPost={true} 
+                event={post} 
+                on:replyTo={replyToEvent}/>
         {:else}
             <SkeletonBoardEvent image={false}/>
         {/if}
