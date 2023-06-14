@@ -336,7 +336,7 @@ $: isProfile = state?.space?.is_profile
 
 $: noEvents = events?.length == 0 || events == null
 
-$: selectedPost = events?.find(e => e?.slug == $page.params.post)
+$: selectedPost = isReply ? null : events?.find(e => e?.slug == $page.params.post)
 
 function postEdited(e) {
     let index = data.events.findIndex((event) => event.event_id == e.detail.event_id)
