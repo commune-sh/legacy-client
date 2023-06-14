@@ -1,7 +1,7 @@
 <script>
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
-import { hash, board } from '$lib/assets/icons.js'
+import { discuss, settings } from '$lib/assets/icons.js'
 import { store } from '$lib/store/store.js'
 import TopicItem from './topic-item.svelte'
 
@@ -87,22 +87,36 @@ function logItem(e) {
 $: topics = item?.topics != undefined ? JSON.parse(item?.topics) : null
 
 
+let hovered = false;
+
+function showMenu(e) {
+    e.stopPropagation()
+}
+
 </script>
 
 <div class="item" 
     draggable="true"
     on:click={goToRoom}
     on:contextmenu={logItem}
+    on:mouseover={() => hovered = true}
+    on:mouseleave={() => hovered = false}
     class:active={active}>
 
     <div class="ico grd-c"
         class:inactive={!active}>
-        {@html hash}
+        {@html discuss}
     </div>
 
-    <div class="sl">
+    <div class="sl pr2">
         {item?.alias}
     </div>
+
+    {#if hovered}
+        <div class="ico-s grd-c ph2 set" on:click={showMenu}>
+        {@html settings}
+    </div>
+    {/if}
 </div>
 
 {#if topics?.length > 0 && selected}
@@ -118,7 +132,7 @@ $: topics = item?.topics != undefined ? JSON.parse(item?.topics) : null
 .item {
     cursor: pointer;
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto 1fr auto;
     height: 30px;
     border-radius: 4px;
     font-size: 14px;
@@ -142,11 +156,26 @@ $: topics = item?.topics != undefined ? JSON.parse(item?.topics) : null
     height: 14px;
     width: 14px;
 }
+
 .sl {
     padding-top: 2px;
     align-self: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .inactive {
     opacity: 0.5;
+}
+
+.set {
+}
+
+.item:hover .set{
+}
+
+.ico-s {
+    height: 14px;
+    width: 14px;
 }
 </style>

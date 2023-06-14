@@ -32,7 +32,6 @@ onMount(() => {
 })
 
 $: if($page) {
-    console.info($page)
 }
 
 $: down = $store.down

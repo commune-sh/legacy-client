@@ -11,6 +11,7 @@ import User from './user/user.svelte'
 import Date from './date/date.svelte'
 import Edited from './edited/edited.svelte'
 import Tools from './tools/tools.svelte'
+import Vote from '$lib/vote/vote.svelte'
 
 import MarkdownIt from 'markdown-it'
 import MarkdownItEmoji from 'markdown-it-emoji'
@@ -425,6 +426,11 @@ $: wasEdited = event?.edited_on !== undefined && event?.edited_on !== null &&
                             <Replies count={event?.reply_count} />
                         </div>
                 {/if}
+
+                {#if isReply}
+                    <Vote event={event} />
+                {/if}
+
 
 
                 {#if interactive}

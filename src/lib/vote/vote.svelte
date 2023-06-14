@@ -2,18 +2,31 @@
 import { createEventDispatcher } from 'svelte';
 import { up, down } from '$lib/assets/icons.js';
 import { savePost, redactReaction } from '$lib/utils/request.js'
+import { store } from '$lib/store/store.js'
 
 const dispatch = createEventDispatcher();
 
 export let event;
 export let display = false;
 
+$: authenticated = $store?.authenticated && 
+    $store?.credentials != null
+    $store?.credentials?.access_token?.length > 0
+
 function upvote() {
     saveUpvote()
+    if(!authenticated) {
+        store.startAuthenticating()
+        return
+    }
 }
 
 function downvote() {
     saveDownvote()
+    if(!authenticated) {
+        store.startAuthenticating()
+        return
+    }
 }
 
 async function saveUpvote(key) {
@@ -63,13 +76,13 @@ async function redact(key) {
 </script>
 
 
-<div class="vote">
+<div class="vote mr3 mt2">
     <div class="upvote grd" on:click|stopPropagation={upvote}>
         <div class="c-ico">
             {@html up}
         </div>
     </div>
-    <div class="count">
+    <div class="count ph1">
     </div>
     <div class="downvote grd" on:click|stopPropagation={downvote}>
         <div class="c-ico">
@@ -82,6 +95,7 @@ async function redact(key) {
 .vote {
     display: grid;
     grid-template-columns: auto auto auto;
+    height: 22px;
 }
 
 .c-ico {

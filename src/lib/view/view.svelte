@@ -4,7 +4,6 @@ import { APIRequest } from '$lib/utils/request.js'
 import { onMount, tick, createEventDispatcher } from 'svelte'
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
-import Chat from './chat/chat.svelte'
 import Board from './board/board.svelte'
 
 $: isIndex = $page?.url?.pathname === '/'

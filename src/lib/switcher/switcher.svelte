@@ -41,6 +41,7 @@ function toggleFavicon() {
 
 $: spaces = $store?.spaces
 
+$: verifiedSession = $store.verifiedSession
 
 </script>
 <div class="switcher">
@@ -60,8 +61,10 @@ $: spaces = $store?.spaces
         </div>
 
 
+        {#if verifiedSession}
         <CreateSpace />
         <Discover />
+        {/if}
 
         <div class="fl-o">
         </div>

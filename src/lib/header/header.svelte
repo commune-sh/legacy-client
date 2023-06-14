@@ -20,7 +20,8 @@ $: state = $store?.states[$page?.params?.space]
 $: ready = state != undefined
 
 export let type = 'space';
-export let exists;
+
+$: exists = state != undefined && state?.room_id != undefined
 
 
 export let editing = false;
@@ -196,7 +197,7 @@ $: buttonText = busy ? busyText : normalText
             </div>
             <div class="fl-o"></div>
             <div class="grd-c">
-                {#if authenticated && space}
+                {#if authenticated && space && exists}
                     {#if (joined && !isProfile) || ownProfile}
                         {#if !editing}
                         <button class="light" on:click={newPost}>New Post</button>
