@@ -9,6 +9,7 @@ import Reactions from '$lib/event/reactions/reactions.svelte'
 import Replies from '$lib/event/replies/replies.svelte'
 import User from './user/user.svelte'
 import Date from './date/date.svelte'
+import Edited from './edited/edited.svelte'
 import Tools from './tools/tools.svelte'
 
 import MarkdownIt from 'markdown-it'
@@ -327,6 +328,10 @@ function finishedEditing(e) {
     editing = false
 }
 
+
+$: wasEdited = event?.edited_on !== undefined && event?.edited_on !== null &&
+    event?.edited_on > 0
+
 </script>
 
 <div class="event" 
@@ -349,6 +354,9 @@ function finishedEditing(e) {
             <User hideAvatar={true} user={user} op={op}/>
             <div class="sm ph1"></div>
             <Date date={event?.origin_server_ts} />
+            {#if wasEdited}
+                <Edited date={event?.edited_on} />
+            {/if}
             {#if showRoomAlias}
                 <div class="sm ml2">
                     <a href={`/${event.room_alias}`}>{event.room_alias}</a>

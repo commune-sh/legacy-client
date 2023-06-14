@@ -336,6 +336,8 @@ $: isProfile = state?.space?.is_profile
 
 $: noEvents = events?.length == 0 || events == null
 
+$: selectedPost = events?.find(e => e?.slug == $page.params.post)
+
 </script>
 
 
@@ -419,6 +421,7 @@ $: noEvents = events?.length == 0 || events == null
 
     {#if isPost}
         <Post on:update-reactions={updateReactions} 
+            post={selectedPost}
         on:reply-saved={updateReplyCount} />
     {/if}
 
