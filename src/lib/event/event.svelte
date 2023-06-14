@@ -23,6 +23,7 @@ const dispatch = createEventDispatcher()
 export let isPost = false;
 export let isReply = false;
 export let showAlias = true;
+export let interactive = true;
 
 
 export let event;
@@ -327,11 +328,7 @@ function finishedEditing(e) {
     event.content.body = e.detail.content.body
     editing = false
     if(isPost) {
-        dispatch('edited', {
-            event_id: event.event_id,
-            title: event.content.title,
-            body: event.content.body
-        })
+        dispatch('edited', event)
     }
 }
 
@@ -351,11 +348,12 @@ $: wasEdited = event?.edited_on !== undefined && event?.edited_on !== null &&
     on:click={goToEvent} 
     class:fresh={event?.just_posted}
     class:isrep={isReplyEvent}
-    class:highlight={highlight} role="button">
+    class:highlight={highlight || !interactive} role="button">
 
 
 
-    <div class="ev-c fl-co">
+    <div class="ev-c fl-co"
+    class:ovy={!interactive}>
 
         <div class="ph3 fl mb2 pb1">
             <User hideAvatar={true} user={user} op={op}/>
@@ -373,9 +371,9 @@ $: wasEdited = event?.edited_on !== undefined && event?.edited_on !== null &&
 
 
 
-        <div class="body">
+        <div class="body" class:nonin={!interactive}>
 
-            {#if editing}
+            {#if editing && interactive}
 
                 <Composer 
                 editing={true}
@@ -422,13 +420,14 @@ $: wasEdited = event?.edited_on !== undefined && event?.edited_on !== null &&
 
             <div class="rec-a fl ph3">
 
-                {#if !isReply}
+                {#if !isReply && interactive}
                         <div class="mr2">
                             <Replies count={event?.reply_count} />
                         </div>
                 {/if}
 
 
+                {#if interactive}
                     <Reactions 
                         on:update-reactions
                         bind:this={reactions}
@@ -437,6 +436,7 @@ $: wasEdited = event?.edited_on !== undefined && event?.edited_on !== null &&
                         isReply={isReply}
                         on:active={activateTools} 
                     hovered={displayTools}/>
+                {/if}
 
                 <div class="fl-o"></div>
 
@@ -453,7 +453,7 @@ $: wasEdited = event?.edited_on !== undefined && event?.edited_on !== null &&
         <ImageThumbnail images={images} />
     {/if}
 
-        {#if displayTools && !editing}
+        {#if displayTools && !editing && interactive}
             <div class="tools">
                 <Tools 
                     isReply={isReply} 
@@ -472,7 +472,7 @@ $: wasEdited = event?.edited_on !== undefined && event?.edited_on !== null &&
 </div>
 
 
-{#if hasReplies}
+{#if hasReplies && interactive}
     <div class="replies">
         <div class="gap"></div>
         <div class="events">
@@ -526,7 +526,10 @@ $: wasEdited = event?.edited_on !== undefined && event?.edited_on !== null &&
     overflow: hidden;
 }
 
-
+.ovy {
+    overflow-y: auto;
+    max-height: 140px;
+}
 .h {
     cursor: pointer;
 }
@@ -552,7 +555,11 @@ $: wasEdited = event?.edited_on !== undefined && event?.edited_on !== null &&
 .body {
     line-height: 1.5;
     user-select: text;
-    overflow: hidden;
+
+}
+
+.nonin {
+    overflow-y: auto;
 }
 
 

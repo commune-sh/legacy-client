@@ -65,8 +65,8 @@ $: active = $page?.route?.id === `/(app)/settings`
 
 .item{
     border-radius: 50%;
-    width: 42px;
-    height: 42px;
+    width: 36px;
+    height: 36px;
     display: grid;
     cursor: pointer;
     transition: 0.1s;

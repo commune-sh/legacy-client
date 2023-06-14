@@ -186,8 +186,12 @@ function replyToPost() {
     }
     replying = true
     replyingTo = post
-    console.log("ready, authenticated, joined, replying)", ready, authenticated, joined, replying)
+    if(composer) {
+        composer?.focusBodyInput()
+    }
 }
+
+let composer;
 
 function cancelReply() {
     replying = false
@@ -220,6 +224,15 @@ function setReplyThread(e) {
     data.replies = data.replies
 }
 
+function edited(e) {
+    dispatch('edited', e.detail)
+    if(replyingTo) {
+        if(replyingTo.event_id == e.detail.event_id) {
+            replyingTo = e.detail
+        }
+    }
+}
+
 </script>
 
 <section class="content" class:rep={replying}>
@@ -230,7 +243,7 @@ function setReplyThread(e) {
         {#if post}
             <Event 
                 on:update-reactions 
-                on:edited
+                on:edited={edited}
                 isPost={true} 
                 event={post} 
                 on:replyTo={replyToEvent}/>
@@ -284,6 +297,7 @@ function setReplyThread(e) {
 
     {#if ready && authenticated && joined && replying}
         <Composer 
+            bind:this={composer}
             roomID={roomID}
             reply={true} 
             threadEvent={post?.event_id}
@@ -330,7 +344,7 @@ function setReplyThread(e) {
         top: 0;
         right: 0;
         bottom: 0;
-        left: 304px;
+        left: 298px;
     }
 }
 @media screen and (max-width: 768px) {

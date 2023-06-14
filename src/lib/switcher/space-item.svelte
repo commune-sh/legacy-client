@@ -49,6 +49,7 @@ $: active = $page.params?.space === space?.alias
 
 <div class="i-c grd">
     <div class="item grd-c"
+    class:active={active}
     bind:this={el}
     on:mouseover={() => hovered = true}
     on:mouseleave={() => hovered = false}
@@ -63,36 +64,35 @@ $: active = $page.params?.space === space?.alias
 <style>
 
 .i-c {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
     position: relative;
 }
 
 .item{
     background-color: var(--switcher-item);
-    border-radius: 50%;
-    width: 42px;
-    height: 42px;
+    border-radius: 6px;
+    width: 36px;
+    height: 36px;
     display: grid;
     cursor: pointer;
-    transition: 0.1s;
 }
 
 .initial {
     opacity: 0.8;
-    font-size: 0.9rem;
 }
 
 .item:hover {
-    border-radius: 15px;
-    background-color: var(--primary);
+}
+
+.active {
+    outline: 2px solid var(--primary);
 }
 
 
 .tick {
     opacity: 0;
-    transition: 0.1s;
     position: absolute;
-    top: 12px;
+    top: 10px;
     left: 0px;
     height: 15px;
     width: 4px;
@@ -104,7 +104,7 @@ $: active = $page.params?.space === space?.alias
 }
 
 .ac {
-    opacity: 1;
+    opacity: 0;
 }
 
 </style>

@@ -178,14 +178,14 @@ $: if(authenticated) {
     align-self: start;
     display: grid;
     grid-template-rows: auto;
-    grid-template-columns: [sidebar] 304px [content] 1fr;
+    grid-template-columns: [sidebar] 298px [content] 1fr;
     overflow: hidden;
 }
 
 .inner-container {
     display: grid;
     grid-template-rows: auto;
-    grid-template-columns: [switcher] 64px [sidebar] 240px;
+    grid-template-columns: [switcher] 58px [sidebar] 240px;
     overflow: hidden;
 }
 
@@ -205,7 +205,7 @@ $: if(authenticated) {
     position: fixed;
     top: 0;
     bottom: 0;
-    left: 304px;
+    left: 298px;
 }
 
 
@@ -213,7 +213,7 @@ $: if(authenticated) {
     position: fixed;
     top: 0;
     bottom: 0;
-    left: 304px;
+    left: 298px;
     height: 100%;
     z-index: 10000;
     width: 100vw;

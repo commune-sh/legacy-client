@@ -70,21 +70,19 @@ function createSpace() {
 .item{
     background-color: var(--switcher-item);
     border-radius: 50%;
-    width: 42px;
-    height: 42px;
+    width: 36px;
+    height: 36px;
+    border: 2px solid transparent;
     display: grid;
     cursor: pointer;
-    transition: 0.1s;
 }
 .item:hover {
-    border-radius: 15px;
-    background-color: var(--primary);
+    border: 2px solid var(--primary);
 }
 
 
 .tick {
     opacity: 0;
-    transition: 0.1s;
     position: absolute;
     top: 12px;
     left: 0px;

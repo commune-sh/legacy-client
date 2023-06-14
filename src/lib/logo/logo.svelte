@@ -25,8 +25,8 @@ export let loader = false;
 }
 
 .l-c {
-    height: 38px;
-    width: 38px;
+    height: 36px;
+    width: 36px;
     background-color: var(--logo-bg);
     border-radius: 6px;
     transition: 0.1s;
@@ -36,8 +36,8 @@ export let loader = false;
 }
 
 .lg {
-    height: 42px;
-    width: 42px;
+    height: 36px;
+    width: 36px;
 }
 
 .l-c:hover .l-c-i {
@@ -51,8 +51,8 @@ export let loader = false;
 
 
 .l-c-i {
-    height: 34px;
-    width: 34px;
+    height: 28px;
+    width: 28px;
     fill: var(--logo-shade-1);
 }
 

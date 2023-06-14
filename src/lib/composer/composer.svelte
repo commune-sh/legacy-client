@@ -13,6 +13,7 @@ import Attach from './attachments/attach.svelte'
 import InsertEmoji from './insert-emoji.svelte'
 import Attachments from './attachments/attachments.svelte'
 import EmojiList from './emoji-list.svelte'
+import Event from '$lib/event/event.svelte'
 import tippy from 'tippy.js';
 
 import { v4 as uuidv4 } from 'uuid';
@@ -218,6 +219,9 @@ onMount(() => {
         },
     ]);
 
+    if(replyTo) {
+        lastReplyTo = replyTo
+    }
 
 
     setupLinkPasteListener()
@@ -401,7 +405,7 @@ function handleEnter(e) {
 
 let bodyInput;
 
-async function focusBodyInput() {
+export async function focusBodyInput() {
     await tick()
     bodyInput.focus()
     updateContent()
@@ -554,6 +558,12 @@ function togglePreview() {
     }
 }
 
+let lastReplyTo = null;
+$: if(replyTo !== lastReplyTo) {
+    lastReplyTo = replyTo
+    focusBodyInput()
+}
+
 </script>
 
 <section class="composer" 
@@ -562,13 +572,14 @@ function togglePreview() {
 
     {#if reply && replyTo}
         <div class="reply-header">
-            <div class="pa3">
-                Replying to {replyTo.sender.display_name}
+            <div class="pa3 sm">
+                <b>Replying</b>
             </div>
             <div class="grd-c c-ico ph2 mr2" on:click={kill}>
                 {@html close}
             </div>
         </div>
+        <Event event={replyTo} isReply={reply} interactive={false} />
     {/if}
 
     <div class="editor-area">

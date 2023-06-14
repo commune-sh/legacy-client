@@ -342,8 +342,8 @@ function postEdited(e) {
     let index = data.events.findIndex((event) => event.event_id == e.detail.event_id)
     if(index > -1) {
         console.log("updating edited content")
-        data.events[index].content.title = e.detail.title
-        data.events[index].content.body = e.detail.body
+        data.events[index].content.title = e.detail.content.title
+        data.events[index].content.body = e.detail.content.body
     }
 }
 

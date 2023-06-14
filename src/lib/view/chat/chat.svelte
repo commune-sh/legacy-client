@@ -296,7 +296,7 @@ function toggleMenu() {
     position: fixed;
     top: 0;
     bottom: 0;
-    left: 304px;
+    left: 298px;
     height: 100%;
     z-index: 10000;
     width: 100vw;
