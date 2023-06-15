@@ -23,6 +23,7 @@ $: if(authenticated) {
 
 
 $: state = $store?.states[$page?.params?.space]
+$: stateReady = $store.stateReady
 
 $: roomID = isRoom ? state?.children?.find(r => r?.alias ===
     $page?.params?.room)?.room_id : isSpace ? state?.room_id : null
@@ -98,18 +99,25 @@ async function loadEvents() {
 
     const token = localStorage.getItem('access_token')
 
-    let url = `${PUBLIC_API_URL}/events/`
+    let endpoint = PUBLIC_API_URL
+
+    if($store.federated?.active && $store.federated.endpoint) {
+        endpoint = $store.federated?.endpoint
+    }
+
+
+    let url = `${endpoint}/events/`
 
     let space = $page.params.space
     let isSpace = space && space !== 'undefined' && space?.length > 0
     if(isSpace) {
-        url = `${PUBLIC_API_URL}/${space}/events`
+        url = `${endpoint}/${space}/events`
     }
 
     let room = $page.params.room
     let isRoom = room && room !== 'undefined' && room?.length > 0
     if(isRoom) {
-        url = `${PUBLIC_API_URL}/${space}/${room}/events`
+        url = `${endpoint}/${space}/${room}/events`
     }
 
     let opt = {
@@ -121,9 +129,11 @@ async function loadEvents() {
         opt.url = url + `?topic=${topic}`
     }
 
-    if(token && !isSpace && !isRoom) {
+    if(token && !isSpace && !isRoom && !$store.federated) {
         opt.url = `${PUBLIC_API_URL}/feed`
     }
+
+    console.log("usrl is ", opt.url)
 
     const resp = await loadPosts(opt)
     if(resp) {
@@ -184,7 +194,23 @@ $: if(obs && loaded && ready) {
     setupObserver()
 }
 
+$: isDomain = $page.params.domain !== undefined && 
+    $page.params.domain !== 'undefined' && 
+    $page.params.domain?.length > 0
+
+let domainPinged =false
+
+$: if(isDomain && $store.federated.endpoint && !loaded) {
+    if(!domainPinged) {
+        domainPinged = true
+        loadEvents()
+    }
+}
+
 onMount(() => {
+    if(isDomain) {
+        return
+    }
     loadEvents(true)
     return
     if(!data.error && !data.down) {
@@ -368,11 +394,11 @@ function postEdited(e) {
             bind:this={scrollable}>
 
 
-            {#if !loaded || reloading}
+            {#if !loaded || reloading || !stateReady}
 
                 <SkeletonBoardEvents reply={false}/>
 
-            {:else}
+            {:else if stateReady}
                 {#if authenticated && editing}
                     <Composer 
                         roomID={roomID}

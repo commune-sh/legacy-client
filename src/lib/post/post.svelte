@@ -49,18 +49,44 @@ let route = null;
 $: routeChanged = route !== $page.route
 
 //$: if((routeChanged || post == null) && r) {
-$: if((routeChanged && !post) && r) {
+$: if((routeChanged && !post) && r && !isDomain) {
     console.log(post?.event_id)
     post = null
     ready = false
     fetchPost()
 } else if(routeChanged && post && r) {
+    if(isDomain) {
+        post = null
+        ready = false
+    }
     fetchPost()
 }
 
+let domainPinged =false
+
+$: if(isDomain && $store.federated.endpoint && !ready) {
+    if(!domainPinged) {
+        domainPinged = true
+        fetchPost()
+    }
+}
+
+$: isDomain = $page.params.domain !== undefined && 
+    $page.params.domain !== 'undefined' && 
+    $page.params.domain?.length > 0
+
 async function fetchPost() {
+
+    let endpoint = PUBLIC_API_URL
+
+    if($store.federated?.active && $store.federated.endpoint) {
+        endpoint = $store.federated?.endpoint
+    }
+
+    let url = `${endpoint}/event/${r}?replies=true`
+
     let opt = {
-      url: `${PUBLIC_API_URL}/event/${r}?replies=true`,
+      url: url,
       method: 'GET',
     }
 

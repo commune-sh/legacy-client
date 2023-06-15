@@ -63,6 +63,10 @@ onMount(() => {
 
 $: topic = $page.params.topic
 
+$: isDomain = $page.params.domain !== undefined && 
+    $page.params.domain !== 'undefined' && 
+    $page.params.domain?.length > 0
+
 function buildLink(e, page) {
     let url = `/post/${e?.slug}`
     if(isSpace) {
@@ -93,6 +97,10 @@ function buildLink(e, page) {
             url = `/${page.params.space}/${page.params.room}`
         }
 
+    }
+
+    if(isDomain) {
+        url = `/${page.params.domain}${url}`
     }
 
     return url

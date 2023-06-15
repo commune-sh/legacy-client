@@ -22,9 +22,6 @@ $: if($page?.params?.space !== lastSpace && $page?.params?.space && !down) {
 $: isdomain = $page?.params?.domain != null && 
     $page?.params?.domain?.length > 0
 
-$: if(isdomain) {
-    console.log("domaain is", $page?.params?.domain)
-}
 
 onMount(() => {
 })
@@ -65,6 +62,9 @@ async function fetchSpaceState() {
 
         if(endpoint?.url) {
             opt.url = `${endpoint.url}/${$page.params?.space}/state`
+            store.isFederated({
+                endpoint: endpoint.url
+            })
         }
     }
 
@@ -73,6 +73,7 @@ async function fetchSpaceState() {
         if(resp?.state) {
             store.addSpaceState($page?.params?.space, resp.state)
             lastSpace = $page?.params?.space
+            store.stateReady()
         }
     })
 }

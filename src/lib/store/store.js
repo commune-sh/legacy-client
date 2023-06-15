@@ -19,6 +19,7 @@ function createApp() {
     spaces: [],
     states: [],
     spacePaths: [],
+    stateReady: false,
     pageState: [],
     events: [],
     events_cache: [],
@@ -27,6 +28,10 @@ function createApp() {
     editorStates: [],
     settings: {
       active: false,
+    },
+    federated: {
+      active: false,
+      endpoint: null,
     },
     staticRoutes: [
       {
@@ -114,6 +119,40 @@ function createApp() {
       return p
     })
   }
+
+  let stateReady = () => {
+    update(p => {
+      p.stateReady = true
+      return p
+    })
+  }
+
+  let stateNotReady = () => {
+    update(p => {
+      p.stateReady = false
+      return p
+    })
+  }
+
+  let isFederated= (x) => {
+    update(p => {
+      p.federated = {
+        active: true,
+        endpoint: x.endpoint,
+      }
+      return p
+    })
+  }
+  let isNotFederated = () => {
+    update(p => {
+      p.federated = {
+        active: false,
+        endpoint: null,
+      }
+      return p
+    })
+  }
+
 
   let startRefreshingFeed = () => {
     update(p => {
@@ -539,6 +578,10 @@ function createApp() {
     addEventReplies,
     updateEventsCache,
     showModal,
+    stateReady,
+    stateNotReady,
+    isFederated, 
+    isNotFederated,
   };
 }
 

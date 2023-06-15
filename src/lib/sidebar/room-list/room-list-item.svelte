@@ -40,6 +40,8 @@ $: spaceRoomPath = $store?.spacePaths[space]?.rooms[item?.alias]
 
 $: menuToggled = $store?.menuToggled
 
+$: isDomain = $page?.params?.domain != null && $page?.params?.domain?.length > 0
+
 function goToRoom() {
 
     let url = `/`
@@ -66,6 +68,10 @@ function goToRoom() {
 
     url = `/${space}${alias}`
 
+
+    if(isDomain) {
+        url = `/${$page.params.domain}/${space}${alias}`
+    }
 
 
     goto(url, {
