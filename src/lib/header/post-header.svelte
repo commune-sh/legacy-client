@@ -31,6 +31,10 @@ function goFull() {
     if($page.params?.room) {
         url = `/${$page.params?.space}/${$page.params?.room}/post/${$page.params.post}`
     }
+
+    if($page.params?.domain) {
+        url = `/${$page.params?.domain}${url}`
+    }
     goto(url, {
         noscroll: true,
     })

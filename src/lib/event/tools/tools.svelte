@@ -31,6 +31,10 @@ function editEvent() {
 function goToEvent() {
     let url = `/${event.room_alias}/post/${$page.params.post}/reply/${event?.slug}`
 
+    if($page.params?.domain) {
+        url = `/${$page.params.domain}${url}`
+    }
+
     goto(url, {
         noscroll: true,
     })

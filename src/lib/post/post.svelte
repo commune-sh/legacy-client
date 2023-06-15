@@ -52,9 +52,15 @@ $: routeChanged = route !== $page.route
 $: if((routeChanged && !post) && r && !isDomain) {
     console.log(post?.event_id)
     post = null
+    if(data?.replies) {
+        data.replies = null
+    }
     ready = false
     fetchPost()
-} else if(routeChanged && post && r) {
+} else if(routeChanged && post && r && !isDomain) {
+    if(data?.replies) {
+        data.replies = null
+    }
     if(isDomain) {
         post = null
         ready = false
@@ -66,9 +72,17 @@ let domainPinged =false
 
 $: if(isDomain && $store.federated.endpoint && !ready) {
     if(!domainPinged) {
-        domainPinged = true
         fetchPost()
     }
+}
+
+$: if(isDomain && $store.federated.endpoint && routeChanged && domainPinged) {
+    if(data?.replies) {
+        data.replies = null
+    }
+    post = null
+    ready = false
+    fetchPost()
 }
 
 $: isDomain = $page.params.domain !== undefined && 
@@ -102,6 +116,7 @@ async function fetchPost() {
         }
         route = $page.route
         ready = true
+        domainPinged = true
     }
     if(!resp) {
         down = true
