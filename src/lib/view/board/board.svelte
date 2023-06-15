@@ -129,7 +129,7 @@ async function loadEvents() {
         opt.url = url + `?topic=${topic}`
     }
 
-    if(token && !isSpace && !isRoom && !$store.federated) {
+    if(token && !isSpace && !isRoom && !$store.federated.active) {
         opt.url = `${PUBLIC_API_URL}/feed`
     }
 
@@ -394,11 +394,11 @@ function postEdited(e) {
             bind:this={scrollable}>
 
 
-            {#if !loaded || reloading || !stateReady}
+            {#if !loaded || reloading || (!stateReady && isSpace)}
 
                 <SkeletonBoardEvents reply={false}/>
 
-            {:else if stateReady}
+            {:else if (stateReady || !isSpace)}
                 {#if authenticated && editing}
                     <Composer 
                         roomID={roomID}
