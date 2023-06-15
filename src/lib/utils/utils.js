@@ -28,3 +28,17 @@ export const encodeImageToBlurhash = async image => {
   return encode(imageData.data, imageData.width, imageData.height, 4, 4);
 };
 
+export function getReplyCount(event) {
+  let count = 0;
+
+  if (event.children && event.children.length > 0) {
+    count += event.children.length; // Add the immediate children count
+
+    // Recursively calculate the sum of descendant children
+    for (const childEvent of event.children) {
+      count += getReplyCount(childEvent);
+    }
+  }
+
+  return count;
+}

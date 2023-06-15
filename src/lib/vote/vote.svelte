@@ -54,6 +54,8 @@ async function downvote() {
     }
 }
 
+$: votes = (event?.upvotes || 0) - (event?.downvotes || 0) 
+
 </script>
 
 
@@ -63,7 +65,8 @@ async function downvote() {
             {@html up}
         </div>
     </div>
-    <div class="count ph1">
+    <div class="count ph1 grd-c">
+        {votes != 0 ? votes : ''}
     </div>
     <div class="downvote grd" on:click|stopPropagation={downvote}>
         <div class="c-ico" class:ac={event?.downvoted}>
@@ -85,5 +88,12 @@ async function downvote() {
 }
 .ac {
     fill: var(--primary);
+}
+
+.count {
+    font-size: small;
+    color: var(--text-light);
+    line-height: 14px;
+    height: 14px;
 }
 </style>

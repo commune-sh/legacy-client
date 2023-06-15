@@ -13,6 +13,8 @@ import Edited from './edited/edited.svelte'
 import Tools from './tools/tools.svelte'
 import Vote from '$lib/vote/vote.svelte'
 
+import { getReplyCount } from '$lib/utils/utils.js'
+
 import MarkdownIt from 'markdown-it'
 import MarkdownItEmoji from 'markdown-it-emoji'
 import MarkdownItLinkAttributes from 'markdown-it-link-attributes'
@@ -337,6 +339,13 @@ function finishedEditing(e) {
 $: wasEdited = event?.edited_on !== undefined && event?.edited_on !== null &&
     event?.edited_on > 0
 
+let showingReplies = true
+function toggleReplies() {
+    showingReplies = !showingReplies
+}
+
+$: replies = getReplyCount(event)
+
 </script>
 
 <div class="event" 
@@ -427,7 +436,7 @@ $: wasEdited = event?.edited_on !== undefined && event?.edited_on !== null &&
                         </div>
                 {/if}
 
-                {#if isReply}
+                {#if isReply && interactive}
                     <Vote event={event} />
                 {/if}
 
@@ -446,6 +455,16 @@ $: wasEdited = event?.edited_on !== undefined && event?.edited_on !== null &&
 
                 <div class="fl-o"></div>
 
+                {#if isReply && interactive && hasReplies}
+                    <div class="mr2 grd-c mt2 expand" 
+                        on:click={toggleReplies}>
+                        {#if showingReplies}
+                            <b>[-]</b>
+                        {:else}
+                            <b>[+{replies ? replies : null}]</b>
+                        {/if}
+                    </div>
+                {/if}
             </div>
 
 
@@ -478,7 +497,7 @@ $: wasEdited = event?.edited_on !== undefined && event?.edited_on !== null &&
 </div>
 
 
-{#if hasReplies && interactive}
+{#if hasReplies && showingReplies && interactive}
     <div class="replies">
         <div class="gap"></div>
         <div class="events">
@@ -609,6 +628,18 @@ $: wasEdited = event?.edited_on !== undefined && event?.edited_on !== null &&
 :global(p:last-of-type){
     margin-block-end: 0;
 }
+
+.expand {
+    font-weight: bold;
+    font-size: small;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: 0.1s;
+}
+.expand:hover {
+    opacity: 1;
+}
+
 
 @keyframes fadeOut {
   from {
