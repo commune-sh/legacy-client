@@ -3,6 +3,7 @@ import { createEventDispatcher } from 'svelte';
 import { up, down } from '$lib/assets/icons.js';
 import { savePost, redactReaction } from '$lib/utils/request.js'
 import { store } from '$lib/store/store.js'
+import {saveUpvote, saveDownvote} from '$lib/utils/request.js'
 
 const dispatch = createEventDispatcher();
 
@@ -13,64 +14,44 @@ $: authenticated = $store?.authenticated &&
     $store?.credentials != null
     $store?.credentials?.access_token?.length > 0
 
-function upvote() {
-    saveUpvote()
+async function upvote() {
     if(!authenticated) {
         store.startAuthenticating()
         return
     }
+
+    if(!event?.upvoted && event?.downvoted) {
+        events.downvoted = false
+    }
+
+
+    const res = await saveUpvote(event.event_id)
+    console.log(res)
+    if(res?.upvoted) {
+        event.upvoted = true
+    } else {
+        event.upvoted = false
+    }
 }
 
-function downvote() {
+async function downvote() {
     saveDownvote()
     if(!authenticated) {
         store.startAuthenticating()
         return
     }
-}
 
-async function saveUpvote(key) {
-    let post = {
-        room_id: event.room_id,
-        type: "vote",
-        content: {
-            "m.relates_to": {
-                "rel_type": "m.annotation",
-                "event_id": event.event_id,
-                "key": "upvote",
-            }
-        },
+    if(!event?.downvoted && event?.upvoted) {
+        events.upvoted = false
     }
 
-    const res = await savePost(post);
+    const res = await saveDownvote(event.event_id)
     console.log(res)
-}
-
-async function saveDownvote(key) {
-    let post = {
-        room_id: event.room_id,
-        type: "vote",
-        content: {
-            "m.relates_to": {
-                "rel_type": "m.annotation",
-                "event_id": event.event_id,
-                "key": "downvote",
-            }
-        },
+    if(res?.downvoted) {
+        event.downvoted = true
+    } else {
+        event.downvoted = false
     }
-
-    const res = await savePost(post);
-    console.log(res)
-}
-
-async function redact(key) {
-    let redaction = {
-        room_id: event.room_id,
-        event_id: event.event_id,
-        key: "upvote",
-    }
-    const res = await redactReaction(redaction);
-    console.log(res)
 }
 
 </script>
@@ -78,14 +59,14 @@ async function redact(key) {
 
 <div class="vote mr3 mt2">
     <div class="upvote grd" on:click|stopPropagation={upvote}>
-        <div class="c-ico">
+        <div class="c-ico" class:ac={event?.upvoted}>
             {@html up}
         </div>
     </div>
     <div class="count ph1">
     </div>
     <div class="downvote grd" on:click|stopPropagation={downvote}>
-        <div class="c-ico">
+        <div class="c-ico" class:ac={event?.downvoted}>
             {@html down}
         </div>
     </div>
@@ -101,5 +82,8 @@ async function redact(key) {
 .c-ico {
     height: 22px;
     width: 22px;
+}
+.ac {
+    fill: var(--primary);
 }
 </style>

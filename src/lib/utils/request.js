@@ -214,3 +214,19 @@ export async function getLinkMetadata(link) {
   return data
 }
 
+export async function saveUpvote(event) {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/event/upvote?id=${event}`,
+    method: 'PUT'
+  })
+  return data
+}
+
+export async function saveDownvote(event) {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/event/downvote?id=${event}`,
+    method: 'PUT'
+  })
+  return data
+}
+
