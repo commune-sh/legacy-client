@@ -163,6 +163,7 @@ function showMenu(e) {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: normal;
 }
 .inactive {
     opacity: 0.5;

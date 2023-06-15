@@ -20,18 +20,21 @@ async function upvote() {
         return
     }
 
-    if(!event?.upvoted && event?.downvoted) {
-        events.downvoted = false
+    if(event?.upvoted) {
+        event.upvoted = false
+    } else {
+        event.upvoted = true
     }
-
-
     const res = await saveUpvote(event.event_id)
     console.log(res)
-    if(res?.upvoted) {
-        event.upvoted = true
-    } else {
-        event.upvoted = false
+    event.upvoted = res?.upvoted
+
+    if(event?.downvoted) {
+        event.downvoted = false
+        const res = saveDownvote(event.event_id)
+        console.log(res)
     }
+
 }
 
 async function downvote() {
@@ -41,17 +44,21 @@ async function downvote() {
         return
     }
 
-    if(!event?.downvoted && event?.upvoted) {
-        events.upvoted = false
+    if(event?.downvoted) {
+        event.downvoted = false
+    } else {
+        event.downvoted = true
     }
-
     const res = await saveDownvote(event.event_id)
     console.log(res)
-    if(res?.downvoted) {
-        event.downvoted = true
-    } else {
-        event.downvoted = false
+    event.downvoted = res?.downvoted
+
+    if(event?.upvoted) {
+        event.upvoted = false
+        const res = await saveUpvote(event.event_id)
+        console.log(res)
     }
+
 }
 
 $: votes = (event?.upvotes || 0) - (event?.downvotes || 0) 
@@ -66,7 +73,6 @@ $: votes = (event?.upvotes || 0) - (event?.downvotes || 0)
         </div>
     </div>
     <div class="count ph1 grd-c">
-        {votes != 0 ? votes : ''}
     </div>
     <div class="downvote grd" on:click|stopPropagation={downvote}>
         <div class="c-ico" class:ac={event?.downvoted}>
