@@ -12,6 +12,7 @@ import Date from './date/date.svelte'
 import Edited from './edited/edited.svelte'
 import Tools from './tools/tools.svelte'
 import Vote from '$lib/vote/vote.svelte'
+import Links from './links/links.svelte'
 import { pin } from '$lib/assets/icons.js'
 
 import { getReplyCount } from '$lib/utils/utils.js'
@@ -146,6 +147,7 @@ $: title = event?.content?.title ? event?.content?.title : `Untitled`
 
 $: attachments = event?.content?.attachments
 $: hasAttachments = event?.content?.attachments?.length > 0
+$: hasLinks = event?.content?.links?.length > 0
 
 $: images = attachments?.filter(a => a?.type?.startsWith('image'))
 
@@ -436,6 +438,10 @@ $: replies = getReplyCount(event)
 
             {#if (isPost || isReply) && hasAttachments && images}
                 <Images images={images} />
+            {/if}
+
+            {#if (isPost || isReply) && hasLinks}
+                <Links event={event} />
             {/if}
 
 
