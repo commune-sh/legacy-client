@@ -28,6 +28,7 @@ export let isPost = false;
 export let isReply = false;
 export let showAlias = true;
 export let interactive = true;
+export let search = false;
 
 
 export let event;
@@ -115,6 +116,8 @@ function goToEvent() {
     if(isPost || isReply || toolsActive || editing) {
         return
     }
+
+    console.log("go to event")
 
     goto(link, {
         noscroll: true,
@@ -483,7 +486,7 @@ $: replies = getReplyCount(event)
 
     </div>
 
-    {#if !isPost && !isReply && hasAttachments && images && !editing}
+    {#if !isPost && !isReply && hasAttachments && images && !editing && !search}
         <ImageThumbnail images={images} />
     {/if}
 

@@ -4,6 +4,7 @@ import { debounce } from '$lib/utils/utils.js'
 import { page } from '$app/stores';
 import { searchEvents } from '$lib/utils/request.js'
 import { store } from '$lib/store/store.js'
+import Event from '$lib/event/event.svelte'
 
 $: state = $store?.states[$page?.params?.space]
 
@@ -21,7 +22,9 @@ let focus = () => {
     focused = true
 }
 let blur = () => {
-    focused = false
+    setTimeout(() => {
+        //focused = false
+    }, 100)
 }
 
 let searchInput;
@@ -30,8 +33,15 @@ let query;
 $: active = query?.length > 0 || focused
 
 function search () {
-    debounce(doSearch, 500)
+    results = null;
+    results = results
+    fetched = false
+    debounce(doSearch, 200)
 }
+
+let results = null;
+
+let fetched = false;
 
 async function doSearch() {
     if(query == null || query.length < 1) return
@@ -40,8 +50,22 @@ async function doSearch() {
         query: query,
     })
     console.log(res)
+    if(res?.results?.length > 0) {
+        results = res.results
+        results = results
+    }
+    fetched = true
 }
 
+
+$: showResults = query?.length > 0 && focused
+
+function kill() {
+    query = ''
+    results = null;
+    results = results
+    fetched = false
+}
 </script>
 
 
@@ -51,13 +75,37 @@ async function doSearch() {
         bind:value={query}
         class:ex={active}
         on:focus={focus}
-        on:keyup={search}
+        on:input={search}
         spellcheck="false"
         on:blur={blur}
         placeholder="search"/>
     <div class="ico-s">
         {@html searchIcon}
     </div>
+
+    {#if showResults}
+        <div class="results fl-co">
+            <div class="te sm pa3">
+                <span class="label">Searching for:</span> <b>{query}</b>
+            </div>
+            <div class="events">
+                {#if results?.length > 0}
+                    {#each results as result}
+                        <div class="event-item" on:click={kill}>
+                            <Event 
+                            event={result} 
+                            search={true}
+                            interactive={false}/>
+                        </div>
+                    {/each}
+                {:else if fetched}
+                    <div class="te sm pa3">
+                        Nothing found...
+                    </div>
+                {/if}
+            </div>
+        </div>
+    {/if}
 
 </div>
 
@@ -89,5 +137,22 @@ input {
 
 .ex {
     width: 200px;
+}
+
+.results {
+    overflow: hidden;
+    width: 300px;
+    background: var(--shade-2);
+    position: absolute;
+    top: 2rem;
+    right: 0;
+    border-radius: 4px;
+    box-shadow: 0 0 0 1px var(--shade-3);
+    z-index: 100;
+}
+
+.events {
+    overflow-y: auto;
+    max-height: 300px;
 }
 </style>
