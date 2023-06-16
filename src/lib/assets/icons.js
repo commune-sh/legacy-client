@@ -209,3 +209,7 @@ export const arrowDropRight = `
 export const logout = `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 22C4.44772 22 4 21.5523 4 21V3C4 2.44772 4.44772 2 5 2H19C19.5523 2 20 2.44772 20 3V21C20 21.5523 19.5523 22 19 22H5ZM15 16L20 12L15 8V11H9V13H15V16Z"></path></svg>
 `
+
+export const pin = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 3V5H17V11L19 14V16H13V23H11V16H5V14L7 11V5H6V3H18Z"></path></svg>
+`

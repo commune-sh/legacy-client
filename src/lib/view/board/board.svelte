@@ -25,6 +25,8 @@ $: if(authenticated) {
 $: state = $store?.states[$page?.params?.space]
 $: stateReady = $store.stateReady
 
+
+
 $: roomID = isRoom ? state?.children?.find(r => r?.alias ===
     $page?.params?.room)?.room_id : isSpace ? state?.room_id : null
 
@@ -34,6 +36,10 @@ $: selectedRoomType = isRoom ? state?.children?.find(r => r?.alias ===
 $: isChat = selectedRoomType === 'chat'
 $: isBoard = selectedRoomType === 'board'
 
+$: pinned = isRoom ? state?.children?.find(r => r?.alias ===
+    $page?.params?.room)?.pinned_events : isSpace ? state?.space?.pinned_events : null
+
+$: pinnedEvents = pinned ? JSON.parse(pinned) : null
 
 const dispatch = createEventDispatcher()
 
@@ -95,7 +101,11 @@ $: events = data?.events
 //$: sorted = events?.sort((a, b) => b.origin_server_ts - a.origin_server_ts);
 
 
-async function loadEvents() {
+async function loadEvents(init) {
+
+    if(init) {
+        console.log("do pinned events exist?", pinnedEvents)
+    }
 
     const token = localStorage.getItem('access_token')
 
@@ -133,7 +143,6 @@ async function loadEvents() {
         opt.url = `${PUBLIC_API_URL}/feed`
     }
 
-    console.log("usrl is ", opt.url)
 
     const resp = await loadPosts(opt)
     if(resp) {
@@ -271,7 +280,14 @@ let fetchMore = () => {
       method: 'GET',
     }).then((res) => {
         if(res && res?.events?.length > 0) {
-            data.events = [...data.events, ...res.events];
+            for (const event of res?.events) {
+              const exists = data.events.some(e => e.event_id === event.event_id);
+
+              if (!exists) {
+                data.events = [...data.events, event];
+              }
+            }
+
             store.addToRoomEvents(roomID, res.events)
         }
     });
@@ -410,8 +426,14 @@ function postEdited(e) {
                 {#if events}
                     <section class="events">
                         {#each events as event (event.event_id)}
-                            <Event 
-                                event={event} sender={null} />
+                            {#if event.pinned}
+                                <Event event={event} sender={null} />
+                            {/if}
+                        {/each}
+                        {#each events as event (event.event_id)}
+                            {#if !event.pinned}
+                                <Event event={event} sender={null} />
+                            {/if}
                         {/each}
                     </section>
                 {/if}

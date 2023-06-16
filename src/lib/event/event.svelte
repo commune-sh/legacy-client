@@ -12,6 +12,7 @@ import Date from './date/date.svelte'
 import Edited from './edited/edited.svelte'
 import Tools from './tools/tools.svelte'
 import Vote from '$lib/vote/vote.svelte'
+import { pin } from '$lib/assets/icons.js'
 
 import { getReplyCount } from '$lib/utils/utils.js'
 
@@ -487,7 +488,7 @@ $: replies = getReplyCount(event)
     {/if}
 
         {#if displayTools && !editing && interactive}
-            <div class="tools">
+        <div class="tools" class:asi={event?.pinned}>
                 <Tools 
                     isReply={isReply} 
                     on:reply={replyToEvent}
@@ -501,6 +502,14 @@ $: replies = getReplyCount(event)
                     event={event} />
             </div>
         {/if}
+
+
+
+    {#if event.pinned}
+        <div class="pin ico-s">
+            {@html pin}
+        </div>
+    {/if}
 
 </div>
 
@@ -533,6 +542,7 @@ $: replies = getReplyCount(event)
     border-bottom: 1px solid var(--ev-bb);
     overflow: hidden;
     position: relative;
+    word-break:break-all
 }
 
 .replies {
@@ -583,6 +593,9 @@ $: replies = getReplyCount(event)
     position: absolute;
     top: 0.75rem;
     right: 0.75rem;
+}
+.asi {
+    right: 2.75rem;
 }
 
 .body {
@@ -646,6 +659,13 @@ $: replies = getReplyCount(event)
 }
 .expand:hover {
     opacity: 1;
+}
+
+.pin {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    fill: var(--primary);
 }
 
 

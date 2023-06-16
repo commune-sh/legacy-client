@@ -12,6 +12,7 @@ import { store } from '$lib/store/store.js'
 import Attach from './attachments/attach.svelte'
 import InsertEmoji from './insert-emoji.svelte'
 import Attachments from './attachments/attachments.svelte'
+import Links from './links/links.svelte'
 import EmojiList from './emoji-list.svelte'
 import Event from '$lib/event/event.svelte'
 import tippy from 'tippy.js';
@@ -251,6 +252,26 @@ function setupLinkPasteListener() {
 async function processLink(href) {
     const res = await getLinkMetadata(href)
     console.log(res)
+    if(res?.metadata?.title) {
+        let link = {
+            href: href,
+            title: res.metadata.title,
+        }
+        if(res?.metadata?.image) {
+            link.image = res.metadata.image
+        }
+        if(res?.metadata?.description) {
+            link.description = res.metadata.description
+        }
+        if(res?.metadata?.author) {
+            link.author = res.metadata.author
+        }
+        store.addLink({
+            room_id: stateKey,
+            link: link,
+        })
+    }
+
 }
 
 onDestroy(() => {
@@ -357,6 +378,10 @@ async function createPost() {
 
         if(attachments && items.length > 0) {
             post.content.attachments = items
+        }
+
+        if(links && links.length > 0) {
+            post.content.links = links
         }
 
         console.log("trying to save", post)
@@ -548,6 +573,9 @@ function insertEmoji(e) {
 $: attachments = $store.editorStates[stateKey]?.attachments
 $: showAttachments = $store.editorStates[stateKey]?.attachments?.length > 0;
 
+$: links = $store.editorStates[stateKey]?.links
+$: showLinks = $store.editorStates[stateKey]?.links?.length > 0;
+
 let preview;
 let previewing = false;
 
@@ -639,6 +667,11 @@ $: if(replyTo !== lastReplyTo) {
     {#if showAttachments}
         <Attachments uploading={uploading} roomID={stateKey}/>
     {/if}
+
+    {#if showLinks}
+        <Links uploading={uploading} roomID={stateKey}/>
+    {/if}
+
 
     <div class="tools fl">
         <Attach busy={busy} on:attached={attachFiles}/>

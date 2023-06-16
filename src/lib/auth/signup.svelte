@@ -107,7 +107,7 @@ function create() {
 let availableWarning = false;
 
 function validateUsername() {
-    debounce(usernameAvailable, 500)
+    debounce(usernameAvailable, 250)
 }
 
 

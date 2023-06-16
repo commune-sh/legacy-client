@@ -230,3 +230,18 @@ export async function saveDownvote(event) {
   return data
 }
 
+export async function loadEvent(event) {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/event/${event}`,
+  })
+  return data
+}
+
+export async function searchEvents({query, room_id}) {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/search/${room_id}/events?q=${query}`,
+    method: 'GET'
+  })
+  return data
+}
+

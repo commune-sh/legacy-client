@@ -7,6 +7,7 @@ import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
 import { menu} from '$lib/assets/icons.js'
 import SkeletonSpan from '$lib/skeleton/skeleton-span.svelte'
+import Search from '$lib/search/search.svelte'
 
 $: authenticated = $store?.authenticated && 
     $store?.credentials != null
@@ -196,6 +197,9 @@ $: buttonText = busy ? busyText : normalText
 
             </div>
             <div class="fl-o"></div>
+            <div class="grd-c">
+                <Search />
+            </div>
             <div class="grd-c">
                 {#if authenticated && space && exists}
                     {#if (joined && !isProfile) || ownProfile}

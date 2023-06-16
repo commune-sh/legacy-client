@@ -440,6 +440,28 @@ function createApp() {
     })
   }
 
+  let addLink = (x) => {
+    update(p => {
+      if(p.editorStates[x.room_id]?.links == undefined) {
+        p.editorStates[x.room_id].links = []
+      }
+      let index = p.editorStates[x.room_id]?.links.findIndex(l => l.href == x.link.href)
+      if(index == -1) {
+        console.log("adding link", x)
+        p.editorStates[x.room_id]?.links.push(x.link)
+      }
+      return p
+    })
+  }
+
+  let deleteLink = (room_id, index) => {
+    update(p => {
+      p.editorStates[room_id]?.links.splice(index, 1)
+      return p
+    })
+  }
+
+
 
   let getEditorState = (room_id) => {
       return app.editorStates[room_id]
@@ -566,8 +588,10 @@ function createApp() {
     updateEditorState,
     getEditorState,
     deleteEditorState,
-    deleteAttachment,
     addAttachment,
+    deleteAttachment,
+    addLink,
+    deleteLink,
     toggleTheme,
     toggleCreateSpace,
     toggleEmojiPicker,
