@@ -76,8 +76,8 @@ function viewSource() {
     z-index: 901;
 }
 .more {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     border-radius: 4px;
     padding: 0.25rem;
 }

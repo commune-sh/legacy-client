@@ -205,7 +205,7 @@ $: buttonText = busy ? busyText : normalText
                     {#if (joined && !isProfile) || ownProfile}
                         {#if !editing}
                         <button class="new-post light" on:click={newPost}>New Post</button>
-                            <div class="new-post-alt c-ico">
+                            <div class="new-post-alt c-ico" on:click={newPost}>
                                 {@html newChat}
                             </div>
                         {/if}
