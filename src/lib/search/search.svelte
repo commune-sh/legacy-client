@@ -23,8 +23,8 @@ let focus = () => {
 }
 let blur = () => {
     setTimeout(() => {
-        //focused = false
-    }, 100)
+        focused = false
+    }, 200)
 }
 
 let searchInput;
