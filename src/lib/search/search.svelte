@@ -135,6 +135,12 @@ input {
     transition: 0.1s;
 }
 
+@media screen and (max-width: 768px) {
+    input {
+        width: 80px;
+    }
+}
+
 .ex {
     width: 200px;
 }

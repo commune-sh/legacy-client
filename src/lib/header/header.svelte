@@ -5,7 +5,7 @@ import { onMount, createEventDispatcher } from 'svelte'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
-import { menu} from '$lib/assets/icons.js'
+import { menu, newChat} from '$lib/assets/icons.js'
 import SkeletonSpan from '$lib/skeleton/skeleton-span.svelte'
 import Search from '$lib/search/search.svelte'
 
@@ -204,7 +204,10 @@ $: buttonText = busy ? busyText : normalText
                 {#if authenticated && space && exists}
                     {#if (joined && !isProfile) || ownProfile}
                         {#if !editing}
-                        <button class="light" on:click={newPost}>New Post</button>
+                        <button class="new-post light" on:click={newPost}>New Post</button>
+                            <div class="new-post-alt c-ico">
+                                {@html newChat}
+                            </div>
                         {/if}
                     {:else if !following}
                         <button class="light" 
@@ -252,6 +255,26 @@ $: buttonText = busy ? busyText : normalText
     font-size: 1rem;
 }
 
+.new-post-alt {
+    background-color: var(--primary);
+    border-radius: 50%;
+    padding: 1rem;
+    z-index: 1000;
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    display: none;
+}
+
+.c-ico {
+    fill: white;
+    opacity: 0.9;
+}
+
+.c-ico:hover {
+    opacity: 1;
+}
+
 @media screen and (max-width: 768px) {
     .container {
         grid-template-columns: 48px auto;
@@ -264,6 +287,12 @@ $: buttonText = busy ? busyText : normalText
     }
     .name {
         padding-left: 0.5rem;
+    }
+    .new-post {
+        display: none;
+    }
+    .new-post-alt {
+        display: block;
     }
 }
 .slash {
