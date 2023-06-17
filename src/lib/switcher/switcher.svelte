@@ -103,15 +103,6 @@ $: verifiedSession = $store.verifiedSession
     width: 100%;
 }
 
-::-webkit-scrollbar {
-    width: 0px;
-}
-::-webkit-scrollbar-thumb {
-    background: var(--scrollbar-thumb);
-}
-::-webkit-scrollbar-track {
-    background: var(--scrollbar-track);
-}
 .sepc {
     margin-top: 0.75rem;
     margin-bottom: 0.75rem;

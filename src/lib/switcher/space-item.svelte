@@ -7,6 +7,7 @@ import { page } from '$app/stores';
 import tippy from 'tippy.js';
 
 export let container;
+export let scrolling;
 
 let el;
 let content;
@@ -24,6 +25,11 @@ onMount(() => {
         theme: 'inline',
     });
 })
+
+$: if(scrolling && menu) {
+    menu.hide()
+    hovered = false
+}
 
 export let space;
 
