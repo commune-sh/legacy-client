@@ -372,6 +372,16 @@ function createApp() {
     })
   }
 
+  let addRoomToSpaceState = (space, state) => {
+    update(p => {
+      if(!p.states[space]?.children) {
+        p.states[space].children = []
+      }
+      p.states[space].children.push(state)
+      console.log(p.states[space])
+      return p
+    })
+  }
   let addSpacePath = (space, path) => {
     update(p => {
       let x = p.spacePaths[space]
@@ -581,6 +591,7 @@ function createApp() {
     addNewPostToRoom,
     addPageState,
     addSpaceState,
+    addRoomToSpaceState,
     addSpacePath,
     addSpaceRoomPath,
     toggleMenu,

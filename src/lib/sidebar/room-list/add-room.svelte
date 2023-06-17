@@ -1,5 +1,6 @@
 <script>
 import { store } from '$lib/store/store.js'
+import { goto } from '$app/navigation';
 import { createSpaceRoom } from '$lib/utils/request.js'
 import { page } from '$app/stores';
 import { tick } from 'svelte'
@@ -30,6 +31,11 @@ async function focusNameInput() {
 }
 
 function validate(e) {
+    if (event.key === 'Escape' || event.key === 'Esc') {
+        kill()
+        return
+    }
+
     if(e.key == 'Enter' && !exists) {
         busy = true
         addRoom();
@@ -44,8 +50,8 @@ function validate(e) {
 }
 
 function check(e) {
-    let index = state?.children.findIndex(x => x.alias == nameInput.value)
-    if(index != -1) {
+    let index = state?.children?.findIndex(x => x.alias == nameInput.value)
+    if(index > -1) {
         exists = true
     } else {
         exists = false
@@ -60,6 +66,28 @@ async function addRoom() {
         name: nameInput.value
     })
     console.log(res)
+    if(res?.success && res?.room_id) {
+        store.addRoomToSpaceState($page.params.space, {
+            alias: nameInput.value,
+            avatar: null,
+            header: null,
+            name: nameInput.value,
+            pinned_events: null,
+            room_id: res?.room_id,
+            topic: null,
+            topics: null,
+            type: "board",
+        })
+        goto(`/${$page.params.space}/${nameInput.value}`)
+        kill()
+    }
+}
+function kill() {
+    active = false;
+    busy = false;
+    nameInput.value = '';
+    name = '';
+    exists = false;
 }
 
 </script>
@@ -97,9 +125,6 @@ async function addRoom() {
             <div class="sloader"></div>
         </div>
     {/if}
-</div>
-<div class="mh2">
-    <button>Add</button>
 </div>
 {/if}
 
