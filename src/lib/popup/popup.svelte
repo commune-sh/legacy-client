@@ -201,7 +201,7 @@ async function focusSearchInput() {
         class:inactive={!active}>
 
         <div class="popup-container" 
-        style={`--top:${activePosition?.top}px;--left:${activePosition?.left}px;`}
+            style={`--top:${activePosition?.top}px;--left:${activePosition?.left}px;--shadow:${shadow}`}
         in:fly="{{ y: 30, duration: 100 }}"
         bind:this={container}>
 

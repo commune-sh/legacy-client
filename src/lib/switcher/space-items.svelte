@@ -1,4 +1,6 @@
 <script>
+import { store } from '$lib/store/store.js'
+import UserSpace from './user-space.svelte'
 import SpaceItem from './space-item.svelte'
 export let spaces;
 
@@ -12,11 +14,21 @@ function scroll() {
     }, 200)
 }
 
+$: authenticated = $store?.authenticated && 
+    $store?.credentials != null
+    $store?.credentials?.access_token?.length > 0
+
 </script>
 
 <div class="switcher-items" 
     on:scroll={scroll}
     bind:this={container}>
+
+    {#if authenticated}
+
+        <UserSpace />
+    {/if}
+
     {#if spaces?.length > 0}
         {#each spaces as space}
             <SpaceItem scrolling={scrolling} space={space} container={container}/>

@@ -63,6 +63,8 @@
     --emoji-list: #2b2b2b;
 
     --hamburger: #868686;
+    --hover-focus: #272727;
+    --popup-bg: #090909;
 }
 
 :root.light {
@@ -127,6 +129,9 @@
     --emoji-list: #fff;
 
     --hamburger: #2d2d2d;
+    --hover-focus: #e9ecef;
+
+    --popup-bg: #e9ecef;
 }
 
 :root.black {
@@ -191,6 +196,9 @@
     --emoji-list: #151515;
 
     --hamburger: #a6a6a6;
+    --hover-focus: #181818;
+
+    --popup-bg: #181818;
 }
 
 
