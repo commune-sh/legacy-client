@@ -363,6 +363,10 @@ function toggleReplies() {
 $: replies = getReplyCount(event)
 
 
+$: hasTopic = event?.content?.topic !== undefined && event?.content?.topic !==
+    null && event?.content?.topic !== ''
+
+$: showTopic = hasTopic && !isTopic
 </script>
 
 <div class="event" 
@@ -391,6 +395,11 @@ $: replies = getReplyCount(event)
             {#if showRoomAlias}
                 <div class="sm ml2">
                     <a href={`/${event.room_alias}`}>{event.room_alias}</a>
+                </div>
+            {/if}
+            {#if showTopic}
+                <div class="sm ml2">
+                    <a href={`/${event.room_alias}/topic/${event.content.topic}`}>{event.content.topic}</a>
                 </div>
             {/if}
         </div>
