@@ -281,6 +281,7 @@ $: buttonText = busy ? busyText : normalText
     }
     .menu {
         display: block;
+        fill: var(--hamburger);
     }
     .menu {
         display: block;

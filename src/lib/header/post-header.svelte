@@ -133,6 +133,7 @@ $: isTopic= $page?.params?.topic !== undefined &&
     }
     .menu {
         display: block;
+        fill: var(--hamburger);
     }
     .close {
         display: none;
