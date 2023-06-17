@@ -46,7 +46,7 @@ let fetched = false;
 async function doSearch() {
     if(query == null || query.length < 1) return
     const res = await searchEvents({
-        room_id: roomID,
+        room_id: roomID ? roomID : 'all',
         query: query,
     })
     console.log(res)

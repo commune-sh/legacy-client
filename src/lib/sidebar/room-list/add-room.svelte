@@ -78,6 +78,7 @@ async function addRoom() {
             topics: null,
             type: "board",
         })
+        store.addRoom(res.room_id)
         goto(`/${$page.params.space}/${nameInput.value}`)
         kill()
     }
@@ -118,6 +119,7 @@ function kill() {
         on:input={check}
         bind:this={nameInput}
         bind:value={name}
+        spellcheck="false"
         placeholder="my-board" class="sl" />
 
     {#if busy}

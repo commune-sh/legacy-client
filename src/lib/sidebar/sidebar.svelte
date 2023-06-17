@@ -109,11 +109,15 @@ $: items = buildItems(state)
     background: transparent;
     transition: 0.1s;
 }
-::-webkit-scrollbar-thumb:hover {
-    background: var(--scrollbar-track);
+::-webkit-scrollbar-track {
+    background: transparent;
+    transition: 0.1s;
 }
 
 .items:hover::-webkit-scrollbar-thumb {
     background: var(--scrollbar-thumb);
+}
+.items:hover::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
 }
 </style>

@@ -83,7 +83,7 @@ async function create() {
         store.addSpace(res.space)
         store.addRoom(res.space.room_id)
         goto(`/${res.space.alias}`)
-
+        busy = false
         kill()
     }
     if(res?.error) {
