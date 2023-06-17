@@ -274,6 +274,9 @@ function edited(e) {
     }
 }
 
+$: sender_id = $store.credentials?.matrix_user_id
+$: isPostAuthor = sender_id === post?.sender?.id
+
 </script>
 
 <section class="content" class:rep={replying}>
@@ -286,6 +289,7 @@ function edited(e) {
                 on:update-reactions 
                 on:edited={edited}
                 isPost={true} 
+                isPostAuthor={isPostAuthor}
                 event={post} 
                 on:replyTo={replyToEvent}/>
         {:else}
@@ -325,6 +329,7 @@ function edited(e) {
                         sender={post?.sender?.id}
                         on:set-reply-thread={setReplyThread}
                         event={reply} 
+                        isPostAuthor={isPostAuthor}
                         on:replyTo={replyToEvent} />
                 {/each}
             {/if}

@@ -245,3 +245,19 @@ export async function searchEvents({query, room_id}) {
   return data
 }
 
+export async function createSpace(body) {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/space/create`,
+    body: body,
+  })
+  return data
+}
+
+export async function createSpaceRoom(body) {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/space/room/create`,
+    body: body,
+  })
+  return data
+}
+

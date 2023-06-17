@@ -31,6 +31,8 @@ export let showAlias = true;
 export let interactive = true;
 export let search = false;
 
+export let isPostAuthor = false;;
+
 
 export let event;
 export let sender;
@@ -360,6 +362,7 @@ function toggleReplies() {
 
 $: replies = getReplyCount(event)
 
+
 </script>
 
 <div class="event" 
@@ -373,7 +376,6 @@ $: replies = getReplyCount(event)
     class:fresh={event?.just_posted}
     class:isrep={isReplyEvent}
     class:highlight={highlight || !interactive} role="button">
-
 
 
     <div class="ev-c fl-co"
@@ -534,6 +536,7 @@ $: replies = getReplyCount(event)
                 nested={true}
                 event={reply} 
                 on:set-reply-thread
+                isPostAuthor={isPostAuthor}
                 sender={sender}
                 on:replyTo/>
         {/each}

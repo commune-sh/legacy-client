@@ -384,6 +384,7 @@ input, textarea {
     color: var(--text);
     font-size: 16px;
     box-sizing: border-box;
+    font-family: "Inter", "Twemoji", "Apple Color Emoji", "Segoe UI Emoji", "Arial", "Helvetica", sans-serif, "STIXGeneral", "Noto Color Emoji";
 }
 
 input:focus, textarea:focus {
@@ -397,6 +398,11 @@ input[disabled]{
 textarea {
     line-height: 1.6;
     resize: none;
+}
+
+textarea:disabled,
+textarea[disabled]{
+    cursor: not-allowed;
 }
 
 .pa0 { padding: 0; }
@@ -721,10 +727,11 @@ textarea {
 }
 
 .label {
-    font-size: 0.8rem;
+    font-size: small;
     font-weight: bold;
     text-transform: uppercase;
     color: var(--text-2);
+    letter-spacing: 1px;
 }
 
 pre {

@@ -108,7 +108,7 @@ $: if(space && !room) {
 }
 
 $: if(authenticated) {
-    console.log("setting up events sync")
+    //console.log("setting up events sync")
     //SyncEvents()
 }
 

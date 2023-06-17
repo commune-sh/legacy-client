@@ -15,6 +15,11 @@ function deleteLink() {
 </script>
 
 <div class="link-item ma2 pa2 fl">
+    {#if item.image}
+        <div class="image mr2 grd-c" 
+            style="background-image: url({item.image})">
+        </div>
+    {/if}
     <div class="ovh fl-co">
         <div class="sm">
             <b>{item.title}</b>
@@ -81,8 +86,16 @@ function deleteLink() {
     background-size: cover;
     background-position: center;
     border-radius: 3px;
-    width: 60px;
-    height: 60px;
+    min-width: 40px;
+    min-height: 40px;
+    width: 40px;
+    height: 40px;
 }
 
+.description {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-break: break-all;
+}
 </style>

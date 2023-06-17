@@ -1,14 +1,23 @@
 <script>
 export let event;
+import { external } from '$lib/assets/icons.js'
 
 $: links = event?.content?.links;
 </script>
 
 <div class="links">
     {#each links as item}
-        <div class="link-item">
-            <a href={item.href} target="_blank" rel="noopener noreferrer">
-            <div class="ovh fl-co">
+        <a class="" href={item.href} target="_blank" rel="noopener noreferrer">
+        <div class="link-item fl">
+            <div class="image grd-c grd mr2" 
+                style="background-image: url({item.image})">
+                {#if !item.image}
+                    <div class="grd-c ico-s">
+                        {@html external}
+                    </div>
+                {/if}
+            </div>
+            <div class="ovh fl-co fl-o">
                 <div class="sm">
                     <b>{item.title}</b>
                 </div>
@@ -26,8 +35,8 @@ $: links = event?.content?.links;
                     </div>
                 {/if}
             </div>
-            </a>
         </div>
+        </a>
     {/each}
 </div>
 
@@ -57,10 +66,17 @@ $: links = event?.content?.links;
     background-size: cover;
     background-position: center;
     border-radius: 3px;
-    width: 60px;
-    height: 60px;
+    background-color: var(--shade-3);
+    width: 40px;
+    height: 40px;
 }
 
+.description {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-break: break-all;
+}
 a {
     color: var(--text);
     text-decoration: none;

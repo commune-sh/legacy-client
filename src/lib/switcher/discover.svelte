@@ -29,6 +29,7 @@ $: spacePath = $store?.spacePaths[space?.alias]?.pathname
 $: initial = space?.alias?.charAt(0)?.toUpperCase()
 
 function goToSpace() {
+    return
     let url = `/discover`
     goto(url, {noscroll: true})
 }

@@ -28,6 +28,7 @@ function buildItems(state) {
     let items = [
         {
             alias: state?.space?.is_profile ? `${$page.params.space}`:`general`,
+            title: state?.space?.topic ? state?.space?.topic : state?.space?.name,
             avatar: state?.space?.avatar,
             header: state?.space?.header,
             name: state?.space?.name,
@@ -41,6 +42,11 @@ function buildItems(state) {
 
     if(children?.length > 0) {
         children.forEach(child => {
+            let title = child?.topic
+            if(!child.topic) {
+                title = `${$page.params.space}/${child.alias}`
+            }
+            child.title = title
             items.push(child)
         })
     }

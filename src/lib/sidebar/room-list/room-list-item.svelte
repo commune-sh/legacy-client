@@ -20,6 +20,10 @@ $: active = (isGeneral && !room && !topic) ||
 $: selected = (isGeneral && !room) || 
     (room === item?.alias)
 
+$: if(selected) {
+    document.title = item.title
+}
+
 let toggled = false;
 
 $: if(active) {

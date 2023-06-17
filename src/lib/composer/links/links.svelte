@@ -20,4 +20,7 @@ $: links = $store.editorStates[roomID]?.links
 </div>
 
 <style>
+.links {
+    overflow: hidden;
+}
 </style>

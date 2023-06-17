@@ -359,6 +359,7 @@ function createApp() {
   let addSpace = (x) => {
     update(p => {
       p.spaces.push(x)
+      p.spaces.sort((a, b) => a.alias.toLowerCase().localeCompare(b.alias.toLowerCase()));
       return p
     })
   }

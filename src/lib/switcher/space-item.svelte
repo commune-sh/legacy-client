@@ -1,9 +1,12 @@
 <script>
 import { onMount, createEventDispatcher } from 'svelte'
+import { isInViewport } from '$lib/utils/utils.js'
 import { store } from '$lib/store/store.js'
 import { goto } from '$app/navigation';
 import { page } from '$app/stores';
 import tippy from 'tippy.js';
+
+export let container;
 
 let el;
 let content;
@@ -41,6 +44,15 @@ let hovered = false;
 
 $: active = $page.params?.space === space?.alias
 
+$: if(active && el) {
+    isInViewport(el)
+    .then(e => {
+        if(!e) {
+            el.scrollIntoView()
+        }
+    });
+}
+
 </script>
 
 <div class="" bind:this={content}>
@@ -75,6 +87,7 @@ $: active = $page.params?.space === space?.alias
     height: 36px;
     display: grid;
     cursor: pointer;
+    border: 2px solid transparent;
 }
 
 .initial {
@@ -85,7 +98,7 @@ $: active = $page.params?.space === space?.alias
 }
 
 .active {
-    outline: 2px solid var(--primary);
+    border: 2px solid var(--primary);
 }
 
 

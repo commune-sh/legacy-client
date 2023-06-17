@@ -40,6 +40,12 @@ let passwordWarning = false;
 
 let showInvalid = false;
 
+function validateUsername(e) {
+    const letters = /^[0-9a-zA-Z]+$/;
+    if(!e.key.match(letters)){
+        e.preventDefault()
+    }
+}
 
 function create() {
     if(emailInput.value.length < 1){
@@ -106,7 +112,7 @@ function create() {
 
 let availableWarning = false;
 
-function validateUsername() {
+function checkAvailability() {
     debounce(usernameAvailable, 250)
 }
 
@@ -223,7 +229,8 @@ function togglePass() {
                 class:red={availableWarning || usernameWarning}
                 on:keyup={ukey}
                 on:keydown={rlw}
-                on:keyup={validateUsername}
+                on:keyup={checkAvailability}
+                on:keypress={validateUsername}
                 type="text" placeholder="" />
             </div>
             <div class="mt3 pb2" class:warn={passwordWarning}>

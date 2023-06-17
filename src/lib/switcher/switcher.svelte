@@ -56,8 +56,11 @@ $: verifiedSession = $store.verifiedSession
             </div>
         </div>
 
-        <div class="content">
-            <SpaceItems spaces={spaces}/>
+        <SpaceItems spaces={spaces}/>
+
+        <div class="sepc grd">
+            <div class="sep grd-c">
+            </div>
         </div>
 
 
@@ -88,8 +91,11 @@ $: verifiedSession = $store.verifiedSession
 }
 
 .switcher-container {
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
+}
+
+.content {
+    overflow: hidden;
 }
 
 .mt {
@@ -106,9 +112,6 @@ $: verifiedSession = $store.verifiedSession
 ::-webkit-scrollbar-track {
     background: var(--scrollbar-track);
 }
-.content {
-}
-
 .sepc {
     margin-top: 0.75rem;
     margin-bottom: 0.75rem;
