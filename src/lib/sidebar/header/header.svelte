@@ -16,6 +16,8 @@ $: isStaticRoute = $store.staticRoutes.some(r => r.path === $page?.url?.pathname
 $: staticRoute = $store.staticRoutes.find(r => r.path === $page?.url?.pathname);
 $: isNotSpace = $page?.params?.space == undefined || $page?.params?.space == null
 
+$: isSpace = $page?.params?.space !== undefined && $page?.params?.space !== null
+
 $: isIndex = $page?.url?.pathname === '/'
 
 $: sender_id = $store.credentials?.matrix_user_id
@@ -41,6 +43,7 @@ let popup;
 
 <div class="sidebar-header">
 
+    {#if isSpace}
     <Popup
     bind:this={popup}
     trigger={"click"}
@@ -54,12 +57,7 @@ let popup;
             class:active={menuActive}
             on:click={toggleMenu}>
             <div class="name in fl-o">
-                {#if isNotSpace}
-                    {PUBLIC_APP_NAME}
-                {:else if isStaticRoute}
-                    <b>{staticRoute.name}</b>
-
-                {:else if !ready}
+                {#if !ready}
                     <SkeletonSpan />
                 {:else}
 
@@ -84,6 +82,19 @@ let popup;
         </div>
 
     </Popup>
+    {:else}
+
+        <div class="name in fl-o">
+            {#if isStaticRoute}
+                <b>{staticRoute.name}</b>
+            {:else if isNotSpace}
+                {PUBLIC_APP_NAME}
+            {/if}
+        </div>
+
+    {/if}
+
+
 
 </div>
 <style>

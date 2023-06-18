@@ -54,7 +54,6 @@ $: username = $store?.credentials?.username
             {@html user}
         </div>
     </div>
-    <div class="tick" class:th={hovered} class:ac={active}></div>
 </div>
 
 <style>
@@ -79,25 +78,10 @@ $: username = $store?.credentials?.username
 
 .active {
     border: 2px solid var(--primary);
+    background-color: var(--primary);
 }
 
-
-.tick {
-    opacity: 0;
-    position: absolute;
-    top: 12px;
-    left: 0px;
-    height: 15px;
-    width: 4px;
-    border-radius: 0 5px 5px 0;
-    background-color: var(--switcher-pill);
-}
-.th {
-    opacity: 1;
-}
-
-.ac {
-    opacity: 1;
+.ico {
 }
 
 .create {

@@ -29,7 +29,6 @@ $: spacePath = $store?.spacePaths[space?.alias]?.pathname
 $: initial = space?.alias?.charAt(0)?.toUpperCase()
 
 function goToSpace() {
-    return
     let url = `/discover`
     goto(url, {noscroll: true})
 }
@@ -46,6 +45,7 @@ $: active = $page?.route?.id === `/(app)/discover`
 
 <div class="i-c grd">
     <div class="item grd-c" 
+    class:active={active}
     on:mouseover={() => hovered = true}
     on:mouseleave={() => hovered = false}
     on:click={goToSpace}
@@ -76,17 +76,14 @@ $: active = $page?.route?.id === `/(app)/discover`
     border: 2px solid var(--primary);
 }
 
-
-.tick {
-    opacity: 0;
-    position: absolute;
-    top: 12px;
-    left: 0px;
-    height: 15px;
-    width: 4px;
-    border-radius: 0 5px 5px 0;
-    background-color: var(--switcher-pill);
+.active {
+    border: 2px solid var(--primary);
+    background-color: var(--primary);
 }
+
+
+
+
 .th {
     opacity: 1;
 }

@@ -79,7 +79,7 @@ $: size = initials?.length > 2 ? '0.75rem' : initials?.length > 1 ? '0.85rem' : 
             <b>{initials}</b>
         </div>
     </div>
-    <div class="tick" class:th={hovered} class:ac={active}></div>
+    <div class="tick" class:ac={active}></div>
 </div>
 
 <style>
@@ -105,10 +105,13 @@ $: size = initials?.length > 2 ? '0.75rem' : initials?.length > 1 ? '0.85rem' : 
 }
 
 .item:hover {
+    border: 2px solid var(--primary);
 }
 
 .active {
     border: 2px solid var(--primary);
+    background-color: var(--primary);
+    color: white;
 }
 
 

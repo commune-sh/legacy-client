@@ -37,7 +37,7 @@ function createApp() {
     staticRoutes: [
       {
         path: '/discover',
-        name: 'Discover',
+        name: 'Discover Spaces',
         route: 'discover',
         component: 'discover.svelte',
       },
