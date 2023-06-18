@@ -52,15 +52,19 @@ $: verifiedSession = $store.verifiedSession
         <Logo large={true} />
 
         <div class="sepc grd">
-            <div class="sep grd-c">
-            </div>
+            <div class="sp"></div>
+            <div class="sep grd-c"></div>
         </div>
 
-        <SpaceItems spaces={spaces}/>
+        <div class="items">
+            <div class="tf"></div>
+            <SpaceItems spaces={spaces}/>
+            <div class="bf"></div>
+        </div>
 
         <div class="sepc grd">
-            <div class="sep grd-c">
-            </div>
+            <div class="sep grd-c"></div>
+            <div class="sp"></div>
         </div>
 
 
@@ -94,8 +98,9 @@ $: verifiedSession = $store.verifiedSession
     overflow: hidden;
 }
 
-.content {
+.items {
     overflow: hidden;
+    position:relative;
 }
 
 .mt {
@@ -103,14 +108,35 @@ $: verifiedSession = $store.verifiedSession
     width: 100%;
 }
 
-.sepc {
-    margin-top: 0.75rem;
-    margin-bottom: 0.75rem;
+.sp {
+    height: 0.75rem;
 }
+
 .sep {
     width: 24px;
     height: 3px;
     border-radius: 2px;
     background-color: var(--border-1);
 }
+
+.tf {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 0.75rem;
+    background: linear-gradient(to bottom, var(--bg), transparent);
+    z-index: 100;
+}
+
+.bf {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 0.75rem;
+    background: linear-gradient(to bottom, transparent, var(--bg));
+    z-index: 100;
+}
+
 </style>

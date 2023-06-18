@@ -332,6 +332,22 @@ async function createPost() {
                     info: file.info,
                     key: presignedURL.key,
                 }
+                if(file.type.startsWith('image')){
+                    const thumbnailURL = await getPresignedURL(extension);
+                    await uploadAttachment(file.thumbnail, thumbnailURL.url);
+                    item.thumbnail = {
+                        key: thumbnailURL.key,
+                    }
+                }
+                /*
+                if(file.type.startsWith('video')){
+                    const previewURL = await getPresignedURL('jpeg');
+                    await uploadAttachment(file.preview, previewURL.url);
+                    item.preview = {
+                        key: previewURL.key,
+                    }
+                }
+                */
                 if(file.info) {
                     item.info = file.info
                 }

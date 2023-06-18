@@ -3,8 +3,8 @@ import { onMount, createEventDispatcher } from 'svelte'
 import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
-import ImageThumbnail from './attachments/image-thumbnail.svelte'
-import Images from './attachments/images.svelte'
+import MediaThumbnail from './attachments/media-thumbnail.svelte'
+import MediaItems from './attachments/media-items.svelte'
 import Reactions from '$lib/event/reactions/reactions.svelte'
 import Replies from '$lib/event/replies/replies.svelte'
 import User from './user/user.svelte'
@@ -151,12 +151,11 @@ $: attachments = event?.content?.attachments
 $: hasAttachments = event?.content?.attachments?.length > 0
 $: hasLinks = event?.content?.links?.length > 0
 
-$: images = attachments?.filter(a => a?.type?.startsWith('image'))
+$: media = attachments?.filter(a => a?.type?.startsWith('image') ||
+a?.type?.startsWith('video'))
+$: firstIsMedia = attachments?.[0]?.type?.startsWith('image') ||
+    attachments?.[0]?.type?.startsWith('video')
 
-
-function fetchReplies() {
-    console.log("lol")
-}
 
 
 $: highlight = $page.params.post === event?.slug && !isPost
@@ -447,8 +446,8 @@ $: showTopic = hasTopic && !isTopic
 
             {/if}
 
-            {#if (isPost || isReply) && hasAttachments && images}
-                <Images images={images} />
+            {#if (isPost || isReply) && hasAttachments && media}
+                <MediaItems media={media} />
             {/if}
 
             {#if (isPost || isReply) && hasLinks}
@@ -503,8 +502,8 @@ $: showTopic = hasTopic && !isTopic
 
     </div>
 
-    {#if !isPost && !isReply && hasAttachments && images && !editing && !search}
-        <ImageThumbnail images={images} />
+    {#if !isPost && !isReply && hasAttachments && firstIsMedia && !editing && !search}
+        <MediaThumbnail media={media} />
     {/if}
 
         {#if displayTools && !editing && interactive}

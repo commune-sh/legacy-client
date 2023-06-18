@@ -59,3 +59,40 @@ export function isInViewport(element) {
     observer.observe(element);
   });
 }
+
+export const getPreviewImage = async (videoFile) => {
+  const videoElement = document.createElement('video');
+  videoElement.src = URL.createObjectURL(videoFile);
+
+  return new Promise((resolve, reject) => {
+    videoElement.oncanplay = () => {
+      videoElement.currentTime = 3;
+
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      canvas.width = videoElement.videoWidth;
+      canvas.height = videoElement.videoHeight;
+      context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+
+      setTimeout(() => {
+        canvas.toBlob((blob) => {
+          resolve(blob);
+        }, 'image/jpeg');
+      }, 100)
+
+      // Clean up
+      videoElement.oncanplay = null;
+      videoElement.currentTime = null;
+      videoElement.remove();
+      canvas.remove();
+      URL.revokeObjectURL(videoElement.src);
+    };
+
+    videoElement.onerror = () => {
+      reject(new Error('Failed to load video'));
+    };
+  });
+};
+
+export const formatBytes = (a,b) => {if(0==a)return"0 Bytes";var c=1024,d=b||2,e=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],f=Math.floor(Math.log(a)/Math.log(c));return parseFloat((a/Math.pow(c,f)).toFixed(d))+" "+e[f]}
+

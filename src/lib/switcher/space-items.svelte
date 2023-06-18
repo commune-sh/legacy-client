@@ -34,15 +34,20 @@ $: authenticated = $store?.authenticated &&
             <SpaceItem scrolling={scrolling} space={space} container={container}/>
         {/each}
     {/if}
+    <div class="tf"></div>
 </div>
 
 <style>
 .switcher-items {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
     overflow-y: auto;
     overflow-x: hidden;
+    height: 100%;
 }
+
 ::-webkit-scrollbar {
-    width: 2px;
+    width: 1px;
 }
 ::-webkit-scrollbar-thumb {
     background: transparent;
@@ -57,6 +62,5 @@ $: authenticated = $store?.authenticated &&
     background: var(--scrollbar-thumb);
 }
 .switcher-items:hover::-webkit-scrollbar-track {
-    background: var(--scrollbar-track);
 }
 </style>

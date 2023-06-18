@@ -28,6 +28,7 @@ export let space;
 function goToUserSpace() {
     let url = `/@${username}`
     goto(url, {noscroll: true})
+    menu.hide()
 }
 
 let hovered = false;

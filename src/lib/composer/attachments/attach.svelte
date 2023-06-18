@@ -1,5 +1,5 @@
 <script>
-import { onMount, onDestroy, createEventDispatcher } from 'svelte'
+import { createEventDispatcher } from 'svelte'
 import { add } from '$lib/assets/icons.js'
 
 
@@ -13,6 +13,7 @@ let files = [];
 let tooLarge = false;
 
 let build = (e) => {
+    console.log("attaching....")
 
     if(e.target.files.length > 13) {
         alert("That's too many attachments at once.")
@@ -29,20 +30,72 @@ let build = (e) => {
             tooLarge = true
             break
         }
-            if(file.type.includes('image')) {
-                var image = new Image();
-                image.src = URL.createObjectURL(file)
-                image.onload = () => {
-                    file.info = {}
-                    file.info.h = image.height
-                    file.info.w = image.width
+
+        if(file.type.includes('image')) {
+            var image = new Image();
+            image.src = URL.createObjectURL(file)
+            image.onload = () => {
+                file.info = {}
+                file.info.h = image.height
+                file.info.w = image.width
+                image.remove()
+                URL.revokeObjectURL(image.src);
+
+                let width = image.width;
+                let height = image.height;
+
+                let scaleFactor = 1;
+
+                if (width > height) {
+                    scaleFactor = 100 / height;
+                    width *= scaleFactor;
+                    height = 100;
+                } else {
+                    scaleFactor = 100 / width;
+                    height *= scaleFactor;
+                    width = 100;
                 }
+
+                const canvas = document.createElement('canvas');
+                canvas.width = 100;
+                canvas.height = 100;
+
+                const offsetX = (width - 100) / 2;
+                const offsetY = (height - 100) / 2;
+
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(image, -offsetX, -offsetY, width, height);
+
+
+                canvas.toBlob(function(blob) {
+                    file.thumbnail = blob
+                }, 'image/jpeg', 0.8);
+
             }
+
+        } else if(file.type.includes('video')) {
+            let video = document.createElement('video');
+            video.src = URL.createObjectURL(file)
+            video.addEventListener('loadedmetadata', async function(e){
+                file.info = {}
+                file.info.h = video.videoHeight
+                file.info.w = video.videoWidth
+
+                /*
+                const preview = await generateScreenshot(file);
+                console.log(preview)
+                file.preview = preview
+                */
+
+            });
+        }
+
 
         files = [...files, file]
     }
     dispatch('attached', files)
     files = []
+    fileInput.value = ''
 
     /*
     for(let i =0 ; i < files.length; i++) {
@@ -102,7 +155,7 @@ function upload() {
     {@html add}
     <input 
         type="file" 
-        accept="image/*"
+        accept="image/*, video/*"
         name="images"
         bind:this={fileInput} 
         on:change={build} 
