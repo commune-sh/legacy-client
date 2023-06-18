@@ -35,7 +35,7 @@ export let space;
 
 $: spacePath = $store?.spacePaths[space?.alias]?.pathname
 
-$: initial = space?.alias?.charAt(0)?.toUpperCase()
+$: initials = space?.initials?.toUpperCase()
 
 function goToSpace() {
     menu.hide()
@@ -59,6 +59,8 @@ $: if(active && el) {
     });
 }
 
+$: size = initials?.length > 2 ? '0.75rem' : initials?.length > 1 ? '0.85rem' : '1rem'
+
 </script>
 
 <div class="" bind:this={content}>
@@ -67,13 +69,14 @@ $: if(active && el) {
 
 <div class="i-c grd">
     <div class="item grd-c"
+    draggable="true"
     class:active={active}
     bind:this={el}
     on:mouseover={() => hovered = true}
     on:mouseleave={() => hovered = false}
     on:click={goToSpace}>
-        <div class="initial grd-c">
-            <b>{initial}</b>
+        <div class="initial grd-c" style="font-size:{size};">
+            <b>{initials}</b>
         </div>
     </div>
     <div class="tick" class:th={hovered} class:ac={active}></div>
@@ -98,6 +101,7 @@ $: if(active && el) {
 
 .initial {
     opacity: 0.8;
+    font-size: var(--size);
 }
 
 .item:hover {

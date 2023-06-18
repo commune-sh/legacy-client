@@ -96,3 +96,25 @@ export const getPreviewImage = async (videoFile) => {
 
 export const formatBytes = (a,b) => {if(0==a)return"0 Bytes";var c=1024,d=b||2,e=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],f=Math.floor(Math.log(a)/Math.log(c));return parseFloat((a/Math.pow(c,f)).toFixed(d))+" "+e[f]}
 
+
+
+export function generateInitials(items) {
+  const initialsMap = new Map();
+
+  items.forEach((item) => {
+    const firstChar = item.alias.charAt(0);
+    let initials = firstChar;
+
+    if (initialsMap.has(firstChar)) {
+      let index = 1;
+      while (index < item.alias.length && initialsMap.has(initials)) {
+        initials = item.alias.substr(0, index + 1);
+        index++;
+      }
+    }
+
+    initialsMap.set(initials, true);
+    item.initials = initials;
+  });
+}
+

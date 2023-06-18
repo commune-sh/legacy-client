@@ -1,5 +1,5 @@
 import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
-import { insertEvents } from '$lib/utils/events.js'
+import { generateInitials } from '$lib/utils/utils.js'
 import { writable } from 'svelte/store';
 
 function createApp() {
@@ -354,6 +354,7 @@ function createApp() {
       if(x == null) {
         p.spaces = []
       }
+      generateInitials(p.spaces);
       return p
     })
   }
