@@ -39,6 +39,7 @@ let usernameWarning = false;
 let passwordWarning = false;
 
 let showInvalid = false;
+let provider_forbidden = false;
 
 function validateUsername(e) {
     const letters = /^[0-9a-zA-Z]+$/;
@@ -99,6 +100,9 @@ function create() {
             store.saveSpaces(resp.spaces)
             store.isAuthenticated()
             dispatch('created', true)
+        }
+        if(resp?.provider_forbidden) {
+            provider_forbidden = true
         }
 
         busy = false
@@ -214,6 +218,11 @@ function togglePass() {
                 class:red={emailWarning}
                 type="text" placeholder="" />
             </div>
+            {#if provider_forbidden}
+            <div class="mt2 pb2 warn pvd">
+                Please use a personal or work email.
+            </div>
+            {/if}
             <div class="mt3 pb2" class:warn={availableWarning || usernameWarning}>
                 <span class="label">username</span>
                 {#if availableWarning}
@@ -350,6 +359,10 @@ input {
 }
 .col {
     fill: var(--primary);
+}
+
+.pvd {
+    line-height: 1.5;
 }
 
 @media screen and (max-width: 550px) {

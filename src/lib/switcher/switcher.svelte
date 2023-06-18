@@ -6,6 +6,7 @@ import CreateSpace from './create-space.svelte'
 import Discover from './discover.svelte'
 import Settings from './settings.svelte'
 import Theme from './theme.svelte'
+import SkeletonSpaceItems from '$lib/skeleton/skeleton-space-items.svelte'
 import { page } from '$app/stores';
 
 $: authenticated = $store?.authenticated && 
@@ -43,6 +44,8 @@ $: spaces = $store?.spaces
 
 $: verifiedSession = $store.verifiedSession
 
+$: spacesFetched = $store.spacesFetched
+
 </script>
 <div class="switcher">
     <div class="switcher-container fl-co">
@@ -56,11 +59,17 @@ $: verifiedSession = $store.verifiedSession
             <div class="sep grd-c"></div>
         </div>
 
+
+        {#if spacesFetched}
         <div class="items">
             <div class="tf"></div>
             <SpaceItems spaces={spaces}/>
             <div class="bf"></div>
         </div>
+        {:else}
+            <SkeletonSpaceItems />
+        {/if}
+
 
         <div class="sepc grd">
             <div class="sep grd-c"></div>
@@ -68,10 +77,8 @@ $: verifiedSession = $store.verifiedSession
         </div>
 
 
-        {#if verifiedSession}
         <CreateSpace />
         <Discover />
-        {/if}
 
         <div class="fl-o">
         </div>
@@ -101,6 +108,7 @@ $: verifiedSession = $store.verifiedSession
 .items {
     overflow: hidden;
     position:relative;
+    height: 100%;
 }
 
 .mt {

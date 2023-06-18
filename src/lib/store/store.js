@@ -17,6 +17,7 @@ function createApp() {
     credentials: null,
     rooms: [],
     spaces: [],
+    spacesFetched: false,
     states: [],
     spacePaths: [],
     stateReady: false,
@@ -561,6 +562,13 @@ function createApp() {
       return p
     })
   }
+  let spacesFetched = () => {
+    update(p => {
+      p.spacesFetched = true
+      return p
+    })
+  }
+
 
   const { subscribe, set, update } = writable(app);
 
@@ -618,6 +626,7 @@ function createApp() {
     stateNotReady,
     isFederated, 
     isNotFederated,
+    spacesFetched,
   };
 }
 

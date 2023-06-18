@@ -47,7 +47,7 @@ $: authenticated = $store?.authenticated &&
 }
 
 ::-webkit-scrollbar {
-    width: 1px;
+    width: 2px;
 }
 ::-webkit-scrollbar-thumb {
     background: transparent;

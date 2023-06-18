@@ -57,7 +57,7 @@ function goToNext() {
         style="background: url({getURL(item)})">
 
             {#if isItemVideo(item)}
-                <video width="40" height="40">
+                <video class="tvi" width="40" height="40">
                   <source src={getURL(media[0])} autoplay muted>
                 </video>
                 <div class="vid grd">
@@ -141,6 +141,9 @@ function goToNext() {
 video {
     max-height: 500px;
     width: 100%;
+}
+
+.tvi {
     background-color: var(--shade-2);
 }
 .vid {

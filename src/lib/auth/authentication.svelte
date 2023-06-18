@@ -41,6 +41,7 @@ let syncCreds = (token) => {
                 store.saveSpaces(resp.spaces)
                 store.isAuthenticated()
                 store.verifiedSession(true)
+                store.spacesFetched()
             } else {
                 //localStorage.removeItem('access_token')
                 store.verifiedSession(true)

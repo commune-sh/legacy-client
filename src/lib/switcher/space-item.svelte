@@ -88,7 +88,7 @@ $: if(active && el) {
 
 .item{
     background-color: var(--switcher-item);
-    border-radius: 6px;
+    border-radius: 50%;
     width: 36px;
     height: 36px;
     display: grid;

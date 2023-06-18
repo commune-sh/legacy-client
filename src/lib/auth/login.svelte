@@ -89,6 +89,7 @@ function login() {
             store.saveSpaces(resp.spaces)
             store.isAuthenticated()
             dispatch('authenticated', true)
+            store.spacesFetched()
         }
 
         busy = false

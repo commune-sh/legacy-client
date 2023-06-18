@@ -42,6 +42,8 @@ function fetchDefaultSpaces() {
     .then(resp => {
         if(resp) {
             store.saveSpaces(resp.spaces)
+            store.stateReady()
+            store.spacesFetched()
         }
     })
 }
