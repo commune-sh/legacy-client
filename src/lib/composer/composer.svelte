@@ -266,6 +266,9 @@ async function processLink(href) {
         if(res?.metadata?.author) {
             link.author = res.metadata.author
         }
+        if(res?.metadata?.youtube_id) {
+            link.youtube_id = res.metadata.youtube_id
+        }
         store.addLink({
             room_id: stateKey,
             link: link,

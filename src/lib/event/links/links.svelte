@@ -1,12 +1,21 @@
 <script>
+import YoutubeItem from './youtube-item.svelte'
 export let event;
 import { external } from '$lib/assets/icons.js'
 
 $: links = event?.content?.links;
+
+$: isYoutube = (item) => {
+    return item?.youtube_id?.length > 0;
+}
+
 </script>
 
 <div class="links">
     {#each links as item}
+        {#if isYoutube(item)}
+            <YoutubeItem link={item} />
+        {:else}
         <a class="" href={item.href} target="_blank" rel="noopener noreferrer">
         <div class="link-item fl">
             <div class="image grd-c grd mr2" 
@@ -37,6 +46,7 @@ $: links = event?.content?.links;
             </div>
         </div>
         </a>
+        {/if}
     {/each}
 </div>
 

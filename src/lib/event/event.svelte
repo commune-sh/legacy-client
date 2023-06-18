@@ -4,6 +4,7 @@ import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 import MediaThumbnail from './attachments/media-thumbnail.svelte'
+import LinkThumbnail from './links/link-thumbnail.svelte'
 import MediaItems from './attachments/media-items.svelte'
 import Reactions from '$lib/event/reactions/reactions.svelte'
 import Replies from '$lib/event/replies/replies.svelte'
@@ -149,6 +150,7 @@ $: title = event?.content?.title ? event?.content?.title : `Untitled`
 
 $: attachments = event?.content?.attachments
 $: hasAttachments = event?.content?.attachments?.length > 0
+$: links = event?.content?.links
 $: hasLinks = event?.content?.links?.length > 0
 
 $: media = attachments?.filter(a => a?.type?.startsWith('image') ||
@@ -373,7 +375,7 @@ $: showTopic = hasTopic && !isTopic
     on:mouseover={showTools}
     on:mouseleave={hideTools}
     class:h={!isReply && !isPost && !editing}
-    class:ha={!isReply && !isPost && hasAttachments}
+    class:ha={!isReply && !isPost && (hasAttachments || hasLinks)}
     class:ma={toolsActive}
     on:click={goToEvent} 
     class:fresh={event?.just_posted}
@@ -505,6 +507,11 @@ $: showTopic = hasTopic && !isTopic
     {#if !isPost && !isReply && hasAttachments && firstIsMedia && !editing && !search}
         <MediaThumbnail media={media} />
     {/if}
+
+    {#if !isPost && !isReply && hasLinks && !editing && !search}
+        <LinkThumbnail links={links} />
+    {/if}
+
 
         {#if displayTools && !editing && interactive}
         <div class="tools" class:asi={event?.pinned}>
