@@ -1,12 +1,20 @@
 <script>
 import { store } from '$lib/store/store.js'
 import { goto } from '$app/navigation';
-import { createSpaceRoom } from '$lib/utils/request.js'
+import { createStateEvent } from '$lib/utils/request.js'
 import { page } from '$app/stores';
 import { tick } from 'svelte'
-import { addLine, discuss } from '$lib/assets/icons.js'
+import { addLine, pulse } from '$lib/assets/icons.js'
 
 $: state = $store?.states[$page?.params?.space]
+
+$: roomID = isRoom ? state?.children?.find(r => r?.alias ===
+    $page?.params?.room)?.room_id : isSpace ? state?.room_id : null
+$: isSpace = $page?.params?.space !== undefined 
+$: isRoom = $page?.params?.room !== undefined 
+
+export let alias;
+export let topics;
 
 let active = false;
 let busy = false;
@@ -16,9 +24,6 @@ function activate() {
         return;
     }
     active = true;
-    if(!$store.addingRoom) {
-        $store.addingRoom = true
-    }
 }
 
 let nameInput;
@@ -53,7 +58,7 @@ function validate(e) {
 }
 
 function check(e) {
-    let index = state?.children?.findIndex(x => x.alias == nameInput.value)
+    let index = topics?.findIndex(x => x == nameInput.value)
     if(index > -1) {
         exists = true
     } else {
@@ -64,11 +69,23 @@ function check(e) {
 let exists = false;
 
 async function addRoom() {
-    const res = await createSpaceRoom({
-        room_id: state.room_id,
-        name: nameInput.value
+    let newTopics = topics
+    if(!newTopics) {
+        newTopics = []
+    }
+    newTopics.push(nameInput.value)
+    const res = await createStateEvent({
+        room_id: roomID,
+        event_type: 'm.room.topics',
+        content: {
+            topics: newTopics
+        }
     })
+
     console.log(res)
+    store.updateRoomTopics($page.params.space, alias, JSON.stringify(newTopics))
+    kill()
+    return
     if(res?.success && res?.room_id) {
         store.addRoomToSpaceState($page.params.space, {
             alias: nameInput.value,
@@ -87,6 +104,7 @@ async function addRoom() {
     }
 }
 
+
 function blur() {
     if(nameInput.value == '') {
         kill()
@@ -99,12 +117,6 @@ function kill() {
     nameInput.value = '';
     name = '';
     exists = false;
-    $store.addingRoom = false
-}
-
-$: if($store.addingRoom) {
-    activate()
-    focusNameInput()
 }
 
 </script>
@@ -117,15 +129,15 @@ $: if($store.addingRoom) {
     </div>
 
     <div class="sl pr2">
-        Add Board
+        Add Topic
     </div>
 </div>
 {/if}
 
 {#if active}
-<div class="item it-ac">
+<div class="item">
     <div class="ico grd-c op">
-        {@html discuss}
+        {@html pulse}
     </div>
 
         <input class:op={busy} type="text" 
@@ -137,7 +149,7 @@ $: if($store.addingRoom) {
         bind:this={nameInput}
         bind:value={name}
         spellcheck="false"
-        placeholder="my-board" class="sl" />
+        placeholder="my-topic" class="sl" />
 
     {#if busy}
         <div class="spinner">
@@ -159,10 +171,6 @@ $: if($store.addingRoom) {
     position: relative;
 }
 
-.it-ac {
-    outline: 2px solid var(--primary);
-}
-
 .op {
     opacity: 0.5;
     transition: 0.1s;
@@ -179,7 +187,7 @@ $: if($store.addingRoom) {
 
 .ico {
     margin-right: 0.5rem;
-    margin-left: 0.5rem;
+    margin-left: 1.75rem;
     height: 14px;
     width: 14px;
 }
@@ -204,7 +212,7 @@ input {
 .spinner {
     position: absolute;
     top: 9px;
-    right: 4px;
+    right: 0;
 }
 
 .sloader {

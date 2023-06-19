@@ -261,3 +261,11 @@ export async function createSpaceRoom(body) {
   return data
 }
 
+export async function createStateEvent(body) {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/event/state`,
+    body: body,
+  })
+  return data
+}
+

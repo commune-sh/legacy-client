@@ -192,6 +192,12 @@ $: buttonText = busy ? busyText : normalText
                             {selected?.name}
                         </span>
                     {/if}
+                        {#if $page.params.topic}
+                            <span class="slash">/</span>
+                            <span class="n">
+                                {$page.params.topic}
+                            </span>
+                        {/if}
                 {/if}
             {/if}
 

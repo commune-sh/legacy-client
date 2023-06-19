@@ -5,8 +5,14 @@ import { goto } from '$app/navigation';
 import { discuss, settings } from '$lib/assets/icons.js'
 import { store } from '$lib/store/store.js'
 import TopicItem from './topic-item.svelte'
+import AddTopic from './add-topic.svelte'
 
 export let item;
+
+$: state = $store?.states[$page?.params?.space]
+$: sender_id = $store.credentials?.matrix_user_id
+
+$: isOwner = state?.owner === sender_id
 
 $: space = $page.params?.space
 $: room = $page.params?.room
@@ -138,6 +144,11 @@ function showMenu(e) {
             item={topic} />
     {/each}
 {/if}
+
+{#if selected && isOwner}
+    <AddTopic alias={item.alias} topics={topics}/>
+{/if}
+
 
 <style>
 .item {

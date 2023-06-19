@@ -55,7 +55,8 @@ function createApp() {
     modal: {
       active: false,
       content: null,
-    }
+    },
+    addingRoom: false,
   }
 
   window.app = app
@@ -384,6 +385,23 @@ function createApp() {
       return p
     })
   }
+
+  let updateRoomTopics = (space, room, topics) => {
+    console.log(space, room, topics)
+    update(p => {
+      if(room == 'general') {
+        p.states[space].space.topics = topics
+
+      } else {
+        let r = p.states[space].children.find(x => x.alias == room)
+        if(r) {
+          r.topics = topics
+        }
+      }
+      return p
+    })
+  }
+
   let addSpacePath = (space, path) => {
     update(p => {
       let x = p.spacePaths[space]
@@ -563,12 +581,14 @@ function createApp() {
       return p
     })
   }
+
   let spacesFetched = () => {
     update(p => {
       p.spacesFetched = true
       return p
     })
   }
+
 
 
   const { subscribe, set, update } = writable(app);
@@ -628,6 +648,7 @@ function createApp() {
     isFederated, 
     isNotFederated,
     spacesFetched,
+    updateRoomTopics,
   };
 }
 

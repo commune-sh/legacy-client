@@ -331,6 +331,9 @@ let fetchMore = () => {
             store.addToRoomEvents(roomID, res.events)
             startedFetching = true;
 
+            const url = new URL(window.location.href);
+            url.searchParams.set('last', last);
+            history.pushState(null, '', url.toString());
         }
     });
 }
@@ -512,7 +515,7 @@ function postEdited(e) {
             {/if}
 
 
-            {#if (exists || !isSpace) && events?.length >= 30 && !reloading}
+            {#if (exists || !isSpace) && events !== null && !reloading}
                 <div class="obs" bind:this={obs}></div>
             {/if}
 
