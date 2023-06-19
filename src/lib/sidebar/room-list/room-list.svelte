@@ -2,7 +2,7 @@
 import RoomListItem from './room-list-item.svelte'
 import AddRoom from './add-room.svelte'
 import { page } from '$app/stores';
-import { addLine } from '$lib/assets/icons.js'
+import { addLine, up, down } from '$lib/assets/icons.js'
 import { store } from '$lib/store/store.js'
 
 export let items;
@@ -16,12 +16,29 @@ function addRoom() {
     $store.addingRoom = true
 }
 
+let collapsed = false;
+
+function toggleCollapse() {
+    collapsed = !collapsed;
+}
+
 </script>
 
 <div class="fl mb2">
-    <div class="brds fl-o">
-        <span class="label">boards</span>
+    <div class="brds grd-c fl" 
+        on:click={toggleCollapse}>
+        <div class="grd-c ico-s mr1">
+            {#if collapsed}
+                {@html up}
+            {:else}
+                {@html down}
+            {/if}
+        </div>
+        <div class="fl grd-c">
+            <div class="label">boards</div>
+        </div>
     </div>
+    <div class="fl-o"></div>
     <div class="grd-c ico-s" on:click={addRoom}>
         {@html addLine}
     </div>
@@ -29,7 +46,7 @@ function addRoom() {
 
 {#if items?.length > 0}
     {#each items as item}
-        <RoomListItem item={item} />
+        <RoomListItem item={item} collapsed={collapsed} />
     {/each}
 {/if}
 
@@ -39,7 +56,16 @@ function addRoom() {
 
 <style>
 .brds {
+    opacity: 0.9;
+}
+
+.brds:hover {
+    opacity: 1;
+}
+
+.label {
     color: var(--text-light);
+    cursor: pointer;
 }
 .ico-s {
     width: 18px;

@@ -8,6 +8,7 @@ import TopicItem from './topic-item.svelte'
 import AddTopic from './add-topic.svelte'
 
 export let item;
+export let collapsed;
 
 $: state = $store?.states[$page?.params?.space]
 $: sender_id = $store.credentials?.matrix_user_id
@@ -110,8 +111,12 @@ function showMenu(e) {
     e.stopPropagation()
 }
 
+$: show = selected ? true : collapsed && selected ? true : !collapsed ? true :
+    false
+
 </script>
 
+{#if show}
 <div class="item" 
     draggable="true"
     on:click={goToRoom}
@@ -147,6 +152,9 @@ function showMenu(e) {
 
 {#if selected && isOwner}
     <AddTopic alias={item.alias} topics={topics}/>
+{/if}
+
+
 {/if}
 
 
