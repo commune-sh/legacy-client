@@ -36,6 +36,7 @@
     --switcher-pill: #a53131;
 
     --context-menu-bg: black;
+    --context-menu-hover: #242424;
     --context-menu-border: black;
     --context-menu-text: #e1e1e1;
 
@@ -104,6 +105,7 @@
     --switcher-pill: #a53131;
 
     --context-menu-bg: white;
+    --context-menu-hover: #e9ecef;
     --context-menu-border: #a2a2a2;
     --context-menu-text: black;
 
@@ -171,8 +173,9 @@
     --switcher-item: #181818;
     --switcher-pill: #a53131;
 
-    --context-menu-bg: black;
-    --context-menu-border: black;
+    --context-menu-bg: #181818;
+    --context-menu-hover: #2a2a2a;
+    --context-menu-border: #181818;
     --context-menu-text: #e1e1e1;
 
     --warning: #9a1818;

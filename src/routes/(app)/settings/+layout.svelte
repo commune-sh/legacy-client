@@ -6,7 +6,6 @@ import Header from '$lib/header/header.svelte'
 </script>
 
 <section class="container">
-    <Header />
     <div class="space-container">
         <slot></slot>
     </div>

@@ -118,6 +118,5 @@ $: items = buildItems(state)
     background: var(--scrollbar-thumb);
 }
 .items:hover::-webkit-scrollbar-track {
-    background: var(--scrollbar-track);
 }
 </style>

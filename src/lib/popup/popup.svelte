@@ -12,6 +12,7 @@ export let shadow = `box-shadow: 0 0px 10px rgba(0,0,0,.08)`;
 export let borderRadius = `8px`
 
 export let initActive;
+export let mask = false;
 
 $: if(initActive) {
     activate()
@@ -198,6 +199,7 @@ async function focusSearchInput() {
 
 {#if ready}
     <div class="layer" 
+        class:ms={!mask}
         class:inactive={!active}>
 
         <div class="popup-container" 
@@ -220,13 +222,16 @@ async function focusSearchInput() {
 }
 .layer {
     position: fixed;
-    pointer-events: none!important;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: none!important;
     z-index: 1002;
+}
+
+.ms {
+    pointer-events: none!important;
+    background: none!important;
 }
 
 .popup-container {

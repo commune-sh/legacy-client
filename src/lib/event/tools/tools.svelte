@@ -1,5 +1,5 @@
 <script>
-import { reply, external, edit } from '$lib/assets/icons.js'
+import { reply, external, edit, trash } from '$lib/assets/icons.js'
 import Menu from './menu.svelte'
 import React from './react.svelte'
 import { createEventDispatcher } from 'svelte'
@@ -72,6 +72,7 @@ function goToEvent() {
     <Menu 
         on:active 
         on:kill 
+        isAuthor={isAuthor}
         event={event} />
 </div>
 

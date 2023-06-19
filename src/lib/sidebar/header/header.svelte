@@ -48,8 +48,8 @@ let popup;
     bind:this={popup}
     trigger={"click"}
     offset={[8, 8]}
-    shadow={`box-shadow: 0px 6px 15px -3px rgba(0,0,0,0.1);`}
     on:killed={killed}
+    mask={true}
     placement={"top-start"}>
 
         <div class="space fl pa2"
@@ -84,7 +84,7 @@ let popup;
     </Popup>
     {:else}
 
-        <div class="name in fl-o">
+        <div class="name in fl-o ml2">
             {#if isStaticRoute}
                 <b>{staticRoute.name}</b>
             {:else if isNotSpace}
@@ -101,7 +101,7 @@ let popup;
 .sidebar-header {
     display: grid;
     border-bottom: 1px solid var(--border-1);
-    height: 48px;
+    height: 47px;
     transition: 0.1s;
 }
 
