@@ -5,6 +5,7 @@ import { onMount, tick, createEventDispatcher } from 'svelte'
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
 import Board from './board/board.svelte'
+import SpaceSettings from '$lib/space/settings/settings.svelte'
 
 $: isIndex = $page?.url?.pathname === '/'
 $: isSpace = $page?.params?.space !== undefined && $page?.params?.space !== null && $page?.params?.space !== '' 
@@ -19,13 +20,26 @@ $: isChat = selectedRoomType === 'chat'
 $: isBoard = selectedRoomType === 'board'
 
 
+$: isSpaceSettings = isSpace && $page?.params?.room === 'settings'
+
 const dispatch = createEventDispatcher()
+
+$: authenticated = $store?.authenticated && 
+    $store?.credentials != null
+    $store?.credentials?.access_token?.length > 0
+
+
+$: sender_id = $store.credentials?.matrix_user_id
+$: isOwner = state?.owner === sender_id
 
 
 </script>
 
-
-<Board on:ready />
+{#if isSpaceSettings && authenticated && isOwner}
+    <SpaceSettings />
+{:else}
+    <Board on:ready />
+{/if}
 
 
 

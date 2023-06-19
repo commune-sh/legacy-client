@@ -32,11 +32,7 @@ function viewReady() {
 let root;
 
 
-onMount(() => {
-})
 
-$: if($page) {
-}
 
 $: down = $store.down
 

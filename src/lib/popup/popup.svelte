@@ -8,7 +8,7 @@ const dispatch = createEventDispatcher()
 export let offset = [0,0];
 export let trigger = "click";
 
-export let shadow = `box-shadow: 0 0px 10px rgba(0,0,0,.08)`;
+export let shadow;
 export let borderRadius = `8px`
 
 export let initActive;

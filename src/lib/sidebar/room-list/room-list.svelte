@@ -2,8 +2,9 @@
 import RoomListItem from './room-list-item.svelte'
 import AddRoom from './add-room.svelte'
 import { page } from '$app/stores';
-import { addLine, up, down } from '$lib/assets/icons.js'
+import { addLine, up, down, settings } from '$lib/assets/icons.js'
 import { store } from '$lib/store/store.js'
+import SpaceSettingsSidebar from '$lib/space/settings/sidebar.svelte'
 
 export let items;
 
@@ -22,7 +23,24 @@ function toggleCollapse() {
     collapsed = !collapsed;
 }
 
+$: authenticated = $store?.authenticated && 
+    $store?.credentials != null
+    $store?.credentials?.access_token?.length > 0
+
+
+$: isSpace = $page?.params?.space !== undefined && $page?.params?.space !== null && $page?.params?.space !== '' 
+$: sender_id = $store.credentials?.matrix_user_id
+$: isOwner = state?.owner === sender_id
+$: isSpaceSettings = isSpace && $page?.params?.room === 'settings'
+
+$: if(isSpaceSettings) {
+}
+
 </script>
+
+{#if isSpaceSettings && authenticated && isOwner}
+    <SpaceSettingsSidebar />
+{/if}
 
 <div class="fl mb2">
     <div class="brds grd-c fl" 
@@ -50,7 +68,7 @@ function toggleCollapse() {
     {/each}
 {/if}
 
-{#if isOwner}
+{#if isOwner && !collapsed}
     <AddRoom />
 {/if}
 
@@ -71,5 +89,9 @@ function toggleCollapse() {
     width: 18px;
     height: 18px;
     cursor: pointer;
+}
+.set {
+    width: 18px;
+    height: 18px;
 }
 </style>

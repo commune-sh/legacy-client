@@ -74,16 +74,14 @@ $: if(active) {
     border-radius: 50%;
     width: 36px;
     height: 36px;
-    border: 2px solid transparent;
     display: grid;
     cursor: pointer;
 }
 .item:hover {
-    border: 2px solid var(--primary);
+    background-color: var(--primary);
 }
 
 .active {
-    border: 2px solid var(--primary);
     background-color: var(--primary);
 }
 

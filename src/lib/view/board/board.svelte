@@ -331,9 +331,11 @@ let fetchMore = () => {
             store.addToRoomEvents(roomID, res.events)
             startedFetching = true;
 
+                /*
             const url = new URL(window.location.href);
             url.searchParams.set('last', last);
             history.pushState(null, '', url.toString());
+                */
         }
     });
 }
@@ -434,6 +436,9 @@ function postEdited(e) {
     }
 }
 
+$: roomExists = state?.children?.find((child) => child.alias ==
+    $page.params.room) != undefined
+
 </script>
 
 
@@ -471,7 +476,7 @@ function postEdited(e) {
                         on:kill={stopEditing}/>
                 {/if}
 
-                {#if events}
+                {#if events?.length > 0}
                     <section class="events">
                         {#each events as event (event.event_id)}
                             {#if event.pinned}
@@ -486,13 +491,22 @@ function postEdited(e) {
                     </section>
                 {/if}
 
-                {#if exists && !isProfile && noEvents}
+                {#if exists && !isProfile && noEvents && roomExists}
                     <div class="grd">
                         <div class="grd-c">
                             This {holder} does not have any posts yet.
                         </div>
                     </div>
                 {/if}
+
+                {#if exists && !isProfile && noEvents && !roomExists}
+                    <div class="grd">
+                        <div class="grd-c">
+                            This board does not exist.
+                        </div>
+                    </div>
+                {/if}
+
 
                 {#if isProfile && noEvents}
                     <section class="grd">
@@ -515,7 +529,7 @@ function postEdited(e) {
             {/if}
 
 
-            {#if (exists || !isSpace) && events !== null && !reloading}
+            {#if (exists || !isSpace) && events?.length >= 30 && !reloading}
                 <div class="obs" bind:this={obs}></div>
             {/if}
 

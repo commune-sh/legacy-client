@@ -57,6 +57,7 @@ function createApp() {
       content: null,
     },
     addingRoom: false,
+    spaceSettingsOpen: false,
   }
 
   window.app = app
@@ -402,6 +403,19 @@ function createApp() {
     })
   }
 
+  let updateSpaceAvatar = (space, avatar) => {
+    update(p => {
+      console.log(space, avatar)
+      let s = p.spaces.find(x => x.alias == space)
+      if(s) {
+        s.avatar = avatar
+      }
+      p.states[space].space['avatar'] = avatar
+      return p
+    })
+  }
+
+
   let addSpacePath = (space, path) => {
     update(p => {
       let x = p.spacePaths[space]
@@ -590,7 +604,6 @@ function createApp() {
   }
 
 
-
   const { subscribe, set, update } = writable(app);
 
   return {
@@ -649,6 +662,7 @@ function createApp() {
     isNotFederated,
     spacesFetched,
     updateRoomTopics,
+    updateSpaceAvatar,
   };
 }
 

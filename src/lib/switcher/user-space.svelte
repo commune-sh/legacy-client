@@ -54,6 +54,7 @@ $: username = $store?.credentials?.username
             {@html user}
         </div>
     </div>
+    <div class="tick" class:th={hovered} class:ac={active}></div>
 </div>
 
 <style>
@@ -68,16 +69,13 @@ $: username = $store?.credentials?.username
     border-radius: 50%;
     width: 36px;
     height: 36px;
-    border: 2px solid transparent;
     display: grid;
     cursor: pointer;
 }
 .item:hover {
-    border: 2px solid var(--primary);
 }
 
 .active {
-    border: 2px solid var(--primary);
     background-color: var(--primary);
 }
 
@@ -87,5 +85,22 @@ $: username = $store?.credentials?.username
 .create {
     height: 22px;
     width: 22px;
+}
+.tick {
+    opacity: 0;
+    position: absolute;
+    top: 10px;
+    left: 0px;
+    height: 15px;
+    width: 4px;
+    border-radius: 0 5px 5px 0;
+    background-color: var(--switcher-pill);
+}
+.th {
+    opacity: 1;
+}
+
+.ac {
+    opacity: 1;
 }
 </style>

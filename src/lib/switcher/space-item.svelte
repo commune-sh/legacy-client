@@ -1,4 +1,5 @@
 <script>
+import { PUBLIC_MEDIA_URL } from '$env/static/public';
 import { onMount, createEventDispatcher } from 'svelte'
 import { isInViewport } from '$lib/utils/utils.js'
 import { store } from '$lib/store/store.js'
@@ -61,6 +62,14 @@ $: if(active && el) {
 
 $: size = initials?.length > 2 ? '0.75rem' : initials?.length > 1 ? '0.85rem' : '1rem'
 
+function log() {
+    console.log(space)
+}
+
+
+$: avatar = space?.avatar ? `${PUBLIC_MEDIA_URL}/${space?.avatar}` :
+null
+
 </script>
 
 <div class="" bind:this={content}>
@@ -72,14 +81,18 @@ $: size = initials?.length > 2 ? '0.75rem' : initials?.length > 1 ? '0.85rem' : 
     draggable="true"
     class:active={active}
     bind:this={el}
+    on:contextmenu={log}
     on:mouseover={() => hovered = true}
     on:mouseleave={() => hovered = false}
-    on:click={goToSpace}>
+    on:click={goToSpace}
+    style="background-image: url({avatar})">
+        {#if !avatar}
         <div class="initial grd-c" style="font-size:{size};">
             <b>{initials}</b>
         </div>
+        {/if}
     </div>
-    <div class="tick" class:ac={active}></div>
+    <div class="tick" class:th={hovered} class:ac={active}></div>
 </div>
 
 <style>
@@ -96,7 +109,9 @@ $: size = initials?.length > 2 ? '0.75rem' : initials?.length > 1 ? '0.85rem' : 
     height: 36px;
     display: grid;
     cursor: pointer;
-    border: 2px solid transparent;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
 }
 
 .initial {
@@ -105,11 +120,9 @@ $: size = initials?.length > 2 ? '0.75rem' : initials?.length > 1 ? '0.85rem' : 
 }
 
 .item:hover {
-    border: 2px solid var(--primary);
 }
 
 .active {
-    border: 2px solid var(--primary);
     background-color: var(--primary);
     color: white;
 }
@@ -130,7 +143,7 @@ $: size = initials?.length > 2 ? '0.75rem' : initials?.length > 1 ? '0.85rem' : 
 }
 
 .ac {
-    opacity: 0;
+    opacity: 1;
 }
 
 </style>
