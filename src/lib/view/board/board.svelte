@@ -269,9 +269,13 @@ function handleScrollRev() {
 
     let callback = (entries, observer) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) {
+            if (entry.isIntersecting && startedFetching) {
                 //fetchMore()
-                console.log(entry)
+                let lastEventInStore = $store.events[roomID]?.[0]?.event_id
+                let x = data?.events[0]?.event_id
+                if(lastEventInStore != x) {
+                    console.log("repopulating events")
+                }
             }
         });
     };
@@ -280,6 +284,7 @@ function handleScrollRev() {
     observer.observe(ob);
 }
 
+let startedFetching = false;
 
 let fetchMore = () => {
     if(events?.length <30) {
@@ -324,6 +329,8 @@ let fetchMore = () => {
             }
 
             store.addToRoomEvents(roomID, res.events)
+            startedFetching = true;
+
         }
     });
 }
@@ -444,7 +451,7 @@ function postEdited(e) {
             class:splh={editing}
             bind:this={scrollable}>
 
-            {#if (exists || !isSpace) && events !== null && !reloading}
+            {#if (exists || !isSpace) && events?.length >= 30 && !reloading}
                 <div class="ob" bind:this={ob}></div>
             {/if}
 
@@ -505,7 +512,7 @@ function postEdited(e) {
             {/if}
 
 
-            {#if (exists || !isSpace) && events !== null && !reloading}
+            {#if (exists || !isSpace) && events?.length >= 30 && !reloading}
                 <div class="obs" bind:this={obs}></div>
             {/if}
 
