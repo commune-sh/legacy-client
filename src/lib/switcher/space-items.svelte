@@ -43,7 +43,7 @@ $: authenticated = $store?.authenticated &&
     padding-bottom: 0.75rem;
     overflow-y: auto;
     overflow-x: hidden;
-    height: 100%;
+    height: calc(100% - 0.75rem);
 }
 
 ::-webkit-scrollbar {

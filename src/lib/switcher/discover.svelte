@@ -1,4 +1,5 @@
 <script>
+import { PUBLIC_APP_NAME } from '$env/static/public';
 import { onMount, createEventDispatcher } from 'svelte'
 import { store } from '$lib/store/store.js'
 import { compass } from '$lib/assets/icons.js'
@@ -36,6 +37,11 @@ function goToSpace() {
 let hovered = false;
 
 $: active = $page?.route?.id === `/(app)/discover`
+
+$: if(active) {
+    document.title = `Discover Spaces - ${PUBLIC_APP_NAME}`
+}
+
 
 </script>
 

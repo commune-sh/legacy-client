@@ -10,6 +10,7 @@
 		%sveltekit.head%
     <script>
         let showIndex = %sveltekit.env.PUBLIC_INDEX%
+        window.global = window
     </script>
     <script>
         let theme = localStorage.getItem(`theme`)

@@ -4,6 +4,7 @@ import { APIRequest, getAPIEndpoint } from '$lib/utils/request.js'
 import { onMount, tick } from 'svelte'
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
+//import Matrix from '$lib/matrix/matrix.svelte'
 
 $: down = $store.down
 
@@ -127,3 +128,4 @@ function SyncEvents() {
 }
 
 </script>
+

@@ -14,7 +14,11 @@ import Down from '$lib/errors/down.svelte'
 import CreateSpace from '$lib/space/create-space.svelte'
 import Modal from '$lib/modal/modal.svelte'
 
-let isIndex = $page?.route?.id === `/(app)`
+$: isIndex = $page?.url.pathname === '/'
+
+$: if(isIndex) {
+    document.title = `${PUBLIC_APP_NAME}`
+}
 
 let showIndex = PUBLIC_INDEX === 'true'
 

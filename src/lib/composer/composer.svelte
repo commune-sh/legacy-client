@@ -362,7 +362,7 @@ async function createPost() {
             room_id: roomID,
             type: 'm.room.message',
             content: {
-                msgtype: 'm.text',
+                msgtype: 'post',
                 title: titleInput.value,
                 body: bodyInput.value,
                 //formatted_body: md.render(bodyInput.value),

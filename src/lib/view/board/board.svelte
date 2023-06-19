@@ -147,6 +147,7 @@ async function loadEvents(init) {
     const resp = await loadPosts(opt)
     if(resp) {
         data = resp
+        store.addRoomEvents(roomID, resp.events)
 
         if($page?.url?.pathname != lastPath) {
             lastPath = $page?.url?.pathname
@@ -197,10 +198,14 @@ function link(space) {
 let scrollHeight;
 let scrollable
 let obs;
+let ob;
 
 
 $: if(obs && loaded && ready) {
     setupObserver()
+}
+$: if(ob && loaded && ready) {
+    setupObserverRev()
 }
 
 $: isDomain = $page.params.domain !== undefined && 
@@ -232,6 +237,10 @@ function setupObserver() {
     handleScroll();
 }
 
+function setupObserverRev() {
+    handleScrollRev();
+}
+
 function handleScroll() {
     scrollHeight = scrollable?.scrollHeight;
     let options = {
@@ -249,6 +258,26 @@ function handleScroll() {
 
     let observer = new IntersectionObserver(callback, options);
     observer.observe(obs);
+}
+
+function handleScrollRev() {
+    scrollHeight = scrollable?.scrollHeight;
+    let options = {
+        root: scrollable,
+        rootMargin: `${scrollHeight/2}px`,
+    };
+
+    let callback = (entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                //fetchMore()
+                console.log(entry)
+            }
+        });
+    };
+
+    let observer = new IntersectionObserver(callback, options);
+    observer.observe(ob);
 }
 
 
@@ -286,6 +315,12 @@ let fetchMore = () => {
               if (!exists) {
                 data.events = [...data.events, event];
               }
+            }
+            if(data?.events?.length > 100) {
+                //delete first 30 
+                data.events = data.events.slice(30)
+                data.events = data.events
+
             }
 
             store.addToRoomEvents(roomID, res.events)
@@ -409,6 +444,9 @@ function postEdited(e) {
             class:splh={editing}
             bind:this={scrollable}>
 
+            {#if (exists || !isSpace) && events !== null && !reloading}
+                <div class="ob" bind:this={ob}></div>
+            {/if}
 
             {#if !loaded || reloading || (!stateReady && isSpace)}
 

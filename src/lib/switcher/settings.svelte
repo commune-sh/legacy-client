@@ -1,4 +1,5 @@
 <script>
+import { PUBLIC_APP_NAME } from '$env/static/public';
 import { onMount, createEventDispatcher } from 'svelte'
 import { store } from '$lib/store/store.js'
 import { settings } from '$lib/assets/icons.js'
@@ -36,6 +37,10 @@ function goToSpace() {
 let hovered = false;
 
 $: active = $page?.route?.id === `/(app)/settings`
+
+$: if(active) {
+    document.title = `Settings - ${PUBLIC_APP_NAME}`
+}
 
 </script>
 

@@ -1,4 +1,5 @@
 <script>
+import { PUBLIC_APP_NAME } from '$env/static/public';
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 import { discuss, settings } from '$lib/assets/icons.js'
@@ -21,7 +22,7 @@ $: selected = (isGeneral && !room) ||
     (room === item?.alias)
 
 $: if(selected) {
-    document.title = item.title
+    document.title = `${item.title} - ${PUBLIC_APP_NAME}`
 }
 
 let toggled = false;
