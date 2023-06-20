@@ -12,7 +12,7 @@ let files = [];
 
 let tooLarge = false;
 
-let build = (e) => {
+let build = async (e) => {
     console.log("attaching....")
 
     if(e.target.files.length > 13) {
@@ -32,9 +32,9 @@ let build = (e) => {
         }
 
         if(file.type.includes('image')) {
-            var image = new Image();
+            let image = new Image();
             image.src = URL.createObjectURL(file)
-            image.onload = () => {
+            image.onload = async () => {
                 file.info = {}
                 file.info.h = image.height
                 file.info.w = image.width
@@ -66,10 +66,13 @@ let build = (e) => {
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(image, -offsetX, -offsetY, width, height);
 
+                const blob = await new Promise(resolve => canvas.toBlob(resolve));
+                console.log(blob)
+                file.thumbnail = blob
 
-                canvas.toBlob(function(blob) {
-                    file.thumbnail = blob
-                }, 'image/jpeg', 0.8);
+                canvas.remove()
+                image.onload = null
+                URL.revokeObjectURL(image.src);
 
             }
 

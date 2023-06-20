@@ -8,6 +8,15 @@ function getURL(item) {
     return `${PUBLIC_MEDIA_URL}/${item?.key}` || ``
 }
 
+function getThumbnailURL(item) {
+    let key = item?.key || ``
+    if(item?.thumbnail?.key) {
+        key = item.thumbnail.key
+    }
+    return `${PUBLIC_MEDIA_URL}/${key}` 
+}
+
+
 $: multiple = media?.length > 1
 
 $: selected = media[0]
@@ -54,7 +63,7 @@ function goToNext() {
         <div class="item mr3"
         class:selected={selected.key === item.key}
         on:click={() => selected = item}
-        style="background: url({getURL(item)})">
+        style="background: url({getThumbnailURL(item)})">
 
             {#if isItemVideo(item)}
                 <video class="tvi" width="40" height="40">
