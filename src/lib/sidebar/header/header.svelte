@@ -139,6 +139,7 @@ $: if(headerExists && header && el) {
 .name {
     overflow: hidden;
     width: 100%;
+    line-height: normal;
 }
 
 .header {

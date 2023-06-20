@@ -323,5 +323,7 @@ $: buttonText = busy ? busyText : normalText
     overflow: hidden;
     text-overflow: ellipsis;
     margin-right: 0.5rem;
+    font-size: 0.9rem;
+    margin-top: 2px;
 }
 </style>
