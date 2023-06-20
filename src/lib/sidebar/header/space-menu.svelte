@@ -31,8 +31,8 @@ function spaceSettings() {
 </script>
 
 <div class="user-popup">
-    <div class="item fl">
-        <div class="item grd-c fl-o" on:click={kill}>
+    <div class="item fl" on:click={kill}>
+        <div class="item grd-c fl-o">
             Space Info
         </div>
         <div class="ico-s ">
@@ -41,8 +41,8 @@ function spaceSettings() {
     </div>
 
     {#if isOwner}
-        <div class="item fl">
-            <div class="item grd-c fl-o" on:click={spaceSettings}>
+        <div class="item fl" on:click={spaceSettings}>
+            <div class="item grd-c fl-o">
                 Settings
             </div>
             <div class="ico-s">

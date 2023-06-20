@@ -66,6 +66,8 @@
     --hamburger: #868686;
     --hover-focus: #272727;
     --popup-bg: #090909;
+
+    --space-title: #000000b3;
 }
 
 :root.light {
@@ -134,6 +136,7 @@
     --hover-focus: #e9ecef;
 
     --popup-bg: #e9ecef;
+    --space-title: #ffffffc4;
 }
 
 :root.black {
@@ -202,6 +205,7 @@
     --hover-focus: #181818;
 
     --popup-bg: #181818;
+    --space-title: #000000b3;
 }
 
 

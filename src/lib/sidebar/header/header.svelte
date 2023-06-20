@@ -52,7 +52,7 @@ let el;
 $: if(headerExists && header && el) {
     el.style.backgroundImage = `url(${header})`
 } else if(el) {
-    el.style.background = `none`
+    el.style.backgroundImage = `none`
 }
 
 </script>
@@ -70,19 +70,20 @@ $: if(headerExists && header && el) {
     mask={true}
     placement={"top-start"}>
 
-        <div class="space fl pa2"
+        <div class="space fl"
+            class:sp={!headerExists}
             slot="reference"
             class:active={menuActive}
             on:click={toggleMenu}>
-            <div class="name in fl-o">
+            <div class="name in fl-o" class:sh={headerExists}>
                 {#if !ready}
                     <SkeletonSpan />
                 {:else}
 
-                        <b>{name}</b>
+                    <span class="nm" class:ish={headerExists}><b>{name}</b></span>
                 {/if}
             </div>
-            <div class="tools grd-c ico-s">
+            <div class="tools grd-c ico-s mh2">
                 {#if menuActive}
                     {@html up}
                 {:else}
@@ -125,10 +126,19 @@ $: if(headerExists && header && el) {
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
+    overflow: hidden;
+    width: 100%;
 }
 
 .con {
     height: 47px;
+    overflow: hidden;
+    width: 100%;
+}
+
+.name {
+    overflow: hidden;
+    width: 100%;
 }
 
 .header {
@@ -137,9 +147,11 @@ $: if(headerExists && header && el) {
 
 .space {
     cursor: pointer;
+    overflow: hidden;
+    width: 100%;
 }
 
-.space:hover {
+.sp:hover {
     background: var(--hover-focus);
 }
 
@@ -148,11 +160,27 @@ $: if(headerExists && header && el) {
 }
 
 .active {
-    background: var(--hover-focus);
 }
 
 .in {
     justify-self: start;
     align-self: center;
+}
+.sh {
+    text-shadow: 1px 1px var(--bg);
+}
+.nm {
+    padding: 0.25rem 0.5rem;
+    margin-left: 0.25rem;
+    background: transparent;
+    display: inline-block;
+    border-radius: 500px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: normal;
+}
+.ish {
+    background: var(--space-title);
 }
 </style>

@@ -17,9 +17,13 @@ let name;
 let topicInput;
 let topic;
 
+let current = {name: '', topic: ''};
+
 onMount(() => {
     name = state?.space?.name;
     topic = state?.space?.topic;
+    current.name = name;
+    current.topic = topic;
     nameInput.focus();
 })
 
@@ -30,22 +34,28 @@ async function save() {
         name: nameInput.value,
         topic: topicInput.value,
     })
-    const res = await createStateEvent({
-        room_id: roomID,
-        event_type: 'm.room.name',
-        content: {
-            name: nameInput.value,
-        }
-    })
-    console.log(res)
-    const resp = await createStateEvent({
-        room_id: roomID,
-        event_type: 'm.room.topic',
-        content: {
-            topic: topicInput.value,
-        }
-    })
-    console.log(resp)
+    if(name != current.name) {
+        const res = await createStateEvent({
+            room_id: roomID,
+            event_type: 'm.room.name',
+            content: {
+                name: nameInput.value,
+            }
+        })
+        console.log(res)
+        current.name = nameInput.value
+    }
+    if(topic != current.topic) {
+        const resp = await createStateEvent({
+            room_id: roomID,
+            event_type: 'm.room.topic',
+            content: {
+                topic: topicInput.value,
+            }
+        })
+        console.log(resp)
+        current.topic = topicInput.value
+    }
     busy = false
 }
 

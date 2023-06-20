@@ -191,7 +191,7 @@ async function focusSearchInput() {
 
 </script>
 
-<div class="grd" bind:this={reference} on:click={activate}>
+<div class="popup grd" bind:this={reference} on:click={activate}>
     <slot name="reference">
     </slot>
 </div>
@@ -215,6 +215,10 @@ async function focusSearchInput() {
 
 
 <style>
+
+.popup {
+    width: 100%;
+}
 
 .inactive {
     visibility: hidden;
