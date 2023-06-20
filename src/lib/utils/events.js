@@ -61,3 +61,20 @@ export function insertEvents(existingArray, newEvents) {
   return mergedArray;
 }
 
+export function deleteEvent(events, eventId) {
+  for (let i = 0; i < events.length; i++) {
+    const event = events[i];
+
+    if (event.event_id === eventId) {
+      events.splice(i, 1); 
+      return true; 
+    }
+
+    if (event.children) {
+      const childDeleted = deleteEvent(event.children, eventId);
+      if (childDeleted) return true; 
+    }
+  }
+
+  return false; 
+}

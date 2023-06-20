@@ -3,8 +3,8 @@ import Event from '$lib/event/event.svelte'
 import Header from '$lib/header/post-header.svelte'
 import { onMount, createEventDispatcher } from 'svelte';
 import { store } from '$lib/store/store.js'
-import { APIRequest, loadPostWithReplies } from '$lib/utils/request.js'
-import { nestEvents } from '$lib/utils/events.js'
+import { redactEvent, loadPostWithReplies } from '$lib/utils/request.js'
+import { deleteEvent } from '$lib/utils/events.js'
 import { PUBLIC_API_URL } from '$env/static/public';
 import { page } from '$app/stores';
 import SkeletonBoardEvents from '$lib/skeleton/skeleton-board-events.svelte'
@@ -265,6 +265,21 @@ function setReplyThread(e) {
     data.replies = data.replies
 }
 
+async function redactReply(e) {
+    console.log("redacting reply", e.detail)
+    let event = e.detail
+    deleteEvent(data.replies, event.event_id)
+    data.replies = data.replies
+
+    let redaction = {
+        room_id: event.room_id,
+        event_id: event.event_id,
+        reason: "redacted",
+    }
+    const res = await redactEvent(redaction);
+    console.log(res)
+}
+
 function edited(e) {
     dispatch('edited', e.detail)
     if(replyingTo) {
@@ -328,6 +343,7 @@ $: isPostAuthor = sender_id === post?.sender?.id
                     <Event isReply={true} 
                         sender={post?.sender?.id}
                         on:set-reply-thread={setReplyThread}
+                        on:redact={redactReply}
                         event={reply} 
                         isPostAuthor={isPostAuthor}
                         on:replyTo={replyToEvent} />
@@ -395,7 +411,6 @@ $: isPostAuthor = sender_id === post?.sender?.id
 }
 @media screen and (max-width: 768px) {
     .content {
-        position: static;
     }
     .norep {
         padding-top: 0.5rem;

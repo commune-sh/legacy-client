@@ -439,6 +439,11 @@ function postEdited(e) {
 $: roomExists = state?.children?.find((child) => child.alias ==
     $page.params.room) != undefined
 
+
+function redactEvent(e) {
+    console.log("redacting", e.detail )
+}
+
 </script>
 
 
@@ -480,12 +485,16 @@ $: roomExists = state?.children?.find((child) => child.alias ==
                     <section class="events">
                         {#each events as event (event.event_id)}
                             {#if event.pinned}
-                                <Event event={event} sender={null} />
+                                <Event event={event} 
+                                    on:redact={redactEvent}
+                                    sender={null} />
                             {/if}
                         {/each}
                         {#each events as event (event.event_id)}
                             {#if !event.pinned}
-                                <Event event={event} sender={null} />
+                                <Event event={event} 
+                                    on:redact={redactEvent}
+                                    sender={null} />
                             {/if}
                         {/each}
                     </section>
@@ -612,7 +621,6 @@ $: roomExists = state?.children?.find((child) => child.alias ==
 
 @media screen and (max-width: 768px) {
     .inner-area {
-        position: static;
     }
     .post {
         grid-template-columns: auto;

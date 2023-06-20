@@ -353,6 +353,11 @@ function finishedEditing(e) {
 }
 
 
+function print(e) {
+    e.preventDefault()
+    console.log(event)
+}
+
 $: wasEdited = event?.edited_on !== undefined && event?.edited_on !== null &&
     event?.edited_on > 0
 
@@ -372,6 +377,7 @@ $: showTopic = hasTopic && !isTopic
 
 <div class="event" 
     bind:this={el}
+    on:contextmenu={print}
     on:mouseover={showTools}
     on:mouseleave={hideTools}
     class:h={!isReply && !isPost && !editing}
@@ -521,6 +527,7 @@ $: showTopic = hasTopic && !isTopic
                     active={toolsActive}
                     isAuthor={isAuthor}
                     on:edit={editEvent}
+                    on:redact
                     on:set-reply-thread
                     on:react={reactToKey}
                     on:active={activateTools} 
@@ -549,6 +556,7 @@ $: showTopic = hasTopic && !isTopic
                 isReply={true} 
                 depth={depth + 1}
                 nested={true}
+                on:redact
                 event={reply} 
                 on:set-reply-thread
                 isPostAuthor={isPostAuthor}

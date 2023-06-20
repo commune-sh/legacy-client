@@ -1,11 +1,14 @@
 <script>
-import { reply, external, edit, trash } from '$lib/assets/icons.js'
-import Menu from './menu.svelte'
+import { reply, external, edit, trash, more } from '$lib/assets/icons.js'
 import React from './react.svelte'
 import { createEventDispatcher } from 'svelte'
 import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';
+
+$: state = $store?.states[$page?.params?.space]
+$: sender_id = $store.credentials?.matrix_user_id
+$: isOwner = state?.owner === sender_id
 
 const dispatch = createEventDispatcher();
 
@@ -27,6 +30,10 @@ function editEvent() {
     dispatch('edit')
 }
 
+function redactEvent() {
+    dispatch('redact', event)
+}
+
 
 function goToEvent() {
     let url = `/${event.room_alias}/post/${$page.params.post}/reply/${event?.slug}`
@@ -40,6 +47,21 @@ function goToEvent() {
     })
 }
 
+let killPopup = (e) => {
+    popup.kill()
+    console.log("dispatching", e.detail)
+    dispatch('kill', e.detail)
+}
+
+let popup;
+
+let menuActive = false;
+
+let killed = () => {
+    menuActive = false
+    //dispatch('kill')
+    console.log("killin")
+}
 </script>
 
 <div class="event-tools">
@@ -69,11 +91,14 @@ function goToEvent() {
         </div>
     {/if}
 
-    <Menu 
-        on:active 
-        on:kill 
-        isAuthor={isAuthor}
-        event={event} />
+    {#if isAuthor || isOwner}
+        <div class="icon grd-c c-ico" 
+            on:click|stopPropagation={redactEvent}>
+            {@html trash}
+        </div>
+    {/if}
+
+
 </div>
 
 {#if active}
