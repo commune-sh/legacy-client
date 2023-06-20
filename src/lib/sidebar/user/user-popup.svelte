@@ -14,7 +14,7 @@ function kill() {
 <style>
 .user-popup {
     min-height: 300px;
-    width: 300px;
+    width: 240px;
     background-color: var(--shade-3);
     border-radius: 7px;
 

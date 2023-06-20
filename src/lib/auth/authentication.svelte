@@ -149,4 +149,7 @@ function created() {
 {/if}
 
 <style>
+.modal {
+    grid-template-rows: [header] auto [content] 1fr;
+}
 </style>
