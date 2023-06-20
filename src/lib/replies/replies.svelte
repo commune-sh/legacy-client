@@ -108,6 +108,7 @@ $: if(lastPost != null && $page.params.post != lastPost) {
 }
 @media screen and (max-width: 768px) {
     .content {
+        position: static;
     }
 }
 </style>

@@ -445,6 +445,7 @@ $: isPostAuthor = sender_id === post?.sender?.id
 }
 @media screen and (max-width: 768px) {
     .content {
+        position:static;
     }
     .norep {
         padding-top: 0.5rem;
