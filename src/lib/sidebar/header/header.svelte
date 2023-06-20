@@ -1,5 +1,5 @@
 <script>
-import { PUBLIC_APP_NAME } from '$env/static/public';
+import { PUBLIC_APP_NAME, PUBLIC_MEDIA_URL } from '$env/static/public';
 import { down, up } from '$lib/assets/icons.js'
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
@@ -10,7 +10,7 @@ import SpaceMenu from './space-menu.svelte'
 $: state = $store?.states[$page?.params?.space]
 export let ready;
 
-$: name = state?.space?.name ? state.space.name : ``;
+$: name = state?.space?.name ? state.space.name : $page.params.space;
 
 $: isStaticRoute = $store.staticRoutes.some(r => r.path === $page?.url?.pathname);
 $: staticRoute = $store.staticRoutes.find(r => r.path === $page?.url?.pathname);
@@ -39,9 +39,26 @@ let killPopup = () => {
 }
 
 let popup;
+
+
+$: header = state?.space?.header ?
+`${PUBLIC_MEDIA_URL}/${state?.space?.header}` : null
+
+$: headerExists = state?.space?.header != null && state?.space?.header !=
+    undefined && state?.space?.header != ''
+
+let el;
+
+$: if(headerExists && header && el) {
+    el.style.backgroundImage = `url(${header})`
+} else if(el) {
+    el.style.background = `none`
+}
+
 </script>
 
-<div class="sidebar-header">
+<div bind:this={el} class="sidebar-header" class:header={headerExists}>
+    <div class="con grd">
 
     {#if isSpace}
     <Popup
@@ -97,13 +114,25 @@ let popup;
 
 
 
+    </div>
+
 </div>
+
 <style>
 .sidebar-header {
     display: grid;
     border-bottom: 1px solid var(--border-1);
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+.con {
     height: 47px;
-    transition: 0.1s;
+}
+
+.header {
+    height: 180px;
 }
 
 .space {

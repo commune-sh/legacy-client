@@ -33,14 +33,14 @@ $: sender_id = $store.credentials?.matrix_user_id
 $: isOwner = state?.owner === sender_id
 $: isSpaceSettings = isSpace && $page?.params?.room === 'settings'
 
-$: if(isSpaceSettings) {
-}
-
+$: spaceSettings = isSpaceSettings && authenticated && isOwner
 </script>
 
 {#if isSpaceSettings && authenticated && isOwner}
     <SpaceSettingsSidebar />
 {/if}
+
+<div class="boards" class:op={spaceSettings}>
 
 <div class="fl mb2">
     <div class="brds grd-c fl" 
@@ -72,6 +72,8 @@ $: if(isSpaceSettings) {
     <AddRoom />
 {/if}
 
+</div>
+
 <style>
 .brds {
     opacity: 0.9;
@@ -93,5 +95,8 @@ $: if(isSpaceSettings) {
 .set {
     width: 18px;
     height: 18px;
+}
+.op {
+    opacity: 0.4;
 }
 </style>

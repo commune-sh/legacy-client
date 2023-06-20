@@ -415,6 +415,33 @@ function createApp() {
     })
   }
 
+  let updateSpaceHeader = (space, header) => {
+    update(p => {
+      console.log(space, header)
+      let s = p.spaces.find(x => x.alias == space)
+      if(s) {
+        s.header = header
+      }
+      p.states[space].space['header'] = header
+      return p
+    })
+  }
+
+
+  let updateSpaceInfo = (space, info) => {
+    update(p => {
+      console.log(space, info)
+      let s = p.spaces.find(x => x.alias == space)
+      if(s) {
+        s.name = info.name 
+        s.topic = info.topic
+      }
+      p.states[space].space['name'] = info.name
+      p.states[space].space['topic'] = info.topic
+      return p
+    })
+  }
+
 
   let addSpacePath = (space, path) => {
     update(p => {
@@ -663,6 +690,8 @@ function createApp() {
     spacesFetched,
     updateRoomTopics,
     updateSpaceAvatar,
+    updateSpaceHeader,
+    updateSpaceInfo,
   };
 }
 

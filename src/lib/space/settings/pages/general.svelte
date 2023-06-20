@@ -5,6 +5,7 @@ import { addImage } from '$lib/assets/icons.js'
 import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';
 import Avatar from '$lib/components/avatar/avatar.svelte'
+import Banner from '$lib/components/banner/banner.svelte'
 import { createStateEvent } from '$lib/utils/request.js'
 
 $: state = $store?.states[$page?.params?.space]
@@ -22,6 +23,32 @@ onMount(() => {
     nameInput.focus();
 })
 
+let busy = false;
+async function save() {
+    busy = true
+    store.updateSpaceInfo($page.params.space, {
+        name: nameInput.value,
+        topic: topicInput.value,
+    })
+    const res = await createStateEvent({
+        room_id: roomID,
+        event_type: 'm.room.name',
+        content: {
+            name: nameInput.value,
+        }
+    })
+    console.log(res)
+    const resp = await createStateEvent({
+        room_id: roomID,
+        event_type: 'm.room.topic',
+        content: {
+            topic: topicInput.value,
+        }
+    })
+    console.log(resp)
+    busy = false
+}
+
 async function avatarUploaded(e) {
     console.log("avatar uploaded! ", e.detail)
     store.updateSpaceAvatar($page.params.space, e.detail)
@@ -36,10 +63,27 @@ async function avatarUploaded(e) {
     console.log(res)
 }
 
+async function bannerUploaded(e) {
+    console.log("banner uploaded! ", e.detail)
+    store.updateSpaceHeader($page.params.space, e.detail)
+    const res = await createStateEvent({
+        room_id: roomID,
+        event_type: 'm.room.header',
+        content: {
+            url: e.detail,
+        }
+    })
+
+    console.log(res)
+}
+
 
 $: avatar = state?.space?.avatar ?
 `${PUBLIC_MEDIA_URL}/${state?.space?.avatar}` : null
 
+
+$: header = state?.space?.header ?
+`${PUBLIC_MEDIA_URL}/${state?.space?.header}` : null
 
 </script>
 
@@ -49,11 +93,8 @@ $: avatar = state?.space?.avatar ?
         <Avatar avatar={avatar} 
             on:uploaded={avatarUploaded}/>
 
-        <div class="header grd">
-            <div class="grd-c c-ico">
-                {@html addImage}
-            </div>
-        </div>
+        <Banner banner={header} 
+            on:uploaded={bannerUploaded}/>
     </div>
 
     <div class="pa3 grd-c fl-co">
@@ -77,6 +118,11 @@ $: avatar = state?.space?.avatar ?
             placeholder="description"></textarea>
         </div>
 
+        <div class="mt3 ">
+            <button class="pa2" disabled={busy} on:click={save}>
+                Save settings
+            </button>
+        </div>
     </div>
 </div>
 

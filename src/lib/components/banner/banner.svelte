@@ -1,10 +1,11 @@
 <script>
 import { getPresignedURL, uploadAttachment } from '$lib/utils/request.js'
 import { createEventDispatcher } from 'svelte'
+import { addImage } from '$lib/assets/icons.js'
 
 const dispatch = createEventDispatcher()
 
-export let avatar;
+export let banner;
 let fileInput;
 let uploading = false;
 
@@ -57,7 +58,7 @@ let build = async (e) => {
 
 
                 canvas.toBlob(async function(blob) {
-                    avatar = URL.createObjectURL(blob);
+                    banner = URL.createObjectURL(blob);
 
                     const extension = file.name.split('.').pop();
                     const presignedURL = await getPresignedURL(extension);
@@ -81,11 +82,13 @@ function select() {
 
 </script>
 
-<div class="c grd">
-<div class="grd-c avatar" 
-    style="background-image: url({avatar})"
-    on:click={select}>
-</div>
+<div class="c grd" on:click={select}
+    style="background-image: url({banner})">
+
+    <div class="grd-c ico-s">
+        {@html addImage}
+    </div>
+
 {#if uploading}
         <div class="ms grd">
             <div class="loader grd-c">
@@ -96,7 +99,7 @@ function select() {
 <input 
     type="file" 
     accept="image/*"
-    name="avatar"
+    name="banner"
     bind:this={fileInput} 
     on:change={build} 
     hidden 
@@ -107,6 +110,12 @@ function select() {
 
 .c {
     position: relative;
+    background: var(--bg);
+    border-radius: 7px;
+    cursor: pointer;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
 }
 
 .ms {
@@ -117,22 +126,6 @@ function select() {
     bottom: 0;
     padding-left: 0.5rem;
 }
-.avatar {
-    cursor: pointer;
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    background: var(--switcher-item);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-.avatar:hover {
-    opacity: 0.8;
-    outline: 3px solid var(--primary);
-}
-
 .op {
     opacity: 0.3;
 }
