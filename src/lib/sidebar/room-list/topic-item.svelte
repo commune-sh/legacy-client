@@ -65,37 +65,42 @@ function logItem(e) {
 
 </script>
 
-<div class="item" 
-    draggable="true"
-    on:click={goToRoom}
-    on:contextmenu={logItem}
+<div class="topic-item"
     class:active={active}>
+    <div class="item" 
+        on:click={goToRoom}
+        on:contextmenu={logItem}>
 
-    <div class="ico grd-c"
-        class:inactive={!active}>
-        {@html pulse}
+        <div class="ico grd-c"
+            class:inactive={!active}>
+            {@html pulse}
+        </div>
+
+        <div class="sl">
+            {item}
+        </div>
     </div>
 
-    <div class="sl">
-        {item}
-    </div>
 </div>
-{#if item?.topics?.length > 0}
-    ok
-{/if}
+
 
 <style>
-.item {
+.topic-item {
     cursor: pointer;
-    display: grid;
-    grid-template-columns: auto 1fr;
     height: 30px;
     border-radius: 4px;
     font-size: 14px;
     margin-bottom: 0.15rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
 }
 
-.item:hover {
+.item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+
+.topic-item:hover {
     background-color: var(--shade-3);
 }
 

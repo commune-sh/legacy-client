@@ -816,7 +816,7 @@ img {
     border-radius: 9px;
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: [header] auto [content] 1fr;
+    grid-template-rows: auto;
 }
 
 @media screen and (max-width: 550px) {

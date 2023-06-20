@@ -499,7 +499,16 @@ $: roomExists = state?.children?.find((child) => child.alias ==
                     </div>
                 {/if}
 
-                {#if exists && !isProfile && noEvents && !roomExists}
+                {#if exists && isTopic && noEvents}
+                    <div class="grd">
+                        <div class="grd-c">
+                            This topic does not have any posts yet.
+                        </div>
+                    </div>
+                {/if}
+
+
+                {#if exists && !isProfile && !isTopic && noEvents && !roomExists}
                     <div class="grd">
                         <div class="grd-c">
                             This board does not exist.

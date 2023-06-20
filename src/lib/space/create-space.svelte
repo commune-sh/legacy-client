@@ -1,5 +1,6 @@
 <script>
 import { onMount, onDestroy } from 'svelte'
+import { close } from '$lib/assets/icons.js'
 import { createSpace } from '$lib/utils/request.js'
 import { PUBLIC_API_URL } from '$env/static/public';
 import { goto } from '$app/navigation';
@@ -99,14 +100,14 @@ let showError = false;
 <div class="mask grd" 
     on:click|self={kill}>
 
-    <div class="modal grd-c">
-        <div class="create pa3">
+    <div class="modal grd-c grd">
+        <div class="create grd-c">
 
-            <div class="title grd-c">
+            <div class="title grd-c pt3 ph3 mv2">
                     Create Space
             </div>
 
-            <div class="fl-co">
+            <div class="con fl-co">
                 <div class="mt3 pb2">
                     <span class="label">Name</span>
                 </div>
@@ -158,6 +159,10 @@ let showError = false;
             </div>
 
         </div>
+
+            <div class="c-ico close">
+                {@html close}
+            </div>
     </div>
 
 </div>
@@ -169,6 +174,7 @@ let showError = false;
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr auto;
+    position: relative;
 }
 
 .title {
@@ -200,12 +206,37 @@ button {
     top: 9px;
     right: 9px;
 }
+.close  {
+    display: none;
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+}
+
+.c-ico {
+    height: 30px;
+    width: 30px;
+}
+
+.con {
+    padding-right: 2rem;
+    padding-left: 2rem;
+    padding-bottom: 2rem;
+}
 
 @media screen and (max-width: 550px) {
+    .close  {
+        display: block;
+    }
     .create {
         width: 100%;
-        height: 100%;
     }
+    .con {
+        padding-right: 1rem;
+        padding-left: 1rem;
+        padding-bottom: 1rem;
+    }
+
 }
 
 .warn {
