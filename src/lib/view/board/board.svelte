@@ -412,11 +412,13 @@ function updateReactions(e) {
 }
 
 function updateReplyCount(e) {
-    let index = data.events.findIndex((event) => event.event_id == e.detail)
+        console.log("updating reply count", e.detail)
+    const event_id = e.detail.event_id
+    const reply_count = e.detail.reply_count
+    let index = data.events.findIndex((event) => event.event_id == event_id)
     if(index > -1) {
         console.log("updating reply count", e.detail)
-        let count = data.events[index].reply_count
-        data.events[index].reply_count = count + 1
+        data.events[index].reply_count = reply_count
     }
 }
 

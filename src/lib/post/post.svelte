@@ -151,27 +151,48 @@ function insertReply(children, newReply) {
     }
   }
 }
+function countTotalEvents(events) {
+  let count = 0;
+
+  for (let i = 0; i < events.length; i++) {
+    count++; // Increment count for the current event
+
+    if (events[i].children) {
+      count += countTotalEvents(events[i].children); // Recursively count events in children
+    }
+  }
+
+  return count;
+}
 
 function replySaved(e) {
 
     let reply = e.detail
 
     reply.just_posted = true
-    dispatch('reply-saved', post.event_id)
+
 
 
     if(data?.replies?.length > 0) {
         let in_reply_to = reply?.content['m.relates_to']?.event_id
         if(in_reply_to == post.event_id) {
             data.replies = [...data.replies, reply];
-            console.log("added", data.replies)
-            post.reply_count += 1
+            post.reply_count = countTotalEvents(data.replies)
+
+            dispatch('reply-saved', {
+                event_id: post.event_id, 
+                reply_count: post.reply_count
+            })
             return
         }
 
         insertReply(data.replies, reply)
-        post.reply_count += 1
+        post.reply_count = countTotalEvents(data.replies)
         data = data
+        dispatch('reply-saved', {
+            event_id: post.event_id, 
+            reply_count: post.reply_count
+        })
         return
     }
 
@@ -184,7 +205,11 @@ function replySaved(e) {
             data.replies = []
         }
         data.replies = [reply, ...data.replies];
-        post.reply_count += 1
+        post.reply_count = countTotalEvents(data.replies)
+        dispatch('reply-saved', {
+            event_id: post.event_id, 
+            reply_count: post.reply_count
+        })
     }
 
 }
@@ -267,17 +292,26 @@ function setReplyThread(e) {
 
 async function redactReply(e) {
     console.log("redacting reply", e.detail)
-    let event = e.detail
-    deleteEvent(data.replies, event.event_id)
-    data.replies = data.replies
+    const del = confirm('Are you sure you want to delete this reply?');
+    if (del) {
+        let event = e.detail
+        deleteEvent(data.replies, event.event_id)
+        post.reply_count = countTotalEvents(data.replies)
+        data.replies = data.replies
 
-    let redaction = {
-        room_id: event.room_id,
-        event_id: event.event_id,
-        reason: "redacted",
+        let redaction = {
+            room_id: event.room_id,
+            event_id: event.event_id,
+            reason: "redacted",
+            is_reply: true,
+        }
+        const res = await redactEvent(redaction);
+        console.log(res)
     }
-    const res = await redactEvent(redaction);
-    console.log(res)
+    dispatch('reply-saved', {
+        event_id: post.event_id, 
+        reply_count: post.reply_count
+    })
 }
 
 function edited(e) {
