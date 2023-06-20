@@ -59,6 +59,7 @@ function sortItems(state) {
             alias: ``,
             fullpath: `/${$page.params.space}`,
             room_id: state?.room_id,
+            topic: state?.space?.topic,
             pinned_events: state.space?.pinned_events != undefined ? JSON.parse(state.space?.pinned_events) : null
         }
     ]
@@ -70,6 +71,7 @@ function sortItems(state) {
                 alias: child?.alias,
                 fullpath: `/${$page.params.space}/${child?.alias}`,
                 room_id: child?.room_id,
+                topic: child?.topic,
                 pinned_events: child?.pinned_events != undefined ? JSON.parse(child?.pinned_events) : null,
             })
         })
@@ -202,6 +204,13 @@ $: buttonText = busy ? busyText : normalText
             {/if}
 
             </div>
+
+            {#if selected?.topic}
+                <div class="topic grd-c">
+                    {selected?.topic}
+                </div>
+            {/if}
+
             <div class="fl-o"></div>
             <div class="grd-c">
                 <Search />
@@ -307,5 +316,12 @@ $: buttonText = busy ? busyText : normalText
     opacity: 0.5;
     margin-right: 0.75rem;
     margin-left: 0.75rem;
+}
+.topic {
+    color: var(--text-light);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 0.5rem;
 }
 </style>

@@ -66,7 +66,7 @@ $: if(headerExists && header && el) {
     trigger={"click"}
     offset={[8, 8]}
     on:killed={killed}
-    shadow={`box-shadow: 0px 9px 15px -7px rgba(0,0,0,0.1);`}
+    shadow={`0px 9px 15px -7px rgba(0,0,0,0.2)`}
     mask={true}
     placement={"top-start"}>
 

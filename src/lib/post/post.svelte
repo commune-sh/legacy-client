@@ -339,6 +339,7 @@ $: isPostAuthor = sender_id === post?.sender?.id
                 on:edited={edited}
                 isPost={true} 
                 isPostAuthor={isPostAuthor}
+                on:redact
                 event={post} 
                 on:replyTo={replyToEvent}/>
         {:else}

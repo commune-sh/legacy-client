@@ -156,7 +156,7 @@ let killed = () => {
             <Popup
             bind:this={popup}
             trigger={"click"}
-            offset={[0, 14]}
+            offset={[0, 4]}
             on:killed={killed}
             shadow={`box-shadow: 0px 9px 15px -7px rgba(0,0,0,0.1);`}
             mask={true}

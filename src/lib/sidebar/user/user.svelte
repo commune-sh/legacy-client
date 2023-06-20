@@ -65,8 +65,9 @@ let popup;
     <Popup
     bind:this={popup}
     trigger={"click"}
-    offset={[8, 10]}
+    offset={[8, 0]}
     on:killed={killed}
+    shadow={`0px 9px 15px -7px rgba(0,0,0,0.2)`}
     placement={"top-start"}>
 
         <div class="ui fl" 

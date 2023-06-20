@@ -1,6 +1,6 @@
 <script>
 import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
-import { APIRequest, loadPosts } from '$lib/utils/request.js'
+import { APIRequest, loadPosts, redactEvent } from '$lib/utils/request.js'
 import { onMount, tick, createEventDispatcher } from 'svelte'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
@@ -442,8 +442,30 @@ $: roomExists = state?.children?.find((child) => child.alias ==
     $page.params.room) != undefined
 
 
-function redactEvent(e) {
-    console.log("redacting", e.detail )
+async function redactPost(e) {
+    const event = e.detail
+    const index = data.events.findIndex(i => i.event_id === event.event_id);
+    if(index !== -1) {
+        data.events.splice(index, 1);
+        data = data
+    }
+    if(isPost && event.slug == $page.params.post) {
+        let url = `/${$page.params.space}`
+        if(isRoom) {
+            url = `/${$page.params.space}/${$page.params.room}`
+        }
+        goto(url, {
+            noscroll: true,
+        })
+    }
+
+    let redaction = {
+        room_id: event.room_id,
+        event_id: event.event_id,
+        reason: "redacted",
+    }
+    const res = await redactEvent(redaction);
+    console.log(res)
 }
 
 </script>
@@ -488,14 +510,14 @@ function redactEvent(e) {
                         {#each events as event (event.event_id)}
                             {#if event.pinned}
                                 <Event event={event} 
-                                    on:redact={redactEvent}
+                                    on:redact={redactPost}
                                     sender={null} />
                             {/if}
                         {/each}
                         {#each events as event (event.event_id)}
                             {#if !event.pinned}
                                 <Event event={event} 
-                                    on:redact={redactEvent}
+                                    on:redact={redactPost}
                                     sender={null} />
                             {/if}
                         {/each}
@@ -562,6 +584,7 @@ function redactEvent(e) {
         <Post on:update-reactions={updateReactions} 
         post={selectedPost}
         on:edited={postEdited}
+        on:redact={redactPost}
         on:reply-saved={updateReplyCount} />
     {/if}
 
