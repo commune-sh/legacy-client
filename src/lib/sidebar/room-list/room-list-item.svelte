@@ -2,10 +2,12 @@
 import { PUBLIC_APP_NAME } from '$env/static/public';
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
-import { discuss, settings } from '$lib/assets/icons.js'
+import { discuss, down } from '$lib/assets/icons.js'
 import { store } from '$lib/store/store.js'
 import TopicItem from './topic-item.svelte'
 import AddTopic from './add-topic.svelte'
+import Popup from '$lib/popup/popup.svelte'
+import RoomTools from './room-tools.svelte'
 
 export let item;
 export let collapsed;
@@ -107,38 +109,76 @@ $: topics = item?.topics != undefined ? JSON.parse(item?.topics) : null
 
 let hovered = false;
 
-function showMenu(e) {
-    e.stopPropagation()
-}
-
 $: show = selected ? true : collapsed && selected ? true : !collapsed ? true :
     false
+
+let menuActive = false;
+
+
+let killPopup = () => {
+    popup.kill()
+}
+
+let popup;
+
+let killed = () => {
+    menuActive = false
+    //hovered = false
+}
 
 </script>
 
 {#if show}
-<div class="item" 
-    draggable="true"
-    on:click={goToRoom}
-    on:contextmenu={logItem}
-    on:mouseover={() => hovered = true}
-    on:mouseleave={() => hovered = false}
-    class:active={active}>
+<div class="room-item"
+        on:contextmenu={logItem}
+        on:mouseover={() => hovered = true}
+        on:mouseleave={() => hovered = false}
+        class:active={active}>
 
-    <div class="ico grd-c"
-        class:inactive={!active}>
-        {@html discuss}
+    <div class="item" 
+            on:click={goToRoom}>
+
+        <div class="ico grd-c"
+            class:inactive={!active}>
+            {@html discuss}
+        </div>
+
+        <div class="sl pr2">
+            {item?.alias}
+        </div>
+
+
+
     </div>
 
-    <div class="sl pr2">
-        {item?.alias}
-    </div>
 
-    {#if hovered}
-        <div class="ico-s grd-c ph2 set" on:click={showMenu}>
-        {@html settings}
-    </div>
-    {/if}
+        <div class="tools grd">
+            <Popup
+            bind:this={popup}
+            trigger={"click"}
+            offset={[0, 14]}
+            on:killed={killed}
+            shadow={`box-shadow: 0px 9px 15px -7px rgba(0,0,0,0.1);`}
+            mask={true}
+            placement={"bottom-end"}>
+
+                <div class="ich grd ph2"
+                    slot="reference">
+                    <div class="ico-s grd-c " >
+                        {@html down}
+                    </div>
+                </div>
+
+
+
+                <div class="component" slot="content">
+                    <RoomTools room={item} on:kill={killPopup}/>
+                </div>
+
+            </Popup>
+
+        </div>
+
 </div>
 
 {#if topics?.length > 0 && selected}
@@ -159,17 +199,23 @@ $: show = selected ? true : collapsed && selected ? true : !collapsed ? true :
 
 
 <style>
-.item {
-    cursor: pointer;
+
+.room-item {
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: 1fr auto;
+    cursor: pointer;
     height: 30px;
     border-radius: 4px;
     font-size: 14px;
     margin-bottom: 0.15rem;
 }
 
-.item:hover {
+.item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+}
+
+.room-item:hover {
     background-color: var(--shade-3);
 }
 
@@ -206,7 +252,20 @@ $: show = selected ? true : collapsed && selected ? true : !collapsed ? true :
 }
 
 .ico-s {
-    height: 14px;
-    width: 14px;
+    height: 18px;
+    width: 18px;
+}
+
+.tools {
+    opacity: 0;
+}
+.room-item:hover .tools {
+    opacity: 1;
+}
+.mac {
+    opacity: 1;
+}
+.ich:hover .ico-s {
+    opacity: 1;
 }
 </style>

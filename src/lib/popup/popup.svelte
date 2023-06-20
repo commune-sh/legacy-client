@@ -20,7 +20,7 @@ $: if(initActive) {
 
 let active = false;
 
-function activate() {
+export function activate() {
     active = !active
     if(!active) {
         ready = false
@@ -191,7 +191,7 @@ async function focusSearchInput() {
 
 </script>
 
-<div class="popup grd" bind:this={reference} on:click={activate}>
+<div class="popup grd grd-c" bind:this={reference} on:click={activate}>
     <slot name="reference">
     </slot>
 </div>
