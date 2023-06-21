@@ -107,7 +107,7 @@ $: if(headerExists && header && el) {
             {#if isStaticRoute}
                 <b>{staticRoute.name}</b>
             {:else if isNotSpace}
-                {PUBLIC_APP_NAME}
+                <b>{PUBLIC_APP_NAME}</b>
             {/if}
         </div>
 
