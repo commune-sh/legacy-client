@@ -72,6 +72,7 @@ let popup;
     trigger={"click"}
     offset={[8, 0]}
     on:killed={killed}
+    mask={true}
     shadow={`0px 9px 15px -7px rgba(0,0,0,0.2)`}
     placement={"top-start"}>
 

@@ -68,7 +68,7 @@ $: if(headerExists && header && el) {
     on:killed={killed}
     shadow={`0px 9px 15px -7px rgba(0,0,0,0.2)`}
     mask={true}
-    placement={"top-start"}>
+    placement={"bottom-start"}>
 
         <div class="space fl"
             class:sp={!headerExists}

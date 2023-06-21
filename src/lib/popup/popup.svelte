@@ -62,6 +62,7 @@ $: if(active) {
     let p = reference?.getBoundingClientRect()
     let c = container?.getBoundingClientRect()
 
+
     positions['bottom'] = {
         top: p.top + p?.height + offset[1],
         left: p.left - (c?.width / 2) - (p?.width / 2) + offset[0],
@@ -139,11 +140,6 @@ $: if(active) {
     }
 
 
-    let x = activePosition.left + c?.width + p?.width
-    if(x > document.body.clientWidth) {
-        let o = x - document.body.clientWidth
-        activePosition.left = activePosition.left  - o
-    }
 
 
     ready = true
@@ -204,7 +200,7 @@ async function focusSearchInput() {
 
         <div class="popup-container" 
             style={`--top:${activePosition?.top}px;--left:${activePosition?.left}px;--shadow:${shadow}`}
-        in:fly="{{ y: 30, duration: 100 }}"
+        in:fly="{{ y: -30, duration: 100 }}"
         bind:this={container}>
 
             <slot name="content"></slot>
@@ -231,7 +227,7 @@ async function focusSearchInput() {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 1002;
+    z-index: 11000;
 }
 
 .ms {
