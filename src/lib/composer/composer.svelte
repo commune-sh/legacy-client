@@ -305,16 +305,26 @@ $: postText = uploading ? 'Uploading...' : busy ? 'Saving...' : 'Save'
 
 
 async function createPost() {
-    if(titleInput.value.length === 0 && !reply && !editingReply) {
+
+    let title = titleInput.value
+    let body = bodyInput.value
+
+    if(links && links[0]?.title?.length > 0 && 
+        links[0]?.description?.length > 0) {
+        title = links[0].title
+        body = links[0].description
+    }
+
+    if(title.length === 0 && !reply && !editingReply) {
         focusTitleInput()
         return
     }
-    console.log(reply, replyTo)
+
     if(reply && replyTo == null) {
         return
     }
 
-    if(bodyInput.value.length === 0) {
+    if(body.length === 0) {
         focusBodyInput()
         return
     }
@@ -363,8 +373,8 @@ async function createPost() {
             type: 'm.room.message',
             content: {
                 msgtype: 'post',
-                title: titleInput.value,
-                body: bodyInput.value,
+                title: title,
+                body: body,
                 //formatted_body: md.render(bodyInput.value),
             },
         }
