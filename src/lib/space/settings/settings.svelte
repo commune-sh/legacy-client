@@ -16,6 +16,7 @@ const dispatch = createEventDispatcher()
 <style>
 .space-settings {
     display: grid;
+    padding: 1rem;
 }
 
 </style>

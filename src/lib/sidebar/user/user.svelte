@@ -28,8 +28,13 @@ let logout = () => {
     store.logout()
     if(!isSpace) {
         //location.replace('/')
+        if(isIndex) {
+            //location.replace('/')
+        }
     }
 }
+
+$: isIndex = $page.url?.pathname === '/'
 
 let menuActive = false
 

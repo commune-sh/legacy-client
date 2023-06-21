@@ -1,6 +1,7 @@
 <script>
 import { PUBLIC_MEDIA_URL } from '$env/static/public';
 import { onMount, createEventDispatcher } from 'svelte'
+import { user } from '$lib/assets/icons.js'
 import { isInViewport } from '$lib/utils/utils.js'
 import { store } from '$lib/store/store.js'
 import { goto } from '$app/navigation';
@@ -67,29 +68,47 @@ function log() {
 }
 
 
-$: avatar = space?.avatar ? `${PUBLIC_MEDIA_URL}/${space?.avatar}` :
+$: avatar = space?.avatar?.length > 0 ? `${PUBLIC_MEDIA_URL}/${space?.avatar}` :
 null
+
+$: isProfile = space?.is_profile && space?.room_id ===
+    $store?.credentials?.user_space_id
+
+$: name = space?.name?.length > 0 ? space?.name : space?.alias
 
 </script>
 
-<div class="" bind:this={content}>
-    {space?.name}
+<div class="tip fl-co" bind:this={content}>
+    <div class="">
+        <b>{name}</b>
+    </div>
+    {#if space?.topic}
+    <div class="mt2">
+        {space?.topic}
+    </div>
+    {/if}
 </div>
 
 <div class="i-c grd">
     <div class="item grd-c"
     draggable="true"
     class:active={active}
+    class:profile={isProfile}
     bind:this={el}
     on:contextmenu={log}
     on:mouseover={() => hovered = true}
     on:mouseleave={() => hovered = false}
     on:click={goToSpace}
     style="background-image: url({avatar})">
-        {#if !avatar}
-        <div class="initial grd-c" style="font-size:{size};">
-            <b>{initials}</b>
-        </div>
+        {#if !avatar && !isProfile}
+            <div class="initial grd-c" style="font-size:{size};">
+                <b>{initials}</b>
+            </div>
+        {/if}
+        {#if isProfile}
+            <div class="grd-c ico">
+                {@html user}
+            </div>
         {/if}
     </div>
     <div class="tick" class:th={hovered} class:ac={active}></div>
@@ -114,12 +133,24 @@ null
     background-repeat: no-repeat;
 }
 
+.profile {
+    border-radius: 9px;
+}
+
 .initial {
     opacity: 0.8;
     font-size: var(--size);
 }
 
-.item:hover {
+.ico {
+    height: 22px;
+    width: 22px;
+    fill: white;
+    opacity: 0.5;
+}
+
+.item:hover .ico {
+    opacity: 1;
 }
 
 .active {

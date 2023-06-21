@@ -69,18 +69,8 @@ async function addRoom() {
         name: nameInput.value
     })
     console.log(res)
-    if(res?.success && res?.room_id) {
-        store.addRoomToSpaceState($page.params.space, {
-            alias: nameInput.value,
-            avatar: null,
-            header: null,
-            name: nameInput.value,
-            pinned_events: null,
-            room_id: res?.room_id,
-            topic: null,
-            topics: null,
-            type: "board",
-        })
+    if(res?.success && res?.room_id && res?.state) {
+        store.addRoomToSpaceState($page.params.space, res.state)
         store.addRoom(res.room_id)
         goto(`/${$page.params.space}/${nameInput.value}`)
         kill()

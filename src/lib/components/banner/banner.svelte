@@ -1,11 +1,14 @@
 <script>
 import { getPresignedURL, uploadAttachment } from '$lib/utils/request.js'
 import { createEventDispatcher } from 'svelte'
-import { addImage } from '$lib/assets/icons.js'
+import { addImage, trash } from '$lib/assets/icons.js'
 
 const dispatch = createEventDispatcher()
 
 export let banner;
+
+$: exists = banner != undefined && banner.length > 0
+
 let fileInput;
 let uploading = false;
 
@@ -80,6 +83,11 @@ function select() {
     fileInput.click()
 }
 
+function remove() {
+    banner = null
+    dispatch('removed')
+}
+
 </script>
 
 <div class="c grd" on:click={select}
@@ -94,6 +102,14 @@ function select() {
             <div class="loader grd-c">
             </div>
         </div>
+{/if}
+
+{#if exists}
+<div class="trash" on:click|stopPropagation={remove}>
+    <div class="ico-s grd-c">
+        {@html trash}
+    </div>
+</div>
 {/if}
 
 <input 
@@ -141,4 +157,27 @@ function select() {
     height: 20px;
     width: 20px;
 }
+.trash {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    background-color:var(--bg);
+    height: 30px;
+    width: 30px;
+    display: grid;
+    cursor: pointer;
+}
+.ico-s {
+    fill: white;
+    height: 18px;
+    width: 18px;
+}
+.trash:hover{
+    background-color:var(--primary);
+}
+.trash:hover .ico-s{
+    opacity: 1;
+}
+
 </style>

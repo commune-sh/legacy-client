@@ -53,6 +53,8 @@ let lastSpace = null;
 let lastRoom = null;
 let lastTopic = null;
 
+let lastAuthState = null;
+
 let lastPageType = null;
 
 $: isSpace = $page?.params?.space !== undefined 
@@ -158,6 +160,7 @@ async function loadEvents(init) {
         lastSpace = $page?.params?.space
         lastRoom = $page?.params?.room
         lastTopic = $page?.params?.topic
+        lastAuthState = authenticated
         loaded = true
         reloading = false
     }
@@ -166,6 +169,11 @@ async function loadEvents(init) {
         down = true
     }
 
+}
+
+$: isIndex = $page.url?.pathname === '/'
+$: if(isIndex && loaded && lastAuthState != null && (authenticated != lastAuthState)) {
+    loadEvents()
 }
 
 let down = false;
@@ -568,6 +576,15 @@ async function redactPost(e) {
                         </section>
                     </section>
                 {/if}
+
+                {#if authenticated && noEvents && !isSpace}
+                    <section class="grd">
+                        <section class="grd-c">
+                            You're not following any spaces yet.
+                        </section>
+                    </section>
+                {/if}
+
 
 
             {/if}

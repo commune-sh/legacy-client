@@ -24,10 +24,6 @@ $: authenticated = $store?.authenticated &&
     on:scroll={scroll}
     bind:this={container}>
 
-    {#if authenticated}
-
-        <UserSpace />
-    {/if}
 
     {#if spaces?.length > 0}
         {#each spaces as space}

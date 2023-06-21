@@ -364,6 +364,7 @@ function createApp() {
     update(p => {
       p.spaces.push(x)
       p.spaces.sort((a, b) => a.alias.toLowerCase().localeCompare(b.alias.toLowerCase()));
+      generateInitials(p.spaces);
       return p
     })
   }

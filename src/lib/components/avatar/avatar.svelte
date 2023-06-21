@@ -1,10 +1,14 @@
 <script>
 import { getPresignedURL, uploadAttachment } from '$lib/utils/request.js'
 import { createEventDispatcher } from 'svelte'
+import { trash, addImage } from '$lib/assets/icons.js'
 
 const dispatch = createEventDispatcher()
 
 export let avatar;
+
+$: exists = avatar != undefined && avatar.length > 0
+
 let fileInput;
 let uploading = false;
 
@@ -79,19 +83,39 @@ function select() {
     fileInput.click()
 }
 
+function remove() {
+    avatar = null
+    dispatch('removed')
+}
+
 </script>
 
 <div class="c grd">
-<div class="grd-c avatar" 
+<div class="grd-c avatar grd" 
     style="background-image: url({avatar})"
     on:click={select}>
+    {#if !exists}
+        <div class="ico-s grd-c">
+            {@html addImage}
+        </div>
+    {/if}
 </div>
+
 {#if uploading}
         <div class="ms grd">
             <div class="loader grd-c">
             </div>
         </div>
 {/if}
+
+{#if exists}
+<div class="trash" on:click={remove}>
+    <div class="ico-s grd-c">
+        {@html trash}
+    </div>
+</div>
+{/if}
+
 
 <input 
     type="file" 
@@ -117,6 +141,31 @@ function select() {
     bottom: 0;
     padding-left: 0.5rem;
 }
+
+.trash {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    background-color:var(--bg);
+    height: 30px;
+    width: 30px;
+    display: grid;
+    cursor: pointer;
+}
+.ico-s {
+    fill: white;
+    height: 18px;
+    width: 18px;
+}
+.trash:hover{
+    background-color:var(--primary);
+}
+.trash:hover .ico-s{
+    opacity: 1;
+}
+
+
 .avatar {
     cursor: pointer;
     width: 90px;

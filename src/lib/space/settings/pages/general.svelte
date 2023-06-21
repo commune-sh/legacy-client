@@ -95,15 +95,43 @@ $: avatar = state?.space?.avatar ?
 $: header = state?.space?.header ?
 `${PUBLIC_MEDIA_URL}/${state?.space?.header}` : null
 
+async function avatarRemoved() {
+    console.log("hmm")
+    avatar = null
+    store.updateSpaceAvatar($page.params.space, null)
+    const res = await createStateEvent({
+        room_id: roomID,
+        event_type: 'm.room.avatar',
+        content: {
+            url: ``
+        }
+    })
+    console.log(res)
+}
+async function bannerRemoved() {
+    console.log("hmm")
+    avatar = null
+    store.updateSpaceHeader($page.params.space, null)
+    const res = await createStateEvent({
+        room_id: roomID,
+        event_type: 'm.room.header',
+        content: {
+            url: ``
+        }
+    })
+    console.log(res)
+}
 </script>
 
 <div class="sco grd-c">
 
     <div class="banner grd pa3">
         <Avatar avatar={avatar} 
+            on:removed={avatarRemoved}
             on:uploaded={avatarUploaded}/>
 
         <Banner banner={header} 
+            on:removed={bannerRemoved}
             on:uploaded={bannerUploaded}/>
     </div>
 
