@@ -59,6 +59,8 @@ $: isSpace = $page?.params?.space !== undefined
 $: isRoom = $page?.params?.room !== undefined 
 $: isPost = $page?.params?.post !== undefined
 
+$: isGeneral = isSpace && !isRoom && !isPost
+
 $: isTopic = $page?.params?.topic !== undefined
 
 $: topic = $page?.params?.topic
@@ -400,7 +402,7 @@ function postSaved(e) {
 $: isReply = $page.params.reply !== undefined && $page.params.reply !== null && $page.params.reply !== ''
 
 
-$: holder = isTopic ? 'topic' : 'space'
+$: holder = isTopic ? 'topic' : isRoom ? 'board' : isSpace ? 'space' : null
 
 
 function updateReactions(e) {
@@ -438,7 +440,7 @@ function postEdited(e) {
     }
 }
 
-$: roomExists = state?.children?.find((child) => child.alias ==
+$: roomExists = isRoom && state?.children?.find((child) => child.alias ==
     $page.params.room) != undefined
 
 
@@ -524,7 +526,7 @@ async function redactPost(e) {
                     </section>
                 {/if}
 
-                {#if exists && !isProfile && noEvents && roomExists}
+                {#if exists && !isProfile && noEvents && (roomExists || isGeneral)}
                     <div class="grd">
                         <div class="grd-c">
                             This {holder} does not have any posts yet.
@@ -541,7 +543,7 @@ async function redactPost(e) {
                 {/if}
 
 
-                {#if exists && !isProfile && !isTopic && noEvents && !roomExists}
+                {#if exists && !isProfile && isRoom && !isTopic && noEvents && !roomExists}
                     <div class="grd">
                         <div class="grd-c">
                             This board does not exist.
