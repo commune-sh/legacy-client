@@ -2,6 +2,7 @@
 import { PUBLIC_APP_NAME } from '$env/static/public';
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
+import { isInViewport } from '$lib/utils/utils.js'
 import { discuss, down } from '$lib/assets/icons.js'
 import { store } from '$lib/store/store.js'
 import TopicItem from './topic-item.svelte'
@@ -126,10 +127,21 @@ let killed = () => {
     //hovered = false
 }
 
+let el;
+$: if(active && el) {
+    isInViewport(el)
+    .then(e => {
+        if(!e) {
+            el.scrollIntoView()
+        }
+    });
+}
+
 </script>
 
 {#if show}
 <div class="room-item"
+        bind:this={el}
         on:contextmenu={logItem}
         on:mouseover={() => hovered = true}
         on:mouseleave={() => hovered = false}
