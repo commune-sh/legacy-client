@@ -10,7 +10,7 @@ import SpaceMenu from './space-menu.svelte'
 $: state = $store?.states[$page?.params?.space]
 export let ready;
 
-$: name = state?.space?.name ? state.space.name : $page.params.space;
+$: name = state?.space?.name ? state?.space?.name : state?.space?.alias;
 
 $: isStaticRoute = $store.staticRoutes.some(r => r.path === $page?.url?.pathname);
 $: staticRoute = $store.staticRoutes.find(r => r.path === $page?.url?.pathname);

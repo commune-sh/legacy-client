@@ -55,7 +55,7 @@ function sortItems(state) {
     let items = [
         {
             path: undefined,
-            name: state?.space?.is_profile ? `${$page.params.space}'s Space`:`general`,
+            name: state?.space?.is_profile ? `${state?.space?.alias}'s Space`:`general`,
             alias: ``,
             fullpath: `/${$page.params.space}`,
             room_id: state?.room_id,
