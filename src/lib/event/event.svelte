@@ -392,7 +392,7 @@ $: showTopic = hasTopic && !isTopic
     <div class="ev-c fl-co"
     class:ovy={!interactive}>
 
-        <div class="ph3 fl mb2 pb1">
+        <div class="sender ph3 fl">
             <User hideAvatar={true} user={user} op={op}/>
             <div class="sm ph1"></div>
             <Date date={event?.origin_server_ts} />
@@ -703,6 +703,9 @@ $: showTopic = hasTopic && !isTopic
     fill: var(--primary);
 }
 
+.sender {
+    margin-bottom: 0.5rem;
+}
 
 @keyframes fadeOut {
   from {
@@ -716,7 +719,17 @@ $: showTopic = hasTopic && !isTopic
 
 @media screen and (max-width: 768px) {
     .event {
+        padding-bottom: 0.5rem;
+        padding-top: 0.5rem;
     }
+    .sender {
+        margin-bottom: 0.25rem;
+    }
+
+    .clipped {
+        margin-bottom: 0.25rem;
+    }
+
     .post-body {
     }
 }

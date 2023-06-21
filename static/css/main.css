@@ -234,7 +234,7 @@ html {
 }
 
 body {
-    font-family: monospace, "Twemoji";
+    font-family: "Inter", "Twemoji", "Apple Color Emoji", "Segoe UI Emoji", "Arial", "Helvetica", sans-serif, "STIXGeneral", "Noto Color Emoji";
     font-weight: normal;
     line-height: 1;
     margin: 0;
@@ -405,7 +405,7 @@ input, textarea {
     color: var(--text);
     font-size: 16px;
     box-sizing: border-box;
-    font-family: monospace, "Twemoji";
+    font-family: "Inter", "Twemoji", "Apple Color Emoji", "Segoe UI Emoji", "Arial", "Helvetica", sans-serif, "STIXGeneral", "Noto Color Emoji";
 }
 
 input:focus, textarea:focus {
@@ -847,4 +847,8 @@ blockquote p {
 }
 
 @media screen and (max-width: 768px) {
+    html {
+        font-size: 13px;
+    }
+
 }
