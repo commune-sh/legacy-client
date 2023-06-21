@@ -78,12 +78,12 @@ $: name = space?.name?.length > 0 ? space?.name : space?.alias
 
 </script>
 
-<div class="tip fl-co" bind:this={content}>
+<div class="tip fl-co pa1" bind:this={content}>
     <div class="">
         <b>{name}</b>
     </div>
     {#if space?.topic}
-    <div class="mt2">
+    <div class="md mt2">
         {space?.topic}
     </div>
     {/if}

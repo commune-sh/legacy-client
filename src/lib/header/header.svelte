@@ -326,4 +326,9 @@ $: buttonText = busy ? busyText : normalText
     font-size: 0.9rem;
     margin-top: 2px;
 }
+@media screen and (max-width: 1020px) {
+    .topic {
+        display: none;
+    }
+}
 </style>

@@ -87,17 +87,14 @@ async function create() {
         busy = false
         kill()
     }
-    if(res?.forbidden) {
-        busy = false
-        notVerified = true
-    }
     if(res?.error) {
         busy = false
         showError = true
+        error = res.error
     }
 }
 let showError = false;
-let notVerified
+let error;
 
 </script>
 
@@ -147,15 +144,10 @@ let notVerified
 
                 {#if showError}
                 <div class="ln mv3 warn">
-                    There was an error. Your space could not be created.
+                    {error}
                 </div>
                 {/if}
 
-                {#if notVerified}
-                <div class="ln mv3 warn">
-                    Your account is not verified with an email. Please verify your account to create a space.
-                </div>
-                {/if}
                 <div class="createc mt3 pb2">
                         <button on:click={create} disabled={busy}>
                             {busy ? 'Creating...' : 'Create'}
