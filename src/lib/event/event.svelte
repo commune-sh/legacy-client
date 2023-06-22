@@ -577,7 +577,7 @@ $: showTopic = hasTopic && !isTopic
     padding-top: 0.75rem;
     border-bottom: 1px solid var(--ev-bb);
     position: relative;
-    word-break:break-all
+    word-break: break-word;
 }
 
 .replies {
