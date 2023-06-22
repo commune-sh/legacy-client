@@ -9,7 +9,7 @@ import Banner from '$lib/components/banner/banner.svelte'
 import { createStateEvent } from '$lib/utils/request.js'
 
 $: state = $store?.states[$page?.params?.space]
-$: roomID = state.room_id
+$: roomID = state?.room_id
 
 let nameInput;
 let name;
@@ -168,7 +168,7 @@ async function bannerRemoved() {
 
 .sco {
     background: var(--modal);
-    width: 520px;
+    width: 100%;
     border-radius: 7px;
 }
 
@@ -199,9 +199,6 @@ textarea {
 }
 
 @media (max-width: 1020px) {
-    .sco {
-        width: 100%;
-    }
 }
 </style>
 

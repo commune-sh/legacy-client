@@ -3,7 +3,7 @@ import { PUBLIC_APP_NAME } from '$env/static/public';
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 import { isInViewport } from '$lib/utils/utils.js'
-import { discuss, down } from '$lib/assets/icons.js'
+import { discuss, chat, down } from '$lib/assets/icons.js'
 import { store } from '$lib/store/store.js'
 import TopicItem from './topic-item.svelte'
 import AddTopic from './add-topic.svelte'

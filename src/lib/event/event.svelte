@@ -1,4 +1,5 @@
 <script>
+import { PUBLIC_BASE_URL } from '$env/static/public';
 import { onMount, createEventDispatcher } from 'svelte'
 import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';

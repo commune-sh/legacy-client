@@ -67,9 +67,13 @@ $: authenticated = $store?.authenticated &&
     $store?.credentials?.access_token?.length > 0
 
 let EmojiPicker;
+let SpaceSettings;
 $: if(authenticated) {
     import('$lib/emoji/emoji-picker.svelte').then(m => {
         EmojiPicker = m.default
+    })
+    import('$lib/space/settings/settings.svelte').then(m => {
+        SpaceSettings = m.default
     })
 }
 
@@ -77,6 +81,10 @@ $: if(authenticated) {
 
 {#if authenticated && EmojiPicker}
     <EmojiPicker />
+{/if}
+
+{#if authenticated && SpaceSettings}
+    <SpaceSettings />
 {/if}
 
 <Sync />
@@ -142,6 +150,7 @@ $: if(authenticated) {
 {#if isIndex && !showIndex}
     <button on:click={switchToIndex}>Show Index</button>
 {/if}
+
 
 <style>
 

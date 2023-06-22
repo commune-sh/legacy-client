@@ -24,8 +24,8 @@ function kill() {
 }
 
 function spaceSettings() {
-    //$store.spaceSettingsOpen = true
-    goto(`/${$page.params.space}/settings`)
+    $store.spaceSettingsOpen = true
+    //goto(`/${$page.params.space}/settings`)
     kill()
 }
 </script>
