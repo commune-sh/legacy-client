@@ -575,7 +575,6 @@ $: showTopic = hasTopic && !isTopic
     padding-bottom: 0.75rem;
     padding-top: 0.75rem;
     border-bottom: 1px solid var(--ev-bb);
-    overflow: hidden;
     position: relative;
     word-break:break-all
 }

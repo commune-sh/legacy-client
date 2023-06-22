@@ -74,7 +74,7 @@ $: isTopic= $page?.params?.topic !== undefined &&
 
         <div class="fl">
 
-            <div class="pd grd-c">
+            <div class="pd grd-c" class:ppd={!embed}>
                 {#if isReply}
                     <span class="n">Reply Thread</span>
                     <span class="ml3 sfd" on:click={goFull}>See Full Discussion</span>
@@ -147,7 +147,7 @@ $: isTopic= $page?.params?.topic !== undefined &&
     .back {
         display: block;
     }
-    .pd {
+    .ppd {
         padding-left: 0.5rem;
     }
 }

@@ -1,6 +1,7 @@
 <script>
-import { reply, external, edit, trash, more } from '$lib/assets/icons.js'
+import { reply, external, edit } from '$lib/assets/icons.js'
 import React from './react.svelte'
+import Menu from './menu.svelte'
 import { createEventDispatcher } from 'svelte'
 import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
@@ -30,10 +31,6 @@ function editEvent() {
     dispatch('edit')
 }
 
-function redactEvent() {
-    dispatch('redact', event)
-}
-
 
 function goToEvent() {
     let url = `/${event.room_alias}/post/${$page.params.post}/reply/${event?.slug}`
@@ -51,6 +48,10 @@ let killPopup = (e) => {
     popup.kill()
     console.log("dispatching", e.detail)
     dispatch('kill', e.detail)
+}
+
+let logEvent = () => {
+    console.log(event)
 }
 
 let popup;
@@ -91,13 +92,12 @@ let killed = () => {
         </div>
     {/if}
 
-    {#if isAuthor || isOwner}
-        <div class="icon grd-c c-ico" 
-            on:click|stopPropagation={redactEvent}>
-            {@html trash}
-        </div>
-    {/if}
 
+    <Menu 
+        on:active 
+        on:kill 
+        on:redact
+        event={event} />
 
 </div>
 

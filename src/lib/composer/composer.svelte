@@ -621,6 +621,7 @@ $: if(replyTo !== lastReplyTo) {
     focusBodyInput()
 }
 
+
 </script>
 
 <section class="composer" 
@@ -715,6 +716,10 @@ $: if(replyTo !== lastReplyTo) {
                 {@html eye}
             </div>
         </div>
+        {#if editing}
+            <div class="grd-c mr3 href" on:click={kill}>cancel</div>
+        {/if}
+
         <button class="ph3" disabled={busy} on:click={createPost}>
             {postText}
         </button>

@@ -22,18 +22,44 @@ let menu;
 
 let active = false;
 
+onMount(() => {
+    menu = tippy(el, {
+        content: content,
+        allowHTML: true,
+        trigger: 'click',
+        interactive: true,
+        theme: 'light-border',
+        placement: 'bottom-end',
+        arrow: false,
+        duration: 1,
+        zIndex: 99999,
+        onShown(i) {
+            active = true
+            dispatch('active', true)
+        },
+        onHide(i) {
+            active = false
+            dispatch('kill', true)
+        },
+        onClickOutside(i) {
+            active = false
+            dispatch('kill', true)
+        },
+    });
+})
+
+
 
 function viewSource() {
-    /*
-    store.showModal(ViewSource, {
-        event: event
-    })
-    */
+    menu.hide()
     console.log(event)
 }
+
 function redactEvent() {
-    dispatch('redact', event.event_id)
+    menu.hide()
+    dispatch('redact', event)
 }
+
 
 
 </script>
@@ -49,7 +75,7 @@ function redactEvent() {
         </div>
     </div>
     {#if isOwner || isAuthor}
-    <div class="m-item fl" on:click|stopPropagation={redactEvent}>
+    <div class="m-item fl pr" on:click|stopPropagation={redactEvent}>
         <div class="grd-c mr2 fl-o">
             Delete
         </div>
@@ -60,12 +86,17 @@ function redactEvent() {
     {/if}
 </div>
 
+<div class="more grd-c c-ico" 
+    class:ac={active}
+    on:click|stopPropagation bind:this={el}>
+    {@html more}
+</div>
+
 <style>
 .menu {
     width: 160px;
     z-index: 901;
     padding: 0.25rem;
-    position: relative;
 }
 .more {
     width: 18px;
@@ -96,5 +127,11 @@ function redactEvent() {
 .mic {
     width: 18px;
     height: 18px;
+}
+.pr {
+    color: red;
+}
+.pr .ico-s {
+    fill: red;
 }
 </style>
