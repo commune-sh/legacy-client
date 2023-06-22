@@ -60,9 +60,8 @@ function createApp() {
     spaceSettingsOpen: false,
   }
 
-  window.app = app
 
-  let theme = localStorage.getItem(`theme`)
+  let theme = localStorage.getItem(`theme`) || "{}"
   if(theme == 'light') {
     app.settings.theme = 'light'
   } else if(theme == 'dark') {

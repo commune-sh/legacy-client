@@ -29,6 +29,7 @@ $: joined = $store?.rooms.find(x => x === roomID) != null
 
 
 export let post;
+export let embed = false;
 
 
 $: state = $store?.states[$page?.params?.space]
@@ -328,10 +329,10 @@ $: isPostAuthor = sender_id === post?.sender?.id
 
 </script>
 
-<section class="content" class:rep={replying}>
-    <Header />
+<section class="content" class:def={!embed} class:rep={replying}>
+    <Header embed={embed}/>
 
-    <section class="events">
+    <section class="events" class:ovf={!embed}>
 
         {#if post}
             <Event 
@@ -422,7 +423,7 @@ $: isPostAuthor = sender_id === post?.sender?.id
     grid-template-rows: 48px 1fr auto;
 }
 
-.events {
+.ovf {
     overflow-y: scroll;
 }
 
@@ -436,7 +437,7 @@ $: isPostAuthor = sender_id === post?.sender?.id
 }
 
 @media screen and (max-width: 1280px) {
-    .content {
+    .def {
         position: fixed;
         top: 0;
         right: 0;
@@ -445,7 +446,7 @@ $: isPostAuthor = sender_id === post?.sender?.id
     }
 }
 @media screen and (max-width: 768px) {
-    .content {
+    .def {
         position:static;
     }
     .norep {

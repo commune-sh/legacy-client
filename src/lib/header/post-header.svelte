@@ -6,6 +6,8 @@ import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
 
+export let embed = false;
+
 const dispatch = createEventDispatcher()
 
 function kill() {
@@ -64,9 +66,11 @@ $: isTopic= $page?.params?.topic !== undefined &&
 <div class="header">
     <div class="container fl">
 
+        {#if !embed}
         <div class="menu c-ico grd-c" on:click={toggleMenu}>
             {@html menu}
         </div>
+        {/if}
 
         <div class="fl">
 
@@ -81,6 +85,7 @@ $: isTopic= $page?.params?.topic !== undefined &&
 
             <div class="fl-o"></div>
 
+        {#if !embed}
             <div class="close c-ico pd grd-c" on:click={kill}>
                 {@html close}
             </div>
@@ -88,6 +93,7 @@ $: isTopic= $page?.params?.topic !== undefined &&
             <div class="back c-ico pd grd-c" on:click={kill}>
                 {@html arrowLeftSmall}
             </div>
+        {/if}
         </div>
 
     </div>

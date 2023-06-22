@@ -32,7 +32,12 @@ function viewReady() {
 let root;
 
 
+onMount(() => {
+})
 
+$: if($page) {
+    console.log($page)
+}
 
 $: down = $store.down
 

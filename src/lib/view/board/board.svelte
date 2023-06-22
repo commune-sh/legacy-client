@@ -108,7 +108,6 @@ $: events = data?.events
 async function loadEvents(init) {
 
     if(init) {
-        console.log("do pinned events exist?", pinnedEvents)
     }
 
     const token = localStorage.getItem('access_token')

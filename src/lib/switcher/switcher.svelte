@@ -99,6 +99,7 @@ $: spacesFetched = $store.spacesFetched
     border-right: 1px solid var(--border-1);
     background-color: var(--bg);
     overflow: hidden;
+    height: 100%;
 }
 
 .switcher-container {

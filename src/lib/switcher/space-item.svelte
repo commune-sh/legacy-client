@@ -105,7 +105,7 @@ $: name = space?.name?.length > 0 ? space?.name : space?.alias
                 <b>{initials}</b>
             </div>
         {/if}
-        {#if isProfile}
+        {#if isProfile && !avatar}
             <div class="grd-c ico">
                 {@html user}
             </div>
@@ -134,7 +134,7 @@ $: name = space?.name?.length > 0 ? space?.name : space?.alias
 }
 
 .profile {
-    border-radius: 9px;
+    border-radius: 6px;
 }
 
 .initial {
