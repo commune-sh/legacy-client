@@ -34,10 +34,16 @@ $: if(authenticated && createSpaceAfterLogin)  {
     createSpaceAfterLogin = false
 }
 
+$: senderVerified = authenticated && $store.credentials?.verified
+
 function createSpace() {
     if(!authenticated) {
         store.startAuthenticating()
         createSpaceAfterLogin = true
+        return
+    }
+    if(!senderVerified) {
+        $store.showVerificationAlert = true
         return
     }
     store.toggleCreateSpace()

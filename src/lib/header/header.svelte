@@ -39,7 +39,7 @@ function goToSpace() {
 
 function newPost() {
     if(requiresVerification && !senderVerified && !isOwner) {
-        alert('This space requires users to verify their email before posting.')
+        $store.showVerificationAlert = true
         return
     }
     dispatch('newPost', room_id)

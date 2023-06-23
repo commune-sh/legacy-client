@@ -15,6 +15,7 @@ function createApp() {
       active: false,
       mode: null,
     },
+    showVerificationAlert: false,
     startAccountVerification: false,
     refreshingFeed: false,
     verifiedSession: false,
