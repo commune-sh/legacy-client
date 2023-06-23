@@ -10,6 +10,7 @@ let active = false;
 
 let kill =() => {
     active = false;
+    $store.spaceSettingsOpen = false;
 }
 
 

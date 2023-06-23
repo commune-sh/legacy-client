@@ -38,6 +38,10 @@ function goToSpace() {
 }
 
 function newPost() {
+    if(requiresVerification && !senderVerified && !isOwner) {
+        alert('This space requires users to verify their email before posting.')
+        return
+    }
     dispatch('newPost', room_id)
 }
 
@@ -60,6 +64,7 @@ function sortItems(state) {
             fullpath: `/${$page.params.space}`,
             room_id: state?.room_id,
             topic: state?.space?.topic,
+            restrictions: state?.space?.restrictions,
             pinned_events: state.space?.pinned_events != undefined ? JSON.parse(state.space?.pinned_events) : null
         }
     ]
@@ -72,6 +77,7 @@ function sortItems(state) {
                 fullpath: `/${$page.params.space}/${child?.alias}`,
                 room_id: child?.room_id,
                 topic: child?.topic,
+                restrictions: child.restrictions,
                 pinned_events: child?.pinned_events != undefined ? JSON.parse(child?.pinned_events) : null,
             })
         })
@@ -90,7 +96,9 @@ $: isSpaceRoom = room_id === space_room_id
 
 $: isProfile = state?.space?.is_profile 
 
-$: ownProfile = isProfile && state?.owner === $store?.credentials?.matrix_user_id
+$: isOwner = state?.owner === $store?.credentials?.matrix_user_id
+
+$: ownProfile = isProfile && isOwner
 
 $: joinedRoom = $store?.rooms?.includes(room_id)
 $: joinedSpace = $store?.spaces.find(x => x?.room_id === space_room_id) != null 
@@ -149,6 +157,11 @@ $: normalText = isProfile ? 'Follow' : 'Join'
 $: busyText = isProfile ? 'Following' : 'Joining'
 
 $: buttonText = busy ? busyText : normalText
+
+$: requiresVerification = selected?.restrictions?.verified || false
+$: requiresSenderAge = selected?.restrictions?.age || 0
+
+$: senderVerified = authenticated && $store.credentials?.verified
 
 </script>
 

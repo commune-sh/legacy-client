@@ -6,6 +6,7 @@ import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';
 import Avatar from '$lib/components/avatar/avatar.svelte'
 import Banner from '$lib/components/banner/banner.svelte'
+import Select from '$lib/components/select/select.svelte'
 import { createStateEvent } from '$lib/utils/request.js'
 
 $: state = $store?.states[$page?.params?.space]
@@ -121,6 +122,27 @@ async function bannerRemoved() {
     })
     console.log(res)
 }
+
+$: roomType = state?.space?.type
+
+async function changeRoomType(e) {
+    console.log(e.target.value)
+    store.updateSpaceType($page.params.space, e.target.value)
+    const res = await createStateEvent({
+        room_id: roomID,
+        event_type: 'm.space.type',
+        content: {
+            type: e.target.value
+        }
+    })
+    console.log(res)
+}
+
+let roomTypes = [
+    {value: 'board', text: 'board'},
+    {value: 'chat', text: 'chat'},
+]
+
 </script>
 
 <div class="sco grd-c">
@@ -154,6 +176,19 @@ async function bannerRemoved() {
             <textarea bind:this={topicInput}
             bind:value={topic}
             placeholder="description"></textarea>
+        </div>
+
+        <div class="mt3 pb2">
+            <span class="label">space type</span>
+        </div>
+        <div class="mt1 pb2">
+            <select value={roomType} on:change={changeRoomType}>
+                <option value="board">board</option>
+                <option value="chat">chat</option>
+            </select>
+        </div>
+        <div class="mt1 pb2">
+            <Select items={roomTypes} />
         </div>
 
         <div class="mt3 ">

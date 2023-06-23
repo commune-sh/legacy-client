@@ -354,8 +354,15 @@ button {
     background-color: var(--primary);
     font-weight: bold;
     color: white;
-    transition: 0.1s;
     display: inline-block;
+}
+
+.h100 {
+    height: 100%;
+}
+
+.w100 {
+    width: 100%;
 }
 
 button:hover {
@@ -424,6 +431,19 @@ textarea {
 textarea:disabled,
 textarea[disabled]{
     cursor: not-allowed;
+}
+
+
+select {
+    border: none;
+    padding: 0.25rem;
+    border-radius: 5px;
+    background: var(--black);
+    border: 1px solid var(--input-border);
+    color: var(--text);
+    font-size: 16px;
+    box-sizing: border-box;
+    font-family: "Inter", "Twemoji", "Apple Color Emoji", "Segoe UI Emoji", "Arial", "Helvetica", sans-serif, "STIXGeneral", "Noto Color Emoji";
 }
 
 .pa0 { padding: 0; }
@@ -845,6 +865,7 @@ blockquote p {
     padding-top: 0;
     padding-bottom: 0;
 }
+
 
 @media screen and (max-width: 768px) {
     html {

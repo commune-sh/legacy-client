@@ -60,7 +60,7 @@ let kill =() => {
     store.stopAuthenticating()
 }
 
-$: authenticating = $store.authenticating
+$: authenticating = $store.authenticating?.active && $store.authenticating?.mode
 
 $: if(authenticating) {
     active = true
@@ -88,7 +88,7 @@ function escape(e) {
 
 
 
-export let mode = "login";
+$: mode = $store.authenticating?.mode
 
 $: loginMode = mode === "login";
 $: signupMode = mode === "signup";

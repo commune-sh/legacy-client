@@ -11,7 +11,11 @@ function createApp() {
     ready: false,
     features: null,
     authenticated: false,
-    authenticating: false,
+    authenticating: {
+      active: false,
+      mode: null,
+    },
+    startAccountVerification: false,
     refreshingFeed: false,
     verifiedSession: false,
     credentials: null,
@@ -60,6 +64,9 @@ function createApp() {
     spaceSettingsOpen: false,
   }
 
+  if(window) {
+    window.app = app
+  }
 
   let theme = localStorage.getItem(`theme`) || "{}"
   if(theme == 'light') {
@@ -108,16 +115,18 @@ function createApp() {
     })
   }
 
-  let startAuthenticating = () => {
+  let startAuthenticating = (mode) => {
     update(p => {
-      p.authenticating = true
+      p.authenticating.active = true
+      p.authenticating.mode = mode
       return p
     })
   }
 
   let stopAuthenticating = () => {
     update(p => {
-      p.authenticating = false
+      p.authenticating.active = false
+      p.authenticating.mode = null
       return p
     })
   }
@@ -187,6 +196,14 @@ function createApp() {
   let verifiedSession = (v) => {
     update(p => {
       p.verifiedSession = v
+      return p
+    })
+  }
+
+  let accountVerified = (email) => {
+    update(p => {
+      p.credentials.email = email
+      p.credentials.verified = true
       return p
     })
   }
@@ -423,6 +440,13 @@ function createApp() {
         s.header = header
       }
       p.states[space].space['header'] = header
+      return p
+    })
+  }
+
+  let updateSpaceType = (space, type) => {
+    update(p => {
+      p.states[space].space['type'] = type
       return p
     })
   }
@@ -692,6 +716,8 @@ function createApp() {
     updateSpaceAvatar,
     updateSpaceHeader,
     updateSpaceInfo,
+    updateSpaceType,
+    accountVerified,
   };
 }
 

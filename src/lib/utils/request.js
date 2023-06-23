@@ -269,3 +269,19 @@ export async function createStateEvent(body) {
   return data
 }
 
+export async function verifyEmail(body) {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/account/verify/code`,
+    body: body,
+  })
+  return data
+}
+
+export async function verifyCode(body) {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/account/verify`,
+    body: body,
+  })
+  return data
+}
+

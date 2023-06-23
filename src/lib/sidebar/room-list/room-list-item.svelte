@@ -152,7 +152,11 @@ $: if(active && el) {
 
         <div class="ico grd-c"
             class:inactive={!active}>
-            {@html discuss}
+                {#if isBoard}
+                    {@html discuss}
+                {:else}
+                    {@html chat}
+                {/if}
         </div>
 
         <div class="sl pr2">

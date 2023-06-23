@@ -20,7 +20,7 @@ let kill =() => {
 }
 
 onMount(() => {
-    emailInput.focus();
+    usernameInput.focus();
 });
 
 function login() {
@@ -49,20 +49,6 @@ function validateUsername(e) {
 }
 
 function create() {
-    if(emailInput.value.length < 1){
-        //emailWarning = true
-        emailInput.focus()
-        return
-    }
-
-    let validEmail = validator.isEmail(emailInput?.value)
-    if(!validEmail) {
-        emailWarning = true
-        emailInput.focus()
-        return
-    }
-    emailWarning = false
-
 
     if(usernameInput.value.length < 3){
         usernameWarning = true
@@ -82,7 +68,7 @@ function create() {
     APIRequest({
         url: `${PUBLIC_API_URL}/account`,
         body: {
-            email: emailInput.value, 
+            //email: emailInput.value, 
             username: usernameInput.value, 
             password: passwordInput.value,
         }
@@ -205,23 +191,6 @@ function togglePass() {
                 <div class="grd-c mt4 mb3 warn">
                     Signup is currently disabled
                 </div>
-            {/if}
-            <div class="mt3 pb2" class:warn={emailWarning}>
-                <span class="label">email</span>
-                {#if emailWarning}
-                    <span class="sm ml2">That email doesn't look right</span>
-                {/if}
-            </div>
-            <div class="mt1 pb2">
-                <input bind:this={emailInput}
-                disabled={down || busy}
-                class:red={emailWarning}
-                type="text" placeholder="" />
-            </div>
-            {#if provider_forbidden}
-            <div class="mt2 pb2 warn pvd">
-                Please use a personal or work email.
-            </div>
             {/if}
             <div class="mt3 pb2" class:warn={availableWarning || usernameWarning}>
                 <span class="label">username</span>

@@ -1,8 +1,8 @@
 <script>
-import { PUBLIC_API_URL } from '$env/static/public';
+import { PUBLIC_MEDIA_URL } from '$env/static/public';
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
-import { more } from '$lib/assets/icons.js'
+import { user } from '$lib/assets/icons.js'
 import Popup from '$lib/popup/popup.svelte'
 import UserPopup from './user-popup.svelte'
 
@@ -17,8 +17,12 @@ $: active = $store.verifiedSession
 $: username = $store?.credentials?.username
 
 
-let toggleFlow = () => {
-    store.startAuthenticating()
+let login = () => {
+    store.startAuthenticating("login")
+}
+
+let signup = () => {
+    store.startAuthenticating("signup")
 }
 
 $: isSpace = $page.params.space !== undefined && $page.params.space !== null &&
@@ -51,14 +55,21 @@ let killPopup = () => {
 }
 
 let popup;
+
+$: profileSpace = $store?.spaces?.find(s => s.room_id ===
+        $store?.credentials?.user_space_id)
+$: avatar = profileSpace?.avatar?.length > 0 ?
+`${PUBLIC_MEDIA_URL}/${profileSpace?.avatar}` : null
+
 </script>
 
 <section class="user">
 
 {#if active && !authenticated}
-<div class="grd">
-    <div class="grd-c">
-        <button class="btn" on:click={toggleFlow}>Log in • Sign up</button>
+<div class="us-c">
+    <div class="co grd-c fl">
+        <button class="btn log ml3 mr1" on:click={login}>Log in</button>
+        <button class="btn mr3 ml1" on:click={signup}>Sign up</button>
     </div>
 </div>
 {/if}
@@ -81,7 +92,13 @@ let popup;
             class:active={menuActive}
             on:click={toggleMenu}>
             <div class="grd-c">
-                <div class="avatar">
+                <div class="avatar grd"
+                style="background-image: url({avatar})">
+                    {#if !avatar}
+                            <div class="ico-s grd-c">
+                                {@html user}
+                            </div>
+                    {/if}
                 </div>
             </div>
             <div class="grd-c">
@@ -95,11 +112,6 @@ let popup;
         </div>
     </Popup>
 
-    <div class="grd">
-        <div class="c-ico grd-c ph2" on:click={logout}>
-            {@html more}
-        </div>
-    </div>
 </div>
 
 
@@ -108,6 +120,14 @@ let popup;
 </section>
 
 <style>
+.us-c {
+    display: grid;
+}
+
+.co {
+    width: 100%;
+}
+
 .user {
     border-top: 1px solid var(--border-1);
     display: grid;
@@ -119,7 +139,6 @@ let popup;
 }
 
 .btn {
-    width: 220px;
     cursor: pointer;
     border-radius: 60px;
     border: 0px;
@@ -127,10 +146,18 @@ let popup;
     font-weight: bold;
     background-color: var(--primary);
     color: white;
+    width: 100%;
+    height: 28px;
 }
 .btn:hover {
-    background-color: var(--primary);
+    opacity: 0.9;
 }
+
+.log {
+    background-color: var(--shade-2);
+    color: var(--text-1);
+}
+
 .c-ico {
     height: 24px;
     width: 24px;
@@ -157,6 +184,13 @@ let popup;
     width: 30px;
     border-radius: 50%;
     background-color: var(--avatar-bg);
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
 
+}
+.ico-s {
+    height: 16px;
+    width: 16px;
 }
 </style>
