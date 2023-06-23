@@ -1,5 +1,5 @@
 <script>
-import { PUBLIC_MEDIA_URL } from '$env/static/public';
+import { PUBLIC_MEDIA_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { onMount, tick} from 'svelte'
 import { addImage } from '$lib/assets/icons.js'
 import { debounce } from '$lib/utils/utils.js'
@@ -182,11 +182,28 @@ function handleInput() {
     debounce(updateRestrictions, 250)
 }
 
+$: is_default = state?.is_default || false
+
+let defaultInput;
+
+async function updateDefault() {
+    console.log(defaultInput.checked)
+    store.updateSpaceDefault($page.params.space, defaultInput.checked)
+    const res = await createStateEvent({
+        room_id: roomID,
+        event_type: 'm.space.default',
+        content: {
+            default: defaultInput.checked ? true : false
+        }
+    })
+    console.log(res)
+}
+
 </script>
 
 <div class="sco grd-c">
 
-    <div class="banner grd pa3">
+    <div class="banner grd ph3 pb3">
         <Avatar avatar={avatar} 
             on:removed={avatarRemoved}
             on:uploaded={avatarUploaded}/>
@@ -261,6 +278,27 @@ function handleInput() {
                 </div>
             </div>
         </div>
+
+        {#if $store.credentials?.admin}
+        <div class="mt3 pb2">
+            <span class="label">default</span>
+        </div>
+        <div class="mt1 pb2">
+            <div class="fl">
+                <div class="grd-c mr2 fl-o">
+                    <label for="def">
+                        Make this a default space on {PUBLIC_APP_NAME}
+                    </label>
+                </div>
+                <div class="grd-c">
+                    <input id="def" type="checkbox" 
+                        bind:this={defaultInput}
+                        checked={is_default}
+                        on:change={updateDefault} />
+                </div>
+            </div>
+        </div>
+        {/if}
 
         <div class="mt3 ">
             <button class="pa2" disabled={busy} on:click={save}>

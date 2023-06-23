@@ -1,5 +1,6 @@
 <script>
 import { onMount, createEventDispatcher } from 'svelte'
+import { close } from '$lib/assets/icons.js'
 import { store } from '$lib/store/store.js'
 import General from './pages/general.svelte'
 
@@ -22,12 +23,15 @@ $: active = $store.spaceSettingsOpen
     on:click|self|stopPropagation={kill}>
     <div class="modal grd-c" >
         <div class="space-settings">
-            <div class="header grd">
-                <div class="grd-c">
+            <div class="header grd fl">
+                <div class="title grd-c ml3 fl-o">
                     Space Settings
                 </div>
+                    <div class="c-ico grd-c ph3" on:click={kill}>
+                        {@html close}
+                </div>
             </div>
-            <div class="page">
+            <div class="page pa3">
                 <General />
             </div>
         </div>
@@ -50,7 +54,6 @@ $: active = $store.spaceSettingsOpen
 }
 .page {
     display: grid;
-    padding: 1rem;
 }
 
 @media (max-width: 700px) {

@@ -452,6 +452,13 @@ function createApp() {
     })
   }
 
+  let updateSpaceDefault = (space, d) => {
+    update(p => {
+      p.states[space].is_default = d
+      return p
+    })
+  }
+
 
   let updateSpaceInfo = (space, info) => {
     update(p => {
@@ -717,6 +724,7 @@ function createApp() {
     updateSpaceInfo,
     updateSpaceType,
     updateSpaceRestrictions,
+    updateSpaceDefault,
     accountVerified,
   };
 }
