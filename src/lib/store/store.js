@@ -240,7 +240,6 @@ function createApp() {
 
   let addEventReplies = (post, replies) => {
     update(p => {
-      console.log('adding replies', post, replies)
       p.replies[post] = replies
       return p
     })
@@ -268,7 +267,6 @@ function createApp() {
           ) {
             index++;
           }
-          console.log("inserting, at index", index)
           p.events[room_id].splice(index, 0, event);
         }
       }
@@ -399,13 +397,11 @@ function createApp() {
         p.states[space].children = []
       }
       p.states[space].children.push(state)
-      console.log(p.states[space])
       return p
     })
   }
 
   let updateRoomTopics = (space, room, topics) => {
-    console.log(space, room, topics)
     update(p => {
       if(room == 'general') {
         p.states[space].space.topics = topics
@@ -422,7 +418,6 @@ function createApp() {
 
   let updateSpaceAvatar = (space, avatar) => {
     update(p => {
-      console.log(space, avatar)
       let s = p.spaces.find(x => x.alias == space)
       if(s) {
         s.avatar = avatar
@@ -434,7 +429,6 @@ function createApp() {
 
   let updateSpaceHeader = (space, header) => {
     update(p => {
-      console.log(space, header)
       let s = p.spaces.find(x => x.alias == space)
       if(s) {
         s.header = header
@@ -451,10 +445,16 @@ function createApp() {
     })
   }
 
+  let updateSpaceRestrictions = (space, restrictions) => {
+    update(p => {
+      p.states[space].space['restrictions'] = restrictions
+      return p
+    })
+  }
+
 
   let updateSpaceInfo = (space, info) => {
     update(p => {
-      console.log(space, info)
       let s = p.spaces.find(x => x.alias == space)
       if(s) {
         s.name = info.name 
@@ -543,7 +543,6 @@ function createApp() {
       }
       let index = p.editorStates[x.room_id]?.links.findIndex(l => l.href == x.link.href)
       if(index == -1) {
-        console.log("adding link", x)
         p.editorStates[x.room_id]?.links.push(x.link)
       }
       return p
@@ -717,6 +716,7 @@ function createApp() {
     updateSpaceHeader,
     updateSpaceInfo,
     updateSpaceType,
+    updateSpaceRestrictions,
     accountVerified,
   };
 }

@@ -2,6 +2,7 @@
 import { PUBLIC_MEDIA_URL } from '$env/static/public';
 import { onMount, tick} from 'svelte'
 import { addImage } from '$lib/assets/icons.js'
+import { debounce } from '$lib/utils/utils.js'
 import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';
 import Avatar from '$lib/components/avatar/avatar.svelte'
@@ -29,8 +30,10 @@ onMount(() => {
 })
 
 let busy = false;
+
 async function save() {
     busy = true
+    updateRestrictions()
     store.updateSpaceInfo($page.params.space, {
         name: nameInput.value,
         topic: topicInput.value,
@@ -126,13 +129,13 @@ async function bannerRemoved() {
 $: roomType = state?.space?.type
 
 async function changeRoomType(e) {
-    console.log(e.target.value)
-    store.updateSpaceType($page.params.space, e.target.value)
+    console.log(e.detail)
+    store.updateSpaceType($page.params.space, e.detail)
     const res = await createStateEvent({
         room_id: roomID,
         event_type: 'm.space.type',
         content: {
-            type: e.target.value
+            type: e.detail
         }
     })
     console.log(res)
@@ -142,6 +145,42 @@ let roomTypes = [
     {value: 'board', text: 'board'},
     {value: 'chat', text: 'chat'},
 ]
+
+
+$: restrictions = state?.space?.restrictions
+$: require_verification = restrictions?.verified || false
+$: sender_age = restrictions?.age || 0
+
+let verifiedInput;
+
+async function updateRestrictions(e) {
+
+    if(verifiedInput.checked == require_verification && sender_age == ageInput.value) {
+        return
+    }
+
+    let restrictions = {
+        verified: verifiedInput?.checked,
+        age: ageInput.value,
+    }
+
+    store.updateSpaceRestrictions($page.params.space, restrictions)
+    const res = await createStateEvent({
+        room_id: roomID,
+        event_type: 'm.restrict_events_to',
+        content: {
+            verified: verifiedInput?.checked,
+            age: ageInput?.value,
+        }
+    })
+    console.log(res)
+}
+
+let ageInput;
+
+function handleInput() {
+    debounce(updateRestrictions, 250)
+}
 
 </script>
 
@@ -182,13 +221,45 @@ let roomTypes = [
             <span class="label">space type</span>
         </div>
         <div class="mt1 pb2">
-            <select value={roomType} on:change={changeRoomType}>
-                <option value="board">board</option>
-                <option value="chat">chat</option>
-            </select>
+            <Select items={roomTypes} 
+                value={roomType} 
+                on:change={changeRoomType} />
+        </div>
+
+        <div class="mt3 pb2">
+            <span class="label">restrictions</span>
         </div>
         <div class="mt1 pb2">
-            <Select items={roomTypes} />
+            <div class="fl">
+                <div class="grd-c mr2 fl-o">
+                    <label for="ver">
+                        Restrict space to users with verified email.
+                    </label>
+                </div>
+                <div class="grd-c">
+                    <input id="ver" type="checkbox" 
+                        bind:this={verifiedInput}
+                        checked={require_verification}
+                        on:change={updateRestrictions}
+                        bind:value={require_verification} />
+                </div>
+            </div>
+        </div>
+
+        <div class="mt1 pb2">
+            <div class="fl">
+                <div class="grd-c mr2 fl-o">
+                    Require user accounts to be at least this old (in days)
+                </div>
+                <div class="grd-c">
+                    <input id="age" type="number" 
+                        bind:this={ageInput}
+                        value={sender_age}
+                        placeholder="0"
+                        on:input={handleInput}
+                        on:change={updateRestrictions} />
+                </div>
+            </div>
         </div>
 
         <div class="mt3 ">
@@ -231,6 +302,17 @@ input, textarea {
 
 textarea {
     height: 100px;
+}
+
+#age {
+    width: 70px;
+    padding: 0.25rem;
+}
+
+#ver {
+    padding: 0;
+    width: auto;
+    cursor: pointer;
 }
 
 @media (max-width: 1020px) {

@@ -7,19 +7,13 @@ const dispatch = createEventDispatcher()
 
 
 export let items;
+export let value;
 
-$: selected = items?.filter(item => item.default)[0] || items[0]
+let selected = value;
 
-function select(index) {
-    items.forEach((item, i) => {
-        if(i == index) {
-            item.default = true
-        } else {
-            item.default = false
-        }
-    })
-    items = items
-    dispatch('selected', items[index].value)
+function select(item) {
+    selected = item
+    dispatch('change', selected)
     kill()
 }
 
@@ -59,7 +53,7 @@ function kill() {
 <div class="fl fl-co rel" bind:this={selector}>
     <div class="select fl" on:click={toggle}>
         <div class="grd-c fl-o">
-            {selected?.text}
+            {selected}
         </div>
         <div class="ico-s grd-c">
             {@html down}
@@ -70,12 +64,12 @@ function kill() {
         in:fly="{{ y: -20, duration: 70 }}">
             {#each items as item, i (i)}
                 <div class="select-option fl" 
-                    class:selected={item.default}
-                on:click={select(i)}>
+                    class:selected={item.value == selected}
+                    on:click={select(item.value)}>
                     <div class="grd-c fl-o">
                         {item.text}
                     </div>
-                    {#if item.default}
+                    {#if item.value == selected}
                         <div class="ico-s grd-c">
                             {@html check}
                         </div>

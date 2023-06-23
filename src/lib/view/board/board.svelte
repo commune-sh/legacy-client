@@ -179,7 +179,8 @@ let down = false;
 
 let data = null;
 
-$: exists = state != undefined && state?.space != undefined
+$: exists = state != undefined && state?.space != undefined && 
+    data?.events?.exists != false
 
 $: if(data) {
     //ready = true
@@ -500,6 +501,8 @@ async function redactPost(e) {
             {#if (exists || !isSpace) && events?.length >= 30 && !reloading}
                 <div class="ob" bind:this={ob}></div>
             {/if}
+
+
 
             {#if !loaded || reloading || (!stateReady && isSpace)}
 

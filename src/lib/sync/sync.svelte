@@ -77,6 +77,8 @@ async function fetchSpaceState() {
             store.addSpaceState($page?.params?.space, resp.state)
             lastSpace = $page?.params?.space
             store.stateReady()
+        } else {
+            store.stateReady()
         }
     })
 }
