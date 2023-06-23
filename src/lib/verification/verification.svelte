@@ -32,6 +32,8 @@ $: if(active) {
     focusEmailInput()
 }
 
+let busy = false;
+
 let verified = false;
 
 let emailInput;
@@ -75,6 +77,7 @@ async function start() {
     if(codeInput) {
         codeInput.value = ''
     }
+    busy = true
 
     const res = await verifyEmail({
         email: emailInput.value,
@@ -87,10 +90,12 @@ async function start() {
         focusCodeInput()
         startCountdown()
     }
+    busy = false
 }
 
+let verifying = false;
 async function verify() {
-    console.log("verifying")
+    verifying = true
     const res = await verifyCode({
         email: emailInput.value,
         session: session,
@@ -106,10 +111,12 @@ async function verify() {
     if(res?.valid) {
         store.accountVerified(emailInput.value)
         verified = true
+        verifying = false
         //kill()
     }
 }
 
+$: buttonText = code_sent ? 'Resend Code' : busy ? 'Sending...' : 'Send Code'
 </script>
 
 {#if active}
@@ -132,21 +139,26 @@ async function verify() {
                 Add an email address to your account to verify it.
             </div>
             <div class="mt3 fl">
-                <div class="fl-o">
+                <div class="rel fl-o">
                     <input bind:this={emailInput}
                     class:red={emailWarning}
                     disabled={lockResend}
                     type="text" placeholder="your@email.com" />
+                    {#if busy}
+                        <div class="spinner">
+                            <div class="sloader"></div>
+                        </div>
+                    {/if}
                 </div>
-                <div class="ml3 grd-c h100 pa1">
-                        <button class="h100" 
-                            disabled={lockResend}
-                            on:click={start}>
-                            {code_sent ? 'Resend Code' : 'Send Code'}
-                            {#if lockResend}
-                                <span class="ml1">({count})</span>
-                            {/if}
-                        </button>
+                <div class="rel ml3 grd-c h100 pa1">
+                    <button class="h100" 
+                        disabled={busy || lockResend}
+                        on:click={start}>
+                            {buttonText}
+                        {#if lockResend}
+                            <span class="ml1">({count})</span>
+                        {/if}
+                    </button>
                 </div>
             </div>
             {#if emailWarning}
@@ -158,13 +170,20 @@ async function verify() {
             {#if code_sent}
 
                 <div class="mt3 fl">
-                    <div class="fl-o">
+                    <div class="rel fl-o">
                         <input bind:this={codeInput}
                         class:red={codeWarning}
                         type="text" placeholder="your code" />
+                        {#if verifying}
+                            <div class="spinner">
+                                <div class="sloader"></div>
+                            </div>
+                        {/if}
                     </div>
                     <div class="ml3 grd-c h100 pa1">
-                        <button class="h100" on:click={verify}>Verify Code</button>
+                        <button class="h100" on:click={verify}>
+                            {verifying ? 'Verifying...' : 'Verify Code'}
+                        </button>
                     </div>
                 </div>
                 {#if codeWarning}
@@ -226,6 +245,17 @@ input {
     width: 100%;
     padding: 0.5rem;
     height: 100%;
+}
+.spinner {
+    position: absolute;
+    top: 9px;
+    right: 9px;
+}
+
+.sloader {
+    border-top: 2px solid var(--primary);
+    border-right: 2px solid var(--primary);
+    border-bottom: 2px solid var(--primary);
 }
 </style>
 

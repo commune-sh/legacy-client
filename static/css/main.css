@@ -867,6 +867,14 @@ blockquote p {
 }
 
 
+.rel {
+    position: relative;
+}
+
+.abs {
+    position: absolute;
+}
+
 @media screen and (max-width: 768px) {
     html {
         font-size: 14px;
