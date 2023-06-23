@@ -1,6 +1,7 @@
 <script>
 import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { joinSpace, joinRoom } from '$lib/utils/request.js'
+import { validAge } from '$lib/utils/time.js'
 import { onMount, createEventDispatcher } from 'svelte'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
@@ -162,6 +163,10 @@ $: requiresVerification = selected?.restrictions?.verified || false
 $: requiresSenderAge = selected?.restrictions?.age || 0
 
 $: senderVerified = authenticated && $store.credentials?.verified
+
+$: senderAge = $store?.credentials?.age
+
+$: ageIsOk = validAge(senderAge, requiresSenderAge)
 
 </script>
 
