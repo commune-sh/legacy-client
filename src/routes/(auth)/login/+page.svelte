@@ -78,7 +78,7 @@ let validateToken = () => {
     display: grid;
 }
 .container {
-    background-color: var(--bg);
+    background-color: var(--shade-3);
     padding-top: 2rem;
     border-radius: 9px;
 }

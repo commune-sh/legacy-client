@@ -1,5 +1,5 @@
 <script>
-import { onMount, createEventDispatcher } from 'svelte'
+import { onMount, createEventDispatcher, tick } from 'svelte'
 import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { store } from '$lib/store/store.js'
 import { debounce } from '$lib/utils/utils.js'
@@ -20,8 +20,13 @@ let kill =() => {
 }
 
 onMount(() => {
-    usernameInput.focus();
+    focusUsernameInput()
 });
+
+async function focusUsernameInput() {
+    await tick()
+    usernameInput.focus()
+}
 
 function login() {
     dispatch('login', true)

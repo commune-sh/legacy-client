@@ -1,5 +1,5 @@
 <script>
-import { onMount, createEventDispatcher } from 'svelte'
+import { onMount, createEventDispatcher, tick } from 'svelte'
 import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { store } from '$lib/store/store.js'
 import { eye, eyeoff } from '$lib/assets/icons.js'
@@ -14,8 +14,13 @@ let kill =() => {
 }
 
 onMount(() => {
-    usernameInput.focus();
+    focusUsernameInput()
 });
+
+async function focusUsernameInput() {
+    await tick()
+    usernameInput.focus()
+}
 
 function signup() {
     dispatch('signup', true)
@@ -65,6 +70,7 @@ function login() {
         if(resp?.authenticated == false) {
             showInvalid = true
             usernameInput.focus()
+            busy = false
         } else if (resp?.authenticated == true && resp?.access_token && resp?.credentials) {
             localStorage.setItem('access_token', resp.access_token)
 
@@ -92,7 +98,7 @@ function login() {
             store.spacesFetched()
         }
 
-        busy = false
+        //busy = false
       })
       .catch(error => {
         console.error('Error:', error);

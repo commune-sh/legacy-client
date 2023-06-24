@@ -102,6 +102,7 @@ $: isBoard = item?.type === 'board'
 
 function logItem(e) {
     e.preventDefault()
+    popup.activate()
     console.log(item)
 }
 
