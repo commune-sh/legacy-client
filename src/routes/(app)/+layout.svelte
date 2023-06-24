@@ -68,6 +68,7 @@ $: authenticated = $store?.authenticated &&
 
 let EmojiPicker;
 let SpaceSettings;
+let RoomSettings;
 let VerificationAlert;
 let Verification;
 $: if(authenticated) {
@@ -76,6 +77,9 @@ $: if(authenticated) {
     })
     import('$lib/space/settings/settings.svelte').then(m => {
         SpaceSettings = m.default
+    })
+    import('$lib/room/settings/settings.svelte').then(m => {
+        RoomSettings = m.default
     })
     import('$lib/verification/alert.svelte').then(m => {
         VerificationAlert = m.default
@@ -93,6 +97,10 @@ $: if(authenticated) {
 
 {#if authenticated && SpaceSettings}
     <SpaceSettings />
+{/if}
+
+{#if authenticated && RoomSettings}
+    <RoomSettings />
 {/if}
 
 {#if authenticated && VerificationAlert}

@@ -25,9 +25,14 @@ function kill() {
     dispatch('kill')
 }
 
-function spaceSettings() {
+function boardSettings() {
     //$store.spaceSettingsOpen = true
     //goto(`/${$page.params.space}/settings`)
+    console.log(room)
+    $store.roomSettings = {
+        active: true,
+        room_id: room?.room_id,
+    }
     kill()
 }
 </script>
@@ -43,7 +48,7 @@ function spaceSettings() {
     </div>
 
     {#if isOwner}
-        <div class="item fl" on:click={spaceSettings}>
+        <div class="item fl" on:click={boardSettings}>
             <div class="item grd-c fl-o">
                 Settings
             </div>

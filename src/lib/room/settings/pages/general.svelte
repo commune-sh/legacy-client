@@ -1,17 +1,20 @@
 <script>
 import { PUBLIC_MEDIA_URL, PUBLIC_APP_NAME } from '$env/static/public';
-import { onMount, tick} from 'svelte'
+import { onMount, tick, createEventDispatcher} from 'svelte'
 import { addImage } from '$lib/assets/icons.js'
 import { debounce } from '$lib/utils/utils.js'
 import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';
-import Avatar from '$lib/components/avatar/avatar.svelte'
-import Banner from '$lib/components/banner/banner.svelte'
 import Select from '$lib/components/select/select.svelte'
 import { createStateEvent } from '$lib/utils/request.js'
+const dispatch = createEventDispatcher()
+
+export let room_id;
 
 $: state = $store?.states[$page?.params?.space]
-$: roomID = state?.room_id
+
+$: room = state?.children?.find(c => c.room_id == room_id)
+$: roomID = room?.room_id
 
 let nameInput;
 let name;
@@ -22,8 +25,8 @@ let topic;
 let current = {name: '', topic: ''};
 
 onMount(() => {
-    name = state?.space?.name;
-    topic = state?.space?.topic;
+    name = room?.name;
+    topic = room?.topic;
     current.name = name;
     current.topic = topic;
     nameInput.focus();
@@ -31,13 +34,49 @@ onMount(() => {
 
 let busy = false;
 
+function validate(e) {
+    const letters = /^[0-9a-zA-Z-]+$/;
+    if(!e.key.match(letters)){
+        e.preventDefault()
+    }
+
+}
+
+let lengthWarning = false;
+let nameWarning = false;
+
+function check(e) {
+    let index = state?.children?.findIndex(x => x.alias == nameInput.value)
+    if(index > -1) {
+        nameWarning = true
+    } else {
+        nameWarning = false
+    }
+    if(nameInput.value.length > 0) {
+        lengthWarning = false
+    }
+}
+
 async function save() {
+    if(nameWarning) {
+        nameInput.focus()
+        return
+    }
+
     busy = true
-    updateRestrictions()
-    store.updateSpaceInfo($page.params.space, {
+
+    if(nameInput.value == '') {
+        lengthWarning = true
+        nameInput.focus()
+        busy = false
+        return
+    }
+
+    store.updateSpaceRoomInfo($page.params.space, roomID, {
         name: nameInput.value,
         topic: topicInput.value,
     })
+
     if(name != current.name) {
         const res = await createStateEvent({
             room_id: roomID,
@@ -60,6 +99,7 @@ async function save() {
         console.log(resp)
         current.topic = topicInput.value
     }
+    updateRestrictions()
     busy = false
 }
 
@@ -92,12 +132,12 @@ async function bannerUploaded(e) {
 }
 
 
-$: avatar = state?.space?.avatar ?
-`${PUBLIC_MEDIA_URL}/${state?.space?.avatar}` : null
+$: avatar = room?.avatar ?
+`${PUBLIC_MEDIA_URL}/${room?.avatar}` : null
 
 
-$: header = state?.space?.header ?
-`${PUBLIC_MEDIA_URL}/${state?.space?.header}` : null
+$: header = room?.header ?
+`${PUBLIC_MEDIA_URL}/${room?.header}` : null
 
 async function avatarRemoved() {
     console.log("hmm")
@@ -126,11 +166,11 @@ async function bannerRemoved() {
     console.log(res)
 }
 
-$: roomType = state?.space?.type
+$: roomType = room?.type
 
 async function changeRoomType(e) {
     console.log(e.detail)
-    store.updateSpaceType($page.params.space, e.detail)
+    store.updateSpaceRoomType($page.params.space, roomID, e.detail)
     const res = await createStateEvent({
         room_id: roomID,
         event_type: 'm.space.type',
@@ -147,7 +187,7 @@ let roomTypes = [
 ]
 
 
-$: restrictions = state?.space?.restrictions
+$: restrictions = room?.restrictions
 $: require_verification = restrictions?.verified || false
 $: sender_age = restrictions?.age || 0
 
@@ -182,36 +222,29 @@ function handleInput() {
     debounce(updateRestrictions, 250)
 }
 
-$: is_default = state?.is_default || false
-
-let defaultInput;
-
-async function updateDefault() {
-    console.log(defaultInput.checked)
-    store.updateSpaceDefault($page.params.space, defaultInput.checked)
+async function removeBoard() {
+    store.removeSpaceRoom($page.params.space, roomID)
+    dispatch('kill')
     const res = await createStateEvent({
-        room_id: roomID,
-        event_type: 'm.space.default',
-        content: {
-            default: defaultInput.checked ? true : false
-        }
+        room_id: state?.room_id,
+        state_key: roomID,
+        event_type: 'm.space.child',
+        content: {}
     })
     console.log(res)
+    const resp = await createStateEvent({
+        room_id: roomID,
+        state_key: state?.room_id,
+        event_type: 'm.space.parent',
+        content: {}
+    })
+    console.log(resp)
 }
 
 </script>
 
 <div class="sco grd-c">
 
-    <div class="banner grd ph3 pb3">
-        <Avatar avatar={avatar} 
-            on:removed={avatarRemoved}
-            on:uploaded={avatarUploaded}/>
-
-        <Banner banner={header} 
-            on:removed={bannerRemoved}
-            on:uploaded={bannerUploaded}/>
-    </div>
 
     <div class="pa3 grd-c fl-co">
 
@@ -221,9 +254,22 @@ async function updateDefault() {
 
         <div class="mt1 pb2">
             <input bind:this={nameInput}
+            class:warn={nameWarning}
+            on:input={check}
+            on:keydown={validate}
             bind:value={name}
-            type="text" placeholder={$page.params?.space} />
+            type="text" placeholder={room.alias} />
         </div>
+        {#if nameWarning}
+            <div class="mt1 pb2 red">
+                A board with that name already exists.
+            </div>
+        {/if}
+        {#if lengthWarning}
+            <div class="mt1 pb2 red">
+                Board name can't be empty.
+            </div>
+        {/if}
 
         <div class="mt3 pb2">
             <span class="label">topic</span>
@@ -279,29 +325,11 @@ async function updateDefault() {
             </div>
         </div>
 
-        {#if $store.credentials?.admin}
-        <div class="mt3 pb2">
-            <span class="label">default</span>
-        </div>
-        <div class="mt1 pb2">
-            <div class="fl">
-                <div class="grd-c mr2 fl-o">
-                    <label for="def">
-                        Make this a default space on {PUBLIC_APP_NAME}
-                    </label>
-                </div>
-                <div class="grd-c">
-                    <input id="def" type="checkbox" 
-                        bind:this={defaultInput}
-                        checked={is_default}
-                        on:change={updateDefault} />
-                </div>
-            </div>
-        </div>
-        {/if}
-
         <div class="mt3 fl">
             <div class="grd-c">
+                <button class="sbut" disabled={busy} on:click={removeBoard}>
+                    Remove board
+                </button>
             </div>
             <div class="grd-c fl-o">
             </div>
@@ -360,6 +388,13 @@ textarea {
 }
 
 @media (max-width: 1020px) {
+}
+.warn {
+    outline: 1px solid red;
+}
+.red {
+    color: red;
+    font-size: bold;
 }
 </style>
 

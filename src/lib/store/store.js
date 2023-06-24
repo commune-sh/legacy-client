@@ -63,6 +63,7 @@ function createApp() {
     },
     addingRoom: false,
     spaceSettingsOpen: false,
+    roomSettings: false,
   }
 
   if(window) {
@@ -446,6 +447,27 @@ function createApp() {
     })
   }
 
+  let updateSpaceRoomType = (space, room_id, type) => {
+    update(p => {
+      let ind = p.states[space]?.children.findIndex(x => x.room_id == room_id)
+      if(ind !== -1) {
+        p.states[space].children[ind].type = type
+      }
+      return p
+    })
+  }
+
+  let removeSpaceRoom = (space, room_id, type) => {
+    update(p => {
+      let ind = p.states[space]?.children.findIndex(x => x.room_id == room_id)
+      if(ind !== -1) {
+        p.states[space].children.splice(ind, 1)
+      }
+      return p
+    })
+  }
+
+
   let updateSpaceRestrictions = (space, restrictions) => {
     update(p => {
       p.states[space].space['restrictions'] = restrictions
@@ -473,6 +495,19 @@ function createApp() {
       return p
     })
   }
+
+  let updateSpaceRoomInfo = (space, room_id, info) => {
+    update(p => {
+      let ind = p.states[space]?.children.findIndex(x => x.room_id == room_id)
+      if(ind !== -1) {
+        p.states[space].children[ind].name = info.name 
+        p.states[space].children[ind].alias = info.name 
+        p.states[space].children[ind].topic = info.topic
+      }
+      return p
+    })
+  }
+
 
 
   let addSpacePath = (space, path) => {
@@ -737,11 +772,14 @@ function createApp() {
     updateSpaceAvatar,
     updateSpaceHeader,
     updateSpaceInfo,
+    updateSpaceRoomInfo,
     updateSpaceType,
+    updateSpaceRoomType,
     updateSpaceRestrictions,
     updateSpaceDefault,
     accountVerified,
     updateRoomJoinStatus,
+    removeSpaceRoom,
   };
 }
 

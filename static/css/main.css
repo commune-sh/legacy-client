@@ -357,6 +357,11 @@ button {
     display: inline-block;
 }
 
+.sbut {
+    background-color: var(--shade-4);
+    color: var(--text-1);
+}
+
 .h100 {
     height: 100%;
 }
