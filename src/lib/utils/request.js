@@ -285,3 +285,27 @@ export async function verifyCode(body) {
   return data
 }
 
+export async function passwordRecovery(body) {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/account/password`,
+    body: body,
+  })
+  return data
+}
+
+export async function verifyRecoverycode(body) {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/account/password/verify`,
+    body: body,
+  })
+  return data
+}
+
+export async function resetPassword(body) {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/account/password/reset`,
+    body: body,
+  })
+  return data
+}
+

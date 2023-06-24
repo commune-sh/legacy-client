@@ -1,6 +1,6 @@
 <script>
 import { onMount } from 'svelte'
-import Login from '$lib/auth/login.svelte'
+import Password from '$lib/auth/password.svelte'
 import { APIRequest } from '$lib/utils/request.js'
 import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { goto } from '$app/navigation';
@@ -9,14 +9,8 @@ import Health from '$lib/sync/health.svelte'
 
 $: down = $store.down
 
-function signup() {
-    goto(`/signup`, {
-        noscroll: true,
-    })
-}
-
-function resetPass() {
-    goto(`/password`, {
+function kill() {
+    goto(`/login`, {
         noscroll: true,
     })
 }
@@ -62,7 +56,8 @@ let validateToken = () => {
 {#if down}
 <section class="down">
         <div class="grd-c">
-    {PUBLIC_APP_NAME} is down right now. You will not be able to log in.
+    {PUBLIC_APP_NAME} is down right now. You will not be able to recover your
+            password.
         Try again later.
         </div>
 </section>
@@ -72,9 +67,7 @@ let validateToken = () => {
 {#if ready}
 <section class="login">
     <div class="container grd-c">
-            <Login on:authenticated={success} 
-                on:resetPass={resetPass}
-                on:signup={signup}/>
+        <Password on:kill={kill}/>
     </div>
 </section>
 {/if}

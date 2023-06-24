@@ -39,7 +39,7 @@ function success() {
 <style>
 .signup {
     width: 100%;
-    height: 100vh;
+    height: 100%;
     display: grid;
 }
 .container {
@@ -50,6 +50,7 @@ function success() {
 @media screen and (max-width: 768px) {
     .container {
         width: 100%;
+        height: 100%;
     }
 }
 </style>
