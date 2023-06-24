@@ -661,6 +661,20 @@ function createApp() {
     })
   }
 
+  let updateRoomJoinStatus = (space, room_id) => {
+    update(p => {
+      if(p.states[space]?.room_id == room_id) {
+        p.states[space].joined = true
+      } else {
+        let ind = p.states[space].children.findIndex(r => r.room_id == room_id)
+        if(ind != -1) {
+          p.states[space].children[ind].joined = true
+        }
+      }
+      return p
+    })
+  }
+
 
   const { subscribe, set, update } = writable(app);
 
@@ -727,6 +741,7 @@ function createApp() {
     updateSpaceRestrictions,
     updateSpaceDefault,
     accountVerified,
+    updateRoomJoinStatus,
   };
 }
 

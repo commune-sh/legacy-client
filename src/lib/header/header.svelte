@@ -106,9 +106,19 @@ $: isOwner = state?.owner === $store?.credentials?.matrix_user_id
 
 $: ownProfile = isProfile && isOwner
 
-$: joinedRoom = $store?.rooms?.includes(room_id)
-$: joinedSpace = $store?.spaces.find(x => x?.room_id === space_room_id) != null 
-$: joined = joinedSpace && joinedRoom
+//$: joinedRoom = $store?.rooms?.includes(room_id)
+
+$: joinedRoom = () => {
+    if(room_id == state?.room_id) {
+        return true
+    }
+    return state?.children?.find(x => x?.room_id === room_id)?.joined
+}
+
+$: joinedSpace = authenticated && 
+    $store?.spaces.find(x => x?.room_id === space_room_id) != null 
+
+$: joined = joinedSpace && joinedRoom()
 
 $: following = isProfile && !ownProfile && joinedRoom
 //$: spaceRoomJoined = $store?.rooms?.includes(space_room_id)
@@ -139,7 +149,8 @@ async function join() {
         if(resp && resp.space) {
             console.log(resp)
             store.addSpace(resp.space)
-            store.addRoom(resp.space.room_id)
+            //store.addRoom(resp.space.room_id)
+            store.updateRoomJoinStatus($page.params.space, room_id)
         }
     } 
 
@@ -147,7 +158,8 @@ async function join() {
         const resp = await joinRoom(room_id);
         if(resp && resp?.joined && resp.room_id) {
             console.log(resp)
-            store.addRoom(resp.room_id)
+            //store.addRoom(resp.room_id)
+            store.updateRoomJoinStatus($page.params.space, room_id)
         }
     }
     busy = false
