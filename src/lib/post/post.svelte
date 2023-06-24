@@ -230,7 +230,7 @@ $: if(authenticated && replyToEventAfterLogin)  {
 function replyToEvent(e) {
     if(!authenticated) {
         replyToEventAfterLogin = true
-        store.startAuthenticating()
+        store.startAuthenticating("login")
         return
     }
     replying = true
@@ -248,7 +248,7 @@ function replyToPost() {
     if(!authenticated) {
         console.log('not authenticated')
         replyToPostAfterLogin = true
-        store.startAuthenticating()
+        store.startAuthenticating("login")
         return
     }
     replying = true

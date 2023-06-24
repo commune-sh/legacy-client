@@ -18,7 +18,7 @@ $: reacted = reaction?.senders?.findIndex(s => s === sender) > -1
 
 function reactToEvent() {
     if(!authenticated) {
-        store.startAuthenticating()
+        store.startAuthenticating("login")
         return
     }
     dispatch('react', reaction.key)

@@ -38,7 +38,7 @@ $: senderVerified = authenticated && $store.credentials?.verified
 
 function createSpace() {
     if(!authenticated) {
-        store.startAuthenticating()
+        store.startAuthenticating("login")
         createSpaceAfterLogin = true
         return
     }

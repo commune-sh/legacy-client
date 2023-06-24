@@ -39,6 +39,11 @@ function goToSpace() {
 }
 
 function newPost() {
+    if(!authenticated) {
+        store.startAuthenticating("login")
+        return
+    }
+
     if(requiresVerification && !senderVerified && !isOwner) {
         $store.showVerificationAlert = true
         return
@@ -124,7 +129,10 @@ function toggleMenu() {
 let busy = false;
 
 async function join() {
-    console.log("joining")
+    if(!authenticated) {
+        store.startAuthenticating("login")
+        return
+    }
     busy = true
     if(!joinedSpace) {
         const resp = await joinSpace(space);
@@ -230,11 +238,13 @@ $: ageIsOk = validAge(senderAge, requiresSenderAge)
             {/if}
 
             <div class="fl-o"></div>
+            {#if $store.verifiedSession}
+                <div class="grd-c">
+                    <Search />
+                </div>
+            {/if}
             <div class="grd-c">
-                <Search />
-            </div>
-            <div class="grd-c">
-                {#if authenticated && space && exists}
+                {#if $store.verifiedSession && space && exists}
                     {#if (joined && !isProfile) || ownProfile}
                         {#if !editing}
                         <button class="new-post light" on:click={newPost}>New Post</button>

@@ -16,7 +16,7 @@ $: authenticated = $store?.authenticated &&
 
 async function upvote() {
     if(!authenticated) {
-        store.startAuthenticating()
+        store.startAuthenticating("login")
         return
     }
 
@@ -40,7 +40,7 @@ async function upvote() {
 async function downvote() {
     saveDownvote()
     if(!authenticated) {
-        store.startAuthenticating()
+        store.startAuthenticating("login")
         return
     }
 

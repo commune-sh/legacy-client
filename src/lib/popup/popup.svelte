@@ -74,10 +74,6 @@ $: if(active) {
     }
 
 
-    positions['bottom-end'] = {
-        top: p.top + p?.height + offset[1],
-        left: p.left - (c?.width) + (p?.width) + offset[0],
-    }
 
 
     positions['top'] = {
@@ -88,25 +84,6 @@ $: if(active) {
     positions['top-start'] = {
         top: p.top - (c?.height) - offset[1],
         left: p.left + offset[0],
-    }
-    positions['top-end'] = {
-        top: p.top - (c?.height) - p?.height - offset[1],
-        left: p.left - (c?.width) + (p?.width) + offset[0],
-    }
-
-    positions['left'] = {
-        top: p.top - (c?.height / 2) + (p?.height /2) + offset[1],
-        left: p.left - c?.width + offset[0],
-    }
-
-    positions['left-start'] = {
-        top: p.top + offset[1],
-        left: p.left - c?.width + offset[0],
-    }
-
-    positions['left-end'] = {
-        top: p.top - c?.height + p?.height + offset[1],
-        left: p.left - c?.width + offset[0],
     }
 
     activePosition = positions[placement]
@@ -124,21 +101,6 @@ $: if(active) {
             activePosition.top = p.top - (c?.height) - p?.height - offset[1]
         }
     }
-
-    if(isLeftStart) {
-        let top = activePosition.top + c?.height
-        if(top > document.body.clientHeight) {
-            let offsetBy = top - document.body.clientHeight + 20
-            activePosition.top = activePosition.top - offsetBy
-        }
-    }
-
-    if(isLeftEnd) {
-        if(activePosition.top < 0) {
-            activePosition.top = activePosition.top + (-activePosition.top) + 20
-        }
-    }
-
 
 
 

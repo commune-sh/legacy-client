@@ -20,7 +20,7 @@ let reactEl;
 
 function reactToEvent() {
     if(!authenticated) {
-        store.startAuthenticating()
+        store.startAuthenticating("login")
         return
     }
     let e = {
