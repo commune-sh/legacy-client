@@ -1,5 +1,6 @@
 <script>
 import RoomListItem from './room-list-item.svelte'
+import { joinSpace } from '$lib/utils/request.js'
 import AddRoom from './add-room.svelte'
 import { page } from '$app/stores';
 import { addLine, up, down, settings } from '$lib/assets/icons.js'
@@ -34,6 +35,37 @@ $: isOwner = state?.owner === sender_id
 $: isSpaceSettings = isSpace && $page?.params?.room === 'settings'
 
 $: spaceSettings = isSpaceSettings && authenticated && isOwner
+
+
+$: space_room_id = state?.room_id
+$: joinedSpace = authenticated && 
+    $store?.spaces.find(x => x?.room_id === space_room_id) != null 
+
+$: active = $store.verifiedSession
+
+let busy = false;
+
+$: space = $page.params.space
+
+async function join() {
+    if(!authenticated) {
+        store.startAuthenticating("login")
+        return
+    }
+    busy = true
+    if(!joinedSpace) {
+        const resp = await joinSpace(space);
+        if(resp && resp.space) {
+            console.log(resp)
+            store.addSpace(resp.space)
+            //store.addRoom(resp.space.room_id)
+            store.updateRoomJoinStatus($page.params.space, space_room_id)
+        }
+    } 
+    busy = false
+}
+
+
 </script>
 
 {#if isSpaceSettings && authenticated && isOwner}
@@ -41,6 +73,25 @@ $: spaceSettings = isSpaceSettings && authenticated && isOwner
 {/if}
 
 <div class="boards" class:op={spaceSettings}>
+
+    {#if !joinedSpace && active}
+        <div class="mb3 rel">
+            <button class="but" 
+                disabled={busy}
+                on:click={join}>
+                {#if busy}
+                    Joining...
+                {:else}
+                    Join Space
+                {/if}
+            </button>
+            {#if busy}
+                <div class="spinner">
+                    <div class="sloader"></div>
+                </div>
+            {/if}
+        </div>
+    {/if}
 
 <div class="fl mb2">
     <div class="brds grd-c fl" 
@@ -98,5 +149,14 @@ $: spaceSettings = isSpaceSettings && authenticated && isOwner
 }
 .op {
     opacity: 0.4;
+}
+.but {
+    width: 100%;
+    height: 26px;
+}
+.spinner {
+    position: absolute;
+    top: 3px;
+    right: 5px;
 }
 </style>

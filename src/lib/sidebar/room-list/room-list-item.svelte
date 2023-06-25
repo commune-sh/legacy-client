@@ -254,7 +254,9 @@ async function join() {
             <div class="grd-c mr1 join">
                 <button class="light" 
                     disabled={busy}
-                    on:click={join}>Join</button>
+                    on:click={join}>
+                    {busy ? "Joining..." : "Join"}
+                </button>
             </div>
         {/if}
 

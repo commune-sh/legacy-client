@@ -14,6 +14,8 @@ export let borderRadius = `8px`
 export let initActive;
 export let mask = false;
 
+export let disabled = false;
+
 $: if(initActive) {
     activate()
 }
@@ -58,7 +60,7 @@ $: isLeft = placement == "left" ||
 $: isLeftStart = placement == "left-start" 
 $: isLeftEnd = placement == "left-end" 
 
-$: if(active) {
+$: if(active && !disabled) {
     let p = reference?.getBoundingClientRect()
     let c = container?.getBoundingClientRect()
 
@@ -150,7 +152,7 @@ $: if(active) {
         document.addEventListener('click', killMe)
         document.addEventListener('keydown', escape)
     }, 10)
-} else {
+} else if(!active && !disabled) {
     document.removeEventListener('click', killMe)
     document.removeEventListener('keydown', escape)
     dispatch('killed', true)

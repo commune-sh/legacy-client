@@ -24,6 +24,11 @@ $: sender_id = $store.credentials?.matrix_user_id
 
 $: isOwner = state?.owner === sender_id
 
+$: authenticated = $store?.authenticated && 
+    $store?.credentials != null
+    $store?.credentials?.access_token?.length > 0
+
+
 let menuActive =  false;
 
 function toggleMenu() {
@@ -61,48 +66,56 @@ $: if(headerExists && header && el) {
     <div class="con grd">
 
     {#if isSpace}
-    <Popup
-    bind:this={popup}
-    trigger={"click"}
-    offset={[8, 8]}
-    on:killed={killed}
-    shadow={`0px 9px 15px -7px rgba(0,0,0,0.2)`}
-    mask={true}
-    placement={"bottom-start"}>
 
-        <div class="space fl"
-            class:sp={!headerExists}
-            slot="reference"
-            class:active={menuActive}
-            on:click={toggleMenu}>
-            <div class="name in fl-o" class:sh={headerExists}>
-                {#if !ready}
-                    <div class="grd-c ml2">
-                        <SkeletonSpan />
-                    </div>
-                {:else}
+        <Popup
+        bind:this={popup}
+        trigger={"click"}
+        offset={[8, 8]}
+        on:killed={killed}
+        shadow={`0px 9px 15px -7px rgba(0,0,0,0.2)`}
+        mask={true}
+        disabled={!authenticated}
+        placement={"bottom-start"}>
 
-                    <span class="nm" class:ish={headerExists}><b>{name}</b></span>
+            <div class="space fl"
+                class:sp={!headerExists}
+                class:au={authenticated}
+                slot="reference"
+                class:active={menuActive}>
+
+                <div class="name in fl-o" class:sh={headerExists}>
+                    {#if !ready}
+                        <div class="grd-c ml2">
+                            <SkeletonSpan />
+                        </div>
+                    {:else}
+
+                        <span class="nm" class:ish={headerExists}><b>{name}</b></span>
+                    {/if}
+                </div>
+
+                {#if authenticated}
+                <div class="tools grd-c ico-s mh2">
+                    {#if menuActive}
+                        {@html up}
+                    {:else}
+                        {@html down}
+                    {/if}
+                </div>
                 {/if}
+
             </div>
-            <div class="tools grd-c ico-s mh2">
-                {#if menuActive}
-                    {@html up}
-                {:else}
-                    {@html down}
-                {/if}
+
+
+            
+
+
+            <div class="component" slot="content">
+                <SpaceMenu on:kill={killPopup}/>
             </div>
-        </div>
 
+        </Popup>
 
-        
-
-
-        <div class="component" slot="content">
-            <SpaceMenu on:kill={killPopup}/>
-        </div>
-
-    </Popup>
     {:else}
 
         <div class="name in fl-o ml2">
@@ -149,12 +162,15 @@ $: if(headerExists && header && el) {
 }
 
 .space {
-    cursor: pointer;
     overflow: hidden;
     width: 100%;
 }
 
-.sp:hover {
+.au {
+    cursor: pointer;
+}
+
+.au:hover {
     background: var(--hover-focus);
 }
 

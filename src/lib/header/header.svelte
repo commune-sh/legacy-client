@@ -264,12 +264,6 @@ $: ageIsOk = validAge(senderAge, requiresSenderAge)
                                 {@html newChat}
                             </div>
                         {/if}
-                    {:else if !following}
-                        <button class="light" 
-                            disabled={busy}
-                            on:click={join}>
-                            {buttonText}
-                        </button>
                     {/if}
                 {/if}
             </div>
