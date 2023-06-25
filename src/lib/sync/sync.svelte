@@ -19,6 +19,10 @@ $: if($page?.params?.space !== lastSpace && $page?.params?.space && !down) {
     fetchSpaceState()
 }
 
+$: if(authenticated){
+    fetchPowerLevels()
+}
+
 
 $: isdomain = $page?.params?.domain != null && 
     $page?.params?.domain?.length > 0
@@ -77,8 +81,26 @@ async function fetchSpaceState() {
             store.addSpaceState($page?.params?.space, resp.state)
             lastSpace = $page?.params?.space
             store.stateReady()
+            if(authenticated){
+                fetchPowerLevels()
+            }
         } else {
             store.stateReady()
+        }
+    })
+}
+
+async function fetchPowerLevels() {
+
+    let opt = {
+      url: `${PUBLIC_API_URL}/${$page?.params?.space}/power_levels`,
+      method: 'GET',
+    }
+
+    APIRequest(opt)
+    .then(resp => {
+        if(resp?.power_levels) {
+            store.savePowerLevels(resp.power_levels)
         }
     })
 }

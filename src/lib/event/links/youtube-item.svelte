@@ -23,7 +23,7 @@ function activate() {
 </script>
 
 
-<div class="link-item-container pa3 fl " 
+<div class="lic pa3 fl " 
     on:click={activate} >
 
     <div class="link-item fl fl-co">
@@ -44,7 +44,7 @@ function activate() {
         {:else}
             <div class="vp-i grd"
                 style="background-image: url({link?.image});">
-                <div class="play-icon-container grd-c grd pa3">
+                <div class="pic grd-c grd pa3">
                     <div class="play-icon grd-c">
                         {@html play}
                     </div>
@@ -59,6 +59,10 @@ function activate() {
 
 
 <style>
+
+.lic {
+}
+
 .frame-con {
   overflow: hidden;
 }
@@ -76,12 +80,24 @@ function activate() {
     background-position: center;
     background-size: cover;
 }
+.pic {
+    border-radius: 50%;
+    background-color: black;
+    padding: 0.5rem;
+    opacity: 0.8;
+    transition: 0.1s;
+}
+
+.vp-i:hover .pic{
+    opacity: 1;
+}
 
 .play-icon {
-    width: 44px;
-    height: 44px;
-    fill: var(--text);
+    width: 34px;
+    height: 34px;
+    fill: white;
 }
+
 .link-item:hover .play-icon {
     fill: var(--white);
 }

@@ -24,6 +24,7 @@ function createApp() {
     spaces: [],
     spacesFetched: false,
     states: [],
+    power_levels: [],
     spacePaths: [],
     stateReady: false,
     pageState: [],
@@ -376,6 +377,16 @@ function createApp() {
       return p
     })
   }
+  let savePowerLevels = (x) => {
+    update(p => {
+      p.power_levels = x
+      if(x == null) {
+        p.power_levels = []
+      }
+      return p
+    })
+  }
+
   let addSpace = (x) => {
     update(p => {
       p.spaces.push(x)
@@ -780,6 +791,7 @@ function createApp() {
     accountVerified,
     updateRoomJoinStatus,
     removeSpaceRoom,
+    savePowerLevels,
   };
 }
 
