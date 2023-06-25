@@ -1,5 +1,6 @@
 <script>
 import { PUBLIC_APP_NAME } from '$env/static/public';
+import { joinSpace, joinRoom } from '$lib/utils/request.js'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 import { isInViewport } from '$lib/utils/utils.js'
@@ -56,6 +57,29 @@ $: spaceRoomPath = $store?.spacePaths[space]?.rooms[item?.alias]
 $: menuToggled = $store?.menuToggled
 
 $: isDomain = $page?.params?.domain != null && $page?.params?.domain?.length > 0
+
+
+$: authenticated = $store?.authenticated && 
+    $store?.credentials != null
+    $store?.credentials?.access_token?.length > 0
+
+$: space_room_id = state?.room_id
+$: room_id = item?.room_id
+
+$: isSpaceRoom = room_id === space_room_id
+
+$: joinedRoom = () => {
+    if(room_id == state?.room_id) {
+        return true
+    }
+    return state?.children?.find(x => x?.room_id === room_id)?.joined
+}
+
+$: joinedSpace = authenticated && 
+    $store?.spaces.find(x => x?.room_id === space_room_id) != null 
+
+$: joined = joinedSpace && joinedRoom()
+
 
 function goToRoom() {
 
@@ -138,6 +162,36 @@ $: if(active && el) {
     });
 }
 
+let busy = false;
+
+async function join() {
+    if(!authenticated) {
+        store.startAuthenticating("login")
+        return
+    }
+    busy = true
+    if(!joinedSpace) {
+        const resp = await joinSpace(space);
+        if(resp && resp.space) {
+            console.log(resp)
+            store.addSpace(resp.space)
+            //store.addRoom(resp.space.room_id)
+            store.updateRoomJoinStatus($page.params.space, room_id)
+        }
+    } 
+
+    if(!isSpaceRoom) {
+        const resp = await joinRoom(room_id);
+        if(resp && resp?.joined && resp.room_id) {
+            console.log(resp)
+            //store.addRoom(resp.room_id)
+            store.updateRoomJoinStatus($page.params.space, room_id)
+        }
+    }
+    busy = false
+}
+
+
 </script>
 
 {#if show}
@@ -169,6 +223,7 @@ $: if(active && el) {
     </div>
 
 
+        {#if authenticated && (isOwner || joined)}
         <div class="tools grd">
             <Popup
             bind:this={popup}
@@ -195,6 +250,13 @@ $: if(active && el) {
             </Popup>
 
         </div>
+        {:else if authenticated && !joined}
+            <div class="grd-c mr1 join">
+                <button class="light" 
+                    disabled={busy}
+                    on:click={join}>Join</button>
+            </div>
+        {/if}
 
 </div>
 
@@ -284,5 +346,15 @@ $: if(active && el) {
 }
 .ich:hover .ico-s {
     opacity: 1;
+}
+button {
+    padding: 0.25rem;;
+}
+
+.join {
+    display: none;
+}
+.room-item:hover .join {
+    display: grid;
 }
 </style>
