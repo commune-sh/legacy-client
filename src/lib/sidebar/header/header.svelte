@@ -77,7 +77,9 @@ $: if(headerExists && header && el) {
             on:click={toggleMenu}>
             <div class="name in fl-o" class:sh={headerExists}>
                 {#if !ready}
-                    <SkeletonSpan />
+                    <div class="grd-c ml2">
+                        <SkeletonSpan />
+                    </div>
                 {:else}
 
                     <span class="nm" class:ish={headerExists}><b>{name}</b></span>

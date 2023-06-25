@@ -223,7 +223,7 @@ async function join() {
     </div>
 
 
-        {#if authenticated && (isOwner || joined)}
+        {#if authenticated && (isOwner || joined) && !isGeneral}
         <div class="tools grd">
             <Popup
             bind:this={popup}
@@ -250,7 +250,7 @@ async function join() {
             </Popup>
 
         </div>
-        {:else if authenticated && !joined}
+        {:else if authenticated && !joined && !isGeneral}
             <div class="grd-c mr1 join">
                 <button class="light" 
                     disabled={busy}

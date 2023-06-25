@@ -410,6 +410,15 @@ function createApp() {
     })
   }
 
+  let removeSpace = (x) => {
+    update(p => {
+      p.spaces = p.spaces.filter(s => s.alias != x)
+      //p.spaces.push(x)
+      //p.spaces.sort((a, b) => a.alias.toLowerCase().localeCompare(b.alias.toLowerCase()));
+      return p
+    })
+  }
+
 
   let addSpaceState = (space, state) => {
     update(p => {
@@ -735,6 +744,21 @@ function createApp() {
     })
   }
 
+  let updateRoomLeftStatus = (space, room_id) => {
+    update(p => {
+      if(p.states[space]?.room_id == room_id) {
+        p.states[space].joined = false
+      } else {
+        let ind = p.states[space].children.findIndex(r => r.room_id == room_id)
+        if(ind != -1) {
+          p.states[space].children[ind].joined = false
+        }
+      }
+      return p
+    })
+  }
+
+
 
   const { subscribe, set, update } = writable(app);
 
@@ -752,6 +776,7 @@ function createApp() {
     saveDefaultSpaces,
     saveSpaces,
     addSpace,
+    removeSpace,
     startAuthenticating,
     stopAuthenticating,
     startRefreshingFeed,
@@ -805,6 +830,7 @@ function createApp() {
     updateSpaceDefault,
     accountVerified,
     updateRoomJoinStatus,
+    updateRoomLeftStatus,
     removeSpaceRoom,
     savePowerLevels,
   };

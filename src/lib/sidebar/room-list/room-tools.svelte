@@ -1,7 +1,8 @@
 <script>
 import { page } from '$app/stores';
+import { leaveRoom } from '$lib/utils/request.js'
 import { goto } from '$app/navigation';
-import { leave, settings, info } from '$lib/assets/icons.js'
+import { leave as leaveIcon, settings, info } from '$lib/assets/icons.js'
 import { store } from '$lib/store/store.js'
 import {createEventDispatcher} from 'svelte';
 
@@ -23,6 +24,15 @@ const dispatch = createEventDispatcher();
 
 function kill() {
     dispatch('kill')
+}
+
+async function leave() {
+    kill()
+    const resp = await leaveRoom(room.room_id);
+    if(resp && resp?.left) {
+        console.log(resp)
+        store.updateRoomLeftStatus($page.params.space, room.room_id)
+    }
 }
 
 function boardSettings() {
@@ -62,12 +72,12 @@ function boardSettings() {
     {#if authenticated}
         {#if !isOwner && joinedSpace}
         <div class="sep"></div>
-            <div class="item fl" on:click={kill}>
+            <div class="item fl" on:click={leave}>
                 <div class="item grd-c fl-o">
                     Leave Space
                 </div>
                 <div class="ico-s leave">
-                    {@html leave}
+                    {@html leaveIcon}
                 </div>
             </div>
         {/if}

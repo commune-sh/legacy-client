@@ -1,7 +1,8 @@
 <script>
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
-import { leave, settings, info } from '$lib/assets/icons.js'
+import { leaveSpace } from '$lib/utils/request.js'
+import { leave as leaveIcon, settings, info } from '$lib/assets/icons.js'
 import { store } from '$lib/store/store.js'
 import {createEventDispatcher} from 'svelte';
 
@@ -21,6 +22,17 @@ const dispatch = createEventDispatcher();
 
 function kill() {
     dispatch('kill')
+}
+
+$: space = $page.params.space
+
+async function leave() {
+    dispatch('kill')
+    store.removeSpace($page.params.space)
+    const resp = await leaveSpace(space);
+    if(resp) {
+        console.log(resp)
+    }
 }
 
 function spaceSettings() {
@@ -55,12 +67,12 @@ function spaceSettings() {
     {#if authenticated}
         {#if !isOwner && joinedSpace}
         <div class="sep"></div>
-            <div class="item fl" on:click={kill}>
+            <div class="item fl" on:click={leave}>
                 <div class="item grd-c fl-o">
                     Leave Space
                 </div>
                 <div class="ico-s leave">
-                    {@html leave}
+                    {@html leaveIcon}
                 </div>
             </div>
         {/if}

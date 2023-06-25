@@ -185,6 +185,27 @@ export async function joinSpace(space) {
   return data;
 }
 
+export async function leaveSpace(space) {
+    let headers = { 
+      'Content-Type': 'application/json',
+    }
+
+    const token = localStorage.getItem('access_token')
+
+    if(token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+
+    let options = {
+      headers: headers,
+      method: "POST",
+    }
+
+  const response = await fetch(`${PUBLIC_API_URL}/space/${space}/leave`, options)
+  const data = await response.json();
+  return data;
+}
+
 export async function joinRoom(room_id) {
     let headers = { 
       'Content-Type': 'application/json',
@@ -205,6 +226,28 @@ export async function joinRoom(room_id) {
   const data = await response.json();
   return data;
 }
+
+export async function leaveRoom(room_id) {
+    let headers = { 
+      'Content-Type': 'application/json',
+    }
+
+    const token = localStorage.getItem('access_token')
+
+    if(token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+
+    let options = {
+      headers: headers,
+      method: "POST",
+    }
+
+  const response = await fetch(`${PUBLIC_API_URL}/room/leave?id=${room_id}`, options)
+  const data = await response.json();
+  return data;
+}
+
 
 export async function getLinkMetadata(link) {
   const data = await APIRequest({
