@@ -21,6 +21,7 @@ function createApp() {
     verifiedSession: false,
     credentials: null,
     rooms: [],
+    defaultSpaces: [],
     spaces: [],
     spacesFetched: false,
     states: [],
@@ -65,6 +66,7 @@ function createApp() {
     addingRoom: false,
     spaceSettingsOpen: false,
     roomSettings: false,
+    userSettings: false,
   }
 
   if(window) {
@@ -377,6 +379,18 @@ function createApp() {
       return p
     })
   }
+
+  let saveDefaultSpaces = (x) => {
+    update(p => {
+      p.defaultSpaces = x
+      if(x == null) {
+        p.defaultSpaces = []
+      }
+      generateInitials(p.defaultSpaces);
+      return p
+    })
+  }
+
   let savePowerLevels = (x) => {
     update(p => {
       p.power_levels = x
@@ -735,6 +749,7 @@ function createApp() {
     removeCredentials,
     saveRooms,
     addRoom,
+    saveDefaultSpaces,
     saveSpaces,
     addSpace,
     startAuthenticating,

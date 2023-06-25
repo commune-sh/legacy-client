@@ -29,6 +29,11 @@ function verify() {
     kill()
 }
 
+function editProfile() {
+    $store.userSettings = true
+    kill()
+}
+
 $: verified = $store.credentials?.verified
 
 </script>
@@ -48,7 +53,7 @@ $: verified = $store.credentials?.verified
 
     {/if}
 
-        <div class="item fl" on:click={logout}>
+        <div class="item fl" on:click={editProfile}>
             <div class="grd-c fl-o">
                 Edit Profile
             </div>

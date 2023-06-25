@@ -58,8 +58,8 @@ let popup;
 
 $: profileSpace = $store?.spaces?.find(s => s.room_id ===
         $store?.credentials?.user_space_id)
-$: avatar = profileSpace?.avatar?.length > 0 ?
-`${PUBLIC_MEDIA_URL}/${profileSpace?.avatar}` : null
+$: avatar = $store?.credentials?.avatar_url?.length > 0 ?
+`${PUBLIC_MEDIA_URL}/${$store.credentials?.avatar_url}` : null
 
 </script>
 
