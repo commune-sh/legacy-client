@@ -207,11 +207,7 @@ async function join() {
 
         <div class="ico grd-c"
             class:inactive={!active}>
-                {#if isBoard}
-                    {@html discuss}
-                {:else}
-                    {@html chat}
-                {/if}
+                {@html discuss}
         </div>
 
         <div class="sl pr2">

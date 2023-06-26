@@ -281,14 +281,6 @@ async function removeBoard() {
             placeholder="topic"></textarea>
         </div>
 
-        <div class="mt3 pb2">
-            <span class="label">space type</span>
-        </div>
-        <div class="mt1 pb2">
-            <Select items={roomTypes} 
-                value={roomType} 
-                on:change={changeRoomType} />
-        </div>
 
         <div class="mt3 pb2">
             <span class="label">restrictions</span>
