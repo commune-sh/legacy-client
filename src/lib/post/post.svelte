@@ -1,6 +1,7 @@
 <script>
 import Event from '$lib/event/event.svelte'
 import Header from '$lib/header/post-header.svelte'
+import { savePost, redactReaction } from '$lib/utils/request.js'
 import { onMount, createEventDispatcher } from 'svelte';
 import { store } from '$lib/store/store.js'
 import { redactEvent, loadPostWithReplies } from '$lib/utils/request.js'
@@ -327,6 +328,58 @@ function edited(e) {
 $: sender_id = $store.credentials?.matrix_user_id
 $: isPostAuthor = sender_id === post?.sender?.id
 
+async function pinReply(e) {
+    console.log("pinning reply", e.detail)
+    let event = data.replies.find(r => r.event_id == e.detail.event_id)
+    if(!event?.reactions) {
+        event.reactions = []
+    }
+    let index = event?.reactions?.findIndex(r => r.key == "pinned")
+    if(index == -1) {
+        data.replies = data.replies.map(r => {
+            if(r.event_id == e.detail.event_id) {
+                r.reactions = [...r.reactions, {
+                    key: "pinned",
+                }]
+            }
+            return r
+        })
+
+        let post = {
+            room_id: event.room_id,
+            type: "m.reaction",
+            content: {
+                "m.relates_to": {
+                    "rel_type": "m.annotation",
+                    "event_id": event.event_id,
+                    "key": "pinned",
+                }
+            },
+        }
+
+        const res = await savePost(post);
+        console.log(res)
+
+
+    } else {
+        data.replies = data.replies.map(r => {
+            if(r.event_id == e.detail.event_id) {
+                r.reactions = r?.reactions?.filter(r => r.key != "pinned")
+            }
+            return r
+        })
+        let redaction = {
+            room_id: event.room_id,
+            event_id: event.event_id,
+            key: "pinned",
+        }
+        const res = await redactReaction(redaction);
+        console.log(res)
+
+    }
+    data.replies = data.replies
+}
+
 </script>
 
 <section class="content" class:def={!embed} class:rep={replying}>
@@ -380,6 +433,7 @@ $: isPostAuthor = sender_id === post?.sender?.id
                         sender={post?.sender?.id}
                         on:set-reply-thread={setReplyThread}
                         on:redact={redactReply}
+                        on:pin={pinReply}
                         event={reply} 
                         isPostAuthor={isPostAuthor}
                         on:replyTo={replyToEvent} />

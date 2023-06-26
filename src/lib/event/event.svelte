@@ -376,6 +376,8 @@ $: hasTopic = event?.content?.topic !== undefined && event?.content?.topic !==
 $: showTopic = hasTopic && !isTopic
 
 
+$: replyPinned = isReply && event?.reactions?.filter(r => r.key === 'pinned').length > 0
+
 </script>
 
 <div class="event" 
@@ -523,7 +525,7 @@ $: showTopic = hasTopic && !isTopic
 
 
         {#if displayTools && !editing && interactive}
-        <div class="tools" class:asi={event?.pinned}>
+        <div class="tools" class:asi={event?.pinned || replyPinned}>
                 <Tools 
                     isReply={isReply} 
                     on:reply={replyToEvent}
@@ -544,7 +546,7 @@ $: showTopic = hasTopic && !isTopic
 
 
 
-    {#if event.pinned}
+    {#if event.pinned || replyPinned}
         <div class="pin ico-s">
             {@html pin}
         </div>

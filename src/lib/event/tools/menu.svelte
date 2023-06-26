@@ -74,13 +74,14 @@ function pinEvent() {
     dispatch('pin', event)
 }
 
+$: replyPinned = isReply && event?.reactions?.filter(r => r.key === 'pinned').length > 0
 
 
 </script>
 
 
 <div class="menu fl-co" bind:this={content}>
-    {#if authenticated && isOwner && !nested && isSpace}
+    {#if authenticated && isOwner && !nested && !isReply && isSpace}
     <div class="m-item fl " on:click|stopPropagation={pinEvent}>
         <div class="grd-c mr2 fl-o">
             {event?.pinned ? 'Unpin' : 'Pin'} Post
@@ -94,7 +95,7 @@ function pinEvent() {
     {#if authenticated && (isPostAuthor && isReply) && !nested && isSpace}
     <div class="m-item fl " on:click|stopPropagation={pinEvent}>
         <div class="grd-c mr2 fl-o">
-            {event?.pinned ? 'Unpin' : 'Pin'} Reply
+            {replyPinned ? 'Unpin' : 'Pin'} Reply
         </div>
         <div class="mic grd-c ico-s" >
             {@html pin}

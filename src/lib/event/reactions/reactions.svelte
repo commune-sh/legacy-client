@@ -110,16 +110,21 @@ async function redact(key) {
         reactions: event.reactions
     })
 }
+
+let skip = ['pinned', 'tagged']
+
 </script>
 
 {#if processed?.length > 0}
     <div class="reactions fl" class:mt2={isReply}>
         {#each processed as reaction}
+            {#if !skip.includes(reaction.key)}
             <Reaction 
                 isReply={isReply} 
                 event={event} 
                 on:react
                 reaction={reaction} />
+            {/if}
         {/each}
     {#if hovered}
     <div class="grd re" class:ml2={ml}>
