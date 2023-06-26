@@ -230,7 +230,8 @@ onMount(() => {
 
 function setupLinkPasteListener() {
     bodyInput.addEventListener('paste', (e) => {
-        let expression = /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/g
+        //let expression = /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/g
+        const expression = /(https?:\/\/[^\s]+)/g;
         let regex = new RegExp(expression);
  
         let paste = (e.clipboardData || window.clipboardData).getData('text');

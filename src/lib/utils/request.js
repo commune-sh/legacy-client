@@ -251,7 +251,7 @@ export async function leaveRoom(room_id) {
 
 export async function getLinkMetadata(link) {
   const data = await APIRequest({
-    url: `${PUBLIC_API_URL}/link/metadata?href=${link}`,
+    url: `${PUBLIC_API_URL}/link/metadata?href=${encodeURIComponent(link)}`,
     method: 'GET'
   })
   return data

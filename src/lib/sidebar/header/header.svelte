@@ -78,7 +78,7 @@ $: if(headerExists && header && el) {
         placement={"bottom-start"}>
 
             <div class="space fl"
-                class:sp={!headerExists}
+                class:sp={authenticated && !headerExists}
                 class:au={authenticated}
                 slot="reference"
                 class:active={menuActive}>
@@ -171,6 +171,10 @@ $: if(headerExists && header && el) {
 }
 
 .au:hover {
+    background: var(--hover-focus);
+}
+
+.sp:hover {
     background: var(--hover-focus);
 }
 

@@ -108,9 +108,12 @@ async function join() {
         </div>
     </div>
     <div class="fl-o"></div>
+
+    {#if isOwner}
     <div class="grd-c ico-s" on:click={addRoom}>
         {@html addLine}
     </div>
+    {/if}
 </div>
 
 {#if items?.length > 0}
@@ -137,6 +140,7 @@ async function join() {
 .label {
     color: var(--text-light);
     cursor: pointer;
+    font-size: 12px;
 }
 .ico-s {
     width: 18px;
