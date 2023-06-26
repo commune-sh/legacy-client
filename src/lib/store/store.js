@@ -491,6 +491,14 @@ function createApp() {
     })
   }
 
+  let updateSpacePinnedEvents = (space, pinned_events) => {
+    update(p => {
+      p.states[space].space['pinned_events'] = pinned_events
+      return p
+    })
+  }
+
+
   let removeSpaceRoom = (space, room_id, type) => {
     update(p => {
       let ind = p.states[space]?.children.findIndex(x => x.room_id == room_id)
@@ -827,6 +835,7 @@ function createApp() {
     updateSpaceType,
     updateSpaceRoomType,
     updateSpaceRestrictions,
+    updateSpacePinnedEvents,
     updateSpaceDefault,
     accountVerified,
     updateRoomJoinStatus,

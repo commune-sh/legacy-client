@@ -374,6 +374,8 @@ $: hasTopic = event?.content?.topic !== undefined && event?.content?.topic !==
     null && event?.content?.topic !== ''
 
 $: showTopic = hasTopic && !isTopic
+
+
 </script>
 
 <div class="event" 
@@ -527,7 +529,9 @@ $: showTopic = hasTopic && !isTopic
                     on:reply={replyToEvent}
                     active={toolsActive}
                     isAuthor={isAuthor}
+                    nested={nested}
                     on:edit={editEvent}
+                    on:pin
                     on:redact
                     on:set-reply-thread
                     on:react={reactToKey}

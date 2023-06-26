@@ -16,6 +16,8 @@ const dispatch = createEventDispatcher();
 export let active;
 export let event;
 
+export let nested;
+
 export let isReply;
 export let isAuthor;
 
@@ -97,6 +99,9 @@ let killed = () => {
         on:active 
         on:kill 
         on:redact
+        on:pin
+        isReply={isReply}
+        nested={nested}
         event={event} />
 
 </div>

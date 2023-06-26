@@ -1,7 +1,7 @@
 <script>
 import { onMount, createEventDispatcher } from 'svelte'
 import { store } from '$lib/store/store.js'
-import { more, code, trash } from '$lib/assets/icons.js'
+import { more, code, trash, pin } from '$lib/assets/icons.js'
 import ViewSource from './source.svelte'
 import tippy from 'tippy.js';
 import { page } from '$app/stores';
@@ -10,10 +10,18 @@ $: state = $store?.states[$page?.params?.space]
 $: sender_id = $store.credentials?.matrix_user_id
 $: isOwner = state?.owner === sender_id
 
+$: authenticated = $store?.authenticated && 
+    $store?.credentials != null
+    $store?.credentials?.access_token?.length > 0
+
+$: isSpace = $page?.params?.space !== undefined && $page?.params?.space !== null && $page?.params?.space !== ''
+
 const dispatch = createEventDispatcher();
 
 export let event;
 export let isAuthor;
+export let isReply;
+export let nested;
 
 let el;
 let content;
@@ -60,12 +68,27 @@ function redactEvent() {
     dispatch('redact', event)
 }
 
+function pinEvent() {
+    menu.hide()
+    dispatch('pin', event)
+}
+
 
 
 </script>
 
 
 <div class="menu fl-co" bind:this={content}>
+    {#if authenticated && isOwner && !nested && isSpace}
+    <div class="m-item fl " on:click|stopPropagation={pinEvent}>
+        <div class="grd-c mr2 fl-o">
+            {event?.pinned ? 'Unpin' : 'Pin'} Post
+        </div>
+        <div class="mic grd-c ico-s" >
+            {@html pin}
+        </div>
+    </div>
+    {/if}
     <div class="m-item fl" on:click|stopPropagation={viewSource}>
         <div class="grd-c mr2 fl-o">
             View source
@@ -74,7 +97,7 @@ function redactEvent() {
             {@html code}
         </div>
     </div>
-    {#if isOwner || isAuthor}
+    {#if authenticated && (isOwner || isAuthor)}
     <div class="m-item fl pr" on:click|stopPropagation={redactEvent}>
         <div class="grd-c mr2 fl-o">
             Delete

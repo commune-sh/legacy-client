@@ -1,6 +1,7 @@
 <script>
 import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { APIRequest, loadPosts, redactEvent } from '$lib/utils/request.js'
+import { createStateEvent } from '$lib/utils/request.js'
 import { onMount, tick, createEventDispatcher } from 'svelte'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
@@ -478,6 +479,38 @@ async function redactPost(e) {
     console.log(res)
 }
 
+async function pinPost(e) {
+    const event = e.detail
+    const index = data.events.findIndex(i => i.event_id === event.event_id);
+    if(index !== -1) {
+        let ps = data?.events[index].pinned
+        data.events[index].pinned = !ps
+
+        let pinned_events = JSON.parse(state?.space?.pinned_events)
+        if(!pinned_events) {
+            pinned_events = []
+        }
+        let ind = pinned_events.findIndex(i => i === event.event_id);
+        if(ind !== -1) {
+            pinned_events.splice(ind, 1);
+        } else {
+            pinned_events.push(event.event_id)
+        }
+        store.updateSpacePinnedEvents($page.params.space, JSON.stringify(pinned_events))
+
+        console.log(pinned_events)
+
+        const res = await createStateEvent({
+            room_id: e.detail.room_id,
+            event_type: 'm.room.pinned_events',
+            content: {
+                pinned: pinned_events,
+            }
+        })
+        console.log(res)
+    }
+}
+
 </script>
 
 
@@ -523,6 +556,7 @@ async function redactPost(e) {
                             {#if event.pinned}
                                 <Event event={event} 
                                     on:redact={redactPost}
+                                    on:pin={pinPost}
                                     sender={null} />
                             {/if}
                         {/each}
@@ -530,6 +564,7 @@ async function redactPost(e) {
                             {#if !event.pinned}
                                 <Event event={event} 
                                     on:redact={redactPost}
+                                    on:pin={pinPost}
                                     sender={null} />
                             {/if}
                         {/each}
