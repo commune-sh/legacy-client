@@ -79,7 +79,7 @@ $: if(headerExists && header && el) {
 
             <div class="space fl"
                 class:sp={authenticated && !headerExists}
-                class:au={authenticated}
+                class:au={authenticated && headerExists}
                 slot="reference"
                 class:active={menuActive}>
 
@@ -171,7 +171,10 @@ $: if(headerExists && header && el) {
 }
 
 .au:hover {
-    background: var(--hover-focus);
+}
+
+.sp {
+    cursor: pointer;
 }
 
 .sp:hover {

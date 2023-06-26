@@ -101,6 +101,7 @@ async function save() {
     }
     updateRestrictions()
     busy = false
+    dispatch('kill')
 }
 
 async function avatarUploaded(e) {

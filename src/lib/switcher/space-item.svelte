@@ -101,8 +101,10 @@ $: name = space?.name?.length > 0 ? space?.name : space?.alias
     on:click={goToSpace}
     style="background-image: url({avatar})">
         {#if !avatar && !isProfile}
-            <div class="initial grd-c" style="font-size:{size};">
-                <b>{initials}</b>
+            <div class="initial grd-c" >
+                <b style="font-size:{size};line-height:{size};">
+                    {initials}
+                </b>
             </div>
         {/if}
         {#if isProfile && !avatar}

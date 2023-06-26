@@ -1,6 +1,6 @@
 <script>
 import { PUBLIC_MEDIA_URL, PUBLIC_APP_NAME } from '$env/static/public';
-import { onMount, tick} from 'svelte'
+import { onMount, tick, createEventDispatcher} from 'svelte'
 import { addImage } from '$lib/assets/icons.js'
 import { debounce } from '$lib/utils/utils.js'
 import { store } from '$lib/store/store.js'
@@ -9,6 +9,8 @@ import Avatar from '$lib/components/avatar/avatar.svelte'
 import Banner from '$lib/components/banner/banner.svelte'
 import Select from '$lib/components/select/select.svelte'
 import { createStateEvent } from '$lib/utils/request.js'
+
+const dispatch = createEventDispatcher();
 
 $: state = $store?.states[$page?.params?.space]
 $: roomID = state?.room_id
@@ -61,6 +63,7 @@ async function save() {
         current.topic = topicInput.value
     }
     busy = false
+    dispatch('kill')
 }
 
 async function avatarUploaded(e) {

@@ -13,7 +13,10 @@ $: authenticated = $store?.authenticated &&
 
 $: state = $store?.states[$page?.params?.space]
 $: sender_id = $store.credentials?.matrix_user_id
+
 $: isOwner = state?.owner === sender_id
+
+$: isSpaceAdmin = $store?.power_levels?.space[$store?.credentials?.matrix_user_id] == 100
 
 $: space_room_id = state?.room_id
 $: joinedSpace = $store?.spaces.find(x => x?.room_id === space_room_id) != null 
@@ -52,7 +55,7 @@ function spaceSettings() {
         </div>
     </div>
 
-    {#if isOwner}
+    {#if isOwner || isSpaceAdmin}
         <div class="item fl" on:click={spaceSettings}>
             <div class="item grd-c fl-o">
                 Settings

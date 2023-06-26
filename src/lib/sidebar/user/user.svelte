@@ -142,7 +142,6 @@ $: avatar = $store?.credentials?.avatar_url?.length > 0 ?
     cursor: pointer;
     border-radius: 60px;
     border: 0px;
-    padding: 0.5rem;
     font-weight: bold;
     background-color: var(--primary);
     color: white;
