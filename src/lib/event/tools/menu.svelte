@@ -20,6 +20,7 @@ const dispatch = createEventDispatcher();
 
 export let event;
 export let isAuthor;
+export let isPostAuthor;
 export let isReply;
 export let nested;
 
@@ -89,6 +90,18 @@ function pinEvent() {
         </div>
     </div>
     {/if}
+
+    {#if authenticated && (isPostAuthor && isReply) && !nested && isSpace}
+    <div class="m-item fl " on:click|stopPropagation={pinEvent}>
+        <div class="grd-c mr2 fl-o">
+            {event?.pinned ? 'Unpin' : 'Pin'} Reply
+        </div>
+        <div class="mic grd-c ico-s" >
+            {@html pin}
+        </div>
+    </div>
+    {/if}
+
     <div class="m-item fl" on:click|stopPropagation={viewSource}>
         <div class="grd-c mr2 fl-o">
             View source

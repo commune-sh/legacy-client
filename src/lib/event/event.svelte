@@ -529,6 +529,7 @@ $: showTopic = hasTopic && !isTopic
                     on:reply={replyToEvent}
                     active={toolsActive}
                     isAuthor={isAuthor}
+                    isPostAuthor={isPostAuthor}
                     nested={nested}
                     on:edit={editEvent}
                     on:pin

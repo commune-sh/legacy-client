@@ -21,6 +21,8 @@ export let nested;
 export let isReply;
 export let isAuthor;
 
+export let isPostAuthor;
+
 function kill() {
     dispatch('kill')
 }
@@ -101,6 +103,8 @@ let killed = () => {
         on:redact
         on:pin
         isReply={isReply}
+        isAuthor={isAuthor}
+        isPostAuthor={isPostAuthor}
         nested={nested}
         event={event} />
 

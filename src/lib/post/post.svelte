@@ -24,8 +24,8 @@ $: if(authenticated) {
     })
 }
 
-$: space_room_id = state?.room_id
-$: joined = $store?.rooms.find(x => x === roomID) != null 
+$: joined = state?.joined ||
+    state?.children.filter(c => c.joined).length > 0
 
 
 export let post;
