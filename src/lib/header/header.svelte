@@ -169,6 +169,7 @@ $: isStaticRoute = $store.staticRoutes.some(r => r.path === $page?.url?.pathname
 $: staticRoute = $store.staticRoutes.find(r => r.path === $page?.url?.pathname);
 
 $: isMobile = window.innerWidth <= 768
+$: isPost = $page?.params?.post != undefined
 
 
 $: pinned_events = selected?.pinned_events
@@ -243,7 +244,7 @@ $: ageIsOk = validAge(senderAge, requiresSenderAge)
 
             </div>
 
-            {#if selected?.topic}
+            {#if selected?.topic && !isPost}
                 <div class="topic grd-c">
                     {selected?.topic}
                 </div>

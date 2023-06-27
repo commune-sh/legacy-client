@@ -19,6 +19,7 @@ export let event;
 export let nested;
 
 export let isReply;
+export let isPost;
 export let isAuthor;
 
 export let isPostAuthor;
@@ -77,10 +78,12 @@ let killed = () => {
         on:react
         on:active />
 
+    {#if isPost || isReply}
     <div class="icon grd-c c-ico" 
         on:click|stopPropagation={replyToEvent}>
         {@html reply}
     </div>
+    {/if}
 
     {#if isReply}
         <div class="icon grd-c c-ico" 

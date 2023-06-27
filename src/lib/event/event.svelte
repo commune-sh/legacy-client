@@ -206,10 +206,6 @@ $: if(!$store.emojiPicker.active) {
 
 
 function replyToEvent() {
-    if(!isPost && !isReply && !isPost) {
-        //goToEvent()
-        return
-    }
     dispatch('replyTo', event)
 }
 
@@ -531,6 +527,7 @@ $: bannedFromSpace = state?.banned === true
         <div class="tools" class:asi={event?.pinned || replyPinned}>
                 <Tools 
                     isReply={isReply} 
+                    isPost={isPost}
                     on:reply={replyToEvent}
                     active={toolsActive}
                     isAuthor={isAuthor}

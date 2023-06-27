@@ -1,3 +1,5 @@
+<svelte:options accessors={true} />
+
 <script>
 import Event from '$lib/event/event.svelte'
 import Header from '$lib/header/post-header.svelte'
@@ -215,8 +217,8 @@ function replySaved(e) {
 
 let reply_count = post?.reply_count || 0
 
-let replying = false;
-let replyingTo = null;
+export let replying = false;
+export let replyingTo = null;
 
 let replyToEventAfterLogin = false;
 
