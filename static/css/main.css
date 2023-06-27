@@ -42,6 +42,7 @@
 
     --warning: #9a1818;
 
+    --code-inline: #0c0c0c;
     --code-block: #0c0c0c;
     --code-block-border: #0c0c0c;
     --code-block-scroll: #323232;
@@ -113,6 +114,7 @@
 
     --warning: #9a1818;
 
+    --code-inline: #e9ecef;
     --code-block: white;
     --code-block-border: #e9e9e9;
     --code-block-scroll: #b9b9b9;
@@ -183,7 +185,8 @@
 
     --warning: #9a1818;
 
-    --code-block: #0c0c0c;
+    --code-inline: #181818;
+    --code-block: #181818;
     --code-block-border: #0c0c0c;
     --code-block-scroll: #323232;
 
@@ -805,8 +808,8 @@ pre code {
 
 code {
     font-family: monospace;
-    background: var(--code-block);
-    padding: 0.25rem;
+    background: var(--code-inline);
+    padding: 0.125rem;
 }
 
 pre::-webkit-scrollbar {

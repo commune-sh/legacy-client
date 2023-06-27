@@ -123,15 +123,13 @@ onMount(() => {
         duration: 1,
     });
 
-    md = new MarkdownIt("zero", {
+    md = new MarkdownIt({
       html: true,
       linkify: true,
       breaks: true,
       typographer: true
     });
 
-    let enable = ["normalize", "block", "inline", "linkify", "autolink", 'link', 'backticks', 'emphasis', "paragraph", "text", "newline"]
-    md.enable(enable)
 
     md.linkify.set({ fuzzyEmail: false })
 
