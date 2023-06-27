@@ -12,9 +12,10 @@ export let items;
 $: state = $store?.states[$page?.params?.space]
 $: sender_id = $store.credentials?.matrix_user_id
 
-$: isOwner = state?.owner === sender_id
+$: isSpaceAdmin = $store?.power_levels?.space?.[$store?.credentials?.matrix_user_id] == 100
 
 function addRoom() {
+    console.log("adding")
     $store.addingRoom = true
 }
 
@@ -118,7 +119,7 @@ async function join() {
     </div>
     <div class="fl-o"></div>
 
-    {#if isOwner}
+    {#if isOwner || isSpaceAdmin}
     <div class="grd-c ico-s" on:click={addRoom}>
         {@html addLine}
     </div>
@@ -131,7 +132,7 @@ async function join() {
     {/each}
 {/if}
 
-{#if isOwner && !collapsed}
+{#if (isOwner || isSpaceAdmin) && !collapsed}
     <AddRoom />
 {/if}
 
