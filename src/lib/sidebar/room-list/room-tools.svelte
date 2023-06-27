@@ -59,7 +59,6 @@ function boardSettings() {
         </div>
     </div>
 
-    {#if isOwner}
     {#if isOwner || isSpaceAdmin}
         <div class="item fl" on:click={boardSettings}>
             <div class="item grd-c fl-o">
