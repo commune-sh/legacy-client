@@ -18,6 +18,7 @@ $: state = $store?.states[$page?.params?.space]
 $: sender_id = $store.credentials?.matrix_user_id
 
 $: isOwner = state?.owner === sender_id
+$: isSpaceAdmin = $store?.power_levels?.space?.[$store?.credentials?.matrix_user_id] == 100
 
 $: space = $page.params?.space
 $: room = $page.params?.room
@@ -285,7 +286,7 @@ async function join() {
     {/each}
 {/if}
 
-{#if selected && isOwner}
+{#if selected && (isOwner || isSpaceAdmin)}
     <AddTopic alias={item.alias} topics={topics}/>
 {/if}
 
