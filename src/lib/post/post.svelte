@@ -25,9 +25,6 @@ $: if(authenticated) {
     })
 }
 
-$: joined = state?.joined ||
-    state?.children.filter(c => c.joined).length > 0
-
 
 export let post;
 export let embed = false;
@@ -380,6 +377,20 @@ async function pinReply(e) {
     data.replies = data.replies
 }
 
+
+$: joinedSpace = authenticated && 
+    $store?.spaces.find(x => x?.room_id === space_room_id) != null 
+
+$: joinedRoom = () => {
+    if(roomID == state?.room_id) {
+        return true
+    }
+    return state?.children?.find(x => x?.room_id === roomID)?.joined
+}
+
+$: space_room_id = state?.room_id
+$: joined = joinedSpace && joinedRoom()
+
 </script>
 
 <section class="content" class:def={!embed} class:rep={replying}>
@@ -419,10 +430,10 @@ async function pinReply(e) {
             <div class="fl-o">
             </div>
 
-            {#if post}
-            <div class="">
-                <button on:click={replyToPost}>Reply</button>
-            </div>
+            {#if post && authenticated && joined}
+                <div class="">
+                    <button on:click={replyToPost}>Reply</button>
+                </div>
             {/if}
         </div>
 

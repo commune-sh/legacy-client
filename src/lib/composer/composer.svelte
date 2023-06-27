@@ -371,7 +371,7 @@ async function createPost() {
 
         let post = {
             room_id: roomID,
-            type: 'm.room.message',
+            type: 'space.board.post',
             content: {
                 msgtype: 'post',
                 title: title,
@@ -387,6 +387,7 @@ async function createPost() {
         if(reply) {
             post.in_thread = threadEvent
             post.is_reply = true
+            post.replying_to = replyTo.event_id
             post.content['m.relates_to'] = {
                 event_id: replyTo.event_id,
                 'rel_type': 'm.nested_reply',

@@ -579,14 +579,6 @@ async function pinPost(e) {
                     </div>
                 {/if}
 
-                {#if exists && isTopic && noEvents}
-                    <div class="grd">
-                        <div class="grd-c">
-                            This topic does not have any posts yet.
-                        </div>
-                    </div>
-                {/if}
-
 
                 {#if exists && !isProfile && isRoom && !isTopic && noEvents && !roomExists}
                     <div class="grd">

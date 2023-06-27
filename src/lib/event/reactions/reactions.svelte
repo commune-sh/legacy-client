@@ -81,6 +81,7 @@ async function saveReaction(key) {
     let post = {
         room_id: event.room_id,
         type: "m.reaction",
+        reacting_to: event.event_id,
         content: {
             "m.relates_to": {
                 "rel_type": "m.annotation",
