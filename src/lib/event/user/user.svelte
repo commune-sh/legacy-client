@@ -1,5 +1,7 @@
 <script>
-import { user as icon} from '$lib/assets/icons.js'
+import { crown } from '$lib/assets/icons.js'
+import { page } from '$app/stores';
+import { store } from '$lib/store/store.js'
 
 export let user;
 export let op;
@@ -15,6 +17,10 @@ $: nameExists = user?.display_name !== undefined &&
     user?.display_name !== user?.username;
 
 $: initial = user?.username?.charAt(0).toUpperCase();
+
+$: state = $store?.states[$page?.params?.space]
+$: isOwner = state?.owner === user?.id
+$: isSpaceAdmin = $store?.power_levels?.space?.[user?.id] == 100
 
 </script>
 
@@ -32,13 +38,14 @@ $: initial = user?.username?.charAt(0).toUpperCase();
             </div>
         </div>
     {/if}
-        <div class="name grd-c ml1" class:op={op} class:ml1={!hideAvatar}>
-            {#if nameExists}
-                {user.display_name}
-            {:else}
-                {user.username}
-            {/if}
+    <div class="name grd-c ml1" class:op={op} class:ml1={!hideAvatar}>
+        {#if nameExists}
+            {user.display_name}
+        {:else}
+            {user.username}
+        {/if}
     </div>
+        
 </div>
 </a>
 
@@ -80,5 +87,10 @@ a:hover {
 a {
     text-decoration: none;
     color: var(--fg);
+}
+
+.ico-s {
+    width: 13px;
+    height: 13px;
 }
 </style>

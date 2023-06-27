@@ -1,5 +1,5 @@
 <script>
-import { reply, external, edit } from '$lib/assets/icons.js'
+import { reply, external, edit, loop } from '$lib/assets/icons.js'
 import React from './react.svelte'
 import Menu from './menu.svelte'
 import { createEventDispatcher } from 'svelte'
@@ -34,6 +34,10 @@ function replyToEvent() {
 
 function editEvent() {
     dispatch('edit')
+}
+
+function reference() {
+    dispatch('reference')
 }
 
 
@@ -77,6 +81,13 @@ let killed = () => {
         event={event} 
         on:react
         on:active />
+
+    {#if !isPost && !isReply}
+    <div class="icon grd-c c-ico" 
+        on:click|stopPropagation={reference}>
+        {@html loop}
+    </div>
+    {/if}
 
     {#if isPost || isReply}
     <div class="icon grd-c c-ico" 

@@ -385,6 +385,7 @@ async function createPost() {
         }
 
         if(reply) {
+            post.type = 'space.board.post.reply'
             post.in_thread = threadEvent
             post.is_reply = true
             post.replying_to = replyTo.event_id
