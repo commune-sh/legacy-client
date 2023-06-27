@@ -13,6 +13,7 @@ import Health from '$lib/sync/health.svelte'
 import Down from '$lib/errors/down.svelte'
 import CreateSpace from '$lib/space/create-space.svelte'
 import Modal from '$lib/modal/modal.svelte'
+import Alert from '$lib/alert/alert.svelte'
 
 $: isIndex = $page?.url.pathname === '/'
 
@@ -126,6 +127,7 @@ $: if(authenticated) {
 <Health />
 
 <Modal />
+<Alert />
 
 {#if (!down && isIndex && showIndex) || (!down && !isIndex)}
 

@@ -122,93 +122,109 @@ $: buttonText = code_sent ? 'Resend Code' : busy ? 'Sending...' : 'Send Code'
 {#if active}
 <div class="mask grd" 
     on:click|self|stopPropagation={kill}>
-    <div class="modal grd-c grd pa3">
+    <div class="modal grd-c">
 
         {#if !verified}
 
-        <div class="fl-co">
-            <div class="fl">
-                <div class="label fl-o grd-c">
-                    Verify your account
-                </div>
-                    <div class="c-ico grd-c" on:click={kill}>
+        <div class="container">
+
+            <div class="inner pa3 grd">
+            <div class="grd-c w100">
+                <div class="fl">
+                    <div class="label fl-o grd-c">
+                        Verify your account
+                    </div>
+
+                    <div class="cl c-ico grd-c" on:click={kill}>
                         {@html close}
-                </div>
-            </div>
-            <div class="mt4">
-                Add an email address to your account to verify it.
-            </div>
-            <div class="mt3 fl">
-                <div class="rel fl-o">
-                    <input bind:this={emailInput}
-                    class:red={emailWarning}
-                    disabled={lockResend}
-                    type="text" placeholder="your@email.com" />
-                    {#if busy}
-                        <div class="spinner">
-                            <div class="sloader"></div>
-                        </div>
-                    {/if}
-                </div>
-                <div class="rel ml3 grd-c h100 pa1">
-                    <button class="h100" 
-                        disabled={busy || lockResend}
-                        on:click={start}>
-                            {buttonText}
-                        {#if lockResend}
-                            <span class="ml1">({count})</span>
-                        {/if}
-                    </button>
-                </div>
-            </div>
-            {#if emailWarning}
-                <div class="mt3">
-                    <span class="sm">That email doesn't look right</span>
-                </div>
-            {/if}
+                    </div>
 
-            {#if code_sent}
-
+                </div>
+                <div class="ln mt4">
+                    Add an email address to your account to verify it.
+                </div>
                 <div class="mt3 fl">
                     <div class="rel fl-o">
-                        <input bind:this={codeInput}
-                        class:red={codeWarning}
-                        type="text" placeholder="your code" />
-                        {#if verifying}
+                        <input bind:this={emailInput}
+                        class:red={emailWarning}
+                        disabled={lockResend}
+                        type="text" placeholder="your@email.com" />
+                        {#if busy}
                             <div class="spinner">
                                 <div class="sloader"></div>
                             </div>
                         {/if}
                     </div>
-                    <div class="ml3 grd-c h100 pa1">
-                        <button class="h100" on:click={verify}>
-                            {verifying ? 'Verifying...' : 'Verify Code'}
+                    <div class="rel ml3 grd-c h100 pa1">
+                        <button class="h100" 
+                            disabled={busy || lockResend}
+                            on:click={start}>
+                                {buttonText}
+                            {#if lockResend}
+                                <span class="ml1">({count})</span>
+                            {/if}
                         </button>
                     </div>
                 </div>
-                {#if codeWarning}
+                {#if emailWarning}
                     <div class="mt3">
-                        <span class="sm">That code could not be verified.</span>
+                        <span class="sm">That email doesn't look right</span>
                     </div>
                 {/if}
 
+                {#if code_sent}
 
-            {/if}
+                    <div class="mt3 fl">
+                        <div class="rel fl-o">
+                            <input bind:this={codeInput}
+                            class:red={codeWarning}
+                            type="text" placeholder="your code" />
+                            {#if verifying}
+                                <div class="spinner">
+                                    <div class="sloader"></div>
+                                </div>
+                            {/if}
+                        </div>
+                        <div class="ml3 grd-c h100 pa1">
+                            <button class="h100" on:click={verify}>
+                                {verifying ? 'Verifying...' : 'Verify Code'}
+                            </button>
+                        </div>
+                    </div>
+                    {#if codeWarning}
+                        <div class="mt3">
+                            <span class="sm">That code could not be verified.</span>
+                        </div>
+                    {/if}
 
+
+                {/if}
+
+            </div>
+            </div>
         </div>
 
         {:else}
 
-            <div class="pv3 fl-co">
-                <div class="">
+        <div class="container">
+
+            <div class="inner pa3 grd">
+            <div class="grd-c w100 fl-co pa3">
+                <div class="grd-c">
                     Your account was successfully verified.
                 </div>
-                <div class="mt4">
-                    <button on:click={kill}>Ok</button>
+                <div class="mt4 grd-c">
+                    <button class="ph3 pv2" on:click={kill}>Done</button>
                 </div>
             </div>
+            </div>
+        </div>
 
         {/if}
+
+        <div class="close c-ico grd-c" on:click={kill}>
+            {@html close}
+        </div>
 
     </div>
 </div>
@@ -217,7 +233,6 @@ $: buttonText = code_sent ? 'Resend Code' : busy ? 'Sending...' : 'Send Code'
 
 <style>
 .mask {
-    transition: 0.3s;
     position: fixed;
     z-index: 1000;
     width: 100%;
@@ -230,11 +245,18 @@ $: buttonText = code_sent ? 'Resend Code' : busy ? 'Sending...' : 'Send Code'
 }
 
 .modal {
-    transition: 0.2s;
     box-shadow: 0 30px 60px rgba(0,0,0,.1);
     background: var(--modal);
     border-radius: 7px;
     width: 500px;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto;
+    place-self: stretch;
+    height: 100%;
 }
 
 .red {
@@ -256,6 +278,34 @@ input {
     border-top: 2px solid var(--primary);
     border-right: 2px solid var(--primary);
     border-bottom: 2px solid var(--primary);
+}
+
+.ln {
+    line-height: 1.5;
+}
+
+.close {
+    display: none;
+}
+
+@media (max-width: 550px) {
+    .modal {
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+    }
+    .cl {
+        display: none;
+    }
+    .close {
+        display: block;
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        width: 36px;
+        height: 36px;
+    }
+
 }
 </style>
 

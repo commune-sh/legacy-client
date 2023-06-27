@@ -378,6 +378,9 @@ $: showTopic = hasTopic && !isTopic
 
 $: replyPinned = isReply && event?.reactions?.filter(r => r.key === 'pinned').length > 0
 
+$: state = $store?.states[$page?.params?.space]
+$: bannedFromSpace = state?.banned === true
+
 </script>
 
 <div class="event" 
@@ -524,7 +527,7 @@ $: replyPinned = isReply && event?.reactions?.filter(r => r.key === 'pinned').le
     {/if}
 
 
-        {#if displayTools && !editing && interactive}
+        {#if displayTools && !editing && interactive && !bannedFromSpace}
         <div class="tools" class:asi={event?.pinned || replyPinned}>
                 <Tools 
                     isReply={isReply} 

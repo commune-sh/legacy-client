@@ -37,6 +37,7 @@ function buildItems(state) {
             type: state?.space?.type,
             general: true,
             topics: state?.space?.topics,
+            banned: state?.banned,
         }
     ]
 

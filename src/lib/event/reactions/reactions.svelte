@@ -1,6 +1,7 @@
 <script>
 import { createEventDispatcher } from 'svelte'
 import { store } from '$lib/store/store.js'
+import { page } from '$app/stores';
 import Reaction from './reaction.svelte'
 import React from '$lib/event/tools/react.svelte'
 import { savePost, redactReaction } from '$lib/utils/request.js'
@@ -113,6 +114,9 @@ async function redact(key) {
 
 let skip = ['pinned', 'tagged']
 
+$: state = $store?.states[$page?.params?.space]
+$: bannedFromSpace = state?.banned === true
+
 </script>
 
 {#if processed?.length > 0}
@@ -126,7 +130,7 @@ let skip = ['pinned', 'tagged']
                 reaction={reaction} />
             {/if}
         {/each}
-    {#if hovered}
+    {#if hovered && !bannedFromSpace}
     <div class="grd re" class:ml2={ml}>
         <React 
             isReply={isReply} 

@@ -25,6 +25,10 @@ function createApp() {
     spaces: [],
     spacesFetched: false,
     states: [],
+    alert: {
+      active: false,
+      message: null,
+    },
     power_levels: [],
     spacePaths: [],
     stateReady: false,

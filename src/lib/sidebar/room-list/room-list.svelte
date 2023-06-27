@@ -47,6 +47,8 @@ let busy = false;
 
 $: space = $page.params.space
 
+$: banned = state?.banned === true
+
 async function join() {
     if(!authenticated) {
         store.startAuthenticating("login")
@@ -61,6 +63,13 @@ async function join() {
             //store.addRoom(resp.space.room_id)
             store.updateRoomJoinStatus($page.params.space, space_room_id)
         }
+        if(resp && resp?.error) {
+            console.log(resp)
+            $store.alert = {
+                active: true,
+                message: resp.error
+            }
+        }
     } 
     busy = false
 }
@@ -74,7 +83,7 @@ async function join() {
 
 <div class="boards" class:op={spaceSettings}>
 
-    {#if !joinedSpace && active}
+    {#if !joinedSpace && active && !banned}
         <div class="mb3 rel">
             <button class="but" 
                 disabled={busy}

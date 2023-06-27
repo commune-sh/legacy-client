@@ -80,6 +80,10 @@ $: joinedSpace = authenticated &&
 
 $: joined = joinedSpace && joinedRoom()
 
+$: banned = item?.banned === true
+
+$: bannedFromSpace = state?.banned === true
+
 
 function goToRoom() {
 
@@ -178,6 +182,13 @@ async function join() {
             //store.addRoom(resp.space.room_id)
             store.updateRoomJoinStatus($page.params.space, room_id)
         }
+        if(resp && resp?.error) {
+            console.log(resp)
+            $store.alert = {
+                active: true,
+                message: resp.error
+            }
+        }
     } 
 
     if(!isSpaceRoom) {
@@ -186,6 +197,13 @@ async function join() {
             console.log(resp)
             //store.addRoom(resp.room_id)
             store.updateRoomJoinStatus($page.params.space, room_id)
+        }
+        if(resp && resp?.error) {
+            console.log(resp)
+            $store.alert = {
+                active: true,
+                message: resp.error
+            }
         }
     }
     busy = false
@@ -246,7 +264,7 @@ async function join() {
             </Popup>
 
         </div>
-        {:else if authenticated && !joined && !isGeneral}
+        {:else if authenticated && !joined && !isGeneral && !banned && !bannedFromSpace}
             <div class="grd-c mr1 join">
                 <button class="light" 
                     disabled={busy}
