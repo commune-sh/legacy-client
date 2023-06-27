@@ -202,6 +202,28 @@ async function updateDefault() {
     console.log(res)
 }
 
+let indexInput;
+
+$: doNotIndex = state?.space?.do_not_index
+
+async function updateIndex(e) {
+
+    if(indexInput.checked == doNotIndex) {
+        return
+    }
+
+    store.updateSpaceDoNotIndex($page.params.space, indexInput.checked)
+    const res = await createStateEvent({
+        room_id: roomID,
+        event_type: 'm.room.do_not_index',
+        content: {
+            do_not_index: indexInput.checked,
+        }
+    })
+    console.log(res)
+}
+
+
 </script>
 
 <div class="sco grd-c">
@@ -293,6 +315,28 @@ async function updateDefault() {
             </div>
         </div>
         {/if}
+
+        <div class="mt3 pb2">
+            <span class="label">index</span>
+        </div>
+        <div class="mt1 pb2">
+            <div class="fl">
+                <div class="grd-c mr2 fl-o">
+                    <label for="ver">
+                        Hide posts from the {PUBLIC_APP_NAME} frontpage
+                    </label>
+                </div>
+                <div class="grd-c">
+                    <input id="ver" type="checkbox" 
+                        bind:this={indexInput}
+                        checked={doNotIndex}
+                        on:change={updateIndex}
+                        bind:value={doNotIndex} />
+                </div>
+            </div>
+        </div>
+
+
 
         <div class="mt3 fl">
             <div class="grd-c">

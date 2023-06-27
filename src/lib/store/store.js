@@ -554,6 +554,29 @@ function createApp() {
     })
   }
 
+  let updateSpaceDoNotIndex = (space, dni) => {
+    update(p => {
+      let s = p.spaces.find(x => x.alias == space)
+      if(s) {
+        s.do_not_index = dni
+      }
+      p.states[space].space['do_not_index'] = dni
+      return p
+    })
+  }
+
+
+  let updateSpaceRoomDoNotIndex = (space, room_id, dni) => {
+    update(p => {
+      let ind = p.states[space]?.children.findIndex(x => x.room_id == room_id)
+      if(ind !== -1) {
+        p.states[space].children[ind].do_not_index = dni
+      }
+      return p
+    })
+  }
+
+
 
 
   let addSpacePath = (space, path) => {
@@ -836,6 +859,8 @@ function createApp() {
     updateSpaceHeader,
     updateSpaceInfo,
     updateSpaceRoomInfo,
+    updateSpaceDoNotIndex,
+    updateSpaceRoomDoNotIndex,
     updateSpaceType,
     updateSpaceRoomType,
     updateSpaceRestrictions,
