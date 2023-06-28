@@ -375,7 +375,7 @@ function signup() {
     text-overflow: ellipsis;
     margin-right: 0.5rem;
     font-size: 0.9rem;
-    margin-top: 2px;
+    line-height: normal;
 }
 
 @media screen and (max-width: 1020px) {

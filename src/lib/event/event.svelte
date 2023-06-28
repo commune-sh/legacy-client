@@ -407,7 +407,7 @@ $: bannedFromSpace = state?.banned === true
                 </div>
             {/if}
             {#if showTopic}
-                <div class="ico-s grd-c ml2">
+                <div class="ico-s sn grd-c ml2">
                     {@html hash}
                 </div>
                 <div class="grd-c sm">
@@ -715,9 +715,9 @@ $: bannedFromSpace = state?.banned === true
     margin-bottom: 0.5rem;
 }
 
-.ico-s {
-    height: 14px;
-    width: 14px;
+.sn {
+    height: 12px;
+    width: 12px;
 }
 
 @keyframes fadeOut {
