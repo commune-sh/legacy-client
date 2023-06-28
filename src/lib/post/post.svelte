@@ -380,18 +380,7 @@ async function pinReply(e) {
 }
 
 
-$: joinedSpace = authenticated && 
-    $store?.spaces.find(x => x?.room_id === space_room_id) != null 
-
-$: joinedRoom = () => {
-    if(roomID == state?.room_id) {
-        return true
-    }
-    return state?.children?.find(x => x?.room_id === roomID)?.joined
-}
-
-$: space_room_id = state?.room_id
-$: joined = joinedSpace && joinedRoom()
+$: joined = $store?.rooms.find(x => x === roomID) !== undefined
 
 </script>
 

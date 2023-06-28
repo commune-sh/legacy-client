@@ -91,7 +91,7 @@ function login() {
             const cookieValue = `${encodeURIComponent(resp.access_token)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
             document.cookie = `token=${cookieValue}`;
             store.saveCredentials(resp.credentials)
-            //store.saveRooms(resp.rooms)
+            store.saveRooms(resp.rooms)
             store.saveSpaces(resp.spaces)
             store.isAuthenticated()
             dispatch('authenticated', true)

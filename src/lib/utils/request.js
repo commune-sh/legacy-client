@@ -368,3 +368,10 @@ export async function updateDisplayName(body) {
   return data
 }
 
+export async function discoverSpaces() {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/discover`,
+    method: 'GET'
+  })
+  return data
+}

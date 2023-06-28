@@ -149,7 +149,7 @@ async function join() {
         if(resp && resp.space) {
             console.log(resp)
             store.addSpace(resp.space)
-            //store.addRoom(resp.space.room_id)
+            store.addRoom(resp.space.room_id)
             store.updateRoomJoinStatus($page.params.space, room_id)
         }
     } 
@@ -158,7 +158,7 @@ async function join() {
         const resp = await joinRoom(room_id);
         if(resp && resp?.joined && resp.room_id) {
             console.log(resp)
-            //store.addRoom(resp.room_id)
+            store.addRoom(resp.room_id)
             store.updateRoomJoinStatus($page.params.space, room_id)
         }
     }

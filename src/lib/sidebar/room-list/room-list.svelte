@@ -61,7 +61,7 @@ async function join() {
         if(resp && resp.space) {
             console.log(resp)
             store.addSpace(resp.space)
-            //store.addRoom(resp.space.room_id)
+            store.addRoom(resp.space.room_id)
             store.updateRoomJoinStatus($page.params.space, space_room_id)
         }
         if(resp && resp?.error) {

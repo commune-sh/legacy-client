@@ -71,6 +71,7 @@ function createApp() {
     spaceSettingsOpen: false,
     roomSettings: false,
     userSettings: false,
+    discoverSpacesOpen: false,
   }
 
   if(window) {

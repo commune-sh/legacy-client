@@ -5,6 +5,7 @@ import { page } from '$app/stores';
 import RoomList from './room-list/room-list.svelte'
 import { store } from '$lib/store/store.js'
 import SkeletonSidebar from '$lib/skeleton/skeleton-sidebar.svelte'
+import IndexSidebar from '$lib/sidebar/index/index.svelte'
 
 $: state = $store?.states[$page?.params?.space]
 
@@ -63,6 +64,7 @@ $: items = buildItems(state)
 
     <div class="content fl-co">
         {#if isNotSpace}
+            <IndexSidebar />
 
         {:else if !ready}
             <SkeletonSidebar />

@@ -30,8 +30,9 @@ $: spacePath = $store?.spacePaths[space?.alias]?.pathname
 $: initial = space?.alias?.charAt(0)?.toUpperCase()
 
 function goToSpace() {
-    let url = `/discover`
-    goto(url, {noscroll: true})
+    $store.discoverSpacesOpen = true
+    //let url = `/discover`
+    //goto(url, {noscroll: true})
 }
 
 let hovered = false;
