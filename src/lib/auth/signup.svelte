@@ -53,12 +53,27 @@ function validateUsername(e) {
     }
 }
 
+let showError = false;
+let errorMsg;
+
+let letterWarning;
+
 function create() {
 
-    if(usernameInput.value.length < 3){
+    if(usernameInput.value.length < 2){
         usernameWarning = true
         usernameInput.focus()
         return
+    }
+
+    const regex = /[a-zA-Z]/;
+    const p = regex.test(usernameInput.value);
+    if(!p) {
+        letterWarning = true
+        usernameInput.focus()
+        return
+    } else {
+        letterWarning = false
     }
 
     if(passwordInput.value.length < 8) {
@@ -91,6 +106,9 @@ function create() {
             store.saveSpaces(resp.spaces)
             store.isAuthenticated()
             dispatch('created', true)
+        } else if(!resp?.created && resp?.error){
+            showError = true
+            errorMsg = resp.error
         }
         if(resp?.provider_forbidden) {
             provider_forbidden = true
@@ -239,6 +257,16 @@ function togglePass() {
                     {/if}
                 </div>
             </div>
+            {#if showError && errorMsg}
+                <div class="pt3 warn">
+                    {errorMsg}
+                </div>
+            {/if}
+            {#if letterWarning}
+                <div class="pt3 warn">
+                    Username should have at least one letter.
+                </div>
+            {/if}
             <div class="createc mt4">
                 <button class="create" on:click={create} disabled={busy || down}>
                     {busy && !signupDisabled ? 'Creating Account...' : 'Create Account'}
