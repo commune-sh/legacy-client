@@ -1,4 +1,5 @@
 <script>
+import '/static/css/main.css'
 import Signup from '$lib/auth/signup.svelte'
 import { goto } from '$app/navigation';
 import Health from '$lib/sync/health.svelte'

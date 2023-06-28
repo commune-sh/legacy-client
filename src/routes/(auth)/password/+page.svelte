@@ -1,4 +1,5 @@
 <script>
+import '/static/css/main.css'
 import { onMount } from 'svelte'
 import Password from '$lib/auth/password.svelte'
 import { APIRequest } from '$lib/utils/request.js'

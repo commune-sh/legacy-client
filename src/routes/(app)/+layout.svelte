@@ -1,4 +1,5 @@
 <script>
+import '/static/css/main.css'
 import Authentication from '$lib/auth/authentication.svelte'
 import Switcher from '$lib/switcher/switcher.svelte'
 import Sidebar from '$lib/sidebar/sidebar.svelte'
@@ -32,13 +33,6 @@ function viewReady() {
 
 let root;
 
-
-onMount(() => {
-})
-
-$: if($page) {
-    console.log($page)
-}
 
 $: down = $store.down
 
