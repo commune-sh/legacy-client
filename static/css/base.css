@@ -1,0 +1,16 @@
+:root.dark {
+    --bg: #1a1a1a;
+}
+
+:root.light {
+    --bg: white;
+}
+
+:root.black {
+    --bg: #000;
+}
+body {
+    color: var(--text-1);
+    background-color: var(--bg);
+}
+
