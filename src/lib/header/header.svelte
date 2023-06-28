@@ -189,6 +189,10 @@ $: senderAge = $store?.credentials?.age
 
 $: ageIsOk = validAge(senderAge, requiresSenderAge)
 
+function signup() {
+    store.startAuthenticating("signup")
+}
+
 </script>
 
 
@@ -270,7 +274,7 @@ $: ageIsOk = validAge(senderAge, requiresSenderAge)
             </div>
             {#if $store.verifiedSession && !authenticated}
                 <div class="grd-c ml2 signup">
-                    <button class="ph2 pv1">Sign Up</button>
+                    <button class="ph2 pv1" on:click={signup}>Sign Up</button>
                 </div>
             {/if}
         </div>
