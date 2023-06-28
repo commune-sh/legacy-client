@@ -462,7 +462,10 @@ function createApp() {
       if(s) {
         s.avatar = avatar
       }
-      p.states[space].space['avatar'] = avatar
+      console.log(space)
+      if(p.states[space]) {
+        p.states[space].space['avatar'] = avatar
+      }
       return p
     })
   }
@@ -494,6 +497,27 @@ function createApp() {
       return p
     })
   }
+  let updateSpaceRoomAvatar = (space, room_id, avatar) => {
+    update(p => {
+      let ind = p.states[space]?.children.findIndex(x => x.room_id == room_id)
+      if(ind !== -1) {
+        p.states[space].children[ind].avatar = avatar
+      }
+      return p
+    })
+  }
+
+
+  let updateSpaceRoomHeader = (space, room_id, header) => {
+    update(p => {
+      let ind = p.states[space]?.children.findIndex(x => x.room_id == room_id)
+      if(ind !== -1) {
+        p.states[space].children[ind].header = header
+      }
+      return p
+    })
+  }
+
 
   let updateSpacePinnedEvents = (space, pinned_events) => {
     update(p => {
@@ -536,8 +560,10 @@ function createApp() {
         s.name = info.name 
         s.topic = info.topic
       }
-      p.states[space].space['name'] = info.name
-      p.states[space].space['topic'] = info.topic
+      if(p.states[space]?.space) {
+        p.states[space].space['name'] = info.name
+        p.states[space].space['topic'] = info.topic
+      }
       return p
     })
   }
@@ -859,6 +885,8 @@ function createApp() {
     updateSpaceHeader,
     updateSpaceInfo,
     updateSpaceRoomInfo,
+    updateSpaceRoomAvatar,
+    updateSpaceRoomHeader,
     updateSpaceDoNotIndex,
     updateSpaceRoomDoNotIndex,
     updateSpaceType,

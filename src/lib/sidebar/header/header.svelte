@@ -17,6 +17,7 @@ $: staticRoute = $store.staticRoutes.find(r => r.path === $page?.url?.pathname);
 $: isNotSpace = $page?.params?.space == undefined || $page?.params?.space == null
 
 $: isSpace = $page?.params?.space !== undefined && $page?.params?.space !== null
+$: isRoom = $page?.params?.room !== undefined && $page?.params?.room !== null
 
 $: isIndex = $page?.url?.pathname === '/'
 
@@ -45,12 +46,25 @@ let killPopup = () => {
 
 let popup;
 
+function findHeader(s) {
 
-$: header = state?.space?.header ?
-`${PUBLIC_MEDIA_URL}/${state?.space?.header}` : null
+    let spaceHeader = s?.space?.header ?
+    `${PUBLIC_MEDIA_URL}/${s?.space?.header}` : null
 
-$: headerExists = state?.space?.header != null && state?.space?.header !=
-    undefined && state?.space?.header != ''
+    if(isRoom) {
+        let ind = s?.children?.findIndex(r => r?.alias === $page?.params?.room)
+        if(ind !== -1) {
+            return s?.children[ind]?.header ?
+            `${PUBLIC_MEDIA_URL}/${s?.children[ind]?.header}` : spaceHeader
+        }
+    } else {
+        return spaceHeader
+    }
+}
+
+$: header = findHeader(state)
+
+$: headerExists = header != null && header != undefined
 
 let el;
 

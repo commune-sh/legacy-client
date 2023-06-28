@@ -19,6 +19,10 @@ let kill =() => {
     name = null;
     username = null;
     topic = null;
+    usernameWarning = false;
+    busy = false;
+    showError = false;
+    error = null;
 
 }
 

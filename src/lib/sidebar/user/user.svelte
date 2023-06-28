@@ -14,6 +14,7 @@ $: authenticated = $store?.authenticated &&
 $: active = $store.verifiedSession
 
 
+$: display_name = $store?.credentials?.display_name
 $: username = $store?.credentials?.username
 
 
@@ -101,8 +102,20 @@ $: avatar = $store?.credentials?.avatar_url?.length > 0 ?
                     {/if}
                 </div>
             </div>
-            <div class="grd-c">
-                {username}
+
+            <div class="grd-c fl-co">
+                {#if display_name}
+                    <div class="">
+                        <b>{display_name}</b>
+                    </div>
+                    <div class="mt1 sm">
+                        {username}
+                    </div>
+                {:else}
+                    <div class="">
+                        <b>@{username}</b>
+                    </div>
+                {/if}
             </div>
         </div>
 

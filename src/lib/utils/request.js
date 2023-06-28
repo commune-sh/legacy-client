@@ -352,3 +352,19 @@ export async function resetPassword(body) {
   return data
 }
 
+export async function updateAvatar(body) {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/account/avatar`,
+    body: body,
+  })
+  return data
+}
+
+export async function updateDisplayName(body) {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/account/display_name`,
+    body: body,
+  })
+  return data
+}
+

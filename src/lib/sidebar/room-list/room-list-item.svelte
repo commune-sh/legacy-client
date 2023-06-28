@@ -1,5 +1,5 @@
 <script>
-import { PUBLIC_APP_NAME } from '$env/static/public';
+import { PUBLIC_APP_NAME, PUBLIC_MEDIA_URL } from '$env/static/public';
 import { joinSpace, joinRoom } from '$lib/utils/request.js'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
@@ -210,6 +210,8 @@ async function join() {
     busy = false
 }
 
+$: avatar = item?.avatar ?
+`${PUBLIC_MEDIA_URL}/${item?.avatar}` : null
 
 </script>
 
@@ -221,15 +223,21 @@ async function join() {
         on:mouseleave={() => hovered = false}
         class:active={active}>
 
-    <div class="item" 
-            on:click={goToRoom}>
+    <div class="item"on:click={goToRoom}>
 
+        {#if avatar}
+        <div class="ico grd-c img"
+            class:inactive={!active}
+            style="background-image: url({avatar})">
+        </div>
+        {:else}
         <div class="ico grd-c"
             class:inactive={!active}>
                 {@html discuss}
         </div>
+        {/if}
 
-        <div class="sl pr2">
+        <div class="sl ml1  pr2">
             {item?.alias}
         </div>
 
@@ -330,7 +338,6 @@ async function join() {
 }
 
 .sl {
-    padding-top: 2px;
     align-self: center;
     white-space: nowrap;
     overflow: hidden;
@@ -373,5 +380,13 @@ button {
 }
 .room-item:hover .join {
     display: grid;
+}
+
+.img {
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+    height: 18px;
+    width: 18px;
 }
 </style>

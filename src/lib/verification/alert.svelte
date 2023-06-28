@@ -27,7 +27,7 @@ function start() {
         <div class="grd grd-c in fl-co w100">
             <div class="fl">
                 <div class="fl-o"></div>
-                <div class="close c-ico pa3">
+                <div class="close c-ico pa3" on:click={kill}>
                     {@html close}
                 </div>
             </div>

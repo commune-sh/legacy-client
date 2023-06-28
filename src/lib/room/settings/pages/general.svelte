@@ -5,6 +5,8 @@ import { addImage } from '$lib/assets/icons.js'
 import { debounce } from '$lib/utils/utils.js'
 import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';
+import Avatar from '$lib/components/avatar/avatar.svelte'
+import Banner from '$lib/components/banner/banner.svelte'
 import Select from '$lib/components/select/select.svelte'
 import { createStateEvent } from '$lib/utils/request.js'
 const dispatch = createEventDispatcher()
@@ -106,7 +108,7 @@ async function save() {
 
 async function avatarUploaded(e) {
     console.log("avatar uploaded! ", e.detail)
-    store.updateSpaceAvatar($page.params.space, e.detail)
+    store.updateSpaceRoomAvatar($page.params.space, roomID, e.detail)
     const res = await createStateEvent({
         room_id: roomID,
         event_type: 'm.room.avatar',
@@ -120,7 +122,7 @@ async function avatarUploaded(e) {
 
 async function bannerUploaded(e) {
     console.log("banner uploaded! ", e.detail)
-    store.updateSpaceHeader($page.params.space, e.detail)
+    store.updateSpaceRoomHeader($page.params.space, roomID, e.detail)
     const res = await createStateEvent({
         room_id: roomID,
         event_type: 'm.room.header',
@@ -143,7 +145,7 @@ $: header = room?.header ?
 async function avatarRemoved() {
     console.log("hmm")
     avatar = null
-    store.updateSpaceAvatar($page.params.space, null)
+    store.updateSpaceRoomAvatar($page.params.space, roomID, e.detail)
     const res = await createStateEvent({
         room_id: roomID,
         event_type: 'm.room.avatar',
@@ -156,7 +158,7 @@ async function avatarRemoved() {
 async function bannerRemoved() {
     console.log("hmm")
     avatar = null
-    store.updateSpaceHeader($page.params.space, null)
+    store.updateSpaceRoomHeader($page.params.space, roomID, e.detail)
     const res = await createStateEvent({
         room_id: roomID,
         event_type: 'm.room.header',
@@ -266,6 +268,15 @@ async function updateIndex(e) {
 
 <div class="sco grd-c">
 
+    <div class="banner grd ph3 pb3">
+        <Avatar avatar={avatar} 
+            on:removed={avatarRemoved}
+            on:uploaded={avatarUploaded}/>
+
+        <Banner banner={header} 
+            on:removed={bannerRemoved}
+            on:uploaded={bannerUploaded}/>
+    </div>
 
     <div class="pa3 grd-c fl-co">
 

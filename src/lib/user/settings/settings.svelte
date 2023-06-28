@@ -32,7 +32,7 @@ $: active = $store.userSettings
                 </div>
             </div>
             <div class="page pa3">
-                <General />
+                <General on:kill={kill}/>
             </div>
         </div>
 
