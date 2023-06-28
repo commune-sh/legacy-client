@@ -15,7 +15,7 @@ import Edited from './edited/edited.svelte'
 import Tools from './tools/tools.svelte'
 import Vote from '$lib/vote/vote.svelte'
 import Links from './links/links.svelte'
-import { pin } from '$lib/assets/icons.js'
+import { pin, hash } from '$lib/assets/icons.js'
 
 import { getReplyCount } from '$lib/utils/utils.js'
 
@@ -396,18 +396,21 @@ $: bannedFromSpace = state?.banned === true
 
         <div class="sender ph3 fl">
             <User hideAvatar={false} user={user} op={op}/>
-            <div class="sm ph1"></div>
+            <div class="grd-c sm ph1"></div>
             <Date date={event?.origin_server_ts} />
             {#if wasEdited}
                 <Edited date={event?.edited_on} />
             {/if}
             {#if showRoomAlias}
-                <div class="sm ml2">
+                <div class="grd-c sm ml2">
                     <a href={`/${event.room_alias}`}>{event.room_alias}</a>
                 </div>
             {/if}
             {#if showTopic}
-                <div class="sm ml2">
+                <div class="ico-s grd-c ml2">
+                    {@html hash}
+                </div>
+                <div class="grd-c sm">
                     <a href={`/${event.room_alias}/topic/${event.content.topic}`}>{event.content.topic}</a>
                 </div>
             {/if}
@@ -710,6 +713,11 @@ $: bannedFromSpace = state?.banned === true
 
 .sender {
     margin-bottom: 0.5rem;
+}
+
+.ico-s {
+    height: 14px;
+    width: 14px;
 }
 
 @keyframes fadeOut {

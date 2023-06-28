@@ -1,7 +1,7 @@
 <script>
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
-import { pulse } from '$lib/assets/icons.js'
+import { hash } from '$lib/assets/icons.js'
 import { store } from '$lib/store/store.js'
 
 export let item;
@@ -73,7 +73,7 @@ function logItem(e) {
 
         <div class="ico grd-c"
             class:inactive={!active}>
-            {@html pulse}
+            {@html hash}
         </div>
 
         <div class="sl">

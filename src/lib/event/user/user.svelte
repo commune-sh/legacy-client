@@ -35,22 +35,14 @@ $: avatar = `${mediaURL}/${user?.avatar_url}`
 
 <a class="user grd-c" href={`/@${user?.username}`}>
 <div class="flc">
-    {#if !hideAvatar}
-        <div class="grd grd-c">
-                {#if !avatarExists}
-                    <div class="grd-c avatar-base grd">
-                        <div class="dn grd-c">
-                            <b>{initial}</b>
-                        </div>
-                    </div>
-                {:else}
-                    <div class="grd-c avatar-base grd"
-                    style="background-image: url({avatar})">
-                    </div>
-                {/if}
+    {#if !hideAvatar && avatarExists}
+        <div class="grd grd-c mr1">
+                <div class="grd-c avatar-base grd"
+                style="background-image: url({avatar})">
+                </div>
         </div>
     {/if}
-    <div class="name grd-c ml1" class:op={op} class:ml1={!hideAvatar}>
+    <div class="name grd-c" class:op={op}>
         {#if nameExists}
             {user.display_name}
         {:else}
@@ -58,15 +50,15 @@ $: avatar = `${mediaURL}/${user?.avatar_url}`
         {/if}
     </div>
     {#if isOwner && isSpaceAdmin}
-        <div class="ico-s ml2 c1 grd-c" title="space owner">
+        <div class="crown ico-s ml1 c1 grd-c" title="space owner">
             {@html crown}
         </div>
     {:else if isOwner && !isSpaceAdmin}
-        <div class="ico-s ml2 c1 grd-c" title="space owner">
+        <div class="crown ico-s ml1 c1 grd-c" title="space owner">
             {@html crown}
         </div>
     {:else if !isOwner && isSpaceAdmin}
-        <div class="ico-s ml2 c2 grd-c" title="admin">
+        <div class="crown ico-s ml1 c2 grd-c" title="admin">
             {@html crown}
         </div>
     {/if}
@@ -112,6 +104,8 @@ a:hover {
 
 .dn {
     opacity: 0.7;
+    font-size: 11px;
+    font-weight: bold;
 }
 
 .name {
@@ -130,6 +124,8 @@ a {
 }
 
 .c1 {
-    opacity: 0.5;
+}
+.crown {
+    opacity: 0.7;
 }
 </style>
