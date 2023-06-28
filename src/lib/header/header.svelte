@@ -268,6 +268,11 @@ $: ageIsOk = validAge(senderAge, requiresSenderAge)
                     {/if}
                 {/if}
             </div>
+            {#if $store.verifiedSession && !authenticated}
+                <div class="grd-c ml2 signup">
+                    <button class="ph2 pv1">Sign Up</button>
+                </div>
+            {/if}
         </div>
     </div>
 </div>
@@ -325,6 +330,10 @@ $: ageIsOk = validAge(senderAge, requiresSenderAge)
     opacity: 1;
 }
 
+.signup {
+    display: none;
+}
+
 @media screen and (max-width: 768px) {
     .container {
         grid-template-columns: 48px auto;
@@ -345,6 +354,9 @@ $: ageIsOk = validAge(senderAge, requiresSenderAge)
     .new-post-alt {
         display: block;
     }
+    .signup {
+        display: block;
+    }
 }
 .slash {
     font-weight: bold;
@@ -361,6 +373,7 @@ $: ageIsOk = validAge(senderAge, requiresSenderAge)
     font-size: 0.9rem;
     margin-top: 2px;
 }
+
 @media screen and (max-width: 1020px) {
     .topic {
         display: none;
