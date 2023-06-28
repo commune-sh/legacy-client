@@ -395,7 +395,7 @@ $: bannedFromSpace = state?.banned === true
     class:ovy={!interactive}>
 
         <div class="sender ph3 fl">
-            <User hideAvatar={true} user={user} op={op}/>
+            <User hideAvatar={false} user={user} op={op}/>
             <div class="sm ph1"></div>
             <Date date={event?.origin_server_ts} />
             {#if wasEdited}
