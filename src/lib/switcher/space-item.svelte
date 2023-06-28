@@ -41,10 +41,21 @@ $: initials = space?.initials?.toUpperCase()
 
 function goToSpace() {
     menu.hide()
+
+
     let url = `/${space?.alias}`
+
     if(spacePath != undefined) {
         url = spacePath
     }
+
+    const domain = space?.room_id.split(':')[1]
+    const federated = space?.room_id.split(':')[1] != $page?.url?.hostname
+
+    if(federated) {
+        url = `/${domain}/${space?.alias}`
+    }
+
     goto(url, {noscroll: true})
 }
 

@@ -109,7 +109,7 @@ $: avatar = $store?.credentials?.avatar_url?.length > 0 ?
                         <b>{display_name}</b>
                     </div>
                     <div class="mt1 sm">
-                        {username}
+                        <b>@{username}</b>
                     </div>
                 {:else}
                     <div class="">
@@ -204,5 +204,8 @@ $: avatar = $store?.credentials?.avatar_url?.length > 0 ?
 .ico-s {
     height: 16px;
     width: 16px;
+}
+.sm {
+    color: var(--text-light);
 }
 </style>

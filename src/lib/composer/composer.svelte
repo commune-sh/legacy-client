@@ -367,16 +367,34 @@ async function createPost() {
             }
         }
 
+        /*
+        let bo = body
+        if(body?.length > 500) {
+            bo = body.substring(0, 500)
+        }
+        */
+
         let post = {
             room_id: roomID,
             type: 'space.board.post',
             content: {
                 msgtype: 'post',
                 title: title,
-                body: body,
+                body: bo
                 //formatted_body: md.render(bodyInput.value),
             },
         }
+
+        /*
+        if(body?.length > 500) {
+            const presignedURL = await getPresignedURL('txt');
+            const file = new File([body], presignedURL.key, { type: 'text/plain' });
+            await uploadAttachment(file, presignedURL.url);
+            post.content['full_body'] = {
+                key: presignedURL.key,
+            }
+        }
+        */
 
         if(topic) {
             post.content['topic'] = topic
@@ -673,11 +691,11 @@ $: if(replyTo !== lastReplyTo) {
                     class:sh={reply}
                     bind:this={bodyInput}
                     placeholder={placeholder}
+                    maxlength="2000"
                     on:keydown={focusOnTitle}
                     on:keydown={updateContent}
                     on:keydown={trackCaret}
                     on:keydown={bodyKeyDown}
-                    maxlength="2000"
                     on:input={updateContent}
                     on:click={updateContent}
                     on:focus={handleBodyFocus}
