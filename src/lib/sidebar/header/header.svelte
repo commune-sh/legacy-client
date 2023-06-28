@@ -46,16 +46,24 @@ let killPopup = () => {
 
 let popup;
 
+
+$: isDomain = $page.params.domain !== undefined && 
+    $page.params.domain !== 'undefined' && 
+    $page.params.domain?.length > 0
+
+$: mediaURL = isDomain ? $store?.federated?.media_url : PUBLIC_MEDIA_URL
+
+
 function findHeader(s) {
 
     let spaceHeader = s?.space?.header ?
-    `${PUBLIC_MEDIA_URL}/${s?.space?.header}` : null
+    `${mediaURL}/${s?.space?.header}` : null
 
     if(isRoom) {
         let ind = s?.children?.findIndex(r => r?.alias === $page?.params?.room)
         if(ind !== -1) {
             return s?.children[ind]?.header ?
-            `${PUBLIC_MEDIA_URL}/${s?.children[ind]?.header}` : spaceHeader
+            `${mediaURL}/${s?.children[ind]?.header}` : spaceHeader
         }
     } else {
         return spaceHeader

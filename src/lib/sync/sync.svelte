@@ -70,7 +70,8 @@ async function fetchSpaceState() {
         if(endpoint?.url) {
             opt.url = `${endpoint.url}/${$page.params?.space}/state`
             store.isFederated({
-                endpoint: endpoint.url
+                endpoint: endpoint.url,
+                media_url: endpoint.media_url
             })
         }
     }

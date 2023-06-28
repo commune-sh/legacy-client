@@ -78,8 +78,13 @@ function log() {
     console.log(space)
 }
 
+$: isDomain = $page.params.domain !== undefined && 
+    $page.params.domain !== 'undefined' && 
+    $page.params.domain?.length > 0
 
-$: avatar = space?.avatar?.length > 0 ? `${PUBLIC_MEDIA_URL}/${space?.avatar}` :
+$: mediaURL = isDomain ? $store?.federated?.media_url : PUBLIC_MEDIA_URL
+
+$: avatar = space?.avatar?.length > 0 ? `${mediaURL}/${space?.avatar}` :
 null
 
 $: isProfile = space?.is_profile && space?.room_id ===

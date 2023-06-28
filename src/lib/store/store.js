@@ -159,6 +159,7 @@ function createApp() {
       p.federated = {
         active: true,
         endpoint: x.endpoint,
+        media_url: x.media_url,
       }
       return p
     })
@@ -168,6 +169,7 @@ function createApp() {
       p.federated = {
         active: false,
         endpoint: null,
+        media_url: null,
       }
       return p
     })

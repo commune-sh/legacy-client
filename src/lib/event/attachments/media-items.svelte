@@ -1,11 +1,19 @@
 <script>
 import { PUBLIC_MEDIA_URL } from '$env/static/public';
 import { prev, next, play } from '$lib/assets/icons.js'
+import { store } from '$lib/store/store.js'
+import { page } from '$app/stores';
+
+$: isDomain = $page.params.domain !== undefined && 
+    $page.params.domain !== 'undefined' && 
+    $page.params.domain?.length > 0
+
+$: mediaURL = isDomain ? $store?.federated?.media_url : PUBLIC_MEDIA_URL
 
 export let media;
 
 function getURL(item) {
-    return `${PUBLIC_MEDIA_URL}/${item?.key}` || ``
+    return `${mediaURL}/${item?.key}` || ``
 }
 
 function getThumbnailURL(item) {
@@ -13,7 +21,7 @@ function getThumbnailURL(item) {
     if(item?.thumbnail?.key) {
         key = item.thumbnail.key
     }
-    return `${PUBLIC_MEDIA_URL}/${key}` 
+    return `${mediaURL}/${key}` 
 }
 
 

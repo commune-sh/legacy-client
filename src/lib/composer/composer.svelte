@@ -380,7 +380,7 @@ async function createPost() {
             content: {
                 msgtype: 'post',
                 title: title,
-                body: bo
+                body: body,
                 //formatted_body: md.render(bodyInput.value),
             },
         }

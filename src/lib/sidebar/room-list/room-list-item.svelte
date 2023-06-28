@@ -210,8 +210,14 @@ async function join() {
     busy = false
 }
 
-$: avatar = item?.avatar ?
-`${PUBLIC_MEDIA_URL}/${item?.avatar}` : null
+$: isDomain = $page.params.domain !== undefined && 
+    $page.params.domain !== 'undefined' && 
+    $page.params.domain?.length > 0
+
+$: mediaURL = isDomain ? $store?.federated?.media_url : PUBLIC_MEDIA_URL
+
+
+$: avatar = item?.avatar ? `${mediaURL}/${item?.avatar}` : null
 
 </script>
 

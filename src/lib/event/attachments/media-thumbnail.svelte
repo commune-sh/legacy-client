@@ -2,14 +2,22 @@
 import { onMount } from 'svelte'
 import { play } from '$lib/assets/icons.js'
 import { PUBLIC_MEDIA_URL } from '$env/static/public';
+import { store } from '$lib/store/store.js'
+import { page } from '$app/stores';
 export let media;
+
+$: isDomain = $page.params.domain !== undefined && 
+    $page.params.domain !== 'undefined' && 
+    $page.params.domain?.length > 0
+
+$: mediaURL = isDomain ? $store?.federated?.media_url : PUBLIC_MEDIA_URL
 
 function getURL(item) {
     let key = item?.key || ``
     if(item?.thumbnail?.key) {
         key = item.thumbnail.key
     }
-    return `${PUBLIC_MEDIA_URL}/${key}` 
+    return `${mediaURL}/${key}` 
 }
 
 $: isImage = media?.[0]?.type?.startsWith('image') 
