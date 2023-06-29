@@ -48,7 +48,7 @@ function toggle() {
 </script>
 
 <div class="" bind:this={content}>
-    {isLight ? 'Black' : isDark? 'Light' : 'Dark'} mode
+    {isLight ? 'Dark' : isDark? 'Black' : 'Light'} mode
 </div>
 
 <div class="i-c grd">

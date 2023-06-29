@@ -29,6 +29,8 @@ $: authenticated = $store?.authenticated &&
     $store?.credentials != null
     $store?.credentials?.access_token?.length > 0
 
+$: isProfile = state?.space?.is_profile
+
 
 let menuActive =  false;
 
@@ -70,9 +72,27 @@ function findHeader(s) {
     }
 }
 
-$: header = findHeader(state)
+function findAvatar(s) {
 
+    let spaceAvatar = s?.space?.avatar ?
+    `${mediaURL}/${s?.space?.avatar}` : null
+
+    if(isRoom) {
+        let ind = s?.children?.findIndex(r => r?.alias === $page?.params?.room)
+        if(ind !== -1) {
+            return s?.children[ind]?.avatar ?
+            `${mediaURL}/${s?.children[ind]?.avatar}` : spaceAvatar
+        }
+    } else {
+        return spaceAvatar
+    }
+}
+
+$: header = findHeader(state)
 $: headerExists = header != null && header != undefined
+
+$: avatar = findAvatar(state)
+$: avatarExists = avatar != null && avatar != undefined
 
 let el;
 
@@ -84,7 +104,9 @@ $: if(headerExists && header && el) {
 
 </script>
 
-<div bind:this={el} class="sidebar-header" class:header={headerExists}>
+<div bind:this={el} class="sidebar-header" 
+    class:header={headerExists}
+    class:profile={isProfile && avatarExists}>
     <div class="con grd">
 
     {#if isSpace}
@@ -154,6 +176,12 @@ $: if(headerExists && header && el) {
 
     </div>
 
+    {#if isProfile && avatar}
+        <div class="profile-avatar"
+            style="background-image: url({avatar})">
+        </div>
+    {/if}
+
 </div>
 
 <style>
@@ -165,6 +193,7 @@ $: if(headerExists && header && el) {
     background-repeat: no-repeat;
     overflow: hidden;
     width: 100%;
+    position: relative;
 }
 
 .con {
@@ -182,6 +211,23 @@ $: if(headerExists && header && el) {
 .header {
     height: 180px;
 }
+
+.profile {
+    height: 180px;
+}
+
+.profile-avatar {
+    height: 80px;
+    width: 80px;
+    position: absolute;
+    left: 0.5rem;
+    bottom: 0.5rem;
+    border-radius: 14px;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0px 4px 15px -3px rgba(0,0,0,0.4);
+}
+
 
 .space {
     overflow: hidden;

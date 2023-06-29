@@ -460,6 +460,7 @@ function reset() {
     uploading = false
     bodyInput.value = ''
     attachments = []
+    links = []
     autosize.update(bodyInput)
     store.deleteEditorState(stateKey)
 }
