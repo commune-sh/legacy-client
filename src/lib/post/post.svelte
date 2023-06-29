@@ -382,6 +382,11 @@ async function pinReply(e) {
 
 $: joined = $store?.rooms.find(x => x === roomID) !== undefined
 
+export function updateReactions(e) {
+    post.reactions = e
+    post = post
+}
+
 </script>
 
 <section class="content" class:def={!embed} class:rep={replying}>

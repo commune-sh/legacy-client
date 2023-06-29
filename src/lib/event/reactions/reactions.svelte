@@ -93,10 +93,7 @@ async function saveReaction(key) {
 
     const res = await savePost(post);
     console.log(res)
-    dispatch('update-reactions', {
-        event_id: event.event_id,
-        reactions: event.reactions
-    })
+    dispatch('update-reactions', event)
 }
 
 async function redact(key) {
@@ -107,10 +104,7 @@ async function redact(key) {
     }
     const res = await redactReaction(redaction);
     console.log(res)
-    dispatch('update-reactions', {
-        event_id: event.event_id,
-        reactions: event.reactions
-    })
+    dispatch('update-reactions', event)
 }
 
 let skip = ['pinned', 'tagged']

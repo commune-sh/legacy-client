@@ -511,8 +511,16 @@ async function pinPost(e) {
     }
 }
 
+let post;
+
 function discover() {
     $store.discoverSpacesOpen = true
+}
+
+function updatePostReactions(e) {
+    if(e.detail.slug == $page.params.post) {
+        post?.updateReactions(e.detail.reactions)
+    }
 }
 
 </script>
@@ -559,6 +567,7 @@ function discover() {
                         {#each events as event (event.event_id)}
                             {#if event.pinned}
                                 <Event event={event} 
+                                    on:update-reactions={updatePostReactions}
                                     on:redact={redactPost}
                                     on:pin={pinPost}
                                     sender={null} />
@@ -567,6 +576,7 @@ function discover() {
                         {#each events as event (event.event_id)}
                             {#if !event.pinned}
                                 <Event event={event} 
+                                    on:update-reactions={updatePostReactions}
                                     on:redact={redactPost}
                                     on:pin={pinPost}
                                     sender={null} />
@@ -639,6 +649,7 @@ function discover() {
 
     {#if isPost}
         <Post on:update-reactions={updateReactions} 
+        bind:this={post}
         post={selectedPost}
         on:edited={postEdited}
         on:redact={redactPost}
