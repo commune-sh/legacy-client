@@ -53,6 +53,7 @@ function newPost() {
 
 
 $: isIndex = $page.url.pathname == '/'
+$: indexPost = !isSpace && isPost
 
 $: authDone = $store.verifiedSession
 $: indexText = authenticated ? `Your feed` : `What's new`
@@ -169,7 +170,9 @@ $: isStaticRoute = $store.staticRoutes.some(r => r.path === $page?.url?.pathname
 $: staticRoute = $store.staticRoutes.find(r => r.path === $page?.url?.pathname);
 
 $: isMobile = window.innerWidth <= 768
+$: isSpace = $page?.params?.space != undefined
 $: isPost = $page?.params?.post != undefined
+$: isRoom = $page?.params?.room != undefined
 
 
 $: pinned_events = selected?.pinned_events
@@ -205,7 +208,7 @@ function signup() {
         <div class="fl mr3">
 
             <div class="name grd-c fl">
-            {#if isIndex}
+            {#if (isIndex || indexPost)}
                     {#if authDone}
                         <span class="n">{indexText}</span>
                     {/if}

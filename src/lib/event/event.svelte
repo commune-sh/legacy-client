@@ -581,9 +581,8 @@ $: bannedFromSpace = state?.banned === true
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: auto;
-    padding-bottom: 0.75rem;
-    padding-top: 0.75rem;
-    border-bottom: 1px solid var(--ev-bb);
+    padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
     position: relative;
     word-break: break-word;
 }
