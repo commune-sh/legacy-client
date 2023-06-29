@@ -87,8 +87,8 @@ $: hasImage = links[0]?.image?.length > 0
 
 @media screen and (max-width: 768px) {
     .at-img {
-        height: 65px;
-        width: 65px;
+        height: 60px;
+        width: 60px;
     }
 }
 </style>

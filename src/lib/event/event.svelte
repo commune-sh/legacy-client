@@ -434,7 +434,7 @@ $: bannedFromSpace = state?.banned === true
 
                 {#if isPost}
                     {#if !isSingleReply}
-                    <div class="post-title ph3 mb1">
+                    <div class="post-title ph3">
                         {title}
                     </div>
                     {/if}
@@ -449,7 +449,7 @@ $: bannedFromSpace = state?.banned === true
                         {@html content}
                     </div>
                 {:else}
-                    <div class="post-title ph3 mb1">
+                    <div class="post-title ph3">
                         <b>{title}</b>
                     </div>
                     <div class="post-body clipped ph3 ">
