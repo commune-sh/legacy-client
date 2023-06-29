@@ -14,6 +14,7 @@ let uploading = false;
 
 let build = async (e) => {
     console.log("attaching....")
+    uploading = true
 
 
     for(let i =0 ; i < e.target.files.length ; i++) {
@@ -68,6 +69,7 @@ let build = async (e) => {
                     await uploadAttachment(blob, presignedURL.url);
 
                     dispatch('uploaded', presignedURL.key )
+                    uploading = false
 
                 }, 'image/jpeg', 0.8);
 
@@ -91,6 +93,7 @@ function remove() {
 </script>
 
 <div class="c grd" on:click={select}
+    class:op={uploading}
     style="background-image: url({banner})">
 
     <div class="grd-c ico-s">
@@ -124,6 +127,9 @@ function remove() {
 
 <style>
 
+.op {
+    opacity: 0.3;
+}
 .c {
     position: relative;
     background: var(--bg);

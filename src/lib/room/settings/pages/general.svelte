@@ -145,7 +145,7 @@ $: header = room?.header ?
 async function avatarRemoved() {
     console.log("hmm")
     avatar = null
-    store.updateSpaceRoomAvatar($page.params.space, roomID, e.detail)
+    store.updateSpaceRoomAvatar($page.params.space, roomID, null)
     const res = await createStateEvent({
         room_id: roomID,
         event_type: 'm.room.avatar',
@@ -158,7 +158,7 @@ async function avatarRemoved() {
 async function bannerRemoved() {
     console.log("hmm")
     avatar = null
-    store.updateSpaceRoomHeader($page.params.space, roomID, e.detail)
+    store.updateSpaceRoomHeader($page.params.space, roomID, null)
     const res = await createStateEvent({
         room_id: roomID,
         event_type: 'm.room.header',

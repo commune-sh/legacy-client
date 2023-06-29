@@ -658,6 +658,7 @@ $: bannedFromSpace = state?.banned === true
 
 
 .post-title {
+    font-weight: bold;
 }
 
 .post-body {
