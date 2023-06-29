@@ -68,6 +68,7 @@ $: avatar = `${mediaURL}/${user?.avatar_url}`
 
 <style>
 .user {
+    font-weight: bold;
 }
 
 .flc {
@@ -108,6 +109,7 @@ a:hover {
 }
 
 .name {
+    color: var(--text-light);
     line-height: 1;
 }
 
