@@ -433,6 +433,15 @@ function createApp() {
     })
   }
 
+  let removeRoom = (x) => {
+    update(p => {
+      console.log(p.rooms.length)
+      p.rooms = p.rooms.filter(s => s != x)
+      console.log("removed",p.rooms.length)
+      return p
+    })
+  }
+
 
   let addSpaceState = (space, state) => {
     update(p => {
@@ -848,6 +857,7 @@ function createApp() {
     saveSpaces,
     addSpace,
     removeSpace,
+    removeRoom,
     startAuthenticating,
     stopAuthenticating,
     startRefreshingFeed,

@@ -269,6 +269,12 @@ function signup() {
                                 {@html newChat}
                             </div>
                         {/if}
+                    {:else if authenticated && (!joined)}
+                        <button class="signup light" 
+                            disabled={busy}
+                            on:click={join}>
+                            {buttonText}
+                        </button>
                     {/if}
                 {/if}
             </div>

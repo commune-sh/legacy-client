@@ -19,7 +19,10 @@ $: isOwner = state?.owner === sender_id
 $: isSpaceAdmin = $store?.power_levels?.space?.[$store?.credentials?.matrix_user_id] == 100
 
 $: space_room_id = state?.room_id
-$: joinedSpace = $store?.spaces.find(x => x?.room_id === space_room_id) != null 
+
+$: joinedSpace = $store?.rooms.find(x => x === space_room_id) != null 
+
+$: isProfile = state?.space?.is_profile
 
 const dispatch = createEventDispatcher();
 
@@ -32,6 +35,7 @@ $: space = $page.params.space
 async function leave() {
     dispatch('kill')
     store.removeSpace($page.params.space)
+    store.removeRoom(space_room_id)
     const resp = await leaveSpace(space);
     if(resp) {
         console.log(resp)
@@ -72,7 +76,7 @@ function spaceSettings() {
         <div class="sep"></div>
             <div class="item fl" on:click={leave}>
                 <div class="item grd-c fl-o">
-                    Leave Space
+                    {isProfile ? "Unfollow" : "Leave Space"}
                 </div>
                 <div class="ico-s leave">
                     {@html leaveIcon}

@@ -39,8 +39,11 @@ $: spaceSettings = isSpaceSettings && authenticated && isOwner
 
 
 $: space_room_id = state?.room_id
+
+
+
 $: joinedSpace = authenticated && 
-    $store?.spaces.find(x => x?.room_id === space_room_id) != null 
+    $store.rooms?.find(x => x === space_room_id) != null 
 
 $: active = $store.verifiedSession
 
@@ -60,7 +63,9 @@ async function join() {
         const resp = await joinSpace(space);
         if(resp && resp.space) {
             console.log(resp)
-            store.addSpace(resp.space)
+            if(!resp?.space?.is_profile) {
+                store.addSpace(resp.space)
+            }
             store.addRoom(resp.space.room_id)
             store.updateRoomJoinStatus($page.params.space, space_room_id)
         }
@@ -75,6 +80,9 @@ async function join() {
     busy = false
 }
 
+$: isProfile = state?.space?.is_profile
+
+$: buttonText = isProfile ? busy ? "Following" : "Follow" : busy ? "Joining" : "Join"
 
 </script>
 
@@ -89,11 +97,7 @@ async function join() {
             <button class="but" 
                 disabled={busy}
                 on:click={join}>
-                {#if busy}
-                    Joining...
-                {:else}
-                    Join Space
-                {/if}
+                {buttonText}
             </button>
             {#if busy}
                 <div class="spinner">
