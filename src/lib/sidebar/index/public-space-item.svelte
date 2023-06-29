@@ -21,10 +21,12 @@ function goToSpace() {
     }
 }
 
+$: link = `/${space.alias}`
+
 </script>
 
 <div class="space-item">
-    <a on:click={goToSpace} class="grd" href={space.alias}>
+    <a on:click={goToSpace} class="grd" href={link}>
         <div class="item">
 
             <div class="ico grd grd-c img mh2"

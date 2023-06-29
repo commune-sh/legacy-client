@@ -43,13 +43,13 @@ function img(i) {
 .title {
     background: var(--shade-2);
     border-radius: 500px;
-    height: 18px;
+    height: 12px;
 }
 
 .body {
     background: var(--shade-2);
     border-radius: 500px;
-    height: 14px;
+    height: 10px;
     width: 100%;
 }
 
