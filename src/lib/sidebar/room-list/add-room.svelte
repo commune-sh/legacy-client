@@ -107,7 +107,7 @@ $: if($store.addingRoom) {
     </div>
 
     <div class="sl pr2">
-        Add Board
+        <b>Add Board</b>
     </div>
 </div>
 {/if}
@@ -181,6 +181,7 @@ $: if($store.addingRoom) {
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: normal;
+    color: var(--text-light);
 }
 input {
     padding: 0;

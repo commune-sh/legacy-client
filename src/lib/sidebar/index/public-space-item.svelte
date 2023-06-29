@@ -39,7 +39,7 @@ $: link = `/${space.alias}`
             </div>
 
             <div class="name">
-                {space?.name}
+                <b>{space?.name}</b>
             </div>
 
 
@@ -82,6 +82,7 @@ $: link = `/${space.alias}`
 .name {
     justify-self: start;
     align-self: center;
+    color: var(--text-light);
 }
 
 a, a:link, a:visited, a:active {

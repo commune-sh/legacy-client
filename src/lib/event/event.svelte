@@ -403,7 +403,7 @@ $: bannedFromSpace = state?.banned === true
             {/if}
             {#if showRoomAlias}
                 <div class="grd-c ml2">
-                    <a href={`/${event.room_alias}`}>{event.room_alias}</a>
+                <b><a href={`/${event.room_alias}`}>{event.room_alias}</a></b>
                 </div>
             {/if}
             {#if showTopic}
@@ -411,7 +411,7 @@ $: bannedFromSpace = state?.banned === true
                     {@html hash}
                 </div>
                 <div class="grd-c ">
-                    <a href={`/${event.room_alias}/topic/${event.content.topic}`}>{event.content.topic}</a>
+                    <b><a href={`/${event.room_alias}/topic/${event.content.topic}`}>{event.content.topic}</a></b>
                 </div>
             {/if}
         </div>

@@ -27,14 +27,20 @@ $: active = $store.aboutOpen
 
             <section class="pa">
                <span class="label">What is {PUBLIC_APP_NAME}?</span>
-                <p>{PUBLIC_APP_NAME} lets you build public spaces on a
+                <p>{PUBLIC_APP_NAME} lets you build public communities on top of a
                         matrix server.</p>
             </section>
 
             <section class="pa mt4">
                 <span class="label">what is a space?</span>
-                <p>A space is an ordinary matrix room. A space may also have one
+                <p>A space is an ordinary matrix room. A space may have one
                     or more rooms within it.</p>
+            </section>
+
+            <section class="pa mt4">
+                <span class="label">isn't matrix a chat thing?</span>
+                <p>Chat is one possible implmentation of the Matrix protocol, it
+                        just happens to be the deault one.</p>
             </section>
 
 
@@ -54,13 +60,20 @@ $: active = $store.aboutOpen
             <section class="pa mt4">
                 <span class="label">Can I run this on an existing matrix
                         server?</span>
-                <p>Yes. It's recommended to start on a fresh matrix
+                <p>Yes. It's recommended to start on a new matrix
                     server for now though.</p>
             </section>
 
             <section class="pa mt4">
                 <span class="label">Are all spaces public?</span>
                 <p>No. You can create private spaces too.</p>
+            </section>
+
+            <section class="pa mt4">
+                <span class="label">What about E2EE?</span>
+                <p>{PUBLIC_APP_NAME} hasn't implemented direct messages yet or
+                        private rooms yet, but
+                        when it's available, it should be encrypted.</p>
             </section>
 
 
@@ -70,43 +83,6 @@ $: active = $store.aboutOpen
                     moderation guidelines.</p>
             </section>
 
-            <section class="pa mt4">
-                <span class="label">Can I run this on an existing matrix
-                        server?</span>
-                <p>Yes. It's recommended to start on a fresh matrix
-                    server for now though.</p>
-            </section>
-
-            <section class="pa mt4">
-                <span class="label">Are all spaces public?</span>
-                <p>No. You can create private spaces too.</p>
-            </section>
-
-
-            <section class="pa mt4">
-                <span class="label">What about moderation?</span>
-                <p>Each {PUBLIC_APP_NAME} instance should decide on it's own
-                    moderation guidelines.</p>
-            </section>
-
-            <section class="pa mt4">
-                <span class="label">Can I run this on an existing matrix
-                        server?</span>
-                <p>Yes. It's recommended to start on a fresh matrix
-                    server for now though.</p>
-            </section>
-
-            <section class="pa mt4">
-                <span class="label">Are all spaces public?</span>
-                <p>No. You can create private spaces too.</p>
-            </section>
-
-
-            <section class="pa mt4">
-                <span class="label">What about moderation?</span>
-                <p>Each {PUBLIC_APP_NAME} instance should decide on it's own
-                    moderation guidelines.</p>
-            </section>
 
         </div>
 

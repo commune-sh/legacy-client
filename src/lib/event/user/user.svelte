@@ -91,8 +91,8 @@ a:hover {
 }
 
 .avatar-base {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
     margin-right: 2px;
     background-color: var(--avatar-bg);
