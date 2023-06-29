@@ -47,7 +47,6 @@ $: title = dayjs(date)?.format()
 
 <style>
 .time {
-    font-size: small;
     color: var(--text-light);
 }
 </style>

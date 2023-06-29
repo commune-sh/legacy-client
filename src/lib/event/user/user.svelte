@@ -68,7 +68,6 @@ $: avatar = `${mediaURL}/${user?.avatar_url}`
 
 <style>
 .user {
-    font-size: small;
     font-weight: bold;
 }
 
@@ -102,10 +101,11 @@ a:hover {
     background-position: center;
 }
 
-.dn {
-    opacity: 0.7;
-    font-size: 11px;
-    font-weight: bold;
+@media screen and (max-width: 768px) {
+    .avatar-base {
+        width: 12px;
+        height: 12px;
+    }
 }
 
 .name {

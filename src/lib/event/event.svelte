@@ -396,13 +396,13 @@ $: bannedFromSpace = state?.banned === true
 
         <div class="sender ph3 fl">
             <User hideAvatar={false} user={user} op={op}/>
-            <div class="grd-c sm ph1"></div>
+            <div class="grd-c ph1"></div>
             <Date date={event?.origin_server_ts} />
             {#if wasEdited}
                 <Edited date={event?.edited_on} />
             {/if}
             {#if showRoomAlias}
-                <div class="grd-c sm ml2">
+                <div class="grd-c ml2">
                     <a href={`/${event.room_alias}`}>{event.room_alias}</a>
                 </div>
             {/if}
@@ -410,7 +410,7 @@ $: bannedFromSpace = state?.banned === true
                 <div class="ico-s sn grd-c ml2">
                     {@html hash}
                 </div>
-                <div class="grd-c sm">
+                <div class="grd-c ">
                     <a href={`/${event.room_alias}/topic/${event.content.topic}`}>{event.content.topic}</a>
                 </div>
             {/if}
@@ -712,6 +712,7 @@ $: bannedFromSpace = state?.banned === true
 
 .sender {
     margin-bottom: 0.5rem;
+    font-size: small;
 }
 
 .sn {
@@ -736,6 +737,7 @@ $: bannedFromSpace = state?.banned === true
     }
     .sender {
         margin-bottom: 0.25rem;
+        font-size: 12px;
     }
 
     .clipped {
