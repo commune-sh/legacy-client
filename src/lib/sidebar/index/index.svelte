@@ -63,7 +63,7 @@ $: hide = authenticated && $store.spaces?.length == 1
                 communities. 
             </div>
             <div class="mt2">
-                <span class="href" on:click={showAbout}><b>Learn More</b></span>
+                <span class="href" on:click={showAbout}>Learn More</span>
             </div>
         </div>
 

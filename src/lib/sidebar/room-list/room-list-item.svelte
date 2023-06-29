@@ -244,7 +244,7 @@ $: avatar = item?.avatar ? `${mediaURL}/${item?.avatar}` : null
         {/if}
 
         <div class="sl ml1  pr2">
-            <b>{item?.alias}</b>
+            {item?.alias}
         </div>
 
 
@@ -349,7 +349,6 @@ $: avatar = item?.avatar ? `${mediaURL}/${item?.avatar}` : null
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: normal;
-    color: var(--text-light);
 }
 .inactive {
     opacity: 0.5;

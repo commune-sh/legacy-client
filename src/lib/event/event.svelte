@@ -385,6 +385,7 @@ $: bannedFromSpace = state?.banned === true
     class:h={!isReply && !isPost && !editing}
     class:ha={!isReply && !isPost && (hasAttachments || hasLinks)}
     class:ma={toolsActive}
+    class:bb={isReply}
     on:click={goToEvent} 
     class:fresh={event?.just_posted}
     class:isrep={isReplyEvent}
@@ -403,7 +404,7 @@ $: bannedFromSpace = state?.banned === true
             {/if}
             {#if showRoomAlias}
                 <div class="grd-c ml2">
-                <b><a href={`/${event.room_alias}`}>{event.room_alias}</a></b>
+                    <a href={`/${event.room_alias}`}>{event.room_alias}</a>
                 </div>
             {/if}
             {#if showTopic}
@@ -411,8 +412,9 @@ $: bannedFromSpace = state?.banned === true
                     {@html hash}
                 </div>
                 <div class="grd-c ">
-                    <b><a href={`/${event.room_alias}/topic/${event.content.topic}`}>{event.content.topic}</a></b>
+                    <a href={`/${event.room_alias}/topic/${event.content.topic}`}>{event.content.topic}</a>
                 </div>
+
             {/if}
         </div>
 
@@ -434,7 +436,7 @@ $: bannedFromSpace = state?.banned === true
 
                 {#if isPost}
                     {#if !isSingleReply}
-                    <div class="post-title ph3">
+                    <div class="post-title ph3 pb2">
                         {title}
                     </div>
                     {/if}
@@ -450,9 +452,9 @@ $: bannedFromSpace = state?.banned === true
                     </div>
                 {:else}
                     <div class="post-title ph3">
-                        <b>{title}</b>
+                        {title}
                     </div>
-                    <div class="post-body clipped ph3 ">
+                    <div class="post-body pba clipped ph3 ">
                         {@html clipped}
                     </div>
                 {/if}
@@ -587,6 +589,10 @@ $: bannedFromSpace = state?.banned === true
     word-break: break-word;
 }
 
+.bb {
+    border-bottom: 1px solid var(--ev-bb);
+}
+
 .replies {
     display: grid;
     grid-template-columns: 3px 1fr;
@@ -652,10 +658,13 @@ $: bannedFromSpace = state?.banned === true
 
 
 .post-title {
-    font-weight: bold;
 }
 
 .post-body {
+}
+
+.pba {
+    color: var(--text-light);
 }
 
 

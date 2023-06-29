@@ -119,7 +119,7 @@ function kill() {
     </div>
 
     <div class="sl pr2">
-        <b>Add Topic</b>
+        Add Topic
     </div>
 </div>
 {/if}
@@ -189,7 +189,6 @@ function kill() {
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: normal;
-    color: var(--text-light);
 }
 input {
     padding: 0;

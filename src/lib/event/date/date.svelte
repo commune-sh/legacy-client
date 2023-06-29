@@ -42,7 +42,7 @@ $: title = dayjs(date)?.format()
 </script>
 
 <div class="time grd-c" title={title}>
-    <b>{isThisWeek ? when : created}</b>
+    {isThisWeek ? when : created}
 </div>
 
 <style>
