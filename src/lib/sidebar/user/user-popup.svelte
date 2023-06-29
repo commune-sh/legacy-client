@@ -16,12 +16,6 @@ $: isSpace = $page.params.space !== undefined && $page.params.space !== null &&
 function logout() {
     store.logout()
     kill()
-    if(!isSpace) {
-        //location.replace('/')
-        if(isIndex) {
-            //location.replace('/')
-        }
-    }
 }
 
 function verify() {

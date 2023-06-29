@@ -1,17 +1,49 @@
 <script>
-    import { PUBLIC_APP_NAME } from '$env/static/public'
+import { PUBLIC_APP_NAME } from '$env/static/public'
+import { onMount } from 'svelte'
+import { page } from '$app/stores';
+import { store } from '$lib/store/store.js'
+import PublicSpaceItem from './public-space-item.svelte'
+
+let ready = false;
+
+$: spaces = $store.spaces
+
+onMount(() => {
+})
+
+$: if(spaces?.length > 0) {
+    ready = true;
+}
+
+$: authenticated = $store?.authenticated && 
+    $store?.credentials != null
+    $store?.credentials?.access_token?.length > 0
+
+$: label = authenticated ? 'your spaces' : 'public spaces'
+
 </script>
 
 <div class="index-sidebar">
     <div class="con fl-co">
         <div class="mt3">
-            Welcome to {PUBLIC_APP_NAME}'s Matrix-powered public communities.
+            <div class="">
+                Welcome to {PUBLIC_APP_NAME}'s Matrix-powered public communities.
+            </div>
+            <div class="mt2">Learn More</div>
         </div>
-        <div class="mt4 label">
-            public spaces
-        </div>
-        <div class="">
-        </div>
+
+        {#if ready}
+            <div class="mt4 label">
+                {label}
+            </div>
+            <div class="fl-co mt2 mb3">
+                {#each spaces as space}
+                    <PublicSpaceItem space={space} />
+                {/each}
+            </div>
+        {/if}
+
     </div>
 </div>
 
@@ -27,5 +59,21 @@
     overflow-y: auto;
     padding: 0.5rem;
     line-height: 1.5;
+}
+
+::-webkit-scrollbar {
+    width: 4px;
+}
+::-webkit-scrollbar-thumb {
+    background: transparent;
+    transition: 0.1s;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+    transition: 0.1s;
+}
+
+.con:hover::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
 }
 </style>
