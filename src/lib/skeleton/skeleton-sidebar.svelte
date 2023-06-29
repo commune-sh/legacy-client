@@ -1,7 +1,7 @@
 <script>
 function rp() {
     const min = 30;
-    const max = 60;
+    const max = 40;
     const randomPercentage = Math.floor(Math.random() * (max - min + 1)) + min;
     return randomPercentage;
 }
@@ -56,7 +56,7 @@ function topics(i) {
     grid-template-columns: 1fr auto;
     background: var(--shade-2);
     border-radius: 4px;
-    height: 16px;
+    height: 14px;
     margin-bottom: 0.5rem;
     width: 100%;
 }

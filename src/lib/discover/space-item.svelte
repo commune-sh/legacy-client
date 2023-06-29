@@ -51,6 +51,7 @@ function goToSpace() {
     display:grid;
     cursor: pointer;
     grid-template-rows: 100px 1fr;
+    border: 1px solid var(--shade-2);
 }
 
 .banner {
@@ -74,7 +75,7 @@ function goToSpace() {
     opacity: 0.9;
 }
 
-a:link {
+a, a:link, a:visited, a:active {
     text-decoration: none;
     color: var(--text);
 }
