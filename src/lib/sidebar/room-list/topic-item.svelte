@@ -77,7 +77,7 @@ function logItem(e) {
         </div>
 
         <div class="sl">
-            <b>{item}</b>
+            {item}
         </div>
     </div>
 
@@ -120,7 +120,6 @@ function logItem(e) {
 .sl {
     padding-top: 2px;
     align-self: center;
-    color: var(--text-light);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

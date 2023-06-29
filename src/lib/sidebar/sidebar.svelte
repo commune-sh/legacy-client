@@ -58,25 +58,9 @@ function buildItems(state) {
 
 $: items = buildItems(state)
 
-
-$: isRoom = $page?.params?.room !== undefined && $page?.params?.room !== null
-
-function findHeader(s) {
-    let spaceHeader = s?.space?.header ? true : false
-
-    if(isRoom) {
-        let ind = s?.children?.findIndex(r => r?.alias === $page?.params?.room)
-        if(ind !== -1) {
-            return s?.children[ind]?.header ? true : spaceHeader
-        }
-    } else {
-        return spaceHeader
-    }
-}
-$: header = findHeader(state)
 </script>
 
-<div class="sidebar" class:he={header}>
+<div class="sidebar">
     <Header state={state} ready={ready}/>
 
     <div class="content fl-co">
@@ -108,14 +92,10 @@ $: header = findHeader(state)
 .sidebar {
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: [header] 48px [content] 1fr [user] 56px;
+    grid-template-rows: [header] auto [content] 1fr [user] 56px;
     border-right: 1px solid var(--border-1);
     background-color: var(--bg);
     overflow: hidden;
-}
-
-.he {
-    grid-template-rows: [header] 180px [content] 1fr [user] 56px;
 }
 
 .content {

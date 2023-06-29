@@ -385,7 +385,7 @@ $: bannedFromSpace = state?.banned === true
     class:h={!isReply && !isPost && !editing}
     class:ha={!isReply && !isPost && (hasAttachments || hasLinks)}
     class:ma={toolsActive}
-    class:bb={isReply}
+    class:bb={isPost || isReply}
     on:click={goToEvent} 
     class:fresh={event?.just_posted}
     class:isrep={isReplyEvent}
