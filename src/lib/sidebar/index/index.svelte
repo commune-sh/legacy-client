@@ -1,5 +1,6 @@
 <script>
-import { PUBLIC_APP_NAME } from '$env/static/public'
+import { APIRequest } from '$lib/utils/request.js'
+import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public'
 import { onMount } from 'svelte'
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
@@ -12,9 +13,33 @@ $: spaces = $store.spaces
 onMount(() => {
 })
 
-$: if(spaces?.length > 0) {
+$: if(spaces?.length > 1) {
     ready = true;
 }
+$: if(authenticated && spaces?.length == 1) {
+    if($store.defaultSpaces?.length > 0) {
+        spaces = $store.defaultSpaces
+    } else {
+        fetchDefaultSpaces()
+    }
+}
+
+function fetchDefaultSpaces() {
+
+    let opt = {
+      url: `${PUBLIC_API_URL}/default_spaces`,
+      method: 'GET',
+    }
+
+
+    APIRequest(opt)
+    .then(resp => {
+        if(resp) {
+            spaces = resp.spaces
+        }
+    })
+}
+
 
 $: authenticated = $store?.authenticated && 
     $store?.credentials != null
@@ -25,6 +50,8 @@ $: label = authenticated ? 'your spaces' : 'public spaces'
 function showAbout() {
     $store.aboutOpen = true
 }
+
+$: hide = authenticated && $store.spaces?.length == 1
 
 </script>
 
@@ -41,9 +68,13 @@ function showAbout() {
         </div>
 
         {#if ready}
-            <div class="mt4 label">
-                {label}
-            </div>
+                <div class="mt4 label">
+                    {#if !hide}
+                        {label}
+                    {:else}
+                        public spaces
+                    {/if}
+                </div>
             <div class="fl-co mt2 mb3">
                 {#each spaces as space}
                     {#if !space?.is_profile}

@@ -511,6 +511,10 @@ async function pinPost(e) {
     }
 }
 
+function discover() {
+    $store.discoverSpacesOpen = true
+}
+
 </script>
 
 
@@ -608,8 +612,13 @@ async function pinPost(e) {
 
                 {#if authenticated && noEvents && !isSpace}
                     <section class="grd">
-                        <section class="grd-c">
-                            You're not following any spaces yet.
+                        <section class="nothing grd-c fl-co">
+                            <div class="mb4">
+                                You're not following any spaces yet.
+                            </div>
+                            <div class="mb4 grd-c">
+                                <button class="pa2" on:click={discover}>Discover Spaces</button>
+                            </div>
                         </section>
                     </section>
                 {/if}

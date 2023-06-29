@@ -15,10 +15,16 @@ $: initials = space?.alias?.split(' ')
     .join('')
     .toUpperCase()
 
+function goToSpace() {
+    if($store.menuToggled) {
+        $store.menuToggled = false
+    }
+}
+
 </script>
 
 <div class="space-item">
-    <a class="grd" href={space.alias}>
+    <a on:click={goToSpace} class="grd" href={space.alias}>
         <div class="item">
 
             <div class="ico grd grd-c img mh2"
