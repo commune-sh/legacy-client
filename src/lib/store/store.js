@@ -58,6 +58,12 @@ function createApp() {
         route: 'settings',
         component: 'settings.svelte',
       },
+      {
+        path: '/about',
+        name: 'About',
+        route: 'about',
+        component: 'about.svelte',
+      },
     ],
     creatingSpace: false,
     emojiPicker: {
@@ -65,13 +71,14 @@ function createApp() {
     },
     modal: {
       active: false,
-      content: null,
+      component: null,
     },
     addingRoom: false,
     spaceSettingsOpen: false,
     roomSettings: false,
     userSettings: false,
     discoverSpacesOpen: false,
+    aboutOpen: false,
   }
 
   if(window) {

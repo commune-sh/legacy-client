@@ -1,8 +1,7 @@
 <script>
 export let event;
 
-$: render = JSON.stringify(event, null, '\t')
-
+$: render = JSON.stringify(event, null, 2)
 
 </script>
 
@@ -11,7 +10,7 @@ $: render = JSON.stringify(event, null, '\t')
     <div class="event pa3">
         <pre>
             <code>
-            {render}
+                    {@html render}
             </code>
         </pre>
     </div>

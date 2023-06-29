@@ -9,7 +9,7 @@ export let noStyle = false;
 let kill =() => {
     $store.modal = {
         active: false,
-        content: null
+        component: null
     }
 }
 

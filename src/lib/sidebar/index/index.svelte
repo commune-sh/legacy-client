@@ -22,15 +22,22 @@ $: authenticated = $store?.authenticated &&
 
 $: label = authenticated ? 'your spaces' : 'public spaces'
 
+function showAbout() {
+    $store.aboutOpen = true
+}
+
 </script>
 
 <div class="index-sidebar">
     <div class="con fl-co">
         <div class="mt3">
             <div class="">
-                Welcome to {PUBLIC_APP_NAME}'s Matrix-powered public communities.
+                Welcome to {PUBLIC_APP_NAME}'s Matrix-powered 
+                communities. 
             </div>
-            <div class="mt2">Learn More</div>
+            <div class="mt2">
+                <span class="href" on:click={showAbout}>Learn More</span>
+            </div>
         </div>
 
         {#if ready}
@@ -39,7 +46,9 @@ $: label = authenticated ? 'your spaces' : 'public spaces'
             </div>
             <div class="fl-co mt2 mb3">
                 {#each spaces as space}
-                    <PublicSpaceItem space={space} />
+                    {#if !space?.is_profile}
+                        <PublicSpaceItem space={space} />
+                    {/if}
                 {/each}
             </div>
         {/if}

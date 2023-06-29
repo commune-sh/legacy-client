@@ -15,6 +15,7 @@ import Down from '$lib/errors/down.svelte'
 import CreateSpace from '$lib/space/create-space.svelte'
 import Modal from '$lib/modal/modal.svelte'
 import Alert from '$lib/alert/alert.svelte'
+import About from '$lib/about/about.svelte'
 import DiscoverSpaces from '$lib/discover/discover.svelte'
 
 $: isIndex = $page?.url.pathname === '/'
@@ -123,6 +124,7 @@ $: if(authenticated) {
 
 <Modal />
 <Alert />
+<About />
 <DiscoverSpaces />
 
 {#if (!down && isIndex && showIndex) || (!down && !isIndex)}

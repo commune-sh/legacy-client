@@ -141,7 +141,7 @@ $: if(headerExists && header && el) {
     {:else}
 
         <div class="name in fl-o ml2">
-            {#if isStaticRoute}
+            {#if isStaticRoute && staticRoute?.name != 'About'} 
                 <b>{staticRoute.name}</b>
             {:else if isNotSpace}
                 <b>{PUBLIC_APP_NAME}</b>

@@ -62,6 +62,15 @@ onMount(() => {
 function viewSource() {
     menu.hide()
     console.log(event)
+    /*
+    $store.modal = {
+        active: true,
+        component: ViewSource,
+        props: {
+            event: event
+        }
+    }
+    */
 }
 
 function redactEvent() {

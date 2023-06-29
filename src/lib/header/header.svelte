@@ -52,7 +52,7 @@ function newPost() {
 }
 
 
-$: isIndex = !$page.params.space && !$page.params.room
+$: isIndex = $page.url.pathname == '/'
 
 $: authDone = $store.verifiedSession
 $: indexText = authenticated ? `Your feed` : `What's new`
@@ -209,7 +209,7 @@ function signup() {
                     {#if authDone}
                         <span class="n">{indexText}</span>
                     {/if}
-            {:else if !ready}
+            {:else if (!ready && !isStaticRoute)}
                     <SkeletonSpan />
             {:else}
 
