@@ -76,7 +76,7 @@ $: initials = space?.alias?.split(' ')
     align-self: center;
 }
 
-a:link {
+a, a:link, a:visited, a:active {
     color: var(--text);
     text-decoration: none;
 }
