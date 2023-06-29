@@ -109,17 +109,23 @@ $: ownProfile = isProfile && isOwner
 
 //$: joinedRoom = $store?.rooms?.includes(room_id)
 
+/*
 $: joinedRoom = () => {
     if(room_id == state?.room_id) {
         return true
     }
     return state?.children?.find(x => x?.room_id === room_id)?.joined
 }
+*/
 
 $: joinedSpace = authenticated && 
     $store?.spaces.find(x => x?.room_id === space_room_id) != null 
 
-$: joined = joinedSpace && joinedRoom()
+$: joinedRoom = authenticated && 
+    $store?.rooms.find(x => x === room_id) != null 
+
+
+$: joined = joinedSpace && joinedRoom
 
 $: following = isProfile && !ownProfile && joinedRoom
 //$: spaceRoomJoined = $store?.rooms?.includes(space_room_id)
@@ -273,7 +279,7 @@ function signup() {
                             </div>
                         {/if}
                     {:else if authenticated && (!joined)}
-                        <button class="signup light" 
+                        <button class="light" 
                             disabled={busy}
                             on:click={join}>
                             {buttonText}
