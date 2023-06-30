@@ -136,6 +136,13 @@ function getFirstParagraphNode(content) {
   return firstParagraphNode?.innerHTML || null;
 }
 
+
+$: safari = () => {
+    return (navigator.userAgent.match(/iPad|iPhone|iPod/) && !window.MSStream) ||
+      /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+}
+
+
 $: edited = event?.content?.['m.new_content']?.body !== undefined &&
         event?.content?.['m.new_content']?.title !== undefined
 
@@ -526,10 +533,8 @@ $: bannedFromSpace = state?.banned === true
     {/if}
 
 
-        {#if !editing && interactive && !bannedFromSpace}
-        <div class="tools" 
-            class:show={displayTools}
-            class:asi={event?.pinned || replyPinned}>
+        {#if !safari() && displayTools && !editing && interactive && !bannedFromSpace}
+        <div class="tools" class:asi={event?.pinned || replyPinned}>
                 <Tools 
                     isReply={isReply} 
                     isPost={isPost}
@@ -640,16 +645,10 @@ $: bannedFromSpace = state?.banned === true
 }
 
 .tools {
-    visibility: hidden;
     position: absolute;
     top: 0.75rem;
     right: 0.75rem;
 }
-
-.show {
-    visibility: visible;
-}
-
 .asi {
     right: 2.75rem;
 }
