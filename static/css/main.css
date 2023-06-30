@@ -899,5 +899,8 @@ label {
     html {
         font-size: 14px;
     }
+    code {
+        font-size: 13px;
+    }
 
 }

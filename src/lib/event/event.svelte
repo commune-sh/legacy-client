@@ -680,6 +680,7 @@ $: bannedFromSpace = state?.banned === true
     word-break: break-word;
     margin-bottom: 0.5rem;
 }
+
 .clipped p {
     margin-block-start: 0;
     margin-block-end: 0;
@@ -753,6 +754,7 @@ $: bannedFromSpace = state?.banned === true
 
     .clipped {
         margin-bottom: 0.25rem;
+        font-size: 13px;
     }
 
     .post-body {
