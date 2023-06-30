@@ -380,6 +380,8 @@ $: bannedFromSpace = state?.banned === true
 <div class="event" 
     bind:this={el}
     on:contextmenu={print}
+    on:mouseover={showTools}
+    on:mouseleave={hideTools}
     class:h={!isReply && !isPost && !editing}
     class:ha={!isReply && !isPost && (hasAttachments || hasLinks)}
     class:ma={toolsActive}
@@ -524,26 +526,6 @@ $: bannedFromSpace = state?.banned === true
     {/if}
 
 
-        {#if displayTools && !editing && interactive && !bannedFromSpace}
-        <div class="tools" class:asi={event?.pinned || replyPinned}>
-                <Tools 
-                    isReply={isReply} 
-                    isPost={isPost}
-                    on:reply={replyToEvent}
-                    active={toolsActive}
-                    isAuthor={isAuthor}
-                    isPostAuthor={isPostAuthor}
-                    nested={nested}
-                    on:edit={editEvent}
-                    on:pin
-                    on:redact
-                    on:set-reply-thread
-                    on:react={reactToKey}
-                    on:active={activateTools} 
-                    on:kill={killTools} 
-                    event={event} />
-            </div>
-        {/if}
 
 
 
