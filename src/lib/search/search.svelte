@@ -27,6 +27,10 @@ let blur = () => {
     }, 200)
 }
 
+function focusInput() {
+    searchInput.focus()
+}
+
 let searchInput;
 let query;
 
@@ -65,22 +69,35 @@ function kill() {
     results = null;
     results = results
     fetched = false
+    focused = false
+    searchInput.blur()
+}
+function kd(e) {
+    if (e.key === 'Escape' || e.key === 'Esc') {
+        kill()
+    }
 }
 </script>
 
 
 <div class="search-container mr2">
-    <input class="Search" 
-        bind:this={searchInput}
-        bind:value={query}
-        class:ex={active}
-        on:focus={focus}
-        on:input={search}
-        spellcheck="false"
-        on:blur={blur}
-        placeholder="search"/>
-    <div class="ico-s">
-        {@html searchIcon}
+    <div class="sec fl" on:click={focusInput}>
+        <div class="fl-o">
+            <input class="Search" 
+                bind:this={searchInput}
+                bind:value={query}
+                class:ex={active}
+                on:focus={focus}
+                on:input={search}
+                on:keydown={kd}
+                spellcheck="false"
+                on:blur={blur}
+                placeholder="search"/>
+        </div>
+
+        <div class="grd-c ico-s ph1">
+            {@html searchIcon}
+        </div>
     </div>
 
     {#if showResults}
@@ -112,27 +129,33 @@ function kill() {
 <style>
 .search-container { 
     position: relative;
+    background: var(--shade-2);
+    border: none;
+    border-radius: 4px;
+}
+
+.sec {
+    cursor: text;
+    height: 24px;
 }
 
 .ico-s {
-    position: absolute;
-    top: 0.25rem;
-    right: 0.25rem;
     height: 14px;
     width: 14px;
 }
 
 input {
+    margin: 0;
+    padding: 0;
+    padding-left: 0.5rem;
     background: var(--shade-2);
     border: none;
     border-radius: 4px;
     font-size: small;
     font-weight: 500;
     color: var(--text-light);
-    padding-left: 0.5rem;
-    padding-right: 1.5rem;
-    width: 150px;
     transition: 0.1s;
+    width: 180px;
 }
 
 @media screen and (max-width: 768px) {
