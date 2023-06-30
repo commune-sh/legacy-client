@@ -1,9 +1,9 @@
-import { PUBLIC_API_URL, PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
+import { PUBLIC_API_URL } from '$env/static/public';
 import { processFeed } from '$lib/utils/utils.js';
 
-export async function GET() {
+export async function GET({params}) {
 
-  const res = await fetch(`${PUBLIC_API_URL}/events`);
+  const res = await fetch(`${PUBLIC_API_URL}/${params.space}/${params.room}/events?topic=${params.topic}`);
   const data = await res.json();
 
   const feed = processFeed(data?.events);
@@ -15,3 +15,5 @@ export async function GET() {
 		}
 	});
 }
+
+

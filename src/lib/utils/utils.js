@@ -1,3 +1,4 @@
+import { PUBLIC_API_URL, PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { encode } from "blurhash";
 
 export const debounce = function () {
@@ -143,3 +144,34 @@ export function escapeXML(unsafe) {
     }
   });
 }
+
+const render = (items) => `<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+<channel>
+<title>${PUBLIC_APP_NAME}</title>
+<link>${PUBLIC_BASE_URL}/rss</link>
+<description>${PUBLIC_APP_NAME} RSS feed</description>
+<image>
+<url>${PUBLIC_BASE_URL}/favicon.png</url>
+<title>${PUBLIC_APP_NAME}</title>
+<link>${PUBLIC_BASE_URL}/rss</link>
+</image>
+${items
+.map(
+(item) => `
+<item>
+<title>${escapeXML(item.content.title || '')}</title>
+<description>${escapeXML(item.content.body || '')}</description>
+<link>${PUBLIC_BASE_URL}/${item.room_alias}/post/${escapeXML(item.slug)}</link>
+</item>
+`
+)
+.join('')}
+</channel>
+</rss>`;
+
+
+export function processFeed(items) {
+  return render(items)
+}
+
