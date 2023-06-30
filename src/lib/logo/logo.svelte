@@ -1,11 +1,20 @@
 <script>
+import { store } from '$lib/store/store.js'
 import { logo } from '$lib/assets/logo.js'
+
 export let large = false;
 export let loader = false;
+
+function goHome() {
+    if($store.menuToggled) {
+        $store.menuToggled = false
+    }
+}
+
 </script>
 
 <div class="logo">
-    <a class="" href="/">
+    <a on:click={goHome} class="" href="/">
         <div class="l-c grd" class:lg={large} class:ldr={loader}>
             <div class="l-c-i grd-c" class:lgr={loader}>
                 {@html logo}
