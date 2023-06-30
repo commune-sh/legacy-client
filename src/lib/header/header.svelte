@@ -56,7 +56,10 @@ $: isIndex = $page.url.pathname == '/'
 $: indexPost = !isSpace && isPost
 
 $: authDone = $store.verifiedSession
-$: indexText = authenticated ? `Your feed` : `What's new`
+
+$: isAll = $page?.url?.pathname == `/all`
+
+$: indexText = isAll ? `All posts` : authenticated ? `Your feed` : `What's new`
 
 
 function sortItems(state) {
@@ -214,7 +217,7 @@ function signup() {
         <div class="fl mr3">
 
             <div class="name grd-c fl">
-            {#if (isIndex || indexPost)}
+            {#if (isIndex || indexPost || isAll)}
                     {#if authDone}
                         <span class="n">{indexText}</span>
                     {/if}

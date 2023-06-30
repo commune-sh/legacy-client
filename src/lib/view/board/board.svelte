@@ -147,6 +147,10 @@ async function loadEvents(init) {
         opt.url = `${PUBLIC_API_URL}/feed`
     }
 
+    if($page?.url.pathname == '/all') {
+        opt.url = `${PUBLIC_API_URL}/events`
+    }
+
 
     const resp = await loadPosts(opt)
     if(resp) {
@@ -318,6 +322,10 @@ let fetchMore = () => {
 
     if(authenticated && !isSpace && !isRoom) {
         url = `${PUBLIC_API_URL}/feed?last=${last}`
+    }
+
+    if($page?.url.pathname == '/all') {
+        opt.url = `${PUBLIC_API_URL}/events`
     }
 
     APIRequest({

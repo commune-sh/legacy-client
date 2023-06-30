@@ -92,6 +92,8 @@ $: active = $store.emojiPicker.active &&
 
 function kill() {
     store.killEmojiPicker()
+    searchInput.value = null
+    query = ''
 }
 
 
@@ -155,6 +157,7 @@ $: if(query == '') {
 }
 
 onMount(() => {
+    focusSearchInput()
   const contentSections = document.querySelectorAll('.emoji-title')
 
   const observer = new IntersectionObserver(
@@ -182,6 +185,11 @@ $: filtering = query?.length > 0
 $: if(filtering) {
     console.log("hmm")
     highlighted = ``
+}
+
+async function focusSearchInput() {
+    await tick;
+    searchInput.focus()
 }
 
 function killFilter() {
