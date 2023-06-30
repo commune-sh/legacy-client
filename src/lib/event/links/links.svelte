@@ -27,7 +27,7 @@ $: isYoutube = (item) => {
                 {/if}
             </div>
             <div class="ovh fl-co fl-o">
-                <div class="title sm">
+                <div class="ti sm">
                     {item.title}
                 </div>
                 <div class="li link mr3 sm">
@@ -94,7 +94,10 @@ a, a:link, a:visited, a:active {
     text-decoration: none;
 }
 
-.title {
+.ti {
     font-weight: 500;
+}
+.author {
+    color: var(--text-light);
 }
 </style>

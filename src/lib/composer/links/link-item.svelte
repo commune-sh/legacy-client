@@ -21,7 +21,7 @@ function deleteLink() {
         </div>
     {/if}
     <div class="ovh fl-co">
-        <div class="title sm">
+        <div class="ti sm">
             {item.title}
         </div>
         <div class="li link mr3 sm">
@@ -98,7 +98,7 @@ function deleteLink() {
     white-space: nowrap;
     word-break: break-all;
 }
-.title {
+.ti {
     font-weight: 500;
 }
 </style>
