@@ -72,8 +72,8 @@ async function getSpaces() {
 
 <style>
 .modal {
-    height: 650px;
-    width: 670px;
+    height: 750px;
+    width: 1000px;
     overflow: hidden;
 }
 .space-items {
@@ -85,7 +85,7 @@ async function getSpaces() {
 }
 .items {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     grid-auto-rows: auto;
     overflow-y: auto;
     overflow-x: hidden;
@@ -96,32 +96,21 @@ async function getSpaces() {
     grid-template-columns: auto auto;
 }
 
-::-webkit-scrollbar {
-    width: 4px;
-}
-::-webkit-scrollbar-thumb {
-    background: transparent;
-    transition: 0.1s;
-}
-::-webkit-scrollbar-track {
-    background: transparent;
-    transition: 0.1s;
-}
 
-.items:hover::-webkit-scrollbar-thumb {
-    background: var(--scrollbar-thumb);
+@media (max-width: 1010px) {
+    .modal {
+        width: 650px;
+    }
+    .items {
+        grid-template-columns: 50% 50%;
+    }
 }
-.items:hover::-webkit-scrollbar-track {
-}
-
 @media (max-width: 700px) {
     .modal {
         width: 100%;
         height: 100%;
     }
     .items {
-        grid-template-columns: 1fr;
-        grid-auto-rows: auto;
     }
 }
 </style>

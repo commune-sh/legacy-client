@@ -1,6 +1,9 @@
 <script>
+import { page } from '$app/stores';
 import { onMount, createEventDispatcher } from 'svelte'
 import { goto } from '$app/navigation';
+import { store } from '$lib/store/store.js'
+import { joinSpace } from '$lib/utils/request.js'
 import { PUBLIC_APP_NAME, PUBLIC_MEDIA_URL } from '$env/static/public';
 
 const dispatch = createEventDispatcher()
@@ -16,30 +19,80 @@ function goToSpace() {
     dispatch('kill')
 }
 
+
+$: authenticated = $store?.authenticated && 
+    $store?.credentials != null
+    $store?.credentials?.access_token?.length > 0
+
+$: joinedSpace = authenticated && 
+    $store.rooms?.find(x => x === space?.room_id) != null 
+
+let busy;
+
+async function join() {
+    if(!authenticated) {
+        store.startAuthenticating("login")
+        return
+    }
+    busy = true
+    if(!joinedSpace) {
+        const resp = await joinSpace(space?.alias);
+        if(resp && resp.space) {
+            console.log(resp)
+            if(!resp?.space?.is_profile) {
+                store.addSpace(resp.space)
+            }
+            store.addRoom(resp.space.room_id)
+        }
+        if(resp && resp?.error) {
+            console.log(resp)
+            $store.alert = {
+                active: true,
+                message: resp.error
+            }
+        }
+    } 
+    busy = false
+}
 </script>
 
 <div class="item pa2">
     <div class="space"
         on:click={goToSpace}>
-        <div class="banner" 
+
+        <div class="banner rel" 
             style="background-image: url({header})">
-        </div>
-        <div class="pa2 mt1 fl">
-            <div class="snm fl-o">
-                <a href={space.alias}>
-                    {space.name ? space.name : space.alias}
-                </a>
-            </div>
-            <div class="">
-            </div>
-        </div>
-        <div class="ph2 mt1 mb3 sm desc">
-            {#if space.topic}
-                {space.topic}
+
+            {#if !joinedSpace}
+                <div class="join">
+                    <button class="ph2 pv1" 
+                        disabled={busy}
+                        on:click|stopPropagation={join}>
+                        {busy ? 'Joining' : 'Join'}
+                    </button>
+                </div>
             {:else}
-                No description.
             {/if}
+
+
         </div>
+
+        <div class="fl-co">
+
+            <div class="pa2 mt1 snm">
+                    {space.name ? space.name : space.alias}
+            </div>
+
+            <div class="ph2 mt1 mb3 sm desc">
+                {#if space.topic}
+                    {space.topic}
+                {:else}
+                    No description.
+                {/if}
+            </div>
+
+        </div>
+
     </div>
 </div>
 
@@ -50,8 +103,9 @@ function goToSpace() {
     transition: 0.2s;
     display:grid;
     cursor: pointer;
-    grid-template-rows: 100px 1fr;
+    grid-template-rows: 140px 1fr;
     border: 1px solid var(--shade-2);
+    height: 100%;
 }
 
 .banner {
@@ -60,6 +114,13 @@ function goToSpace() {
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
+    position: relative;
+}
+
+.join {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
 }
 
 
@@ -81,9 +142,18 @@ a, a:link, a:visited, a:active {
 }
 .desc {
     color: var(--text-light);
+    line-height: 1.5;
 }
 
 .snm {
     font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+@media (max-width: 700px) {
+    .space {
+        grid-template-rows: 100px 1fr;
+    }
 }
 </style>

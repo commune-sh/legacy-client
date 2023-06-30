@@ -466,7 +466,7 @@ function createApp() {
         p.states[space].space.topics = topics
 
       } else {
-        let r = p.states[space].children.find(x => x.alias == room)
+        let r = p.states[space].children?.find(x => x.alias == room)
         if(r) {
           r.topics = topics
         }
@@ -509,7 +509,7 @@ function createApp() {
 
   let updateSpaceRoomType = (space, room_id, type) => {
     update(p => {
-      let ind = p.states[space]?.children.findIndex(x => x.room_id == room_id)
+      let ind = p.states[space]?.children?.findIndex(x => x.room_id == room_id)
       if(ind !== -1) {
         p.states[space].children[ind].type = type
       }
@@ -518,7 +518,7 @@ function createApp() {
   }
   let updateSpaceRoomAvatar = (space, room_id, avatar) => {
     update(p => {
-      let ind = p.states[space]?.children.findIndex(x => x.room_id == room_id)
+      let ind = p.states[space]?.children?.findIndex(x => x.room_id == room_id)
       if(ind !== -1) {
         p.states[space].children[ind].avatar = avatar
       }
@@ -529,7 +529,7 @@ function createApp() {
 
   let updateSpaceRoomHeader = (space, room_id, header) => {
     update(p => {
-      let ind = p.states[space]?.children.findIndex(x => x.room_id == room_id)
+      let ind = p.states[space]?.children?.findIndex(x => x.room_id == room_id)
       if(ind !== -1) {
         p.states[space].children[ind].header = header
       }
@@ -548,7 +548,7 @@ function createApp() {
 
   let removeSpaceRoom = (space, room_id, type) => {
     update(p => {
-      let ind = p.states[space]?.children.findIndex(x => x.room_id == room_id)
+      let ind = p.states[space]?.children?.findIndex(x => x.room_id == room_id)
       if(ind !== -1) {
         p.states[space].children.splice(ind, 1)
       }
@@ -589,7 +589,7 @@ function createApp() {
 
   let updateSpaceRoomInfo = (space, room_id, info) => {
     update(p => {
-      let ind = p.states[space]?.children.findIndex(x => x.room_id == room_id)
+      let ind = p.states[space]?.children?.findIndex(x => x.room_id == room_id)
       if(ind !== -1) {
         p.states[space].children[ind].name = info.name 
         p.states[space].children[ind].alias = info.name 
@@ -613,7 +613,7 @@ function createApp() {
 
   let updateSpaceRoomDoNotIndex = (space, room_id, dni) => {
     update(p => {
-      let ind = p.states[space]?.children.findIndex(x => x.room_id == room_id)
+      let ind = p.states[space]?.children?.findIndex(x => x.room_id == room_id)
       if(ind !== -1) {
         p.states[space].children[ind].do_not_index = dni
       }
@@ -815,7 +815,7 @@ function createApp() {
       if(p.states[space]?.room_id == room_id) {
         p.states[space].joined = true
       } else {
-        let ind = p.states[space].children.findIndex(r => r.room_id == room_id)
+        let ind = p.states[space].children?.findIndex(r => r.room_id == room_id)
         if(ind != -1) {
           p.states[space].children[ind].joined = true
         }
@@ -829,7 +829,7 @@ function createApp() {
       if(p.states[space]?.room_id == room_id) {
         p.states[space].joined = false
       } else {
-        let ind = p.states[space].children.findIndex(r => r.room_id == room_id)
+        let ind = p.states[space].children?.findIndex(r => r.room_id == room_id)
         if(ind != -1) {
           p.states[space].children[ind].joined = false
         }
