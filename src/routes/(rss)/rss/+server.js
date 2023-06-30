@@ -1,4 +1,5 @@
 import { PUBLIC_API_URL, PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
+import { escapeXML } from '$lib/utils/utils.js';
 
 const render = (items) => `<?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0">
@@ -15,9 +16,9 @@ ${items
 .map(
 (item) => `
 <item>
-<title>${item.content.title}</title>
-<description>${item.content.body}</description>
-<link>${PUBLIC_BASE_URL}/${item.room_alias}/post/${item.slug}</link>
+<title>${escapeXML(item.content.title)}</title>
+<description>${escapeXML(item.content.body)}</description>
+<link>${PUBLIC_BASE_URL}/${item.room_alias}/post/${escapeXML(item.slug)}</link>
 </item>
 `
 )
@@ -32,6 +33,7 @@ export async function GET() {
 
 
   const feed = render(data?.events);
+
 
   return new Response(feed, {
 		headers: {
