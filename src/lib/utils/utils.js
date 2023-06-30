@@ -122,3 +122,7 @@ export function generateInitials(items) {
     item.initials = initials;
   });
 }
+
+export function isSafari() {
+    return (navigator.userAgent.match(/iPad|iPhone|iPod/) && !window.MSStream) || /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+}

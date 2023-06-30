@@ -16,6 +16,7 @@ import Tools from './tools/tools.svelte'
 import Vote from '$lib/vote/vote.svelte'
 import Links from './links/links.svelte'
 import { pin, hash } from '$lib/assets/icons.js'
+import { isSafari } from '$lib/utils/utils.js'
 
 import { getReplyCount } from '$lib/utils/utils.js'
 
@@ -137,10 +138,7 @@ function getFirstParagraphNode(content) {
 }
 
 
-$: safari = () => {
-    return (navigator.userAgent.match(/iPad|iPhone|iPod/) && !window.MSStream) ||
-      /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-}
+$: safari = isSafari()
 
 
 $: edited = event?.content?.['m.new_content']?.body !== undefined &&
@@ -533,7 +531,7 @@ $: bannedFromSpace = state?.banned === true
     {/if}
 
 
-        {#if !safari() && displayTools && !editing && interactive && !bannedFromSpace}
+        {#if !safari && displayTools && !editing && interactive && !bannedFromSpace}
         <div class="tools" class:asi={event?.pinned || replyPinned}>
                 <Tools 
                     isReply={isReply} 

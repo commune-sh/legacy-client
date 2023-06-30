@@ -5,6 +5,7 @@ import { page } from '$app/stores';
 import Reaction from './reaction.svelte'
 import React from '$lib/event/tools/react.svelte'
 import { savePost, redactReaction } from '$lib/utils/request.js'
+import { isSafari } from '$lib/utils/utils.js'
 
 const dispatch = createEventDispatcher()
 
@@ -112,6 +113,7 @@ let skip = ['pinned', 'tagged']
 $: state = $store?.states[$page?.params?.space]
 $: bannedFromSpace = state?.banned === true
 
+$: safari = isSafari()
 </script>
 
 {#if processed?.length > 0}
@@ -125,7 +127,7 @@ $: bannedFromSpace = state?.banned === true
                 reaction={reaction} />
             {/if}
         {/each}
-    {#if hovered && !bannedFromSpace}
+    {#if !safari && hovered && !bannedFromSpace}
     <div class="grd re" class:ml2={ml}>
         <React 
             isReply={isReply} 
