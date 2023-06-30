@@ -375,6 +375,9 @@ $: replyPinned = isReply && event?.reactions?.filter(r => r.key === 'pinned').le
 $: state = $store?.states[$page?.params?.space]
 $: bannedFromSpace = state?.banned === true
 
+function skip(e) {
+}
+
 </script>
 
 <div class="event" 
@@ -387,6 +390,9 @@ $: bannedFromSpace = state?.banned === true
     class:ma={toolsActive}
     class:bb={isPost || isReply}
     on:click={goToEvent} 
+    on:touchstart={skip}
+    on:touchmove={skip}
+    on:touchend={skip}
     class:fresh={event?.just_posted}
     class:isrep={isReplyEvent}
     class:highlight={highlight || !interactive} role="button">
