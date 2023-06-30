@@ -124,6 +124,8 @@ function goToEvent() {
 
     console.log("go to event")
 
+    hideTools()
+
     goto(link, {
         noscroll: true,
     })
@@ -377,17 +379,18 @@ $: bannedFromSpace = state?.banned === true
 
 </script>
 
-<div class="event-container"
-    on:contextmenu={print}
-    on:click={goToEvent} >
 <div class="event" 
     bind:this={el}
+    on:contextmenu={print}
+    on:mouseenter={showTools}
+    on:touchstart={showTools}
+    on:mouseleave={hideTools}
+    on:touchmove={hideTools}
     class:h={!isReply && !isPost && !editing}
     class:ha={!isReply && !isPost && (hasAttachments || hasLinks)}
     class:ma={toolsActive}
     class:bb={isPost || isReply}
-    on:mouseover={showTools}
-    on:mouseleave={hideTools}
+    on:click={goToEvent} 
     class:fresh={event?.just_posted}
     class:isrep={isReplyEvent}
     class:highlight={highlight || !interactive} role="button">
@@ -556,7 +559,6 @@ $: bannedFromSpace = state?.banned === true
         </div>
     {/if}
 
-</div>
 </div>
 
 
