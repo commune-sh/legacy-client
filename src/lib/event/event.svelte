@@ -124,8 +124,6 @@ function goToEvent() {
 
     console.log("go to event")
 
-    hideTools()
-
     goto(link, {
         noscroll: true,
     })
@@ -382,10 +380,6 @@ $: bannedFromSpace = state?.banned === true
 <div class="event" 
     bind:this={el}
     on:contextmenu={print}
-    on:mouseenter={showTools}
-    on:touchstart={showTools}
-    on:mouseleave={hideTools}
-    on:touchmove={hideTools}
     class:h={!isReply && !isPost && !editing}
     class:ha={!isReply && !isPost && (hasAttachments || hasLinks)}
     class:ma={toolsActive}
