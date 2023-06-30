@@ -379,15 +379,15 @@ $: bannedFromSpace = state?.banned === true
 
 <div class="event-container"
     on:contextmenu={print}
-    on:mouseover={showTools}
-    on:mouseleave={hideTools}>
+    on:click={goToEvent} >
 <div class="event" 
     bind:this={el}
     class:h={!isReply && !isPost && !editing}
     class:ha={!isReply && !isPost && (hasAttachments || hasLinks)}
     class:ma={toolsActive}
     class:bb={isPost || isReply}
-    on:click={goToEvent} 
+    on:mouseover={showTools}
+    on:mouseleave={hideTools}
     class:fresh={event?.just_posted}
     class:isrep={isReplyEvent}
     class:highlight={highlight || !interactive} role="button">
