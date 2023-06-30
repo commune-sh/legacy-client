@@ -377,6 +377,10 @@ $: bannedFromSpace = state?.banned === true
 
 </script>
 
+<div class="event-container"
+    on:contextmenu={print}
+    on:mouseover={showTools}
+    on:mouseleave={hideTools}>
 <div class="event" 
     bind:this={el}
     class:h={!isReply && !isPost && !editing}
@@ -552,6 +556,7 @@ $: bannedFromSpace = state?.banned === true
         </div>
     {/if}
 
+</div>
 </div>
 
 
