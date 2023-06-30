@@ -526,6 +526,28 @@ $: bannedFromSpace = state?.banned === true
     {/if}
 
 
+        {#if !editing && interactive && !bannedFromSpace}
+        <div class="tools" 
+            class:show={displayTools}
+            class:asi={event?.pinned || replyPinned}>
+                <Tools 
+                    isReply={isReply} 
+                    isPost={isPost}
+                    on:reply={replyToEvent}
+                    active={toolsActive}
+                    isAuthor={isAuthor}
+                    isPostAuthor={isPostAuthor}
+                    nested={nested}
+                    on:edit={editEvent}
+                    on:pin
+                    on:redact
+                    on:set-reply-thread
+                    on:react={reactToKey}
+                    on:active={activateTools} 
+                    on:kill={killTools} 
+                    event={event} />
+            </div>
+        {/if}
 
 
 
@@ -618,10 +640,16 @@ $: bannedFromSpace = state?.banned === true
 }
 
 .tools {
+    visibility: hidden;
     position: absolute;
     top: 0.75rem;
     right: 0.75rem;
 }
+
+.show {
+    visibility: visible;
+}
+
 .asi {
     right: 2.75rem;
 }
