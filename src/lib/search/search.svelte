@@ -86,7 +86,7 @@ function kill() {
     {#if showResults}
         <div class="results fl-co">
             <div class="te sm pa3">
-                <span class="label">Searching for:</span> <b>{query}</b>
+                <span class="label">Searching for:</span> {query}
             </div>
             <div class="events">
                 {#if results?.length > 0}
@@ -127,7 +127,7 @@ input {
     border: none;
     border-radius: 4px;
     font-size: small;
-    font-weight: bold;
+    font-weight: 500;
     color: var(--text-light);
     padding-left: 0.5rem;
     padding-right: 1.5rem;

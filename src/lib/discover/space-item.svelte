@@ -25,9 +25,9 @@ function goToSpace() {
             style="background-image: url({header})">
         </div>
         <div class="pa2 mt1 fl">
-            <div class="fl-o">
+            <div class="snm fl-o">
                 <a href={space.alias}>
-                <b>{space.name ? space.name : space.alias}</b>
+                    {space.name ? space.name : space.alias}
                 </a>
             </div>
             <div class="">
@@ -81,5 +81,9 @@ a, a:link, a:visited, a:active {
 }
 .desc {
     color: var(--text-light);
+}
+
+.snm {
+    font-weight: 500;
 }
 </style>

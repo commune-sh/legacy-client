@@ -90,7 +90,7 @@ function kill() {
     cursor: pointer;
     box-sizing: border-box;
     border-radius: 5px;
-    font-weight: bold;
+    font-weight: 500;
 }
 .select-options {
     position: absolute;
@@ -110,7 +110,7 @@ function kill() {
     background-color: var(--bg);
 }
 .selected {
-    font-weight: bold;
+    font-weight: 500;
 }
 .rel {
     position: relative;

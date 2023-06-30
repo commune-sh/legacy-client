@@ -25,7 +25,7 @@ $: hasImage = links[0]?.image?.length > 0
 
             {#if links?.length > 1}
                 <div class="img-count">
-                    <b>+{links.length - 1}</b>
+                    +{links.length - 1}
                 </div>
             {/if}
         </div>
@@ -36,7 +36,7 @@ $: hasImage = links[0]?.image?.length > 0
             </div>
             {#if links?.length > 1}
                 <div class="img-count">
-                    <b>+{links.length - 1}</b>
+                    +{links.length - 1}
                 </div>
             {/if}
         </div>
@@ -58,11 +58,12 @@ $: hasImage = links[0]?.image?.length > 0
     padding: 0.125rem 0.25rem;
     border-radius: 500px;
     font-size: small;
+    font-weight: 500;
 }
 
 .at-img {
-    height: 85px;
-    width: 85px;
+    height: 70px;
+    width: 70px;
     border-radius: 9px;
     background-repeat: no-repeat;
     background-size: cover;
@@ -87,8 +88,8 @@ $: hasImage = links[0]?.image?.length > 0
 
 @media screen and (max-width: 768px) {
     .at-img {
-        height: 60px;
-        width: 60px;
+        height: 50px;
+        width: 50px;
     }
 }
 </style>

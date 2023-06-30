@@ -39,8 +39,8 @@ $: username = $store?.credentials?.username
 
 </script>
 
-<div class="" bind:this={content}>
-    <b>@{username}'s space</b>
+<div class="name" bind:this={content}>
+    @{username}'s space
 </div>
 
 <div class="i-c grd">
@@ -102,5 +102,9 @@ $: username = $store?.credentials?.username
 
 .ac {
     opacity: 1;
+}
+
+.name {
+    font-weight: 500;
 }
 </style>

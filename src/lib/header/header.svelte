@@ -325,7 +325,7 @@ function signup() {
 
 .n {
     cursor: pointer;
-    font-weight: bold;
+    font-weight: 500;
     font-size: 1rem;
 }
 
@@ -378,7 +378,7 @@ function signup() {
     }
 }
 .slash {
-    font-weight: bold;
+    font-weight: 500;
     opacity: 0.5;
     margin-right: 0.75rem;
     margin-left: 0.75rem;

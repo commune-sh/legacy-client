@@ -103,17 +103,17 @@ $: avatar = $store?.credentials?.avatar_url?.length > 0 ?
                 </div>
             </div>
 
-            <div class="grd-c fl-co">
+            <div class="name grd-c fl-co">
                 {#if display_name}
                     <div class="">
-                        <b>{display_name}</b>
+                        {display_name}
                     </div>
                     <div class="mt1 sm">
-                        <b>@{username}</b>
+                        @{username}
                     </div>
                 {:else}
                     <div class="">
-                        <b>@{username}</b>
+                        @{username}
                     </div>
                 {/if}
             </div>
@@ -155,7 +155,7 @@ $: avatar = $store?.credentials?.avatar_url?.length > 0 ?
     cursor: pointer;
     border-radius: 60px;
     border: 0px;
-    font-weight: bold;
+    font-weight: 500;
     background-color: var(--primary);
     color: white;
     width: 100%;
@@ -207,5 +207,8 @@ $: avatar = $store?.credentials?.avatar_url?.length > 0 ?
 }
 .sm {
     color: var(--text-light);
+}
+.name {
+    font-weight: 500;
 }
 </style>

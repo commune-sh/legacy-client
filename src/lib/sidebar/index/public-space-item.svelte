@@ -90,7 +90,7 @@ a, a:link, a:visited, a:active {
 }
 
 .init {
-    font-size: small;
-    font-weight: bold;
+    font-size: 10px;
+    font-weight: 500;
 }
 </style>

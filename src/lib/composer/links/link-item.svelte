@@ -21,8 +21,8 @@ function deleteLink() {
         </div>
     {/if}
     <div class="ovh fl-co">
-        <div class="sm">
-            <b>{item.title}</b>
+        <div class="title sm">
+            {item.title}
         </div>
         <div class="li link mr3 sm">
             {item.href}
@@ -97,5 +97,8 @@ function deleteLink() {
     text-overflow: ellipsis;
     white-space: nowrap;
     word-break: break-all;
+}
+.title {
+    font-weight: 500;
 }
 </style>

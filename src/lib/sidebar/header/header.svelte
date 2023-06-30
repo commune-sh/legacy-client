@@ -134,7 +134,7 @@ $: if(headerExists && header && el) {
                         </div>
                     {:else}
 
-                        <span class="nm" class:ish={headerExists}><b>{name}</b></span>
+                        <span class="nm" class:ish={headerExists}>{name}</span>
                     {/if}
                 </div>
 
@@ -164,9 +164,9 @@ $: if(headerExists && header && el) {
 
         <div class="name in fl-o ml2">
             {#if isStaticRoute && staticRoute?.name != 'About'} 
-                <b>{staticRoute.name}</b>
+                {staticRoute.name}
             {:else if isNotSpace}
-                <b>{PUBLIC_APP_NAME}</b>
+                {PUBLIC_APP_NAME}
             {/if}
         </div>
 
@@ -206,6 +206,7 @@ $: if(headerExists && header && el) {
     overflow: hidden;
     width: 100%;
     line-height: normal;
+    font-weight: 500;
 }
 
 .header {
@@ -273,6 +274,7 @@ $: if(headerExists && header && el) {
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: normal;
+    font-weight: 500;
 }
 .ish {
     background: var(--space-title);

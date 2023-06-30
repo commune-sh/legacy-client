@@ -58,7 +58,7 @@ function img(i) {
 .title {
     background: var(--shade-2);
     border-radius: 500px;
-    height: 12px;
+    height: 10px;
 }
 
 .body {

@@ -164,7 +164,7 @@ $: replyPinned = isReply && event?.reactions?.filter(r => r.key === 'pinned').le
     cursor: pointer;
     border-radius: 4px;
     font-size: 0.8rem;
-    font-weight: bold;
+    font-weight: 500;
     padding: 0.25rem;
 }
 .m-item:hover{

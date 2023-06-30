@@ -27,8 +27,8 @@ $: isYoutube = (item) => {
                 {/if}
             </div>
             <div class="ovh fl-co fl-o">
-                <div class="sm">
-                    <b>{item.title}</b>
+                <div class="title sm">
+                    {item.title}
                 </div>
                 <div class="li link mr3 sm">
                     {item.href}
@@ -69,7 +69,7 @@ $: isYoutube = (item) => {
     overflow: hidden;
     text-overflow: ellipsis;
     word-break: break-word;
-    height: 22px;
+    height: 18px;
 }
 .image {
     background-repeat: no-repeat;
@@ -86,9 +86,15 @@ $: isYoutube = (item) => {
     text-overflow: ellipsis;
     white-space: nowrap;
     word-break: break-all;
+    color: var(--text-light);
 }
-a {
+
+a, a:link, a:visited, a:active {
     color: var(--text);
     text-decoration: none;
+}
+
+.title {
+    font-weight: 500;
 }
 </style>

@@ -439,7 +439,7 @@ textarea {
 }
 .red {
     color: red;
-    font-size: bold;
+    font-size: 500;
 }
 </style>
 

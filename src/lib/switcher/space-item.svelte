@@ -95,8 +95,8 @@ $: name = space?.name?.length > 0 ? space?.name : space?.alias
 </script>
 
 <div class="tip fl-co pa1" bind:this={content}>
-    <div class="">
-        <b>{name}</b>
+    <div class="name">
+        {name}
     </div>
     {#if space?.topic}
     <div class="md mt2">
@@ -118,9 +118,9 @@ $: name = space?.name?.length > 0 ? space?.name : space?.alias
     style="background-image: url({avatar})">
         {#if !avatar && !isProfile}
             <div class="initial grd-c" >
-                <b style="font-size:{size};line-height:{size};">
+                <span class="name" style="font-size:{size};line-height:{size};">
                     {initials}
-                </b>
+                </span>
             </div>
         {/if}
         {#if isProfile && !avatar}
@@ -195,4 +195,7 @@ $: name = space?.name?.length > 0 ? space?.name : space?.alias
     opacity: 1;
 }
 
+.name {
+    font-weight: 500;
+}
 </style>

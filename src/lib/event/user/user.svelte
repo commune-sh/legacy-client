@@ -68,7 +68,7 @@ $: avatar = `${mediaURL}/${user?.avatar_url}`
 
 <style>
 .user {
-    font-weight: bold;
+    font-weight: 500;
 }
 
 .flc {

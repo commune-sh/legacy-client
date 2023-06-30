@@ -99,7 +99,7 @@ function spaceSettings() {
     padding: 0.35rem 0.25rem;
     border-radius: 4px;
     font-size: 0.8rem;
-    font-weight: bold;
+    font-weight: 500;
     cursor: pointer;
 }
 .item:hover {

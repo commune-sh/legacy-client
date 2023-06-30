@@ -494,7 +494,7 @@ export function updateReactions(e) {
 
 .rco {
     font-size: small;
-    font-weight: bold;
+    font-weight: 500;
 }
 
 @media screen and (max-width: 1280px) {

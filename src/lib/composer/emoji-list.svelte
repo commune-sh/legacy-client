@@ -87,7 +87,7 @@ let root;
 
     <div class="header">
             <span class="h">MATCHING</span>
-            <span class="s ml1"><b>:{shortcode}<b></span>
+            <span class="s ml1">:{shortcode}</span>
     </div>
 
     <div class="list fl fl-co">
@@ -148,11 +148,11 @@ let root;
 }
 .h {
     color: var(--text-light);
-    font-weight: bold;
+    font-weight: 500;
     font-size: small;
 }
 .s {
-    font-weight: bold;
+    font-weight: 500;
     font-size: small;
 }
 .list {

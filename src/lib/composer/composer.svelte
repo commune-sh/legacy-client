@@ -650,8 +650,8 @@ $: if(replyTo !== lastReplyTo) {
 
     {#if reply && replyTo}
         <div class="reply-header">
-            <div class="pa3 sm">
-                <b>Replying</b>
+            <div class="fw5 pa3 sm">
+                Replying
             </div>
             <div class="grd-c c-ico ph2 mr2" on:click={kill}>
                 {@html close}
@@ -814,7 +814,7 @@ $: if(replyTo !== lastReplyTo) {
     background-color: transparent;
     border: none;
     width: 100%;
-    font-weight: bold;
+    font-weight: 500;
     padding: 0;
     height: 42px;
     padding-top: 1rem;

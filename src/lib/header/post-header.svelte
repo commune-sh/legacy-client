@@ -121,7 +121,7 @@ $: isTopic= $page?.params?.topic !== undefined &&
 
 .n {
     cursor: pointer;
-    font-weight: bold;
+    font-weight: 500;
     font-size: 1rem;
 }
 
@@ -154,7 +154,7 @@ $: isTopic= $page?.params?.topic !== undefined &&
 
 .sfd {
     font-size: small;
-    font-weight: bold;
+    font-weight: 500;
     background-color: var(--shade-4);
     cursor: pointer;
     border-radius: 500px;

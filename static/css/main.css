@@ -215,7 +215,7 @@
 
 @font-face {
     font-family: 'Inter';
-    src: url('/fonts/Inter-Regular.ttf');
+    src: url('/fonts/Inter-VariableFont_slnt,wght.ttf');
 }
 
 
@@ -355,7 +355,7 @@ button {
     border: 0px;
     padding: 0.25rem 0.5rem;
     background-color: var(--primary);
-    font-weight: bold;
+    font-weight: 500;
     color: white;
     display: inline-block;
     font-family: "Inter", "Twemoji", "Apple Color Emoji", "Segoe UI Emoji", "Arial", "Helvetica", sans-serif, "STIXGeneral", "Noto Color Emoji";
@@ -453,6 +453,10 @@ select {
     font-size: 16px;
     box-sizing: border-box;
     font-family: "Inter", "Twemoji", "Apple Color Emoji", "Segoe UI Emoji", "Arial", "Helvetica", sans-serif, "STIXGeneral", "Noto Color Emoji";
+}
+
+.fw5 {
+    font-weight: 500;
 }
 
 .pa0 { padding: 0; }
@@ -758,7 +762,7 @@ select {
 
 .title {
     font-size: 1.2rem;
-    font-weight: bold;
+    font-weight: 500;
     color: var(--text-1);
 }
 
@@ -778,7 +782,7 @@ select {
 
 .label {
     font-size: small;
-    font-weight: bold;
+    font-weight: 500;
     text-transform: uppercase;
     color: var(--text-2);
     letter-spacing: 1px;

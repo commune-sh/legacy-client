@@ -80,7 +80,7 @@ $: verified = $store.credentials?.verified
     cursor: pointer;
     border-radius: 7px;
     padding: 0.5rem;
-    font-weight: bold;
+    font-weight: 500;
     font-size: 0.8rem;
 }
 .item:hover {

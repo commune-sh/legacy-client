@@ -502,9 +502,9 @@ $: bannedFromSpace = state?.banned === true
                     <div class="mr2 grd-c mt2 expand" 
                         on:click={toggleReplies}>
                         {#if showingReplies}
-                            <b>[-]</b>
+                            [-]
                         {:else}
-                            <b>[+{replies ? replies : null}]</b>
+                            [+{replies ? replies : null}]
                         {/if}
                     </div>
                 {/if}
@@ -658,10 +658,11 @@ $: bannedFromSpace = state?.banned === true
 
 
 .post-title {
-    font-weight: bold;
+    font-weight: 500;
 }
 
 .post-body {
+    font-weight: 400;
 }
 
 .pba {
@@ -670,7 +671,7 @@ $: bannedFromSpace = state?.banned === true
 
 
 .clipped {
-    font-weight: 500;
+    font-weight: normal;
     height: 22px;
     line-height: 22px!important;
     overflow: hidden;
@@ -703,7 +704,7 @@ $: bannedFromSpace = state?.banned === true
 }
 
 .expand {
-    font-weight: bold;
+    font-weight: 500;
     font-size: small;
     cursor: pointer;
     opacity: 0.5;
@@ -715,8 +716,8 @@ $: bannedFromSpace = state?.banned === true
 
 .pin {
     position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
+    top: 0.5rem;
+    right: 0.5rem;
     fill: var(--primary);
 }
 

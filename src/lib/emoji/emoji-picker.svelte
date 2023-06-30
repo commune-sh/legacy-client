@@ -489,7 +489,7 @@ input {
 }
 
 .hov-s {
-    font-weight: bold;
+    font-weight: 500;
     font-size: 1rem;
 }
 </style>

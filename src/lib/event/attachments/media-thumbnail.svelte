@@ -36,7 +36,7 @@ $: mediaType = media?.[0]?.type
 
             {#if media?.length > 1}
                 <div class="img-count">
-                    <b>+{media.length - 1}</b>
+                    +{media.length - 1}
                 </div>
             {/if}
         </div>
@@ -55,7 +55,7 @@ $: mediaType = media?.[0]?.type
 
             {#if media?.length > 1}
                 <div class="img-count">
-                    <b>+{media.length - 1}</b>
+                    +{media.length - 1}
                 </div>
             {/if}
         </div>
@@ -76,11 +76,12 @@ $: mediaType = media?.[0]?.type
     padding: 0.125rem 0.25rem;
     border-radius: 500px;
     font-size: small;
+    font-weight: 500;
 }
 
 .at-img {
-    height: 85px;
-    width: 85px;
+    height: 70px;
+    width: 70px;
     border-radius: 9px;
     background-repeat: no-repeat;
     background-size: cover;
@@ -105,8 +106,8 @@ $: mediaType = media?.[0]?.type
 
 @media screen and (max-width: 768px) {
     .at-img {
-        height: 60px;
-        width: 60px;
+        height: 50px;
+        width: 50px;
     }
 }
 </style>
