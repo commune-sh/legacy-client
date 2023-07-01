@@ -428,7 +428,7 @@ export function updateReactions(e) {
 
             {#if post && authenticated && joined}
                 <div class="">
-                    <button on:click={replyToPost}>Reply</button>
+                    <button class="sbut" on:click={replyToPost}>Reply</button>
                 </div>
             {/if}
         </div>
