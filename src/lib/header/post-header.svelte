@@ -67,8 +67,10 @@ $: isTopic= $page?.params?.topic !== undefined &&
     <div class="container fl">
 
         {#if !embed}
-        <div class="menu c-ico grd-c" on:click={toggleMenu}>
-            {@html menu}
+        <div class="grd">
+            <div class="menu c-ico grd-c" on:click={toggleMenu}>
+                {@html menu}
+            </div>
         </div>
         {/if}
 

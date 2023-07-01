@@ -84,28 +84,14 @@ function toggle() {
 }
 
 
-.tick {
-    opacity: 0;
-    transition: 0.1s;
-    position: absolute;
-    top: 12px;
-    left: 0px;
-    height: 15px;
-    width: 4px;
-    border-radius: 0 5px 5px 0;
-    background-color: var(--switcher-pill);
-}
-.th {
-    opacity: 1;
-}
 
 .ac {
     opacity: 1;
 }
 
 .create {
-    height: 22px;
-    width: 22px;
+    height: 20px;
+    width: 20px;
     fill: var(--action-icon);
 }
 </style>

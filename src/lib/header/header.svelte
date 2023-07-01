@@ -210,9 +210,13 @@ function signup() {
 
 <div class="header">
     <div class="container fl">
+
+        <div class="grd">
             <div class="menu c-ico grd-c" on:click={toggleMenu}>
                 {@html menu}
             </div>
+        </div>
+
 
         <div class="fl mr3">
 

@@ -99,7 +99,7 @@ $: name = space?.name?.length > 0 ? space?.name : space?.alias
         {name}
     </div>
     {#if space?.topic}
-    <div class="md mt2">
+    <div class="sm mt2">
         {space?.topic}
     </div>
     {/if}

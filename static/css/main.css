@@ -354,9 +354,10 @@ a:hover {
 
 button {
     cursor: pointer;
+    line-height: 1;
     border-radius: 3px;
     border: 0px;
-    padding: 0.25rem 0.5rem;
+    padding: 0.4rem;
     background-color: var(--primary);
     font-weight: 500;
     color: white;
@@ -784,7 +785,7 @@ select {
 }
 
 .label {
-    font-size: small;
+    font-size: 12px;
     font-weight: 500;
     text-transform: uppercase;
     color: var(--text-2);
