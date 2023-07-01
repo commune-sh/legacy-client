@@ -44,6 +44,10 @@ export let depth = 0;
 
 export let nested = false;
 
+$: isDomain = $page.params.domain !== undefined && 
+    $page.params.domain !== 'undefined' && 
+    $page.params.domain?.length > 0
+
 $: isSpace = $page.params.space !== undefined && $page.params.space !== null &&
     $page.params.space !== ''
 
@@ -380,6 +384,9 @@ $: replyPinned = isReply && event?.reactions?.filter(r => r.key === 'pinned').le
 $: state = $store?.states[$page?.params?.space]
 $: bannedFromSpace = state?.banned === true
 
+$: roomAlias = isDomain ? `${$page.params.domain}/${event.room_alias}` :
+    event.room_alias
+
 </script>
 
 <div class="event" 
@@ -409,7 +416,7 @@ $: bannedFromSpace = state?.banned === true
             {/if}
             {#if showRoomAlias}
                 <div class="grd-c ml2">
-                    <a href={`/${event.room_alias}`}>{event.room_alias}</a>
+                    <a href={`/${roomAlias}`}>{event.room_alias}</a>
                 </div>
             {/if}
             {#if showTopic}
