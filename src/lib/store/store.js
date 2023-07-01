@@ -80,6 +80,8 @@ function createApp() {
     userSettings: false,
     discoverSpacesOpen: false,
     aboutOpen: false,
+    accountCreated: false,
+    refreshFeed: false,
   }
 
   if(window) {

@@ -129,8 +129,9 @@ function loggedin() {
 }
 
 function created() {
-    store.startRefreshingFeed()
+    $store.accountCreated = true
     kill()
+    $store.discoverSpacesOpen = true
 }
 
 </script>

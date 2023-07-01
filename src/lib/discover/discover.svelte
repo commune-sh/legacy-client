@@ -1,4 +1,5 @@
 <script>
+import { page } from '$app/stores';
 import { onMount, createEventDispatcher } from 'svelte'
 import { close } from '$lib/assets/icons.js'
 import { store } from '$lib/store/store.js'
@@ -9,6 +10,9 @@ import SpaceItem from './space-item.svelte'
 const dispatch = createEventDispatcher()
 
 let kill =() => {
+    if($page?.url.pathname == "/") {
+        $store.reloadFeed = true
+    }
     $store.discoverSpacesOpen = false;
 }
 

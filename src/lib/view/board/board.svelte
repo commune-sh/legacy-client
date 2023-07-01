@@ -374,6 +374,12 @@ $: if($store.refreshingFeed) {
     store.stopRefreshingFeed()
 }
 
+$: if($store.reloadFeed && $store.accountCreated) {
+    loadEvents()
+    $store.reloadFeed = false 
+    $store.accountCreated = false
+}
+
 let container;
 
 $: menuToggled = $store?.menuToggled

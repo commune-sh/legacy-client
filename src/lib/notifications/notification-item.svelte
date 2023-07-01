@@ -47,9 +47,6 @@ function go() {
 <div class="item pa3" on:click={go}>
     <a href={sender}><span class="href">@{from}</span></a> {action} to your
     post "{item?.body?.substring(0, 20)}{item?.body?.length > 20 ? `...` : ``}"
-
-    {post_slug}
-    {reply_slug}
 </div>
 
 <style>
