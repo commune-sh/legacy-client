@@ -65,7 +65,7 @@ $: if(authenticated) {
 async function fetchNotifications() {
     const res = await getNotifications();
     console.log(res)
-    if(res?.notifications) {
+    if(res?.notifications?.length > 0) {
         $store.notifications = res.notifications
     }
 }

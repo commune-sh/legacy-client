@@ -246,6 +246,8 @@ function createApp() {
       }
       p.authenticated = false
       p.credentials = null
+      p.rooms = []
+      p.notifications = []
       localStorage.removeItem('access_token')
       return p
     })

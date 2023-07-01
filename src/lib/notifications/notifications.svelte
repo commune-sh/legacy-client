@@ -65,6 +65,8 @@ function goToPost(e) {
     menu.hide()
 }
 
+$: none = $store.notifications?.length == 0
+
 </script>
 
 <div class="grd-c pa2 mr1 bell"
@@ -80,13 +82,13 @@ function goToPost(e) {
 
 <div class="notifications" bind:this={content}>
     <div class="content">
-        {#if !items}
+        {#if none}
             <div class="grd-c">
                 You don't have any notifications.
             </div>
         {/if}
 
-        {#if items}
+        {#if !none && items}
         <div class="items">
             {#each items as item}
                 <NotificationItem 
