@@ -295,7 +295,7 @@ function signup() {
             </div>
             {#if $store.verifiedSession && !authenticated}
                 <div class="grd-c ml2 signup">
-                    <button class="ph2 pv1" on:click={signup}>Sign Up</button>
+                    <button class="ph2 pv2" on:click={signup}>Sign Up</button>
                 </div>
             {/if}
         </div>
@@ -395,7 +395,8 @@ function signup() {
     overflow: hidden;
     text-overflow: ellipsis;
     margin-right: 0.5rem;
-    font-size: 0.9rem;
+    font-size: 13px;
+    font-weight: 500;
     line-height: normal;
 }
 

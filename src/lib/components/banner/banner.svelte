@@ -168,7 +168,7 @@ function remove() {
     right: 0;
     bottom: 0;
     border-radius: 50%;
-    background-color:var(--bg);
+    background-color:var(--primary);
     height: 30px;
     width: 30px;
     display: grid;

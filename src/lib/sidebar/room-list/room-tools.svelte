@@ -1,8 +1,8 @@
 <script>
-import { page } from '$app/stores';
+import { PUBLIC_BASE_URL } from '$env/static/public';
 import { leaveRoom } from '$lib/utils/request.js'
-import { goto } from '$app/navigation';
-import { leave as leaveIcon, settings, info } from '$lib/assets/icons.js'
+import { page } from '$app/stores';
+import { leave as leaveIcon, settings, info, feed } from '$lib/assets/icons.js'
 import { store } from '$lib/store/store.js'
 import {createEventDispatcher} from 'svelte';
 
@@ -28,6 +28,24 @@ function kill() {
     dispatch('kill')
 }
 
+function openFeed() {
+    dispatch('kill')
+
+
+    let url = ``
+
+    if(room?.alias == 'general') {
+        url = `${PUBLIC_BASE_URL}/${$page.params.space}`
+    } else {
+        url = `${PUBLIC_BASE_URL}/${$page.params.space}/${room?.alias}`
+    }
+
+    url = `${url}/rss`
+
+    window.open(url, '_blank')
+}
+
+
 async function leave() {
     kill()
     const resp = await leaveRoom(room.room_id);
@@ -40,22 +58,36 @@ async function leave() {
 function boardSettings() {
     //$store.spaceSettingsOpen = true
     //goto(`/${$page.params.space}/settings`)
-    console.log(room)
-    $store.roomSettings = {
-        active: true,
-        room_id: room?.room_id,
-    }
     kill()
+
+    if(room.alias == `general`) {
+        $store.spaceSettingsOpen = true
+    } else {
+        $store.roomSettings = {
+            active: true,
+            room_id: room?.room_id,
+        }
+    }
 }
 </script>
 
 <div class="user-popup">
+
     <div class="item fl" on:click={kill}>
         <div class="item grd-c fl-o">
             Board Info
         </div>
         <div class="ico-s ">
             {@html info}
+        </div>
+    </div>
+
+    <div class="item fl" on:click={openFeed}>
+        <div class="item grd-c fl-o">
+            RSS Feed
+        </div>
+        <div class="ico-s ">
+            {@html feed}
         </div>
     </div>
 
@@ -90,9 +122,9 @@ function boardSettings() {
 .user-popup {
     width: 180px;
     background-color: var(--popup-bg);
+    border: 1px solid var(--border-1);
     border-radius: 5px;
     padding: 0.25rem;
-    box-shadow: 0px 9px 15px -7px rgba(0,0,0,0.1);
 }
 
 .item {
@@ -102,6 +134,7 @@ function boardSettings() {
     font-weight: 500;
     cursor: pointer;
 }
+
 .item:hover {
     background-color: var(--context-menu-hover);
 }

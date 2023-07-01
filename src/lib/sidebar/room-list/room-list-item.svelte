@@ -5,6 +5,7 @@ import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 import { isInViewport } from '$lib/utils/utils.js'
 import { discuss, chat, down } from '$lib/assets/icons.js'
+import { createStateEvent } from '$lib/utils/request.js'
 import { store } from '$lib/store/store.js'
 import TopicItem from './topic-item.svelte'
 import AddTopic from './add-topic.svelte'
@@ -219,6 +220,20 @@ $: mediaURL = isDomain ? $store?.federated?.media_url : PUBLIC_MEDIA_URL
 
 $: avatar = item?.avatar ? `${mediaURL}/${item?.avatar}` : null
 
+async function removeTopic(e) {
+    let newTopics = topics.filter(x => x !== e.detail)
+    store.updateRoomTopics($page.params.space, item.alias, JSON.stringify(newTopics))
+    const res = await createStateEvent({
+        room_id: room_id,
+        event_type: 'm.room.topics',
+        content: {
+            topics: newTopics
+        }
+    })
+    console.log(res)
+}
+
+
 </script>
 
 {#if show}
@@ -251,35 +266,35 @@ $: avatar = item?.avatar ? `${mediaURL}/${item?.avatar}` : null
 
     </div>
 
+            <div class="tools grd">
+                <Popup
+                bind:this={popup}
+                trigger={"click"}
+                offset={[0, 4]}
+                on:killed={killed}
+                shadow={`box-shadow: 0px 9px 15px -7px rgba(0,0,0,0.1);`}
+                mask={true}
+                placement={"bottom-end"}>
 
-        {#if authenticated && (isOwner || joined) && !isGeneral}
-        <div class="tools grd">
-            <Popup
-            bind:this={popup}
-            trigger={"click"}
-            offset={[0, 4]}
-            on:killed={killed}
-            shadow={`box-shadow: 0px 9px 15px -7px rgba(0,0,0,0.1);`}
-            mask={true}
-            placement={"bottom-end"}>
-
-                <div class="ich grd ph2"
-                    slot="reference">
-                    <div class="ico-s grd-c " >
-                        {@html down}
+                    <div class="ich grd ph2"
+                        slot="reference">
+                        <div class="ico-s grd-c " >
+                            {@html down}
+                        </div>
                     </div>
-                </div>
 
 
 
-                <div class="component" slot="content">
-                    <RoomTools room={item} on:kill={killPopup}/>
-                </div>
+                    <div class="component" slot="content">
+                        <RoomTools room={item} on:kill={killPopup}/>
+                    </div>
 
-            </Popup>
+                </Popup>
 
-        </div>
-        {:else if authenticated && !joined && !isGeneral && !banned && !bannedFromSpace}
+            </div>
+
+
+        {#if !authenticated}
             <div class="grd-c mr1 join">
                 <button class="light" 
                     disabled={busy}
@@ -294,8 +309,11 @@ $: avatar = item?.avatar ? `${mediaURL}/${item?.avatar}` : null
 {#if topics?.length > 0 && selected}
     {#each topics as topic}
         <TopicItem 
+            on:remove={removeTopic}
+            authenticated={authenticated}
             isGeneral={isGeneral}
             alias={item.alias}
+            roomItem={item}
             item={topic} />
     {/each}
 {/if}

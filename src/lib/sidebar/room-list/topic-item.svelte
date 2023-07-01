@@ -1,9 +1,15 @@
 <script>
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
-import { hash } from '$lib/assets/icons.js'
+import { hash, down } from '$lib/assets/icons.js'
 import { store } from '$lib/store/store.js'
+import Popup from '$lib/popup/popup.svelte'
+import TopicTools from './topic-tools.svelte'
+import { createEventDispatcher } from 'svelte'
 
+const dispatch = createEventDispatcher();
+
+export let roomItem;
 export let item;
 export let isGeneral;
 export let alias;
@@ -63,10 +69,39 @@ function logItem(e) {
     console.log(item)
 }
 
+let menuActive = false;
+let killPopup = () => {
+    popup.kill()
+}
+
+let popup;
+
+let killed = () => {
+    menuActive = false
+    //hovered = false
+}
+
+function removeTopic(e) {
+    dispatch('remove', e.detail)
+
+    if(active) {
+
+        let url = `/${space}/${alias}`
+        if(isGeneral) {
+            url = `/${space}`
+        }
+
+        goto(url, {
+            noscroll: true,
+        })
+    }
+}
+
 </script>
 
 <div class="topic-item"
     class:active={active}>
+
     <div class="item" 
         on:click={goToRoom}
         on:contextmenu={logItem}>
@@ -80,6 +115,37 @@ function logItem(e) {
             {item}
         </div>
     </div>
+
+            <div class="tools grd">
+                <Popup
+                bind:this={popup}
+                trigger={"click"}
+                offset={[0, 4]}
+                on:killed={killed}
+                shadow={`box-shadow: 0px 9px 15px -7px rgba(0,0,0,0.1);`}
+                mask={true}
+                placement={"bottom-end"}>
+
+                    <div class="ich grd ph2"
+                        slot="reference">
+                        <div class="ico-s grd-c " >
+                            {@html down}
+                        </div>
+                    </div>
+
+
+
+                    <div class="component" slot="content">
+                        <TopicTools 
+                        topic={item} 
+                        room={roomItem} 
+                        on:remove={removeTopic}
+                        on:kill={killPopup}/>
+                    </div>
+
+                </Popup>
+
+            </div>
 
 </div>
 
@@ -127,5 +193,11 @@ function logItem(e) {
 }
 .inactive {
     opacity: 0.5;
+}
+.tools {
+    opacity: 0;
+}
+.topic-item:hover .tools {
+    opacity: 1;
 }
 </style>
