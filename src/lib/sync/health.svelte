@@ -1,12 +1,32 @@
 <script>
 import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
-import { APIRequest } from '$lib/utils/request.js'
+import { APIRequest,getAPIEndpoint } from '$lib/utils/request.js'
 import { onMount, tick } from 'svelte'
 import { store } from '$lib/store/store.js'
+import { page } from '$app/stores';
 
 onMount(() => {
     checkHealth(true)
 })
+
+$: isDomain = $page?.params?.domain != null && 
+    $page?.params?.domain?.length > 0
+
+
+$: if(isDomain) {
+    fetchFE()
+}
+
+async function fetchFE() {
+        const endpoint = await getAPIEndpoint($page.params?.domain)
+
+        if(endpoint?.url) {
+            store.isFederated({
+                endpoint: endpoint.url,
+                media_url: endpoint.media_url
+            })
+        }
+}
 
 
 function checkHealth(init) {

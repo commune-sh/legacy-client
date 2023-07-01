@@ -205,6 +205,10 @@ function signup() {
     store.startAuthenticating("signup")
 }
 
+$: isDomain = $page.params.domain !== undefined && 
+    $page.params.domain !== 'undefined' && 
+    $page.params.domain?.length > 0
+
 </script>
 
 
@@ -224,6 +228,8 @@ function signup() {
                     {#if authDone}
                         <span class="n">{indexText}</span>
                     {/if}
+            {:else if (isDomain && !isSpace)}
+                    <a href={`https://${$page.params.domain}`} target="_blank">{$page.params.domain}</a>
             {:else if (!ready && !isStaticRoute)}
                     <SkeletonSpan />
             {:else}
@@ -328,6 +334,7 @@ function signup() {
 .name {
     padding-left: 1rem;
     padding-right: 1rem;
+    font-weight: 500;
 }
 
 .n {
@@ -405,4 +412,9 @@ function signup() {
         display: none;
     }
 }
+a, a:link, a:visited, a:active {
+    text-decoration: none;
+    color: var(--text);
+}
+
 </style>

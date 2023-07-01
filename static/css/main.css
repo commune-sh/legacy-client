@@ -261,7 +261,6 @@ body {
 a, a:link, a:visited, a:active {
     text-decoration: none;
     color: var(--link);
-    transition: 0.1s;
 }
 
 a:hover {

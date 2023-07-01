@@ -78,13 +78,14 @@ function log() {
     console.log(space)
 }
 
+
 $: isDomain = $page.params.domain !== undefined && 
     $page.params.domain !== 'undefined' && 
     $page.params.domain?.length > 0
 
 $: mediaURL = isDomain ? $store?.federated?.media_url : PUBLIC_MEDIA_URL
 
-$: avatar = space?.avatar?.length > 0 ? `${mediaURL}/${space?.avatar}` :
+$: avatar = space?.avatar?.length > 0 ? `${PUBLIC_MEDIA_URL}/${space?.avatar}` :
 null
 
 $: isProfile = space?.is_profile && space?.room_id ===
@@ -196,6 +197,6 @@ $: name = space?.name?.length > 0 ? space?.name : space?.alias
 }
 
 .name {
-    font-weight: 500;
+    font-weight: 700;
 }
 </style>

@@ -89,6 +89,9 @@ $: active = $store.emojiPicker.active &&
     $store.emojiPicker.reacting_to != undefined
 
 
+$: if(active && bounding) {
+    console.log(bounding)
+}
 
 function kill() {
     store.killEmojiPicker()

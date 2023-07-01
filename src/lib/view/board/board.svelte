@@ -115,7 +115,7 @@ async function loadEvents(init) {
 
     let endpoint = PUBLIC_API_URL
 
-    if($store.federated?.active && $store.federated.endpoint) {
+    if(isDomain && $store.federated?.active && $store.federated.endpoint) {
         endpoint = $store.federated?.endpoint
     }
 
@@ -235,6 +235,9 @@ $: if(isDomain && $store.federated.endpoint && !loaded) {
         loadEvents()
     }
 }
+$: if(!isDomain && domainPinged) {
+    loadEvents()
+}
 
 onMount(() => {
     if(isDomain) {
@@ -307,25 +310,33 @@ let fetchMore = () => {
     }
     const last = events?.[events?.length - 1]?.origin_server_ts
 
-    let url = `${PUBLIC_API_URL}/events?last=${last}`
+
+    let endpoint = PUBLIC_API_URL
+
+    if(isDomain && $store.federated?.active && $store.federated.endpoint) {
+        endpoint = $store.federated?.endpoint
+    }
+
+
+    let url = `${endpoint}/events?last=${last}`
     if(isSpace) {
-        url = `${PUBLIC_API_URL}/${$page.params.space}/events?last=${last}`
+        url = `${endpoint}/${$page.params.space}/events?last=${last}`
     }
 
     if(isSpace && isRoom) {
-        url = `${PUBLIC_API_URL}/${$page.params.space}/${$page.params.room}/events?last=${last}`
+        url = `${endpoint}/${$page.params.space}/${$page.params.room}/events?last=${last}`
     }
 
     if(isTopic) {
         url = url + `?topic=${topic}`
     }
 
-    if(authenticated && !isSpace && !isRoom) {
+    if(authenticated && !isSpace && !isRoom && !isDomain) {
         url = `${PUBLIC_API_URL}/feed?last=${last}`
     }
 
     if($page?.url.pathname == '/all') {
-        opt.url = `${PUBLIC_API_URL}/events`
+        opt.url = `${endpoint}/events`
     }
 
     APIRequest({

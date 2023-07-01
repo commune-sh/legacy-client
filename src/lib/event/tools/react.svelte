@@ -27,6 +27,7 @@ function reactToEvent() {
         reacting_to: event?.event_id,
         is_reply: isReply,
         target: reactEl,
+        position: 'left'
     }
     store.activateEmojiPicker(e)
     dispatch('active')

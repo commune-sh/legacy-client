@@ -7,8 +7,8 @@ import { discuss } from '$lib/assets/icons.js'
 export let space;
 
 $: isDomain = $page?.params?.domain != null && $page?.params?.domain?.length > 0
-$: mediaURL = isDomain ? $store?.federated?.media_url : PUBLIC_MEDIA_URL
-$: avatar = space?.avatar ? `${mediaURL}/${space?.avatar}` : null
+//$: mediaURL = isDomain ? $store?.federated?.media_url : PUBLIC_MEDIA_URL
+$: avatar = space?.avatar ? `${PUBLIC_MEDIA_URL}/${space?.avatar}` : null
 
 $: initials = space?.alias?.split(' ')
     .map((n) => n[0])
