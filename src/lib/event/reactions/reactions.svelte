@@ -29,8 +29,21 @@ $: emojiSelected = $store.emojiPicker.reacting_to == event?.event_id &&
     selectedEmoji != null &&
     selectedEmoji != undefined
 
+$: joinedRoom = authenticated && 
+    $store?.rooms.find(x => x === event.room_id) != null 
+
 export function process(key) {
     console.log("reacting with", key)
+
+    if(!joinedRoom) {
+        $store.alert = {
+            active: true,
+            message: `You'll need to join this board to react to this post.`
+        }
+        return
+    }
+
+
     if(event?.reactions) {
         // check if reaction key exists
         let i = event?.reactions?.findIndex(r => r.key === key);

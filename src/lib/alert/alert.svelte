@@ -44,11 +44,22 @@ function kill() {
     border-radius: 7px;
     min-width: 500px;
     box-shadow: 4px 4px 18px -10px rgba(0, 0, 0, 0.21);
+    font-weight: 500;
+    line-height: 1.5;
 }
 
 .ico-s{
     opacity:0.9;
     fill: white;
     cursor: pointer;
+}
+@media screen and (max-width: 768px) {
+    .alert {
+        right: 1rem;
+        left: 1rem;
+    }
+    .mes {
+        min-width: 90%;
+    }
 }
 </style>

@@ -265,7 +265,7 @@ async function removeTopic(e) {
 
 
     </div>
-        {#if !authenticated}
+        {#if authenticated && !joined && !isGeneral && !banned && !bannedFromSpace}
             <div class="grd-c mr1 join">
                 <button class="light" 
                     disabled={busy}
