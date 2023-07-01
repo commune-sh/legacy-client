@@ -211,12 +211,11 @@ function signup() {
 <div class="header">
     <div class="container fl">
 
-        <div class="grd">
-            <div class="menu c-ico grd-c" on:click={toggleMenu}>
+        <div class="menu grd" on:click={toggleMenu}>
+            <div class="mi c-ico grd-c">
                 {@html menu}
             </div>
         </div>
-
 
         <div class="fl mr3">
 
@@ -323,6 +322,7 @@ function signup() {
 }
 .menu {
     display: none;
+    cursor: pointer;
 }
 
 .name {
@@ -365,11 +365,10 @@ function signup() {
         grid-template-columns: 48px auto;
     }
     .menu {
-        display: block;
-        fill: var(--hamburger);
+        display: grid;
     }
-    .menu {
-        display: block;
+    .mi {
+        fill: var(--hamburger);
     }
     .name {
         padding-left: 0.5rem;

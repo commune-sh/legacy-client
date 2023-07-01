@@ -67,8 +67,8 @@ $: isTopic= $page?.params?.topic !== undefined &&
     <div class="container fl">
 
         {#if !embed}
-        <div class="grd">
-            <div class="menu c-ico grd-c" on:click={toggleMenu}>
+        <div class="menu grd">
+            <div class="mi c-ico grd-c" on:click={toggleMenu}>
                 {@html menu}
             </div>
         </div>
@@ -133,6 +133,7 @@ $: isTopic= $page?.params?.topic !== undefined &&
 
 .menu {
     display: none;
+    cursor: pointer;
 }
 
 @media screen and (max-width: 768px) {
@@ -140,7 +141,9 @@ $: isTopic= $page?.params?.topic !== undefined &&
         grid-template-columns: 48px 1fr;
     }
     .menu {
-        display: block;
+        display: grid;
+    }
+    .mi {
         fill: var(--hamburger);
     }
     .close {
