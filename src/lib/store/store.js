@@ -20,6 +20,7 @@ function createApp() {
     refreshingFeed: false,
     verifiedSession: false,
     credentials: null,
+    notifications: [],
     rooms: [],
     defaultSpaces: [],
     spaces: [],

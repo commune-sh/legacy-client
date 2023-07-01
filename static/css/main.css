@@ -53,6 +53,7 @@
     --rep-bb: #f2f2f2;
     --event-bg-hover: #1f1f1f;
     --event-highlight: #1f1f1f;
+    --event-context: #121212;
 
 
     --avatar-bg: #000;
@@ -125,6 +126,7 @@
     --rep-bb: #f2f2f2;
     --event-bg-hover: #f7f7f7;
     --event-highlight: #f7f7f7;
+    --event-context: #E9ECEF;
 
     --avatar-bg: #eaeaea;
     --event-user: #eeeeee;
@@ -197,6 +199,7 @@
     --rep-bb: #272727;
     --event-bg-hover: #0c0c0cb8;
     --event-highlight: #0c0c0c;
+    --event-context: #1f1f1f;
 
     --avatar-bg: #252424;
     --event-user: #1a1a1a;
@@ -684,6 +687,12 @@ select {
 
 .tippy-box[data-theme~='inline'] {
     padding: 0.5rem 0.75rem;
+}
+
+.tippy-box[data-theme~='notifications'] {
+    padding: 0;
+    border-radius: 9px;
+    box-shadow: 0px 2px 15px -3px rgba(0,0,0,0.1);
 }
 
 .tippy-box[data-animation="fade"][data-state="hidden"] {

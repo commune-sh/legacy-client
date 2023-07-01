@@ -375,3 +375,19 @@ export async function discoverSpaces() {
   })
   return data
 }
+
+export async function getNotifications() {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/account/notifications`,
+    method: 'GET'
+  })
+  return data
+}
+
+export async function readNotifications() {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/account/notifications/read`,
+    method: 'PUT'
+  })
+  return data
+}

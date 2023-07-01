@@ -148,8 +148,6 @@ $: if(active && !disabled) {
 
     dispatch('ready', true)
 
-    console.log(activePosition)
-
     setTimeout(() => {
         document.addEventListener('click', killMe)
         document.addEventListener('keydown', escape)

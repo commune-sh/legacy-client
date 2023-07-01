@@ -2,9 +2,10 @@
 import { PUBLIC_MEDIA_URL } from '$env/static/public';
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
-import { user } from '$lib/assets/icons.js'
+import { user, bell } from '$lib/assets/icons.js'
 import Popup from '$lib/popup/popup.svelte'
 import UserPopup from './user-popup.svelte'
+import Notifications from '$lib/notifications/notifications.svelte'
 
 $: authenticated = $store?.authenticated && 
     $store?.credentials != null
@@ -62,6 +63,7 @@ $: profileSpace = $store?.spaces?.find(s => s.room_id ===
 $: avatar = $store?.credentials?.avatar_url?.length > 0 ?
 `${PUBLIC_MEDIA_URL}/${$store.credentials?.avatar_url}` : null
 
+
 </script>
 
 <section class="user">
@@ -76,6 +78,7 @@ $: avatar = $store?.credentials?.avatar_url?.length > 0 ?
 {/if}
 
 {#if active && authenticated}
+
 
 <div class="con">
 
@@ -103,16 +106,16 @@ $: avatar = $store?.credentials?.avatar_url?.length > 0 ?
                 </div>
             </div>
 
-            <div class="name grd-c fl-co">
+            <div class="oh grd-c fl-co">
                 {#if display_name}
-                    <div class="">
+                    <div class="name">
                         {display_name}
                     </div>
-                    <div class="mt1 sm">
+                    <div class="name sm">
                         @{username}
                     </div>
                 {:else}
-                    <div class="">
+                    <div class="name ">
                         @{username}
                     </div>
                 {/if}
@@ -124,6 +127,9 @@ $: avatar = $store?.credentials?.avatar_url?.length > 0 ?
             <UserPopup on:kill={killPopup}/>
         </div>
     </Popup>
+
+
+    <Notifications />
 
 </div>
 
@@ -180,6 +186,11 @@ $: avatar = $store?.credentials?.avatar_url?.length > 0 ?
     margin: 0.5rem;
     padding: 0.25rem;
     border-radius: 7px;
+    overflow: hidden;
+}
+
+.oh {
+    overflow: hidden;
 }
 
 .ui:hover {
@@ -208,7 +219,13 @@ $: avatar = $store?.credentials?.avatar_url?.length > 0 ?
 .sm {
     color: var(--text-light);
 }
+
 .name {
     font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: normal;
 }
+
 </style>

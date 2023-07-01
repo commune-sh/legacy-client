@@ -1,6 +1,6 @@
 <script>
 import { onMount, onDestroy } from 'svelte'
-import { APIRequest } from '$lib/utils/request.js'
+import { APIRequest, getNotifications } from '$lib/utils/request.js'
 import { PUBLIC_API_URL } from '$env/static/public';
 import Login from './login.svelte'
 import { close } from '$lib/assets/icons.js'
@@ -51,6 +51,22 @@ let syncCreds = (token) => {
           .catch(error => {
             console.error('Error:', error);
           });
+    }
+}
+
+$: authenticated = $store?.authenticated && 
+    $store?.credentials != null
+    $store?.credentials?.access_token?.length > 0
+
+$: if(authenticated) {
+    fetchNotifications()
+}
+
+async function fetchNotifications() {
+    const res = await getNotifications();
+    console.log(res)
+    if(res?.notifications) {
+        $store.notifications = res.notifications
     }
 }
 

@@ -172,6 +172,7 @@ $: firstIsMedia = attachments?.[0]?.type?.startsWith('image') ||
 
 $: highlight = $page.params.post === event?.slug && !isPost
 
+$: context = $page.url?.search == `?context=${event?.slug}`
 
 $: user = {
     avatar_url: event?.sender?.avatar_url,
@@ -401,6 +402,7 @@ $: roomAlias = isDomain ? `${$page.params.domain}/${event.room_alias}` :
     on:click={goToEvent} 
     class:fresh={event?.just_posted}
     class:isrep={isReplyEvent}
+    class:context={context}
     class:highlight={highlight || !interactive} role="button">
 
 
@@ -648,6 +650,10 @@ $: roomAlias = isDomain ? `${$page.params.domain}/${event.room_alias}` :
 .highlight {
     background-color: var(--event-highlight);
 }
+.context {
+    border: 1px solid var(--primary);
+}
+
 
 .tools {
     position: absolute;
