@@ -108,7 +108,8 @@ $: none = $store.notifications?.length == 0
 
 .notifications {
     width: 350px;
-    height: 400px;
+    max-height: 400px;
+    min-height: 200px;
     z-index: 901;
     border-radius: 9px;
     background-color: var(--context-menu-bg);

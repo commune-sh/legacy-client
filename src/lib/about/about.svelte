@@ -71,9 +71,9 @@ $: active = $store.aboutOpen
 
             <section class="pa mt4">
                 <span class="label">What about E2EE?</span>
-                <p>{PUBLIC_APP_NAME} hasn't implemented direct messages yet or
+                <p>{PUBLIC_APP_NAME} hasn't implemented direct messages or
                         private rooms yet, but
-                        when it's available, it should be encrypted.</p>
+                        when they're available, they should be encrypted.</p>
             </section>
 
 

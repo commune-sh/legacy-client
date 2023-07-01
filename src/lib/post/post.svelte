@@ -489,7 +489,7 @@ export function updateReactions(e) {
 }
 
 .norep {
-    border-bottom: 1px solid var(--border-1);
+    border-bottom: 1px solid var(--ev-bb);
 }
 
 .rco {

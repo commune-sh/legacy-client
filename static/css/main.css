@@ -171,7 +171,7 @@
     --modal: #141414;
     --black: black;
     --white: white;
-    --border-1: #141414;
+    --border-1: #101010;
     --placeholder-color: #3e3e3e;
 
     --light: #f7f7f7
@@ -195,8 +195,8 @@
     --code-block-border: #0c0c0c;
     --code-block-scroll: #323232;
 
-    --ev-bb: #141414;
-    --rep-bb: #272727;
+    --ev-bb: #101010b0;
+    --rep-bb: #101010b0;
     --event-bg-hover: #0c0c0cb8;
     --event-highlight: #0c0c0c;
     --event-context: #1f1f1f;

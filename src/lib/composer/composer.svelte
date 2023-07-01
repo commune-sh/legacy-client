@@ -1,6 +1,6 @@
 <script>
 import { tick, onMount, onDestroy, createEventDispatcher } from 'svelte'
-import { eye, send, close } from '$lib/assets/icons.js'
+import { eye, fullscreen, fullscreenOff, close } from '$lib/assets/icons.js'
 import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { APIRequest, getPresignedURL, uploadAttachment, savePost,
     getLinkMetadata } from '$lib/utils/request.js'
@@ -642,9 +642,15 @@ $: if(replyTo !== lastReplyTo) {
 }
 
 
+let isFullscreen = false;
+
+function toggleFullscreen() {
+    isFullscreen = !isFullscreen
+}
+
 </script>
 
-<section class="composer" 
+<section class="composer"  class:fs={isFullscreen}
     class:sf={showAttachments}
     class:rep={reply}>
 
@@ -766,6 +772,19 @@ $: if(replyTo !== lastReplyTo) {
     max-height: 514px;
 }
 
+.fs {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    background-color: var(--bg);
+    z-index: 10000;
+}
+
 .rep {
     border-top: 1px solid var(--border-1);
     grid-template-rows: auto 1fr auto;
@@ -849,9 +868,6 @@ $: if(replyTo !== lastReplyTo) {
     height: 100%;
 }
 
-.post-body {
-}
-
 .rp {
     padding-right: calc(1rem - 6px);
     padding-top: 1rem;
@@ -870,6 +886,10 @@ $: if(replyTo !== lastReplyTo) {
     padding-left: 1rem;
     max-height: 400px;
     overflow-x: hidden;
+}
+
+.pbfs {
+    max-height: 100%;
 }
 
 .sh {
@@ -909,6 +929,12 @@ button {
 
 * {
     font-family: "Inter", "Twemoji", "Apple Color Emoji", "Segoe UI Emoji", "Arial", "Helvetica", sans-serif, "STIXGeneral", "Noto Color Emoji";
+}
+
+.fullscreen {
+    margin-top: 16px;
+    width: 18px;
+    height: 18px;
 }
 
 </style>

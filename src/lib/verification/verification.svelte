@@ -155,8 +155,8 @@ $: buttonText = code_sent ? 'Resend Code' : busy ? 'Sending...' : 'Send Code'
                             </div>
                         {/if}
                     </div>
-                    <div class="rel ml3 grd-c h100 pa1">
-                        <button class="h100" 
+                    <div class="rel ml3 grd-c pa1 h100">
+                        <button class="pv2" 
                             disabled={busy || lockResend}
                             on:click={start}>
                                 {buttonText}

@@ -44,7 +44,7 @@ function go() {
 
 
 
-<div class="item pa3" on:click={go}>
+<div class="item ph3 pv2" on:click={go}>
     <a href={sender}><span class="href">@{from}</span></a> {action} to your
     post "{item?.body?.substring(0, 20)}{item?.body?.length > 20 ? `...` : ``}"
 </div>
