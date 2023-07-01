@@ -265,6 +265,16 @@ async function removeTopic(e) {
 
 
     </div>
+        {#if !authenticated}
+            <div class="grd-c mr1 join">
+                <button class="light" 
+                    disabled={busy}
+                    on:click={join}>
+                    {busy ? "Joining..." : "Join"}
+                </button>
+            </div>
+        {/if}
+
 
             <div class="tools grd">
                 <Popup
@@ -294,16 +304,6 @@ async function removeTopic(e) {
             </div>
 
 
-        {#if !authenticated}
-            <div class="grd-c mr1 join">
-                <button class="light" 
-                    disabled={busy}
-                    on:click={join}>
-                    {busy ? "Joining..." : "Join"}
-                </button>
-            </div>
-        {/if}
-
 </div>
 
 {#if topics?.length > 0 && selected}
@@ -330,7 +330,7 @@ async function removeTopic(e) {
 
 .room-item {
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr auto auto;
     cursor: pointer;
     height: 30px;
     border-radius: 4px;
