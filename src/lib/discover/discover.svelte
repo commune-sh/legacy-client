@@ -3,7 +3,7 @@ import { onMount, createEventDispatcher } from 'svelte'
 import { close } from '$lib/assets/icons.js'
 import { store } from '$lib/store/store.js'
 import { discoverSpaces } from '$lib/utils/request.js'
-import SkeletonBoardEvents from '$lib/skeleton/skeleton-board-events.svelte'
+import SkeletonDiscoverSpace from '$lib/skeleton/skeleton-discover-space.svelte'
 import SpaceItem from './space-item.svelte'
 
 const dispatch = createEventDispatcher()
@@ -48,10 +48,7 @@ async function getSpaces() {
             </div>
 
             {#if !loaded}
-                <div class="sk ">
-                    <SkeletonBoardEvents />
-                    <SkeletonBoardEvents />
-                </div>
+                <SkeletonDiscoverSpace />
             {/if}
 
             {#if loaded && spaces}
@@ -109,8 +106,6 @@ async function getSpaces() {
     .modal {
         width: 100%;
         height: 100%;
-    }
-    .items {
     }
 }
 </style>

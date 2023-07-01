@@ -83,7 +83,7 @@ async function join() {
                     {space.name ? space.name : space.alias}
             </div>
 
-            <div class="ph2 mt1 mb3 sm desc">
+            <div class="ph2 mt1 mb2 sm desc">
                 {#if space.topic}
                     {space.topic}
                 {:else}
