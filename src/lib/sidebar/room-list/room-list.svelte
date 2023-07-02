@@ -170,7 +170,6 @@ $: buttonText = isProfile ? busy ? "Following" : "Follow" : busy ? "Joining" : "
 }
 .but {
     width: 100%;
-    height: 32px;
 }
 .spinner {
     position: absolute;
