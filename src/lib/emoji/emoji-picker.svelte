@@ -89,9 +89,6 @@ $: active = $store.emojiPicker.active &&
     $store.emojiPicker.reacting_to != undefined
 
 
-$: if(active && bounding) {
-    console.log(bounding)
-}
 
 function kill() {
     store.killEmojiPicker()
@@ -109,14 +106,19 @@ $: positionLeft = position == 'left' || position == undefined
 
 $: bounding = target?.getBoundingClientRect()
 
-$: inside = bounding?.top + 550 < document.body.clientHeight 
-$: at = document.body.clientHeight - 600
+$: inside = bounding?.top + 550 < document.documentElement.clientHeight
+$: at = document.documentElement.clientHeight - 600
 
 
 $: top = inside ? bounding?.top - 4 : at
 
-$: right = document.body.clientWidth - bounding?.right + target?.offsetWidth +
-    10
+
+$: exceedsLeft = bounding?.right - 400 < 0
+$: exceedsLeftBy = bounding?.right - 400
+
+$: cRight = document.documentElement.clientWidth - bounding?.right + target?.offsetWidth + 10
+
+$: right = exceedsLeft ? (cRight + exceedsLeftBy - 40) : cRight
 
 $: left = bounding?.left + target?.offsetWidth + 20
 
@@ -219,6 +221,7 @@ function filterEmoji() {
 <div class="em-root" 
     class:inactive={!active}
     bind:this={root} on:click|self={kill}>
+    {exceedsLeftBy}
 
     <div class="emoji-picker"
         class:right={positionRight}
@@ -502,5 +505,10 @@ input {
 .hov-s {
     font-weight: 500;
     font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+
+
 }
 </style>
