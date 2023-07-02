@@ -1,7 +1,7 @@
 <script>
 import { onMount, createEventDispatcher, tick } from 'svelte'
 import { store } from '$lib/store/store.js'
-import { more, code, trash, pin, tag as tagIcon } from '$lib/assets/icons.js'
+import { more, code, trash, pin, tag as tagIcon, suspend } from '$lib/assets/icons.js'
 import ViewSource from './source.svelte'
 import tippy from 'tippy.js';
 import { page } from '$app/stores';
@@ -10,6 +10,10 @@ $: state = $store?.states[$page?.params?.space]
 $: sender_id = $store.credentials?.matrix_user_id
 $: isOwner = state?.owner === sender_id
 $: isSpaceAdmin = $store?.power_levels?.space?.[$store?.credentials?.matrix_user_id] == 100
+
+$: isAdmin = $store?.credentials?.admin
+
+$: notSelf = $store?.credentials?.matrix_user_id !== event?.sender?.id
 
 $: authenticated = $store?.authenticated && 
     $store?.credentials != null
@@ -80,6 +84,11 @@ function viewSource() {
         }
     }
     */
+}
+
+function suspendUser() {
+    menu.hide()
+    dispatch('suspend', event)
 }
 
 function redactEvent() {
@@ -180,7 +189,19 @@ function handleEnter(e) {
         </div>
     </div>
 
-    {#if authenticated && (isOwner || isAuthor)}
+    {#if authenticated && isAdmin && notSelf}
+    <div class="m-item fl pr" on:click|stopPropagation={suspendUser}>
+        <div class="grd-c mr2 fl-o">
+            Suspend User
+        </div>
+        <div class="mic grd-c ico-s" >
+            {@html suspend}
+        </div>
+    </div>
+    {/if}
+
+
+    {#if authenticated && (isOwner || isAuthor || isAdmin)}
     <div class="m-item fl pr" on:click|stopPropagation={redactEvent}>
         <div class="grd-c mr2 fl-o">
             Delete

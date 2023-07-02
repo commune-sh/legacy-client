@@ -2,7 +2,7 @@
 import { page } from '$app/stores';
 import { onMount, createEventDispatcher } from 'svelte'
 import { store } from '$lib/store/store.js'
-import { user, bell } from '$lib/assets/icons.js'
+import { close, bell } from '$lib/assets/icons.js'
 import tippy from 'tippy.js';
 import { readNotifications } from '$lib/utils/request.js'
 import NotificationItem from './notification-item.svelte'
@@ -35,8 +35,8 @@ onMount(() => {
             dispatch('active', true)
         },
         onHide(i) {
-            active = false
             read()
+            active = false
             dispatch('kill', true)
         },
         onClickOutside(i) {
@@ -45,6 +45,10 @@ onMount(() => {
         },
     });
 })
+
+function kill() {
+    menu.hide()
+}
 
 
 async function read() {
@@ -81,6 +85,15 @@ $: none = $store.notifications?.length == 0
 </div>
 
 <div class="notifications" bind:this={content}>
+    <div class="header ph3 pv2 fl">
+        <div class="fl-o grd-c">
+            <b>Notifications</b>
+        </div>
+        <div class="c-ico grd-c p23" on:click={kill}>
+            {@html close}
+        </div>
+    </div>
+
     <div class="content">
         {#if none}
             <div class="grd-c">
@@ -108,18 +121,20 @@ $: none = $store.notifications?.length == 0
 
 .notifications {
     width: 350px;
-    max-height: 400px;
-    min-height: 200px;
     z-index: 901;
     border-radius: 9px;
     background-color: var(--context-menu-bg);
     display: grid;
+    grid-template-rows: auto 1fr;
     overflow: hidden;
 }
 
 .content {
-     display: grid;
+    display: grid;
     overflow-y: auto;
+    max-height: 300px;
+    min-height: 200px;
+    width: 100%;
 }
 
 .bell {

@@ -3,6 +3,41 @@ import { PUBLIC_BASE_URL } from '$env/static/public'
 import { createEventDispatcher } from 'svelte'
 import { goto } from '$app/navigation';
 
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import tz from 'dayjs/plugin/timezone'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import updateLocale from 'dayjs/plugin/updateLocale'
+
+dayjs.extend(utc);
+dayjs.utc()
+dayjs.extend(tz)
+dayjs.extend(relativeTime)
+dayjs.extend(updateLocale)
+
+dayjs.updateLocale('en', {
+  relativeTime: {
+    future: "in %s",
+    past: "%s ago",
+    s: 'just now',
+    m: "1m",
+    mm: "%dm",
+    h: "1h",
+    hh: "%dh",
+    d: "1d",
+    dd: "%dd",
+    M: "a month",
+    MM: "%d months",
+    y: "a year",
+    yy: "%d years"
+  }
+})
+$: date = item?.created_at
+
+$: isThisWeek = dayjs().diff(dayjs(date), 'day') < 7
+$: when = dayjs(date)?.fromNow(true)
+$: created = dayjs(date)?.format('MMM D')
+
 const dispatch = createEventDispatcher()
 
 export let item;
@@ -44,9 +79,14 @@ function go() {
 
 
 
-<div class="item ph3 pv2" on:click={go}>
-    <a href={sender}><span class="href">@{from}</span></a> {action} to your
-    post "{item?.body?.substring(0, 20)}{item?.body?.length > 20 ? `...` : ``}"
+<div class="item ph3 pv2 fl-co" on:click={go}>
+    <div class="">
+        <a href={sender}><span class="href">@{from}</span></a> {action} to your
+        post "{item?.body?.substring(0, 20)}{item?.body?.length > 20 ? `...` : ``}"
+    </div>
+    <div class="mt1 sm">
+        {isThisWeek ? when : created}
+    </div>
 </div>
 
 <style>

@@ -111,6 +111,7 @@ $: tagKey = reaction?.key?.split(':')[1]
 
 .emoji {
     font-size: small;
+    font-weight: 500;
     line-height: 1.6;
 }
 .t {
