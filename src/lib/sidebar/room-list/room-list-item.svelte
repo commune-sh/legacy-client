@@ -224,6 +224,7 @@ $: mediaURL = isDomain ? $store?.federated?.media_url : PUBLIC_MEDIA_URL
 
 
 $: avatar = item?.avatar ? `${mediaURL}/${item?.avatar}` : null
+$: header = item?.header ? `${mediaURL}/${item?.header}` : null
 
 async function removeTopic(e) {
     let newTopics = topics.filter(x => x !== e.detail)
@@ -240,6 +241,16 @@ async function removeTopic(e) {
 
 
 </script>
+
+<svelte:head>
+{#if active}
+    {#if avatar}
+        <meta property="og:image" content={avatar} />
+    {:else if header}
+        <meta property="og:image" content={header} />
+    {/if}
+{/if}
+</svelte:head>
 
 {#if show}
 <div class="room-item"

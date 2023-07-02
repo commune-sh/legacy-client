@@ -211,8 +211,15 @@ $: isDomain = $page.params.domain !== undefined &&
     $page.params.domain?.length > 0
 
 $: newItems = $store?.notifications?.some(n => !n.read);
+
+$: description = selected?.topic ? selected?.topic : selected?.name ?
+selected?.name : selected?.alias ? selected?.alias : ''
+
 </script>
 
+<svelte:head>
+    <meta name="description" content={description}>
+</svelte:head>
 
 <div class="header">
     <div class="container fl">
