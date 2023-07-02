@@ -132,7 +132,7 @@ $: name = (isMobile && !isRoom) ? $page.params.space : item?.name
     font-weight: 500;
 }
 .menu {
-    width: 350px;
+    width: 300px;
     max-height: 400px;
     z-index: 901;
     border-radius: 9px;

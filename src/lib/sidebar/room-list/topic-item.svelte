@@ -60,6 +60,9 @@ function goToRoom() {
         noscroll: true,
     })
 
+    if($store.menuToggled) {
+        store.toggleMenu()
+    }
 }
 
 $: isBoard = item?.type === 'board'

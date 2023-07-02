@@ -1,4 +1,5 @@
 <script>
+import { onMount, createEventDispatcher } from 'svelte'
 import { PUBLIC_APP_NAME, PUBLIC_MEDIA_URL } from '$env/static/public';
 import { down, up } from '$lib/assets/icons.js'
 import { page } from '$app/stores';
@@ -6,6 +7,7 @@ import { store } from '$lib/store/store.js'
 import SkeletonSpan from '$lib/skeleton/skeleton-span.svelte'
 import Popup from '$lib/popup/popup.svelte'
 import SpaceMenu from './space-menu.svelte'
+import tippy from 'tippy.js';
 
 $: state = $store?.states[$page?.params?.space]
 export let ready;
@@ -31,22 +33,6 @@ $: authenticated = $store?.authenticated &&
 
 $: isProfile = state?.space?.is_profile
 
-
-let menuActive =  false;
-
-function toggleMenu() {
-    menuActive = !menuActive
-}
-
-let killed = () => {
-    menuActive = false
-}
-
-let killPopup = () => {
-    popup.kill()
-}
-
-let popup;
 
 
 $: isDomain = $page.params.domain !== undefined && 
@@ -102,7 +88,42 @@ $: if(headerExists && header && el) {
     el.style.backgroundImage = `none`
 }
 
+let me;
+let content;
+let menu;
+let active = false;
+
+onMount(() => {
+    menu = tippy(me, {
+        content: content,
+        allowHTML: true,
+        trigger: 'click',
+        interactive: true,
+        theme: 'notifications',
+        placement: 'bottom-start',
+        arrow: false,
+        duration: 1,
+        zIndex: 99999,
+        onShown(i) {
+            active = true
+        },
+        onHide(i) {
+            active = false
+        },
+        onClickOutside(i) {
+            active = false
+        },
+    });
+})
+
+function kill() {
+    menu.hide()
+}
+
 </script>
+<div class="menu" bind:this={content}>
+    <SpaceMenu on:kill={kill}/>
+</div>
 
 <div bind:this={el} class="sidebar-header" 
     class:header={headerExists}
@@ -111,21 +132,11 @@ $: if(headerExists && header && el) {
 
     {#if isSpace}
 
-        <Popup
-        bind:this={popup}
-        trigger={"click"}
-        offset={[8, 8]}
-        on:killed={killed}
-        shadow={`0px 9px 15px -7px rgba(0,0,0,0.2)`}
-        mask={true}
-        disabled={!authenticated}
-        placement={"bottom-start"}>
-
             <div class="space fl"
                 class:sp={authenticated && !headerExists}
                 class:au={authenticated && headerExists}
-                slot="reference"
-                class:active={menuActive}>
+                on:click|stopPropagation bind:this={me}
+                class:acc={active && !headerExists}>
 
                 <div class="name in fl-o" class:sh={headerExists}>
                     {#if !ready}
@@ -140,7 +151,7 @@ $: if(headerExists && header && el) {
 
                 {#if authenticated}
                 <div class="tools grd-c ico-s mh2">
-                    {#if menuActive}
+                    {#if active}
                         {@html up}
                     {:else}
                         {@html down}
@@ -153,12 +164,6 @@ $: if(headerExists && header && el) {
 
             
 
-
-            <div class="component" slot="content">
-                <SpaceMenu on:kill={killPopup}/>
-            </div>
-
-        </Popup>
 
     {:else}
 
@@ -191,7 +196,6 @@ $: if(headerExists && header && el) {
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
-    overflow: hidden;
     width: 100%;
     position: relative;
 }
@@ -247,6 +251,10 @@ $: if(headerExists && header && el) {
 }
 
 .sp:hover {
+    background: var(--hover-focus);
+}
+
+.acc {
     background: var(--hover-focus);
 }
 
