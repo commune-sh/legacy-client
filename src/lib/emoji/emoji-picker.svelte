@@ -221,7 +221,6 @@ function filterEmoji() {
 <div class="em-root" 
     class:inactive={!active}
     bind:this={root} on:click|self={kill}>
-    {exceedsLeftBy}
 
     <div class="emoji-picker"
         class:right={positionRight}

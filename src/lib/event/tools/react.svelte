@@ -46,14 +46,19 @@ $: if(emojiSelected) {
     store.killEmojiPicker()
 }
 
+function hovered() {
+    dispatch('hovered')
+}
 
 </script>
-    <div class="icon grd-c c-ico" 
-        class:inline={inline}
-        bind:this={reactEl}
-        on:click|stopPropagation={reactToEvent}>
-        {@html react}
-    </div>
+
+<div class="icon grd-c c-ico" 
+    class:inline={inline}
+    bind:this={reactEl}
+    on:mouseenter={hovered}
+    on:click|stopPropagation={reactToEvent}>
+    {@html react}
+</div>
 
 <style>
 .icon {

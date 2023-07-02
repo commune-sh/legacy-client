@@ -15,6 +15,7 @@ import Edited from './edited/edited.svelte'
 import Tools from './tools/tools.svelte'
 import Vote from '$lib/vote/vote.svelte'
 import Links from './links/links.svelte'
+import Tags from './tags.svelte'
 import { pin, hash } from '$lib/assets/icons.js'
 import { isSafari } from '$lib/utils/utils.js'
 
@@ -388,6 +389,7 @@ $: bannedFromSpace = state?.banned === true
 $: roomAlias = isDomain ? `${$page.params.domain}/${event.room_alias}` :
     event.room_alias
 
+$: tags = event?.reactions?.filter(x => x?.key?.startsWith("tag:"))
 </script>
 
 <div class="event" 
@@ -526,6 +528,10 @@ $: roomAlias = isDomain ? `${$page.params.domain}/${event.room_alias}` :
 
 
         </div>
+
+        {#if tags}
+            <Tags event={event} tags={tags} />
+        {/if}
 
 
 

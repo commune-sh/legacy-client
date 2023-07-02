@@ -1,7 +1,7 @@
 <script>
-import { onMount, createEventDispatcher } from 'svelte'
+import { onMount, createEventDispatcher, tick } from 'svelte'
 import { store } from '$lib/store/store.js'
-import { more, code, trash, pin } from '$lib/assets/icons.js'
+import { more, code, trash, pin, tag as tagIcon } from '$lib/assets/icons.js'
 import ViewSource from './source.svelte'
 import tippy from 'tippy.js';
 import { page } from '$app/stores';
@@ -9,6 +9,7 @@ import { page } from '$app/stores';
 $: state = $store?.states[$page?.params?.space]
 $: sender_id = $store.credentials?.matrix_user_id
 $: isOwner = state?.owner === sender_id
+$: isSpaceAdmin = $store?.power_levels?.space?.[$store?.credentials?.matrix_user_id] == 100
 
 $: authenticated = $store?.authenticated && 
     $store?.credentials != null
@@ -47,16 +48,24 @@ onMount(() => {
             dispatch('active', true)
         },
         onHide(i) {
-            active = false
-            dispatch('kill', true)
+            kill()
         },
         onClickOutside(i) {
-            active = false
-            dispatch('kill', true)
+            kill()
         },
     });
 })
 
+function kill() {
+    active = false
+    dispatch('kill', true)
+    menuMode = true
+    tagMode = false
+    if(tagInput) {
+        tagInput.value = null
+    }
+    tag = null
+}
 
 
 function viewSource() {
@@ -86,10 +95,48 @@ function pinEvent() {
 $: replyPinned = isReply && event?.reactions?.filter(r => r.key === 'pinned').length > 0
 
 
+function tagEvent() {
+    menuMode = false
+    tagMode = true
+}
+
+$: if(tagMode) {
+    focusTagInput()
+}
+
+async function focusTagInput() {
+    await tick()
+    tagInput.focus()
+}
+
+let menuMode = true
+let tagMode = false
+
+let tagInput;
+let tag;
+
+function addTag() {
+    if(!tag) return
+    let key = `tag:${tag}`
+    dispatch('react', key)
+    kill()
+}
+
+function handleEnter(e) {
+    if(e.key === 'Enter') {
+        addTag()
+    }
+}
+
 </script>
 
 
-<div class="menu fl-co" bind:this={content}>
+<div class="menu fl-co" 
+    class:tagMode={tagMode}
+    bind:this={content}>
+
+{#if menuMode}
+
     {#if authenticated && isOwner && !nested && !isReply && isSpace}
     <div class="m-item fl " on:click|stopPropagation={pinEvent}>
         <div class="grd-c mr2 fl-o">
@@ -99,6 +146,18 @@ $: replyPinned = isReply && event?.reactions?.filter(r => r.key === 'pinned').le
             {@html pin}
         </div>
     </div>
+    {/if}
+
+
+    {#if authenticated && (isOwner || isSpaceAdmin)}
+        <div class="m-item fl " on:click|stopPropagation={tagEvent}>
+            <div class="grd-c mr2 fl-o">
+                Tag Post
+            </div>
+            <div class="mic grd-c ico-s" >
+                {@html tagIcon}
+            </div>
+        </div>
     {/if}
 
     {#if authenticated && (isPostAuthor && isReply) && !nested && isSpace}
@@ -120,6 +179,7 @@ $: replyPinned = isReply && event?.reactions?.filter(r => r.key === 'pinned').le
             {@html code}
         </div>
     </div>
+
     {#if authenticated && (isOwner || isAuthor)}
     <div class="m-item fl pr" on:click|stopPropagation={redactEvent}>
         <div class="grd-c mr2 fl-o">
@@ -130,6 +190,24 @@ $: replyPinned = isReply && event?.reactions?.filter(r => r.key === 'pinned').le
         </div>
     </div>
     {/if}
+
+
+{:else if tagMode}
+<div class="tag fl">
+    <div class="fl-o">
+        <input 
+            class="tagInput"
+            on:keydown={handleEnter}
+            bind:this={tagInput}
+            bind:value={tag} 
+            placeholder="tag"/>
+    </div>
+    <div class="">
+                <button class="h100" on:click={addTag}>Add</button>
+    </div>
+</div>
+{/if}
+
 </div>
 
 <div class="more grd-c c-ico" 
@@ -144,6 +222,10 @@ $: replyPinned = isReply && event?.reactions?.filter(r => r.key === 'pinned').le
     z-index: 901;
     padding: 0.25rem;
 }
+.tagMode {
+    width: 240px;
+}
+
 .more {
     width: 18px;
     height: 18px;
@@ -165,7 +247,7 @@ $: replyPinned = isReply && event?.reactions?.filter(r => r.key === 'pinned').le
     border-radius: 4px;
     font-size: 0.8rem;
     font-weight: 500;
-    padding: 0.25rem;
+    padding: 0.4rem;
 }
 .m-item:hover{
     background-color: var(--context-menu-hover);
@@ -179,5 +261,13 @@ $: replyPinned = isReply && event?.reactions?.filter(r => r.key === 'pinned').le
 }
 .pr .ico-s {
     fill: red;
+}
+.ico-s {
+    width: 16px;
+    height: 16px;
+}
+input {
+    height: 22px;
+    width: 100%;
 }
 </style>

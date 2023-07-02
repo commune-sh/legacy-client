@@ -2,6 +2,7 @@
 import { reply, external, edit, loop } from '$lib/assets/icons.js'
 import React from './react.svelte'
 import Menu from './menu.svelte'
+import ShowFrequent from './frequent-reactions.svelte'
 import { createEventDispatcher } from 'svelte'
 import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
@@ -40,6 +41,11 @@ function reference() {
     dispatch('reference')
 }
 
+function menuIsActive() {
+    menuActive = true
+    dispatch('active')
+}
+
 
 function goToEvent() {
     let url = `/${event.room_alias}/post/${$page.params.post}/reply/${event?.slug}`
@@ -72,18 +78,38 @@ let killed = () => {
     //dispatch('kill')
     console.log("killin")
 }
+
+
+let showFrequent = false;
+
+function reactHovered() {
+    if(menuActive) {
+        return
+    }
+    showFrequent = true;
+}
+
+function resetHovered() {
+    showFrequent = false;
+}
+
 </script>
 
 <div class="event-tools">
+    {#if showFrequent}
+        <ShowFrequent on:active on:react event={event} />
+    {/if}
 
     <React inline={false} 
         isReply={isReply} 
         event={event} 
+        on:hovered={reactHovered}
         on:react
         on:active />
 
     {#if !isPost && !isReply}
     <div class="icon grd-c c-ico" 
+        on:mouseenter={resetHovered}
         on:click|stopPropagation={reference}>
         {@html loop}
     </div>
@@ -91,6 +117,7 @@ let killed = () => {
 
     {#if isPost || isReply}
     <div class="icon grd-c c-ico" 
+        on:mouseenter={resetHovered}
         on:click|stopPropagation={replyToEvent}>
         {@html reply}
     </div>
@@ -98,6 +125,7 @@ let killed = () => {
 
     {#if isReply}
         <div class="icon grd-c c-ico" 
+        on:mouseenter={resetHovered}
             on:click|stopPropagation={goToEvent}>
             {@html external}
         </div>
@@ -105,6 +133,7 @@ let killed = () => {
 
     {#if isAuthor}
         <div class="icon grd-c c-ico" 
+            on:mouseenter={resetHovered}
             on:click|stopPropagation={editEvent}>
             {@html edit}
         </div>
@@ -112,10 +141,12 @@ let killed = () => {
 
 
     <Menu 
-        on:active 
+        on:active ={menuIsActive}
         on:kill 
         on:redact
+        on:react
         on:pin
+        on:mouseenter={resetHovered}
         isReply={isReply}
         isAuthor={isAuthor}
         isPostAuthor={isPostAuthor}
@@ -138,7 +169,9 @@ let killed = () => {
     border-radius: 9px;
     padding: 0.25rem;
     background-color: var(--bg);
+    position: relative;
 }
+
 
 .tools-mask {
     position: fixed;

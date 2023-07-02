@@ -19,7 +19,9 @@ $: authenticated = $store?.authenticated &&
 
 $: sender= $store.credentials?.matrix_user_id
 
-$: processed = event?.reactions?.sort((a,b) => b?.senders?.length - a?.senders?.length)
+$: unprocessed = event?.reactions?.sort((a,b) => b?.senders?.length - a?.senders?.length)
+
+$: processed = unprocessed?.filter(x => !x?.key?.startsWith("tag:"))
 
 $: ml = processed?.length > 0
 
