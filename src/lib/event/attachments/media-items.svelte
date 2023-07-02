@@ -59,6 +59,11 @@ function goToNext() {
     }
 }
 
+function openImage() {
+    let url = getURL(selected)
+    window.open(url, '_blank')
+}
+
 </script>
 
 <div class="container">
@@ -102,7 +107,9 @@ function goToNext() {
 
 <div class="pa3 con grd"> 
     {#if isImage}
-        <img width={selected?.info?.w}
+        <img class="image" 
+        on:click={openImage}
+        width={selected?.info?.w}
         height={selected?.info?.h}
         src={getURL(selected)} 
         loading="lazy"/>
@@ -176,4 +183,7 @@ video {
     opacity: 1;
 }
 
+.image{
+    cursor: pointer;
+}
 </style>
