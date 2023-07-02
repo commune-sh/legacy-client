@@ -77,7 +77,7 @@ $: active = $store.aboutOpen
                 <span class="label">What about moderation?</span>
                 <p>Each {PUBLIC_APP_NAME} instance should decide on it's own
                     moderation guidelines. Shpong aims to build necessary and
-                        useful admin tools for easier moderation at some point.</p>
+                        useful admin tools for easier moderation.</p>
             </section>
 
 

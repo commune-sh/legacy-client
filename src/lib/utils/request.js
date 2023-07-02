@@ -391,3 +391,11 @@ export async function readNotifications() {
   })
   return data
 }
+
+export async function suspendUser(user) {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/admin/user/suspend?id=${user}`,
+    method: 'PUT'
+  })
+  return data
+}

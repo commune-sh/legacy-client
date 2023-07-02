@@ -1,7 +1,8 @@
 <script>
 import { onMount, createEventDispatcher, tick } from 'svelte'
 import { store } from '$lib/store/store.js'
-import { more, code, trash, pin, tag as tagIcon, suspend } from '$lib/assets/icons.js'
+import { suspendUser } from '$lib/utils/request.js'
+import { more, code, trash, pin, tag as tagIcon, suspend as suspendIcon } from '$lib/assets/icons.js'
 import ViewSource from './source.svelte'
 import tippy from 'tippy.js';
 import { page } from '$app/stores';
@@ -86,9 +87,10 @@ function viewSource() {
     */
 }
 
-function suspendUser() {
+async function suspend() {
     menu.hide()
-    dispatch('suspend', event)
+    const res = await suspendUser(event.sender.id)
+    console.log(res)
 }
 
 function redactEvent() {
@@ -190,12 +192,12 @@ function handleEnter(e) {
     </div>
 
     {#if authenticated && isAdmin && notSelf}
-    <div class="m-item fl pr" on:click|stopPropagation={suspendUser}>
+    <div class="m-item fl pr" on:click|stopPropagation={suspend}>
         <div class="grd-c mr2 fl-o">
             Suspend User
         </div>
         <div class="mic grd-c ico-s" >
-            {@html suspend}
+            {@html suspendIcon}
         </div>
     </div>
     {/if}
