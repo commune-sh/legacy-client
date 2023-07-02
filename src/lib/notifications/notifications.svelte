@@ -133,15 +133,6 @@ $: none = $store.notifications?.length == 0
     background-color: var(--shade-4);
 }
 
-.dot {
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    height: 7px;
-    width: 7px;
-    border-radius: 50%;
-    background-color: red;
-}
 
 [data-tippy-root] {
     max-width: 300px;

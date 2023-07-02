@@ -60,6 +60,7 @@ $: isTopic= $page?.params?.topic !== undefined &&
     $page?.params?.topic !== null &&
     $page?.params?.topic !== ''
 
+$: newItems = $store?.notifications?.some(n => !n.read);
 </script>
 
 
@@ -71,6 +72,10 @@ $: isTopic= $page?.params?.topic !== undefined &&
             <div class="mi c-ico grd-c" on:click={toggleMenu}>
                 {@html menu}
             </div>
+            {#if newItems}
+                <div class="dot">
+                </div>
+            {/if}
         </div>
         {/if}
 
@@ -134,6 +139,7 @@ $: isTopic= $page?.params?.topic !== undefined &&
 .menu {
     display: none;
     cursor: pointer;
+    position: relative;
 }
 
 @media screen and (max-width: 768px) {
@@ -167,5 +173,9 @@ $: isTopic= $page?.params?.topic !== undefined &&
 }
 .sfd:hover {
     opacity: 0.9;
+}
+.dot {
+    right: 8px;
+    top: 8px;
 }
 </style>

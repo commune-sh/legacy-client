@@ -122,9 +122,11 @@ function kill() {
 
 </script>
 
+{#if isSpace}
 <div class="menu" bind:this={content}>
     <SpaceMenu on:kill={kill}/>
 </div>
+{/if}
 
 <div bind:this={el} class="sidebar-header" 
     class:header={headerExists}

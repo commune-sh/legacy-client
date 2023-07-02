@@ -210,6 +210,7 @@ $: isDomain = $page.params.domain !== undefined &&
     $page.params.domain !== 'undefined' && 
     $page.params.domain?.length > 0
 
+$: newItems = $store?.notifications?.some(n => !n.read);
 </script>
 
 
@@ -220,6 +221,10 @@ $: isDomain = $page.params.domain !== undefined &&
             <div class="mi c-ico grd-c">
                 {@html menu}
             </div>
+            {#if newItems}
+                <div class="dot">
+                </div>
+            {/if}
         </div>
 
         <div class="fl mr3">
@@ -316,6 +321,7 @@ $: isDomain = $page.params.domain !== undefined &&
 .menu {
     display: none;
     cursor: pointer;
+    position: relative;
 }
 
 .name {
@@ -351,6 +357,9 @@ $: isDomain = $page.params.domain !== undefined &&
 
 .signup {
     display: none;
+}
+
+.mi {
 }
 
 @media screen and (max-width: 768px) {
@@ -406,5 +415,9 @@ a, a:link, a:visited, a:active {
 .hash {
     height: 16px;
     width: 16px;
+}
+.dot {
+    right: 8px;
+    top: 8px;
 }
 </style>

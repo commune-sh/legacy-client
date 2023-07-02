@@ -907,6 +907,16 @@ label {
     cursor: pointer;
 }
 
+.dot {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    height: 7px;
+    width: 7px;
+    border-radius: 50%;
+    background-color: red;
+}
+
 @media screen and (max-width: 768px) {
     html {
         font-size: 14px;
