@@ -392,7 +392,9 @@ $: bannedFromSpace = state?.banned === true
 $: roomAlias = isDomain ? `${$page.params.domain}/${event.room_alias}` :
     event.room_alias
 
+$: showMediaThumbnail = !isPost && !isReply && hasAttachments && firstIsMedia && !editing && !search
 
+$: showLinkThumbnail = !isPost && !isReply && hasLinks && !editing && !search
 </script>
 
 <div class="event" 
@@ -537,11 +539,11 @@ $: roomAlias = isDomain ? `${$page.params.domain}/${event.room_alias}` :
 
     </div>
 
-    {#if !isPost && !isReply && hasAttachments && firstIsMedia && !editing && !search}
+    {#if showMediaThumbnail}
         <MediaThumbnail media={media} />
     {/if}
 
-    {#if !isPost && !isReply && hasLinks && !editing && !search}
+    {#if showLinkThumbnail && !showMediaThumbnail}
         <LinkThumbnail links={links} />
     {/if}
 
