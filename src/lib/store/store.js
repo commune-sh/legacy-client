@@ -250,6 +250,7 @@ function createApp() {
       p.credentials = null
       p.rooms = []
       p.notifications = []
+      p.power_levels = []
       localStorage.removeItem('access_token')
       return p
     })

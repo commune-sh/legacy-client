@@ -24,14 +24,23 @@ $: sender= $store.credentials?.matrix_user_id
 
 $: reacted = reaction?.senders?.findIndex(s => s === sender) > -1
 
-$: nopointer = isTag && (!isSpaceAdmin || !isOwner)
+$: notOP = isTag && 
+    reaction?.senders?.[0] != sender_id
 
 function reactToEvent() {
+    if(isTag && !authenticated) {
+        return
+    }
+    if(isTag && (!isSpaceAdmin && !isOwner)) {
+        return
+    }
+
     if(!authenticated) {
         store.startAuthenticating("login")
         return
     }
-    if(isTag && (!isSpaceAdmin || !isOwner)) {
+
+    if(notOP) {
         return
     }
 
@@ -44,7 +53,7 @@ $: tagKey = reaction?.key?.split(':')[1]
 
 <div class="reaction fl mr1" 
     class:tag={isTag}
-    class:nopointer={nopointer}
+    class:nopointer={notOP}
     on:click|stopPropagation={reactToEvent}
     class:reacted={reacted}>
     <div class="emoji">

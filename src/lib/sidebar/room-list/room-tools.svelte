@@ -52,6 +52,7 @@ async function leave() {
     if(resp && resp?.left) {
         console.log(resp)
         store.updateRoomLeftStatus($page.params.space, room.room_id)
+        store.removeRoom(room.room_id)
     }
 }
 
@@ -108,7 +109,7 @@ function boardSettings() {
         <div class="sep"></div>
             <div class="item fl" on:click={leave}>
                 <div class="item grd-c fl-o">
-                    Leave Space
+                    Leave Board
                 </div>
                 <div class="ico-s leave">
                     {@html leaveIcon}

@@ -70,17 +70,22 @@ $: room_id = item?.room_id
 
 $: isSpaceRoom = room_id === space_room_id
 
+/*
 $: joinedRoom = () => {
     if(room_id == state?.room_id) {
         return true
     }
     return state?.children?.find(x => x?.room_id === room_id)?.joined
 }
+*/
+
+$: joinedRoom = authenticated && 
+    $store?.rooms.find(x => x === room_id) != null 
 
 $: joinedSpace = authenticated && 
     $store?.spaces.find(x => x?.room_id === space_room_id) != null 
 
-$: joined = joinedSpace && joinedRoom()
+$: joined = joinedSpace && joinedRoom
 
 $: banned = item?.banned === true
 

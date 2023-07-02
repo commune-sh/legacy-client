@@ -1,8 +1,15 @@
 <script>
 import { text } from '$lib/assets/icons.js'
+import { page } from '$app/stores';
 import { tick, createEventDispatcher } from 'svelte'
+import { store } from '$lib/store/store.js'
+
 const dispatch = createEventDispatcher();
 
+$: state = $store?.states[$page?.params?.space]
+$: sender_id = $store.credentials?.matrix_user_id
+$: isOwner = state?.owner === sender_id
+$: isSpaceAdmin = $store?.power_levels?.space?.[$store?.credentials?.matrix_user_id] == 100
 
 export let event;
 
@@ -58,10 +65,13 @@ function kill() {
         </div>
     {/each}
 
+    {#if isOwner || isSpaceAdmin}
     <div class="icon grd-c c-ico" 
         on:click|stopPropagation={activate}>
         {@html text}
     </div>
+    {/if}
+
 {:else}
 <div class="custom fl">
     <div class="fl-o">
