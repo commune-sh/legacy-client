@@ -113,7 +113,7 @@ $: feedURL = buildURL(item)
                     {feedURL}
                 </div>
             </div>
-            <div class="ico-s grd-c mh2" class:copied={copied}>
+            <div class="ico-s grd-c mh2">
                 {@html feed}
             </div>
         </div>
@@ -172,7 +172,7 @@ $: feedURL = buildURL(item)
 }
 
 .it:hover {
-    background: var(--shade-2);
+    background: var(--shade-4);
 }
 
 .rid {
