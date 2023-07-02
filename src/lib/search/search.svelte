@@ -80,7 +80,7 @@ function kd(e) {
 </script>
 
 
-<div class="search-container mr2">
+<div class="search-container">
     <div class="sec fl" on:click={focusInput}>
         <div class="fl-o">
             <input class="Search" 

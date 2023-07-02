@@ -6,9 +6,10 @@ import { onMount, createEventDispatcher } from 'svelte'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
-import { menu, newChat} from '$lib/assets/icons.js'
+import { menu, newChat, hash} from '$lib/assets/icons.js'
 import SkeletonSpan from '$lib/skeleton/skeleton-span.svelte'
 import Search from '$lib/search/search.svelte'
+import BoardInfo from './board-info.svelte'
 
 $: authenticated = $store?.authenticated && 
     $store?.credentials != null
@@ -254,15 +255,15 @@ $: isDomain = $page.params.domain !== undefined &&
                             </span>
                         {/if}
                     {:else}
-                        <span class="n" on:click={goToSpace}>
-                            {selected?.name}
-                        </span>
+                        <BoardInfo item={selected} />
                     {/if}
                         {#if $page.params.topic}
-                            <span class="slash">/</span>
-                            <span class="n">
+                            <div class="ico-s hash grd-c ml2">
+                                {@html hash}
+                            </div>
+                            <div class="n grd-c">
                                 {$page.params.topic}
-                            </span>
+                            </div>
                         {/if}
                 {/if}
             {/if}
@@ -281,8 +282,8 @@ $: isDomain = $page.params.domain !== undefined &&
                     <Search />
                 </div>
             {/if}
-            <div class="grd-c">
                 {#if $store.verifiedSession && space && exists}
+                    <div class="grd-c ml3">
                     {#if (joined && !isProfile) || ownProfile}
                         {#if !editing}
                         <button class="new-post light" on:click={newPost}>New Post</button>
@@ -297,8 +298,8 @@ $: isDomain = $page.params.domain !== undefined &&
                             {buttonText}
                         </button>
                     {/if}
+                    </div>
                 {/if}
-            </div>
             {#if $store.verifiedSession && !authenticated}
                 <div class="grd-c ml2 signup">
                     <button class="ph2 pv2" on:click={signup}>Sign Up</button>
@@ -332,9 +333,8 @@ $: isDomain = $page.params.domain !== undefined &&
 }
 
 .name {
-    padding-left: 1rem;
+    padding-left: 0.5rem;
     padding-right: 1rem;
-    font-weight: 500;
 }
 
 .n {
@@ -417,4 +417,8 @@ a, a:link, a:visited, a:active {
     color: var(--text);
 }
 
+.hash {
+    height: 16px;
+    width: 16px;
+}
 </style>

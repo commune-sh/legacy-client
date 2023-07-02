@@ -357,7 +357,7 @@ a:hover {
 button {
     cursor: pointer;
     line-height: 1;
-    border-radius: 3px;
+    border-radius: 5px;
     border: 0px;
     padding: 0.4rem;
     background-color: var(--primary);
