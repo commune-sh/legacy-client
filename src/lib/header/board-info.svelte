@@ -43,6 +43,8 @@ onMount(() => {
     });
 })
 
+$: isMobile = window.innerWidth <= 768
+
 function kill() {
     menu.hide()
 }
@@ -73,6 +75,9 @@ function openFeed() {
 
 $: feedURL = buildURL(item)
 
+$: isRoom = $page?.params?.room != undefined
+
+$: name = (isMobile && !isRoom) ? $page.params.space : item?.name
 
 </script>
 
@@ -80,7 +85,7 @@ $: feedURL = buildURL(item)
     class:ac={active}
     on:click|stopPropagation bind:this={el}>
     <div class="name grd-c pl2 pv1">
-        {item?.name}
+        {name}
     </div>
     <div class="ico-s grd-c mh1">
         {@html down}

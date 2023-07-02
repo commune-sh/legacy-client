@@ -240,23 +240,9 @@ $: isDomain = $page.params.domain !== undefined &&
                 {:else if isStatic && name}
                     <span class="n">{name}</span>
                 {:else if selected}
-                    {#if isMobile}
-                        {#if $page.params.room}
-                            <span class="n" on:click={goToSpace}>
-                                {$page.params.space}
-                            </span>
-                            <span class="slash">/</span>
-                            <span class="n">
-                                {selected?.alias}
-                            </span>
-                        {:else}
-                            <span class="n">
-                                {$page.params.space}
-                            </span>
-                        {/if}
-                    {:else}
+
                         <BoardInfo item={selected} />
-                    {/if}
+
                         {#if $page.params.topic}
                             <div class="ico-s hash grd-c ml2">
                                 {@html hash}
