@@ -8,9 +8,9 @@ function findTag(t) {
 
 </script>
 
-<div class="tags ml3 mt2 fl">
+<div class="tags fl">
     {#each tags as tag}
-        <div class="tag mr1">
+        <div class="tag grd-c mr1">
             {findTag(tag.key)}
         </div>
     {/each}
@@ -24,5 +24,6 @@ function findTag(t) {
     font-size: small;
     font-weight: 500;
     color: white;
+    height: 14px;
 }
 </style>

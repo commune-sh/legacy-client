@@ -118,7 +118,7 @@ let tag;
 function addTag() {
     if(!tag) return
     let key = `tag:${tag}`
-    dispatch('react', key)
+    dispatch('add-tag', key)
     kill()
 }
 

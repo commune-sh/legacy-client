@@ -12,6 +12,10 @@ $: state = $store?.states[$page?.params?.space]
 $: sender_id = $store.credentials?.matrix_user_id
 $: isOwner = state?.owner === sender_id
 
+$: authenticated = $store?.authenticated && 
+    $store?.credentials != null
+    $store?.credentials?.access_token?.length > 0
+
 const dispatch = createEventDispatcher();
 
 export let active;
@@ -83,6 +87,9 @@ let killed = () => {
 let showFrequent = false;
 
 function reactHovered() {
+    if(!authenticated) {
+        return
+    }
     if(menuActive) {
         return
     }
@@ -146,6 +153,7 @@ function resetHovered() {
         on:redact
         on:react
         on:pin
+        on:add-tag
         on:mouseenter={resetHovered}
         isReply={isReply}
         isAuthor={isAuthor}

@@ -1,6 +1,12 @@
 <script>
 import { createEventDispatcher } from 'svelte'
+import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
+
+$: state = $store?.states[$page?.params?.space]
+$: sender_id = $store.credentials?.matrix_user_id
+$: isOwner = state?.owner === sender_id
+$: isSpaceAdmin = $store?.power_levels?.space?.[$store?.credentials?.matrix_user_id] == 100
 
 $: authenticated = $store?.authenticated && 
     $store?.credentials != null
@@ -12,29 +18,43 @@ export let event;
 export let reaction;
 export let isReply;
 
+export let isTag;
+
 $: sender= $store.credentials?.matrix_user_id
 
 $: reacted = reaction?.senders?.findIndex(s => s === sender) > -1
+
+$: nopointer = isTag && (!isSpaceAdmin || !isOwner)
 
 function reactToEvent() {
     if(!authenticated) {
         store.startAuthenticating("login")
         return
     }
+    if(isTag && (!isSpaceAdmin || !isOwner)) {
+        return
+    }
+
     dispatch('react', reaction.key)
 }
+
+$: tagKey = reaction?.key?.split(':')[1]
 
 </script>
 
 <div class="reaction fl mr1" 
+    class:tag={isTag}
+    class:nopointer={nopointer}
     on:click|stopPropagation={reactToEvent}
     class:reacted={reacted}>
     <div class="emoji">
-        {reaction?.key}
+        {isTag ? tagKey : reaction?.key}
     </div>
+    {#if !isTag}
     <div class="t ml1">
         {reaction?.senders?.length}
     </div>
+    {/if}
 </div>
 
 <style>
@@ -50,6 +70,16 @@ function reactToEvent() {
     padding-bottom: 0;
     height: 20px;
     cursor: pointer;
+}
+
+.tag{
+    background-color: var(--primary);
+    color: white;
+    font-weight: 500;
+}
+
+.nopointer {
+    cursor: default;
 }
 
 .reacted {

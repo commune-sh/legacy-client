@@ -6,6 +6,7 @@ import Reaction from './reaction.svelte'
 import React from '$lib/event/tools/react.svelte'
 import { savePost, redactReaction } from '$lib/utils/request.js'
 import { isSafari } from '$lib/utils/utils.js'
+import Tags from '$lib/event/tags.svelte'
 
 const dispatch = createEventDispatcher()
 
@@ -22,6 +23,8 @@ $: sender= $store.credentials?.matrix_user_id
 $: unprocessed = event?.reactions?.sort((a,b) => b?.senders?.length - a?.senders?.length)
 
 $: processed = unprocessed?.filter(x => !x?.key?.startsWith("tag:"))
+
+$: tags = event?.reactions?.filter(x => x?.key?.startsWith("tag:"))
 
 $: ml = processed?.length > 0
 
@@ -131,6 +134,20 @@ $: bannedFromSpace = state?.banned === true
 $: safari = isSafari()
 </script>
 
+{#if tags}
+<div class="tags fl mr2" class:mt2={isReply}>
+    {#each tags as reaction}
+        <Reaction 
+            isReply={isReply} 
+            isTag={true}
+            event={event} 
+            on:react
+            reaction={reaction} />
+    {/each}
+</div>
+{/if}
+
+
 {#if processed?.length > 0}
     <div class="reactions fl" class:mt2={isReply}>
         {#each processed as reaction}
@@ -154,6 +171,7 @@ $: safari = isSafari()
     {/if}
 </div>
 {/if}
+
 
 <style>
 .reactions {

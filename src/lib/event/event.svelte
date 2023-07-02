@@ -15,7 +15,6 @@ import Edited from './edited/edited.svelte'
 import Tools from './tools/tools.svelte'
 import Vote from '$lib/vote/vote.svelte'
 import Links from './links/links.svelte'
-import Tags from './tags.svelte'
 import { pin, hash } from '$lib/assets/icons.js'
 import { isSafari } from '$lib/utils/utils.js'
 
@@ -239,6 +238,10 @@ function reactToKey(e) {
     reactions.process(e.detail)
 }
 
+function addTag(e) {
+    reactions.process(e.detail)
+}
+
 
 $: showRoomAlias = !isSpace && !isRoom && !isReply && !isTopic && !isPost
 
@@ -389,7 +392,7 @@ $: bannedFromSpace = state?.banned === true
 $: roomAlias = isDomain ? `${$page.params.domain}/${event.room_alias}` :
     event.room_alias
 
-$: tags = event?.reactions?.filter(x => x?.key?.startsWith("tag:"))
+
 </script>
 
 <div class="event" 
@@ -529,9 +532,6 @@ $: tags = event?.reactions?.filter(x => x?.key?.startsWith("tag:"))
 
         </div>
 
-        {#if tags}
-            <Tags event={event} tags={tags} />
-        {/if}
 
 
 
@@ -561,6 +561,7 @@ $: tags = event?.reactions?.filter(x => x?.key?.startsWith("tag:"))
                     on:redact
                     on:set-reply-thread
                     on:react={reactToKey}
+                    on:add-tag={addTag}
                     on:active={activateTools} 
                     on:kill={killTools} 
                     event={event} />

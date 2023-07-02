@@ -84,6 +84,7 @@ function kill() {
     height: 18px;
     border-radius: 4px;
     padding: 0.25rem;
+    font-size: 18px;
 }
 .icon:hover {
     background-color: var(--shade-2);
