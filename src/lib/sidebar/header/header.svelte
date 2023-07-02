@@ -93,7 +93,7 @@ let content;
 let menu;
 let active = false;
 
-onMount(() => {
+$: if(isSpace && me && content) {
     menu = tippy(me, {
         content: content,
         allowHTML: true,
@@ -114,13 +114,14 @@ onMount(() => {
             active = false
         },
     });
-})
+}
 
 function kill() {
     menu.hide()
 }
 
 </script>
+
 <div class="menu" bind:this={content}>
     <SpaceMenu on:kill={kill}/>
 </div>
