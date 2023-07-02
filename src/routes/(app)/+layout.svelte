@@ -3,7 +3,7 @@ import '/static/css/main.css'
 import Authentication from '$lib/auth/authentication.svelte'
 import Switcher from '$lib/switcher/switcher.svelte'
 import Sidebar from '$lib/sidebar/sidebar.svelte'
-import { PUBLIC_API_URL, PUBLIC_APP_NAME, PUBLIC_INDEX } from '$env/static/public';
+import { PUBLIC_API_URL, PUBLIC_APP_NAME, PUBLIC_INDEX, PUBLIC_META_DESCRIPTION } from '$env/static/public';
 import { APIRequest } from '$lib/utils/request.js'
 import { onMount, tick } from 'svelte'
 import { page } from '$app/stores';
@@ -91,6 +91,11 @@ $: if(authenticated) {
 }
 
 </script>
+<svelte:head>
+{#if isIndex}
+    <meta name="description" content={PUBLIC_META_DESCRIPTION}>
+{/if}
+</svelte:head>
 
 {#if authenticated && EmojiPicker}
     <EmojiPicker />

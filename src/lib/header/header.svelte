@@ -213,12 +213,14 @@ $: isDomain = $page.params.domain !== undefined &&
 $: newItems = $store?.notifications?.some(n => !n.read);
 
 $: description = selected?.topic ? selected?.topic : selected?.name ?
-selected?.name : selected?.alias ? selected?.alias : ''
+selected?.name : selected?.alias ? selected?.alias : null
 
 </script>
 
 <svelte:head>
+    {#if description}
     <meta name="description" content={description}>
+    {/if}
 </svelte:head>
 
 <div class="header">
