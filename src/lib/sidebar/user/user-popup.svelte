@@ -2,6 +2,7 @@
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
 import { logout as leave, edit, alert } from '$lib/assets/icons.js'
+import { logout } from '$lib/utils/request.js'
 import {createEventDispatcher} from 'svelte';
 
 const dispatch = createEventDispatcher();
@@ -13,7 +14,9 @@ function kill() {
 $: isSpace = $page.params.space !== undefined && $page.params.space !== null &&
     $page.params.space !== ''
 
-function logout() {
+async function logOut() {
+    const res = await logout()
+    console.log(res)
     store.logout()
     kill()
 }
@@ -57,7 +60,7 @@ $: verified = $store.credentials?.verified
         </div>
 
 
-        <div class="item fl" on:click={logout}>
+        <div class="item fl" on:click={logOut}>
             <div class="grd-c fl-o">
                 Logout
             </div>

@@ -399,3 +399,11 @@ export async function suspendUser(user) {
   })
   return data
 }
+
+export async function logout() {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/account/logout`,
+    method: 'GET'
+  })
+  return data
+}

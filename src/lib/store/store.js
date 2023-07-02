@@ -230,12 +230,13 @@ function createApp() {
     })
   }
 
-  let logout = () => {
+  let logout = async () => {
     update(p => {
+      /*
       let accounts = localStorage.getItem('accounts')
       if(accounts) {
         accounts = JSON.parse(accounts)
-        let exists = accounts.find(x => x.username == p.credentials.username)
+        let exists = accounts.find(x => x.username == p?.credentials?.username)
         if(exists) {
           //splice it out
           accounts.splice(exists, 1)
@@ -246,12 +247,15 @@ function createApp() {
           }
         }
       }
+      */
       p.authenticated = false
       p.credentials = null
       p.rooms = []
       p.notifications = []
       p.power_levels = []
       localStorage.removeItem('access_token')
+
+
       return p
     })
   }
