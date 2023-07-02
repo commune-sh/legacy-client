@@ -251,10 +251,6 @@ body {
     color: var(--text-1);
     background-color: var(--bg);
     overflow: hidden;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
     height: 100%;
     height: -webkit-fill-available;
     width: 100%;
