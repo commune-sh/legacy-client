@@ -53,23 +53,17 @@ onMount(() => {
             dispatch('active', true)
         },
         onHide(i) {
-            kill()
+            active = false
+            dispatch('kill', true)
         },
         onClickOutside(i) {
-            kill()
+            active = false
+            dispatch('kill', true)
         },
     });
 })
 
 function kill() {
-    active = false
-    dispatch('kill', true)
-    menuMode = true
-    tagMode = false
-    if(tagInput) {
-        tagInput.value = null
-    }
-    tag = null
 }
 
 
@@ -128,9 +122,21 @@ let tag;
 
 function addTag() {
     if(!tag) return
+    menu.hide()
+
     let key = `tag:${tag}`
     dispatch('add-tag', key)
-    kill()
+
+    active = false
+    dispatch('kill', true)
+
+    menuMode = true
+    tagMode = false
+
+    if(tagInput) {
+        tagInput.value = null
+    }
+    tag = null
 }
 
 function handleEnter(e) {

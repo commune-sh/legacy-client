@@ -51,20 +51,32 @@ $: tagKey = reaction?.key?.split(':')[1]
 
 </script>
 
+
+{#if !isTag}
 <div class="reaction fl mr1" 
     class:tag={isTag}
-    class:nopointer={notOP}
     on:click|stopPropagation={reactToEvent}
     class:reacted={reacted}>
     <div class="emoji">
-        {isTag ? tagKey : reaction?.key}
+        {reaction.key}
     </div>
-    {#if !isTag}
     <div class="t ml1">
         {reaction?.senders?.length}
     </div>
-    {/if}
 </div>
+{/if}
+
+{#if isTag}
+<div class="tag fl mr1 grd" 
+    class:nopointer={notOP}
+    on:click|stopPropagation={reactToEvent}>
+
+    <div class="ti grd-c">
+        {tagKey}
+    </div>
+</div>
+{/if}
+
 
 <style>
 .reaction {
@@ -82,9 +94,17 @@ $: tagKey = reaction?.key?.split(':')[1]
 }
 
 .tag{
-    background-color: var(--primary);
-    color: white;
+}
+
+.ti {
+    font-size: small;
+    background-color: var(--shade-4);
     font-weight: 500;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+    height: 18px;
+    border-radius: 3px;
+    line-height: normal;
 }
 
 .nopointer {

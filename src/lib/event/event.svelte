@@ -495,9 +495,7 @@ $: showLinkThumbnail = !isPost && !isReply && hasLinks && !editing && !search
             <div class="rec-a fl ph3">
 
                 {#if !isReply && interactive}
-                        <div class="mr2">
-                            <Replies count={event?.reply_count} />
-                        </div>
+                        <Replies count={event?.reply_count} />
                 {/if}
 
                 {#if isReply && interactive}
