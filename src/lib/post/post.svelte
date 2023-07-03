@@ -111,7 +111,7 @@ async function fetchPost() {
     console.log(resp)
 
     if(resp) {
-        //post = resp.event
+        post = resp.event
         data = resp
         if(resp?.replies) {
             let r = isReply ? $page.params.reply : $page.params.post
