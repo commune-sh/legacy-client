@@ -9,6 +9,7 @@ import { store } from '$lib/store/store.js'
 import { menu, addLine, hash} from '$lib/assets/icons.js'
 import SkeletonSpan from '$lib/skeleton/skeleton-span.svelte'
 import Search from '$lib/search/search.svelte'
+import BoardList from './board-list.svelte'
 import BoardInfo from './board-info.svelte'
 
 $: authenticated = $store?.authenticated && 
@@ -70,12 +71,14 @@ function sortItems(state) {
     let items = [
         {
             path: undefined,
+            general: true,
             name: state?.space?.is_profile ? `${state?.space?.alias}'s Space`:`general`,
             alias: ``,
             fullpath: `/${$page.params.space}`,
             room_id: state?.room_id,
             topic: state?.space?.topic,
             restrictions: state?.space?.restrictions,
+            avatar: state?.space?.avatar,
             pinned_events: state.space?.pinned_events != undefined ? JSON.parse(state.space?.pinned_events) : null
         }
     ]
@@ -88,6 +91,7 @@ function sortItems(state) {
                 fullpath: `/${$page.params.space}/${child?.alias}`,
                 room_id: child?.room_id,
                 topic: child?.topic,
+                avatar: child?.avatar,
                 restrictions: child.restrictions,
                 pinned_events: child?.pinned_events != undefined ? JSON.parse(child?.pinned_events) : null,
             })
@@ -256,6 +260,7 @@ selected?.name : selected?.alias ? selected?.alias : null
                     <span class="n ml2">{name}</span>
                 {:else if selected}
 
+                        <BoardList item={selected} items={items}/>
                         <BoardInfo item={selected} />
 
                         {#if $page.params.topic}
@@ -284,16 +289,16 @@ selected?.name : selected?.alias ? selected?.alias : null
                 </div>
             {/if}
                 {#if $store.verifiedSession && space && exists}
-                    <div class="grd-c ml3">
+                    <div class="grd-c">
                     {#if (joined && !isProfile) || ownProfile}
                         {#if !editing}
-                        <button class="new-post light" on:click={newPost}>New Post</button>
+                        <button class="new-post light ml3" on:click={newPost}>New Post</button>
                             <div class="new-post-alt c-ico" on:click={newPost}>
                                 {@html addLine}
                             </div>
                         {/if}
                     {:else if authenticated && (!joined)}
-                        <button class="light" 
+                        <button class="light ml3" 
                             disabled={busy}
                             on:click={join}>
                             {buttonText}

@@ -3,7 +3,7 @@ import { PUBLIC_BASE_URL } from '$env/static/public';
 import { page } from '$app/stores';
 import { onMount, createEventDispatcher } from 'svelte'
 import { copyToClipboard } from '$lib/utils/utils.js'
-import { down, clipboard, feed} from '$lib/assets/icons.js'
+import { info, clipboard, feed} from '$lib/assets/icons.js'
 export let item;
 import tippy from 'tippy.js';
 
@@ -43,7 +43,6 @@ onMount(() => {
     });
 })
 
-$: isMobile = window.innerWidth <= 768
 
 function kill() {
     menu.hide()
@@ -75,20 +74,15 @@ function openFeed() {
 
 $: feedURL = buildURL(item)
 
-$: isRoom = $page?.params?.room != undefined
 
-$: name = (isMobile && !isRoom) ? $page.params.space : item?.name
 
 </script>
 
-<div class="item"
+<div class="item ml2"
     class:ac={active}
     on:click|stopPropagation bind:this={el}>
-    <div class="name grd-c pl2 pv1">
-        {name}
-    </div>
     <div class="ico-s grd-c mh1">
-        {@html down}
+        {@html info}
     </div>
 </div>
 
@@ -98,7 +92,10 @@ $: name = (isMobile && !isRoom) ? $page.params.space : item?.name
         <div class="rid it pa2" on:click={copyID}>
             <div class="in fl-co">
                 <div class="label">
-                    matrix room id
+                    matrix room id 
+                    {#if copied}
+                        <span class="cop">(copied)</span>
+                    {/if}
                 </div>
                 <div class="mt2 tx">
                     {item?.room_id}
@@ -197,6 +194,10 @@ $: name = (isMobile && !isRoom) ? $page.params.space : item?.name
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: normal;
+}
+
+.cop{
+    color: var(--primary);
 }
 
 </style>
