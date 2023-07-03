@@ -6,7 +6,7 @@ import { onMount, createEventDispatcher } from 'svelte'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
-import { menu, newChat, hash} from '$lib/assets/icons.js'
+import { menu, addLine, hash} from '$lib/assets/icons.js'
 import SkeletonSpan from '$lib/skeleton/skeleton-span.svelte'
 import Search from '$lib/search/search.svelte'
 import BoardInfo from './board-info.svelte'
@@ -289,7 +289,7 @@ selected?.name : selected?.alias ? selected?.alias : null
                         {#if !editing}
                         <button class="new-post light" on:click={newPost}>New Post</button>
                             <div class="new-post-alt c-ico" on:click={newPost}>
-                                {@html newChat}
+                                {@html addLine}
                             </div>
                         {/if}
                     {:else if authenticated && (!joined)}

@@ -104,7 +104,6 @@ $: tagKey = reaction?.key?.split(':')[1]
     padding-right: 0.25rem;
     height: 18px;
     border-radius: 3px;
-    line-height: normal;
 }
 
 .nopointer {
