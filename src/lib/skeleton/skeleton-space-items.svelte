@@ -35,7 +35,6 @@
     height: 36px;
     display: grid;
     cursor: pointer;
-    border: 2px solid transparent;
 }
 .fade {
     position: absolute;

@@ -148,7 +148,7 @@ function handleEnter(e) {
 
 {#if menuMode}
 
-    {#if authenticated && isOwner && !nested && !isReply && isSpace}
+    {#if authenticated && (isOwner || isSpaceAdmin) && !nested && !isReply && isSpace}
     <div class="m-item fl " on:click|stopPropagation={pinEvent}>
         <div class="grd-c mr2 fl-o">
             {event?.pinned ? 'Unpin' : 'Pin'} Post

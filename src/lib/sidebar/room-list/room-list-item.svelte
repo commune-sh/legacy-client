@@ -254,13 +254,15 @@ async function removeTopic(e) {
 
 {#if show}
 <div class="room-item"
-        bind:this={el}
-        on:contextmenu={logItem}
-        on:mouseover={() => hovered = true}
-        on:mouseleave={() => hovered = false}
-        class:active={active}>
+    bind:this={el}
+    on:contextmenu={logItem}
+    on:mouseover={() => hovered = true}
+    on:mouseleave={() => hovered = false}
+    draggable="true">
 
-    <div class="item sel-no" on:click={goToRoom}>
+    <div class="item" class:active={active}>
+
+    <div class="inner sel-no" on:click={goToRoom}>
 
         {#if avatar}
         <div class="ico grd-c img"
@@ -320,24 +322,29 @@ async function removeTopic(e) {
             </div>
 
 
+    </div>
+
+    <div class="topics">
+
+        {#if topics?.length > 0 && selected}
+            {#each topics as topic}
+                <TopicItem 
+                    on:remove={removeTopic}
+                    authenticated={authenticated}
+                    isGeneral={isGeneral}
+                    alias={item.alias}
+                    roomItem={item}
+                    item={topic} />
+            {/each}
+        {/if}
+
+        {#if selected && (isOwner || isSpaceAdmin)}
+            <AddTopic alias={item.alias} topics={topics}/>
+        {/if}
+
+    </div>
+
 </div>
-
-{#if topics?.length > 0 && selected}
-    {#each topics as topic}
-        <TopicItem 
-            on:remove={removeTopic}
-            authenticated={authenticated}
-            isGeneral={isGeneral}
-            alias={item.alias}
-            roomItem={item}
-            item={topic} />
-    {/each}
-{/if}
-
-{#if selected && (isOwner || isSpaceAdmin)}
-    <AddTopic alias={item.alias} topics={topics}/>
-{/if}
-
 
 {/if}
 
@@ -346,20 +353,25 @@ async function removeTopic(e) {
 
 .room-item {
     display: grid;
+    grid-template-rows: 1fr auto;
+    grid-row-gap: 0.15rem;
+}
+
+.item {
+    display: grid;
     grid-template-columns: 1fr auto auto;
     cursor: pointer;
     height: 30px;
     border-radius: 4px;
     font-size: 14px;
-    margin-bottom: 0.15rem;
 }
 
-.item {
+.inner {
     display: grid;
     grid-template-columns: auto 1fr auto;
 }
 
-.room-item:hover {
+.item:hover {
     background-color: var(--shade-3);
 }
 

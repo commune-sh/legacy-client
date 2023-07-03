@@ -103,7 +103,7 @@ function removeTopic(e) {
 </script>
 
 <div class="topic-item"
-    class:active={active}>
+    class:active={active} draggable="true">
 
     <div class="item sel-no" 
         on:click={goToRoom}
