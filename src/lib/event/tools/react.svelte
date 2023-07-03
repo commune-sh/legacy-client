@@ -50,9 +50,16 @@ function hovered() {
     dispatch('hovered')
 }
 
+function queryState() {
+    if(!$store.loadEmojiPicker) {
+        $store.loadEmojiPicker = true
+    }
+}
+
 </script>
 
 <div class="icon grd-c c-ico" 
+    on:mouseenter={queryState}
     class:inline={inline}
     bind:this={reactEl}
     on:mouseenter={hovered}

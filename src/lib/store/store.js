@@ -82,6 +82,7 @@ function createApp() {
     aboutOpen: false,
     accountCreated: false,
     refreshFeed: false,
+    loadEmojiPicker: false,
   }
 
   if(window) {
