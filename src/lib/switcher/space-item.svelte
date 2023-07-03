@@ -197,6 +197,6 @@ $: name = space?.name?.length > 0 ? space?.name : space?.alias
 }
 
 .name {
-    font-weight: 700;
+    font-weight: 500;
 }
 </style>

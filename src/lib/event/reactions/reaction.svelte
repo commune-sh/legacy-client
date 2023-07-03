@@ -53,7 +53,7 @@ $: tagKey = reaction?.key?.split(':')[1]
 
 
 {#if !isTag}
-<div class="reaction fl mr1" 
+<div class="reaction fl mr1 grd-c" 
     class:tag={isTag}
     on:click|stopPropagation={reactToEvent}
     class:reacted={reacted}>
@@ -137,5 +137,17 @@ $: tagKey = reaction?.key?.split(':')[1]
     font-size: small;
     color: var(--text-light);
     line-height: 1.6;
+}
+
+@media screen and (max-width: 1020px) {
+    .reaction {
+        max-height: 16px;
+    }
+    .emoji {
+        font-size: 10px;
+    }
+    .t {
+        font-size: 10px;
+    }
 }
 </style>

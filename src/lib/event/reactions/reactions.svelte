@@ -180,8 +180,9 @@ $: safari = isSafari()
 .re {
     height: 22px;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1020px) {
     .reactions {
+        height: 18px;
     }
 }
 </style>
