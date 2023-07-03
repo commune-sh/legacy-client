@@ -66,6 +66,7 @@ $: if((routeChanged && !post) && r && !isDomain) {
         post = null
         ready = false
     }
+    ready = false
     fetchPost()
 }
 
@@ -73,6 +74,7 @@ let domainPinged =false
 
 $: if(isDomain && $store.federated.endpoint && !ready) {
     if(!domainPinged) {
+        ready = false
         fetchPost()
     }
 }
@@ -109,7 +111,7 @@ async function fetchPost() {
     console.log(resp)
 
     if(resp) {
-        post = resp.event
+        //post = resp.event
         data = resp
         if(resp?.replies) {
             let r = isReply ? $page.params.reply : $page.params.post
