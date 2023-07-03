@@ -107,6 +107,9 @@ function goToItem(item) {
     }
 }
 function initials(item) {
+    if(!item?.alias) {
+        return item?.name?.charAt(0).toUpperCase()
+    }
     return item?.alias?.split(' ')
         .map((n) => n[0])
         .join('')
@@ -115,7 +118,7 @@ function initials(item) {
 
 </script>
 
-<div class="item"
+<div class="board-list"
     class:ac={active}
     on:click|stopPropagation bind:this={el}>
     <div class="name grd-c pl2 pv1">
@@ -127,7 +130,7 @@ function initials(item) {
 </div>
 
 <div class="menu" bind:this={content}>
-    <div class="content pa1 mb1 fl-co">
+    <div class="content pa1 fl-co">
 
         {#each items as item}
             <div class="item pa2" on:click={e => goToItem(item)}>
@@ -165,6 +168,15 @@ function initials(item) {
 </div>
 
 <style>
+.board-list {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    border-radius: 5px;
+    background: var(--shade-3);
+    cursor: pointer;
+    overflow: hidden;
+}
+
 .name {
     font-size: small;
     white-space: nowrap;
@@ -201,6 +213,10 @@ function initials(item) {
 .item:hover {
     background: var(--shade-4);
 }
+.board-list:hover {
+    background: var(--shade-4);
+}
+
 
 .ac {
     background: var(--shade-4);
