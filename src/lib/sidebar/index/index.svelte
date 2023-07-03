@@ -2,7 +2,6 @@
 import { APIRequest } from '$lib/utils/request.js'
 import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public'
 import { onMount } from 'svelte'
-import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
 import PublicSpaceItem from './public-space-item.svelte'
 
@@ -53,6 +52,24 @@ function showAbout() {
 
 $: hide = authenticated && $store.spaces?.length == 1
 
+$: authenticated = $store?.authenticated && 
+    $store?.credentials != null
+    $store?.credentials?.access_token?.length > 0
+
+$: senderVerified = authenticated && $store.credentials?.verified
+
+function createSpace() {
+    if(!authenticated) {
+        store.startAuthenticating("login")
+        return
+    }
+    if(!senderVerified) {
+        $store.showVerificationAlert = true
+        return
+    }
+    store.toggleCreateSpace()
+}
+
 </script>
 
 <div class="index-sidebar">
@@ -81,6 +98,13 @@ $: hide = authenticated && $store.spaces?.length == 1
                         <PublicSpaceItem space={space} />
                     {/if}
                 {/each}
+
+                <div class="mv3 cr ml2">
+                    <button on:click={createSpace}>
+                        Create Your Own Space
+                    </button>
+                </div>
+
             </div>
         {/if}
 

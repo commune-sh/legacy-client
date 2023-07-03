@@ -350,6 +350,13 @@ a:hover {
     flex-wrap: wrap;
 }
 
+.sel-no {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 button {
     cursor: pointer;
     line-height: 1;

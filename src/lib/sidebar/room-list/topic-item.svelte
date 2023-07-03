@@ -105,7 +105,7 @@ function removeTopic(e) {
 <div class="topic-item"
     class:active={active}>
 
-    <div class="item" 
+    <div class="item sel-no" 
         on:click={goToRoom}
         on:contextmenu={logItem}>
 

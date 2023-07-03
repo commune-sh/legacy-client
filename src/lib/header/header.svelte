@@ -241,18 +241,19 @@ selected?.name : selected?.alias ? selected?.alias : null
             <div class="name grd-c fl">
             {#if (isIndex || indexPost || isAll)}
                     {#if authDone}
-                        <span class="n">{indexText}</span>
+                        <span class="ml2">{indexText}</span>
                     {/if}
             {:else if (isDomain && !isSpace)}
-                    <a href={`https://${$page.params.domain}`} target="_blank">{$page.params.domain}</a>
+                <span class="ml2"><a href={`https://${$page.params.domain}`}
+                        target="_blank">{$page.params.domain}</a></span>
             {:else if (!ready && !isStaticRoute)}
                     <SkeletonSpan />
             {:else}
 
                 {#if isStaticRoute && staticRoute}
-                    <span class="n">{staticRoute.name}</span>
+                    <span class="n ml2">{staticRoute.name}</span>
                 {:else if isStatic && name}
-                    <span class="n">{name}</span>
+                    <span class="n ml2">{name}</span>
                 {:else if selected}
 
                         <BoardInfo item={selected} />

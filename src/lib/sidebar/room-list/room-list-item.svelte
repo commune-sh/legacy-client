@@ -260,7 +260,7 @@ async function removeTopic(e) {
         on:mouseleave={() => hovered = false}
         class:active={active}>
 
-    <div class="item"on:click={goToRoom}>
+    <div class="item sel-no" on:click={goToRoom}>
 
         {#if avatar}
         <div class="ico grd-c img"
