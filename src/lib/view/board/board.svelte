@@ -245,11 +245,11 @@ let domainPinged =false
 $: if(isDomain && $store.federated.endpoint && !loaded) {
     if(!domainPinged) {
         domainPinged = true
-        //loadEvents()
+        loadEvents()
     }
 }
 $: if(!isDomain && domainPinged) {
-    //loadEvents()
+    loadEvents()
 }
 
 onMount(() => {
