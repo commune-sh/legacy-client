@@ -12,7 +12,7 @@ $: bounds = target.getBoundingClientRect()
 $: top = bounds.top + bounds.height
 $: bottom = bounds.height + 180
 
-$: matchedEmojis = window.emoji.filter(x => x.shortcode.includes(shortcode))
+$: matchedEmojis = window?.emoji?.filter(x => x.shortcode.includes(shortcode))
 
 $: matched = matchedEmojis[0]
 

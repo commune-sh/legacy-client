@@ -70,19 +70,22 @@ let VerificationAlert;
 let Verification;
 let UserSettings;
 
+/*
 $: if(authenticated && $store.loadEmojiPicker) {
     import('$lib/emoji/emoji-picker.svelte').then(m => {
         EmojiPicker = m.default
     })
 }
+*/
 
 $: if(authenticated) {
 
-    /*
-    import('$lib/emoji/emoji-picker.svelte').then(m => {
-        EmojiPicker = m.default
-    })
-    */
+    setTimeout(() => {
+        import('$lib/emoji/emoji-picker.svelte').then(m => {
+            EmojiPicker = m.default
+        })
+    }, 1000)
+
     import('$lib/space/settings/settings.svelte').then(m => {
         SpaceSettings = m.default
     })

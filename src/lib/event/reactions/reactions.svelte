@@ -134,7 +134,7 @@ $: bannedFromSpace = state?.banned === true
 $: safari = isSafari()
 </script>
 
-{#if tags}
+{#if tags?.length > 0}
 <div class="tags fl mr2" class:mt2={isReply}>
     {#each tags as reaction}
         <Reaction 

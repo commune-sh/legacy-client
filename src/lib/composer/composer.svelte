@@ -308,10 +308,12 @@ async function createPost() {
     let title = titleInput.value
     let body = bodyInput.value
 
-    if(links && links[0]?.title?.length > 0 && 
-        links[0]?.description?.length > 0) {
-        title = links[0].title
-        body = links[0].description
+    if(title.length == 0 && body.length == 0) {
+        if(links && links[0]?.title?.length > 0 && 
+            links[0]?.description?.length > 0) {
+            title = links[0].title
+            body = links[0].description
+        }
     }
 
     if(title.length === 0 && !reply && !editingReply) {
