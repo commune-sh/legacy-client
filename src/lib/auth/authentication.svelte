@@ -124,7 +124,7 @@ function passMode() {
 }
 
 function loggedin() {
-    store.startRefreshingFeed()
+    $store.reloadFeed = true
     kill()
 }
 

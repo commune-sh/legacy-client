@@ -30,16 +30,6 @@ let signup = () => {
 $: isSpace = $page.params.space !== undefined && $page.params.space !== null &&
     $page.params.space !== ''
 
-let logout = () => {
-    store.logout()
-    if(!isSpace) {
-        //location.replace('/')
-        if(isIndex) {
-            //location.replace('/')
-        }
-    }
-}
-
 $: isIndex = $page.url?.pathname === '/'
 
 let menuActive = false

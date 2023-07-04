@@ -18,6 +18,7 @@ async function logOut() {
     const res = await logout()
     console.log(res)
     store.logout()
+    $store.reloadFeed = true
     kill()
 }
 

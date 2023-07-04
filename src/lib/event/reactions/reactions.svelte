@@ -154,6 +154,7 @@ $: safari = isSafari()
             {#if !skip.includes(reaction.key)}
             <Reaction 
                 isReply={isReply} 
+                isTag={false}
                 event={event} 
                 on:react
                 reaction={reaction} />

@@ -80,11 +80,9 @@ $: if(authenticated && $store.loadEmojiPicker) {
 
 $: if(authenticated) {
 
-    setTimeout(() => {
-        import('$lib/emoji/emoji-picker.svelte').then(m => {
-            EmojiPicker = m.default
-        })
-    }, 1000)
+    import('$lib/emoji/emoji-picker.svelte').then(m => {
+        EmojiPicker = m.default
+    })
 
     import('$lib/space/settings/settings.svelte').then(m => {
         SpaceSettings = m.default

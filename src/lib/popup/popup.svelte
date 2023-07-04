@@ -11,14 +11,10 @@ export let trigger = "click";
 export let shadow;
 export let borderRadius = `8px`
 
-export let initActive;
 export let mask = false;
 
 export let disabled = false;
 
-$: if(initActive) {
-    activate()
-}
 
 let active = false;
 

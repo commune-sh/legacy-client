@@ -68,28 +68,6 @@ $: isTopic = $page?.params?.topic !== undefined
 
 $: topic = $page?.params?.topic
 
-$: if($page?.url?.pathname != lastPath) {
-
-    if($page?.params?.room != lastRoom || 
-        $page?.params?.topic != lastTopic ||
-        $page?.params?.space != lastSpace) {
-
-
-        if(loaded) {
-
-            /*
-            if(!events) {
-                editing = false
-                reloading = true
-            }
-            */
-                editing = false
-                reloading = true
-
-            loadEvents()
-        }
-    }
-}
 
 $: if(loaded && roomID) {
     let es = store.getEditorState(roomID)
@@ -106,7 +84,40 @@ $: events = data?.events
 //$: sorted = events?.sort((a, b) => b.origin_server_ts - a.origin_server_ts);
 
 
+// Store $page locally
+let _page = null;
+let reloadTrigger;
+// Reload logic
+
+$: if(reloadTrigger && ($page.url?.pathname != _page?.url?.pathname) &&
+    $page.url.pathname == '/') {
+    loadEvents()
+}
+
+$: if(reloadTrigger && ($page.url?.pathname != _page?.url?.pathname) &&
+    $page.url.pathname == '/all') {
+    loadEvents()
+}
+
+$: if(reloadTrigger && ($page.params?.space != _page?.params?.space)) {
+    loadEvents()
+}
+
+$: if(reloadTrigger && ($page.params?.room != _page?.params?.room)) {
+    loadEvents()
+}
+
+$: if(reloadTrigger && ($page.params?.topic != _page?.params?.topic)) {
+    loadEvents()
+}
+
+async function reload(opt) {
+    const resp = await loadPosts(opt)
+    return resp
+}
+
 async function loadEvents(init) {
+    reloading = true
 
     if(init) {
     }
@@ -165,8 +176,12 @@ async function loadEvents(init) {
         lastRoom = $page?.params?.room
         lastTopic = $page?.params?.topic
         lastAuthState = authenticated
-        loaded = true
         reloading = false
+        loaded = true
+        _page = $page
+        setTimeout(() => {
+            reloadTrigger = true
+        }, 1000)
     }
 
     if(!resp) {
@@ -176,9 +191,7 @@ async function loadEvents(init) {
 }
 
 $: isIndex = $page.url?.pathname === '/'
-$: if(isIndex && loaded && lastAuthState != null && (authenticated != lastAuthState)) {
-    loadEvents()
-}
+
 
 let down = false;
 
@@ -232,11 +245,11 @@ let domainPinged =false
 $: if(isDomain && $store.federated.endpoint && !loaded) {
     if(!domainPinged) {
         domainPinged = true
-        loadEvents()
+        //loadEvents()
     }
 }
 $: if(!isDomain && domainPinged) {
-    loadEvents()
+    //loadEvents()
 }
 
 onMount(() => {
@@ -336,7 +349,7 @@ let fetchMore = () => {
     }
 
     if($page?.url.pathname == '/all') {
-        opt.url = `${endpoint}/events`
+        url = `${endpoint}/events`
     }
 
     APIRequest({
@@ -370,11 +383,8 @@ let fetchMore = () => {
     });
 }
 
-$: if($store.refreshingFeed) {
-    store.stopRefreshingFeed()
-}
 
-$: if($store.reloadFeed && $store.accountCreated) {
+$: if(reloadTrigger && $store.reloadFeed) {
     loadEvents()
     $store.reloadFeed = false 
     $store.accountCreated = false

@@ -17,7 +17,6 @@ function createApp() {
     },
     showVerificationAlert: false,
     startAccountVerification: false,
-    refreshingFeed: false,
     verifiedSession: false,
     credentials: null,
     notifications: [],
@@ -81,8 +80,8 @@ function createApp() {
     discoverSpacesOpen: false,
     aboutOpen: false,
     accountCreated: false,
-    refreshFeed: false,
     loadEmojiPicker: false,
+    reloadFeed: false,
   }
 
   if(window) {
@@ -188,19 +187,6 @@ function createApp() {
   }
 
 
-  let startRefreshingFeed = () => {
-    update(p => {
-      p.refreshingFeed = true
-      return p
-    })
-  }
-
-  let stopRefreshingFeed = () => {
-    update(p => {
-      p.refreshingFeed = false
-      return p
-    })
-  }
 
   let isAuthenticated = () => {
     update(p => {
@@ -872,8 +858,6 @@ function createApp() {
     removeRoom,
     startAuthenticating,
     stopAuthenticating,
-    startRefreshingFeed,
-    stopRefreshingFeed,
     isAuthenticated,
     isNotAuthenticated,
     verifiedSession,

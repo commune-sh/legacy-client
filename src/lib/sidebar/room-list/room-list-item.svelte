@@ -331,7 +331,6 @@ async function removeTopic(e) {
             {#each topics as topic}
                 <TopicItem 
                     on:remove={removeTopic}
-                    authenticated={authenticated}
                     isGeneral={isGeneral}
                     alias={item.alias}
                     roomItem={item}

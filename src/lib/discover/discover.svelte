@@ -10,9 +10,6 @@ import SpaceItem from './space-item.svelte'
 const dispatch = createEventDispatcher()
 
 let kill =() => {
-    if($page?.url.pathname == "/") {
-        $store.reloadFeed = true
-    }
     $store.discoverSpacesOpen = false;
 }
 

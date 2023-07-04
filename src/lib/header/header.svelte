@@ -10,6 +10,7 @@ import { menu, addLine, hash} from '$lib/assets/icons.js'
 import SkeletonSpan from '$lib/skeleton/skeleton-span.svelte'
 import Search from '$lib/search/search.svelte'
 import BoardList from './board-list.svelte'
+import IndexList from './index-list.svelte'
 import BoardInfo from './board-info.svelte'
 
 $: authenticated = $store?.authenticated && 
@@ -240,13 +241,17 @@ selected?.name : selected?.alias ? selected?.alias : null
             {/if}
         </div>
 
-        <div class="fl mr3">
+        <div class="fl mr3 sel-no">
 
             <div class="name grd-c fl">
             {#if (isIndex || indexPost || isAll)}
-                    {#if authDone}
-                        <span class="ml2">{indexText}</span>
-                    {/if}
+
+                {#if authDone && authenticated}
+                        <IndexList />
+                {:else if authDone && !authenticated}
+                    <span class="ml2">{indexText}</span>
+                {/if}
+
             {:else if (isDomain && !isSpace)}
                 <span class="ml2"><a href={`https://${$page.params.domain}`}
                         target="_blank">{$page.params.domain}</a></span>

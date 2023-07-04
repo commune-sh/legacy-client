@@ -96,6 +96,7 @@ function login() {
             store.isAuthenticated()
             dispatch('authenticated', true)
             store.spacesFetched()
+            $store.reloadFeed = true
         }
 
         //busy = false

@@ -224,6 +224,9 @@ onMount(() => {
 
 
     setupLinkPasteListener()
+
+    $store.loadEmojiPicker = true
+
 })
 
 function setupLinkPasteListener() {

@@ -43,6 +43,9 @@ async function join() {
                 store.addSpace(resp.space)
             }
             store.addRoom(resp.space.room_id)
+            if($page?.url.pathname == "/") {
+                $store.reloadFeed = true
+            }
         }
         if(resp && resp?.error) {
             console.log(resp)
