@@ -99,6 +99,7 @@ $: tagKey = reaction?.key?.split(':')[1]
 .ti {
     font-size: small;
     background-color: var(--primary);
+    color: white;
     font-weight: 500;
     padding-left: 0.25rem;
     padding-right: 0.25rem;
