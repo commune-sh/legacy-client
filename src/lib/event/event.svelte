@@ -457,12 +457,12 @@ $: showLinkThumbnail = !isPost && !isReply && hasLinks && !editing && !search
 
                 {#if isPost}
                     {#if !isSingleReply}
-                    <div class="post-title ph3 pb2">
+                    <div class="post-title ph3 pb2 pti">
                         {title}
                     </div>
                     {/if}
 
-                    <div class="post-body ph3 mb2">
+                    <div class="post-body ph3 mb2 pci">
                         {@html content}
                     </div>
                 {:else if isReply}
@@ -755,6 +755,14 @@ $: showLinkThumbnail = !isPost && !isReply && hasLinks && !editing && !search
 .sn {
     height: 12px;
     width: 12px;
+}
+
+.pti {
+    font-size: 16px;
+}
+
+.pci {
+    font-size: 15px;
 }
 
 @keyframes fadeOut {
