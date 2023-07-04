@@ -74,6 +74,8 @@ async function addRoom() {
         newTopics = []
     }
     newTopics.push(nameInput.value)
+    newTopics.sort((a, b) => a.localeCompare(b));
+
     const res = await createStateEvent({
         room_id: roomID,
         event_type: 'm.room.topics',

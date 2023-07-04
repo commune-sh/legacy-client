@@ -141,7 +141,8 @@ function logItem(e) {
     console.log(item)
 }
 
-$: topics = item?.topics != undefined ? JSON.parse(item?.topics) : null
+$: topicItems = item?.topics != undefined ? JSON.parse(item?.topics) : null
+$: topics = topicItems?.sort((a, b) => a.localeCompare(b));
 
 
 let hovered = false;
@@ -438,7 +439,7 @@ button {
     background-size: cover;
     background-position: center;
     border-radius: 50%;
-    height: 18px;
-    width: 18px;
+    height: 14px;
+    width: 14px;
 }
 </style>

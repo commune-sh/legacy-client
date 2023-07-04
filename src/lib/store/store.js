@@ -467,6 +467,7 @@ function createApp() {
         p.states[space].children = []
       }
       p.states[space].children.push(state)
+      p.states[space]?.children.sort((a, b) => a.alias.toLowerCase().localeCompare(b.alias.toLowerCase()));
       return p
     })
   }

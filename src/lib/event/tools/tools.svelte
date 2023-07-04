@@ -1,5 +1,5 @@
 <script>
-import { reply, external, edit, loop } from '$lib/assets/icons.js'
+import { reply, external, edit } from '$lib/assets/icons.js'
 import React from './react.svelte'
 import Menu from './menu.svelte'
 import ShowFrequent from './frequent-reactions.svelte'
@@ -113,14 +113,6 @@ function resetHovered() {
         on:hovered={reactHovered}
         on:react
         on:active />
-
-    {#if !isPost && !isReply}
-    <div class="icon grd-c c-ico" 
-        on:mouseenter={resetHovered}
-        on:click|stopPropagation={reference}>
-        {@html loop}
-    </div>
-    {/if}
 
     {#if isPost || isReply}
     <div class="icon grd-c c-ico" 

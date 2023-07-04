@@ -53,7 +53,7 @@ $: isYoutube = (item) => {
 <style>
 .link-item {
     margin: 0.5rem;
-    padding: 0.5rem;
+    padding: 0.25rem 0.5rem;
     border: 1px solid var(--border-1);
     position: relative;
     line-height: 1.5;
