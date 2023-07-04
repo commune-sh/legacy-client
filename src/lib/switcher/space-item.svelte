@@ -164,7 +164,7 @@ $: name = space?.name?.length > 0 ? space?.name : space?.alias
 .ico {
     height: 22px;
     width: 22px;
-    fill: white;
+    fill: var(--text-1);
     opacity: 0.5;
 }
 
