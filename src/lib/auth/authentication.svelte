@@ -111,7 +111,7 @@ function syncNotifications() {
       if (socket.readyState === WebSocket.OPEN) {
         socket.send('ping');
       }
-    }, 55000);
+    }, 30000);
 }
 
 
