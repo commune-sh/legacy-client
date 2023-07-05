@@ -79,7 +79,8 @@ function go() {
 
 
 
-<div class="item ph3 pv2 fl-co" on:click={go}>
+<div class="item ph3 pv2 fl-co" 
+    on:click={go}>
     <div class="">
         <a href={sender}><span class="href">@{from}</span></a> {action} to your
         post "{item?.body?.substring(0, 20)}{item?.body?.length > 20 ? `...` : ``}"
@@ -87,14 +88,29 @@ function go() {
     <div class="mt1 sm">
         {isThisWeek ? when : created}
     </div>
+    {#if !item.read}
+        <div class="dot"></div>
+    {/if}
 </div>
 
 <style>
 .item {
     line-height: 1.5;
     cursor: pointer;
+    position: relative;
 }
 .item:hover {
     background: var(--context-menu-hover);
 }
+.unread{ 
+    background: var(--primary);
+}
+
+.dot {
+    top: 0.5rem;
+    right: 1rem;
+    height: 7px;
+    width: 7px;
+}
+
 </style>

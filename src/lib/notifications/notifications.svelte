@@ -74,6 +74,7 @@ $: none = $store.notifications?.length == 0
 </script>
 
 <div class="grd-c pa2 mr1 bell"
+    class:ac={active}
     on:click|stopPropagation bind:this={el}>
     <div class="ico-s grd-c">
         {@html bell}
@@ -145,6 +146,10 @@ $: none = $store.notifications?.length == 0
 }
 
 .bell:hover {
+    background-color: var(--shade-4);
+}
+
+.ac {
     background-color: var(--shade-4);
 }
 

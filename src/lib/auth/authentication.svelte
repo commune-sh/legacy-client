@@ -1,7 +1,7 @@
 <script>
 import { onMount, onDestroy } from 'svelte'
 import { APIRequest, getNotifications } from '$lib/utils/request.js'
-import { PUBLIC_API_URL } from '$env/static/public';
+import { PUBLIC_API_URL, PUBLIC_API_URL_WS } from '$env/static/public';
 import Login from './login.svelte'
 import { close } from '$lib/assets/icons.js'
 import { page } from '$app/stores';
@@ -60,6 +60,32 @@ $: authenticated = $store?.authenticated &&
 
 $: if(authenticated) {
     fetchNotifications()
+    syncNotifications()
+}
+
+function syncNotifications() {
+    let token = $store.credentials.access_token
+    const socket = new WebSocket(`${PUBLIC_API_URL_WS}/account/notifications/sync?token=${token}`);
+    console.log("syncing notifications")
+
+  // Connection opened
+  socket.addEventListener('open', function (event) {
+    console.log('Connected to WebSocket');
+  });
+
+  // Listen for messages
+  socket.addEventListener('message', function (event) {
+        if(event.data) {
+            let data = JSON.parse(event.data)
+            console.log(data)
+            store.addNotification(data)
+        }
+  });
+
+  // Connection closed
+  socket.addEventListener('close', function (event) {
+    console.log('Disconnected from WebSocket');
+  });
 }
 
 async function fetchNotifications() {

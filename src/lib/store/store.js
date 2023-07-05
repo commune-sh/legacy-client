@@ -836,6 +836,12 @@ function createApp() {
     })
   }
 
+  let addNotification = (x) => {
+    update(p => {
+      p.notifications?.unshift(x)
+      return p
+    })
+  }
 
 
   const { subscribe, set, update } = writable(app);
@@ -915,6 +921,7 @@ function createApp() {
     updateRoomLeftStatus,
     removeSpaceRoom,
     savePowerLevels,
+    addNotification,
   };
 }
 
