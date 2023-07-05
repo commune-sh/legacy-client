@@ -64,29 +64,50 @@ $: if(authenticated) {
 }
 
 function syncNotifications() {
+  let reconnectDelay = 1000; // Initial reconnect delay in milliseconds
+  let maxReconnectDelay = 60000; // Maximum reconnect delay in milliseconds
+  let reconnectTimer; // Timer for the reconnect delay
+
+  function scheduleReconnect() {
+    if (reconnectTimer) {
+      clearTimeout(reconnectTimer);
+    }
+    reconnectTimer = setTimeout(function () {
+      console.log("Reconnecting to WebSocket server...");
+      syncNotifications();
+    }, reconnectDelay);
+
+    reconnectDelay = Math.min(reconnectDelay * 2, maxReconnectDelay);
+  }
+
     let token = $store.credentials.access_token
     const socket = new WebSocket(`${PUBLIC_API_URL_WS}/account/notifications/sync?token=${token}`);
     console.log("syncing notifications")
 
-  // Connection opened
-  socket.addEventListener('open', function (event) {
-    console.log('Connected to WebSocket');
-  });
+  socket.onopen = function () {
+    console.log("Connected to WebSocket server");
+    reconnectDelay = 1000; // Reset reconnect delay upon successful connection
+  };
 
-  // Listen for messages
-  socket.addEventListener('message', function (event) {
-        if(event.data) {
-            let data = JSON.parse(event.data)
-            console.log(data)
-            store.addNotification(data)
-        }
-  });
+  socket.onmessage = function (event) {
+    if(event.data) {
+        let data = JSON.parse(event.data)
+        console.log(data)
+        store.addNotification(data)
+    }
+  };
 
-  // Connection closed
-  socket.addEventListener('close', function (event) {
-    console.log('Disconnected from WebSocket');
-  });
+  socket.onclose = function (event) {
+    console.log("WebSocket connection closed:", event.reason);
+    scheduleReconnect();
+  };
+
+  socket.onerror = function (error) {
+    console.log("WebSocket error:", error);
+    scheduleReconnect();
+  };
 }
+
 
 async function fetchNotifications() {
     const res = await getNotifications();
