@@ -1,7 +1,8 @@
 <script>
-import { createEventDispatcher } from 'svelte'
+import { onMount, createEventDispatcher } from 'svelte'
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
+import tippy from 'tippy.js';
 
 $: state = $store?.states[$page?.params?.space]
 $: sender_id = $store.credentials?.matrix_user_id
@@ -49,12 +50,39 @@ function reactToEvent() {
 
 $: tagKey = reaction?.key?.split(':')[1]
 
+let el;
+let content;
+
+let menu;
+
+onMount(() => {
+    menu = tippy(el, {
+        content: content,
+        placement: 'top',
+        arrow: true,
+        duration: 1,
+        theme: 'inline',
+    });
+})
+
+function localpart(id) {
+    return id.split(':')[0].substring(1)
+}
 </script>
 
-
 {#if !isTag}
+
+<div class="tip fl-co" bind:this={content}>
+    {#each reaction.senders as sender, i}
+        <div class="sen" class:mb2={i != (reaction?.senders?.length - 1)}>
+            @{localpart(sender)}
+        </div>
+    {/each}
+</div>
+
 <div class="reaction fl mr1 grd-c" 
     class:tag={isTag}
+    bind:this={el}
     on:click|stopPropagation={reactToEvent}
     class:reacted={reacted}>
     <div class="emoji">
@@ -138,6 +166,11 @@ $: tagKey = reaction?.key?.split(':')[1]
     font-size: small;
     color: var(--text-light);
     line-height: 1.6;
+}
+
+.sen {
+    font-size: small;
+    font-weight: 500;
 }
 
 @media screen and (max-width: 1020px) {
