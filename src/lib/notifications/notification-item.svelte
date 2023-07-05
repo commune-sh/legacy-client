@@ -1,7 +1,8 @@
 <script>
-import { PUBLIC_BASE_URL } from '$env/static/public'
+import { PUBLIC_BASE_URL, PUBLIC_MEDIA_URL } from '$env/static/public'
 import { createEventDispatcher } from 'svelte'
 import { goto } from '$app/navigation';
+import { user as userIcon } from '$lib/assets/icons.js'
 
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
@@ -48,11 +49,13 @@ function process(item) {
 
 $: notification = process(item)
 
-$: from = item.from_matrix_user_id.split(':')[0].substring(1);
+$: localpart = `@` + item.from_matrix_user_id.split(':')[0].substring(1);
 
-$: sender = `${PUBLIC_BASE_URL}/@${from}`
+$: from = item?.display_name ? item?.display_name : localpart
 
-$: action = item?.type == `post.reply` ? `replied` : item?.type == `reaction` ? `reacted` : ``
+$: sender = `${PUBLIC_BASE_URL}/${localpart}`
+
+$: action = (item?.type == `post.reply` || item?.type == `reply.reply`) ? `replied` : item?.type == `reaction` ? `reacted` : ``
 
 $: post_slug = item?.relates_to_event_id?.slice(-11);
 $: reply_slug = item?.event_id?.slice(-11);
@@ -74,6 +77,7 @@ function go() {
     goto(url)
 }
 
+$: avatar = item?.avatar_url ?  `${PUBLIC_MEDIA_URL}/${item?.avatar_url}` : null
 
 </script>
 
@@ -81,13 +85,29 @@ function go() {
 
 <div class="item ph3 pv2 fl-co" 
     on:click={go}>
-    <div class="">
-        <a href={sender}><span class="href">@{from}</span></a> {action} to your
-        post "{item?.body?.substring(0, 20)}{item?.body?.length > 20 ? `...` : ``}"
+    <div class="fl">
+        <div class="grd-c avatar-base grd mr3"
+            style="background-image: url({avatar})">
+                {#if !avatar}
+                        <div class="ico-s grd-c">
+                            {@html userIcon}
+                        </div>
+                {/if}
+        </div>
+        <div class="fl-co">
+            <div class="">
+
+                <a href={sender}><span class="href">{from}</span></a> {action} to your
+            post "{item?.body?.substring(0, 20)}{item?.body?.length > 20 ? `...` : ``}"
+            </div>
+
+            <div class="mt1 sm">
+                {isThisWeek ? when : created}
+            </div>
+        </div>
     </div>
-    <div class="mt1 sm">
-        {isThisWeek ? when : created}
-    </div>
+
+
     {#if !item.read}
         <div class="dot"></div>
     {/if}
@@ -113,4 +133,17 @@ function go() {
     width: 7px;
 }
 
+.avatar-base {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: var(--shade-4);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+.ico-s {
+    height: 16px;
+    width: 16px;
+}
 </style>
