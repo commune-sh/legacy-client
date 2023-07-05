@@ -90,9 +90,8 @@ function syncNotifications() {
   };
 
   socket.onmessage = function (event) {
-    if(event.data) {
+    if(event?.data && event?.data != 'ping') {
         let data = JSON.parse(event.data)
-        console.log(data)
         store.addNotification(data)
     }
   };
