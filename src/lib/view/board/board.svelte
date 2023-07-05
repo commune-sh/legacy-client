@@ -118,6 +118,7 @@ async function reload(opt) {
 
 async function loadEvents(init) {
     reloading = true
+    editing = false
 
     if(init) {
     }
