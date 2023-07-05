@@ -106,6 +106,12 @@ function syncNotifications() {
     console.log("WebSocket error:", error);
     scheduleReconnect();
   };
+
+    setInterval(() => {
+      if (socket.readyState === WebSocket.OPEN) {
+        socket.send('ping');
+      }
+    }, 55000);
 }
 
 
