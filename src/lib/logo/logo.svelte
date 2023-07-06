@@ -60,8 +60,8 @@ function goHome() {
 
 
 .l-c-i {
-    height: 28px;
-    width: 28px;
+    height: 20px;
+    width: 20px;
     fill: var(--logo-shade-1);
 }
 
