@@ -393,10 +393,33 @@ $: roomAlias = isDomain ? `${$page.params.domain}/${event.room_alias}` :
 $: showMediaThumbnail = !isPost && !isReply && hasAttachments && firstIsMedia && !editing && !search
 
 $: showLinkThumbnail = !isPost && !isReply && hasLinks && !editing && !search
+
+let dragging = false;
+
+function dragStart(e) {
+    $store.draggable = 'post'
+    dragging = true;
+    e.dataTransfer.setData('text/plain', JSON.stringify(event));
+
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setDragImage(new Image(), 0, 0);
+}
+
+function dragEnd() {
+    dragging = false;
+    $store.draggable = null
+}
+
+$: moveActive = $store.movingPost == event?.event_id
+
 </script>
 
 <div class="event" 
     bind:this={el}
+    draggable={!isReply && !isPost && !editing && interactive && !moveActive}
+    on:dragstart={dragStart}
+    on:dragend={dragEnd}
+    class:dragging={dragging}
     on:contextmenu={print}
     on:mouseover={showTools}
     on:mouseleave={hideTools}
@@ -410,10 +433,21 @@ $: showLinkThumbnail = !isPost && !isReply && hasLinks && !editing && !search
     class:context={context}
     class:highlight={highlight || !interactive} role="button">
 
+    {#if (dragging || moveActive) && (!isReply && !isPost)}
+        <div class="drg">
+            <div class="drgm">
+                {#if moveActive}
+                    Moving...
+                {:else}
+                    Move Post
+                {/if}
+            </div>
+        </div>
+    {/if}
+
 
     <div class="ev-c fl-co"
     class:ovy={!interactive}>
-
         <div class="sender ph3 fl">
             <User hideAvatar={false} user={user} op={op}/>
             <div class="grd-c ph1"></div>
@@ -544,7 +578,7 @@ $: showLinkThumbnail = !isPost && !isReply && hasLinks && !editing && !search
     {/if}
 
 
-        {#if !safari && displayTools && !editing && interactive && !bannedFromSpace}
+        {#if !safari && displayTools && !editing && interactive && !bannedFromSpace && !dragging}
         <div class="tools" class:asi={event?.pinned || replyPinned}>
                 <Tools 
                     isReply={isReply} 
@@ -606,6 +640,7 @@ $: showLinkThumbnail = !isPost && !isReply && hasLinks && !editing && !search
     padding-top: 0.5rem;
     position: relative;
     word-break: break-word;
+    position: relative;
 }
 
 .bb {
@@ -790,5 +825,32 @@ $: showLinkThumbnail = !isPost && !isReply && hasLinks && !editing && !search
 
     .post-body {
     }
+}
+.dragging {
+    cursor: grabbing;
+}
+.drg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    cursor: grabbing;
+    z-index: 100;
+    border: 2px solid var(--primary);
+    border-radius: 7px;
+    transition: 0.1s;
+}
+
+.drgm {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: var(--primary);
+    padding: 0.25rem 0.5rem;
+    color: white;
+    font-size: small;
+    font-weight: 500;
+    border-radius: 0 0 0 7px;
 }
 </style>

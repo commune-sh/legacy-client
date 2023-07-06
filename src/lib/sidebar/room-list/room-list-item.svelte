@@ -240,6 +240,66 @@ async function removeTopic(e) {
     console.log(res)
 }
 
+let dragHover = false;
+let dragHoverRoom = false;
+
+function dragEnter(e) {
+    if($store.draggable == 'post') {
+        dragHover = true;
+    }
+    if($store.draggable == 'room') {
+        dragHoverRoom = true;
+    }
+}
+
+function dragLeave(e) {
+    if(el.contains(e.relatedTarget)) {
+        e.preventDefault()
+        return
+    }
+    if($store.draggable == 'post') {
+        dragHover = false;
+    }
+    if($store.draggable == 'room') {
+        dragHoverRoom = false;
+    }
+}
+
+function allowDrop(e) {
+    e.preventDefault();
+}
+
+function drop(e) {
+    e.preventDefault();
+    const plain = e.dataTransfer.getData('text/plain');
+    if(plain) {
+        const data = JSON.parse(plain)
+        console.log(data)
+        $store.movingPost = data.event_id
+        setTimeout(() => {
+            $store.movingPost = null
+        }, 1000)
+    }
+    dragHover = false;
+    dragHoverRoom = false;
+    $store.draggable = null
+}
+
+let dragging = false;
+
+function dragStart(e) {
+    $store.draggable = 'room'
+    dragging = true;
+    e.dataTransfer.setData('text/plain', JSON.stringify(item));
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setDragImage(new Image(), 0, 0);
+}
+
+function dragEnd() {
+    dragging = false;
+    $store.draggable = null
+}
+
 
 </script>
 
@@ -255,6 +315,13 @@ async function removeTopic(e) {
 
 {#if show}
 <div class="room-item"
+    on:dragstart={dragStart}
+    on:dragend={dragEnd}
+    on:dragenter={dragEnter}
+    on:dragleave={dragLeave}
+    on:dragover={allowDrop}
+    class:dhov={dragHover}
+    on:drop={drop}
     bind:this={el}
     on:contextmenu={logItem}
     on:mouseover={() => hovered = true}
@@ -349,6 +416,9 @@ async function removeTopic(e) {
 
     </div>
 
+{#if dragHoverRoom}
+        <div class="drg"></div>
+{/if}
 </div>
 
 {/if}
@@ -360,6 +430,17 @@ async function removeTopic(e) {
     display: grid;
     grid-template-rows: 1fr auto;
     grid-row-gap: 0.15rem;
+    position: relative;
+}
+
+.drg {
+    position: absolute;
+    height: 2px;
+    background: var(--primary);
+    border-radius: 4px;
+    top: 0;
+    right: 0;
+    left: 0;
 }
 
 .item {
@@ -369,6 +450,11 @@ async function removeTopic(e) {
     height: 30px;
     border-radius: 4px;
     font-size: 14px;
+}
+
+.dhov {
+    outline: 2px solid var(--primary);
+    border-radius: 7px;
 }
 
 .inner {

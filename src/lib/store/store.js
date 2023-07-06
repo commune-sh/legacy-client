@@ -82,6 +82,8 @@ function createApp() {
     accountCreated: false,
     loadEmojiPicker: false,
     reloadFeed: false,
+    movingPost: null,
+    draggable: null,
   }
 
   if(window) {
