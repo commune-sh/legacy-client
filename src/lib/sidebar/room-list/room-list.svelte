@@ -32,7 +32,7 @@ $: authenticated = $store?.authenticated &&
 
 $: isSpace = $page?.params?.space !== undefined && $page?.params?.space !== null && $page?.params?.space !== '' 
 $: sender_id = $store.credentials?.matrix_user_id
-$: isOwner = state?.owner === sender_id
+$: isOwner = state?.owner?.user_id === sender_id
 $: isSpaceSettings = isSpace && $page?.params?.room === 'settings'
 
 $: spaceSettings = isSpaceSettings && authenticated && isOwner

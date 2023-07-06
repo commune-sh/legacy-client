@@ -23,7 +23,7 @@ export let count;
     padding-left: 0.25rem;
     padding-right: 0.25rem;
     padding-bottom: 0;
-    height: 18px;
+    height: 22px;
 }
 
 .rep:hover {
@@ -43,6 +43,7 @@ export let count;
 
 @media screen and (max-width: 768px) {
     .rep {
+        height: 18px;
     }
 }
 </style>

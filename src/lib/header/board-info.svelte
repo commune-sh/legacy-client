@@ -1,10 +1,12 @@
 <script>
-import { PUBLIC_BASE_URL } from '$env/static/public';
+import { PUBLIC_BASE_URL, PUBLIC_MEDIA_URL } from '$env/static/public';
 import { page } from '$app/stores';
+import { store } from '$lib/store/store.js'
 import { onMount, createEventDispatcher } from 'svelte'
 import { copyToClipboard } from '$lib/utils/utils.js'
 import { info, clipboard, feed} from '$lib/assets/icons.js'
 export let item;
+import dayjs from 'dayjs'
 import tippy from 'tippy.js';
 
 let el;
@@ -74,7 +76,20 @@ function openFeed() {
 
 $: feedURL = buildURL(item)
 
+$: state = $store?.states[$page?.params?.space]
 
+$: members = state?.members
+
+$: localpart = '@' + state?.owner?.user_id.split(':')[0].substring(1);
+$: owner_id = state?.owner?.user_id
+
+$: ownerSpace = `${PUBLIC_BASE_URL}/${localpart}`
+
+$: name = state?.owner?.display_name ? state?.owner?.display_name : localpart
+
+$: avatar = `${PUBLIC_MEDIA_URL}/${state?.owner?.avatar_url}`
+
+$: created = dayjs(state?.origin_server_ts)?.format('MMM D YYYY')
 
 </script>
 
@@ -88,6 +103,49 @@ $: feedURL = buildURL(item)
 
 <div class="menu" bind:this={content}>
     <div class="content pa2 fl-co">
+
+        <div class="rid pa2">
+            <div class="in fl-co">
+                <div class="label">
+                    owner
+                </div>
+                <div class="mt2 tx">
+                    <a href={ownerSpace}>
+                        {name}
+                    </a>
+                </div>
+            </div>
+            {#if avatar}
+                <div class="grd-c avatar-base grd"
+                style="background-image: url({avatar})">
+                </div>
+            {/if}
+        </div>
+
+        <div class="rid pa2">
+            <div class="in fl-co">
+                <div class="label">
+                    members
+                </div>
+                <div class="mt2 tx">
+                    {members}
+                </div>
+            </div>
+        </div>
+
+        <div class="rid pa2">
+            <div class="in fl-co">
+                <div class="label">
+                    created
+                </div>
+                <div class="mt2 tx">
+                    {created}
+                </div>
+            </div>
+        </div>
+
+        <div class="sep mv2">
+        </div>
 
         <div class="rid it pa2" on:click={copyID}>
             <div class="in fl-co">
@@ -151,6 +209,13 @@ $: feedURL = buildURL(item)
     overflow: hidden;
 }
 
+.sep {
+    height: 1px;
+    background: var(--shade-4);
+    border-radius: 2px;
+    margin-left: 0.25rem;
+}
+
 .in {
     overflow: hidden;
 }
@@ -200,4 +265,13 @@ $: feedURL = buildURL(item)
     color: var(--primary);
 }
 
+.avatar-base {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: var(--avatar-bg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
 </style>

@@ -10,7 +10,7 @@ import { page } from '$app/stores';
 
 $: state = $store?.states[$page?.params?.space]
 $: sender_id = $store.credentials?.matrix_user_id
-$: isOwner = state?.owner === sender_id
+$: isOwner = state?.owner?.user_id === sender_id
 
 $: authenticated = $store?.authenticated && 
     $store?.credentials != null

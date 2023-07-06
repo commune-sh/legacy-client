@@ -30,7 +30,7 @@ $: authenticated = $store?.authenticated &&
 
 
 $: sender_id = $store.credentials?.matrix_user_id
-$: isOwner = state?.owner === sender_id
+$: isOwner = state?.owner?.user_id === sender_id
 
 
 </script>

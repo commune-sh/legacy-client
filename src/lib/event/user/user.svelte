@@ -20,7 +20,7 @@ $: nameExists = user?.display_name !== undefined &&
 $: initial = user?.username?.charAt(0).toUpperCase();
 
 $: state = $store?.states[$page?.params?.space]
-$: isOwner = state?.owner === user?.id
+$: isOwner = state?.owner?.user_id === user?.id
 $: isSpaceAdmin = $store?.power_levels?.space?.[user?.id] == 100
 
 $: isDomain = $page.params.domain !== undefined && 

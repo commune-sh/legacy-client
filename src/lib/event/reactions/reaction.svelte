@@ -6,7 +6,7 @@ import tippy from 'tippy.js';
 
 $: state = $store?.states[$page?.params?.space]
 $: sender_id = $store.credentials?.matrix_user_id
-$: isOwner = state?.owner === sender_id
+$: isOwner = state?.owner?.user_id === sender_id
 $: isSpaceAdmin = $store?.power_levels?.space?.[$store?.credentials?.matrix_user_id] == 100
 
 $: authenticated = $store?.authenticated && 

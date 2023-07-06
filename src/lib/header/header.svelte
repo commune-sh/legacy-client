@@ -112,7 +112,7 @@ $: isSpaceRoom = room_id === space_room_id
 
 $: isProfile = state?.space?.is_profile 
 
-$: isOwner = state?.owner === $store?.credentials?.matrix_user_id
+$: isOwner = state?.owner?.user_id === $store?.credentials?.matrix_user_id
 
 $: ownProfile = isProfile && isOwner
 
