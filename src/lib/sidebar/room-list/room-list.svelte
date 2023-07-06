@@ -1,4 +1,5 @@
 <script>
+import { createEventDispatcher } from 'svelte';
 import RoomListItem from './room-list-item.svelte'
 import { joinSpace } from '$lib/utils/request.js'
 import AddRoom from './add-room.svelte'
@@ -6,8 +7,11 @@ import { page } from '$app/stores';
 import { addLine, up, down, settings } from '$lib/assets/icons.js'
 import { store } from '$lib/store/store.js'
 import SpaceSettingsSidebar from '$lib/space/settings/sidebar.svelte'
+const dispatch = createEventDispatcher()
 
 export let items;
+
+$: indexed = items.map((item, index) => ({ ...item, index }));
 
 $: state = $store?.states[$page?.params?.space]
 $: sender_id = $store.credentials?.matrix_user_id
@@ -84,6 +88,37 @@ $: isProfile = state?.space?.is_profile
 
 $: buttonText = isProfile ? busy ? "Following" : "Follow" : busy ? "Joining" : "Join"
 
+
+function moveRoom(e) {
+    console.log(e.detail)
+    let index = e.detail
+    if (index.from === index.to || index.from < 0 || index.to < 0 || index.from
+        >= items.length || index.to >= items.length) {
+        return 
+    }
+
+    const shiftedArray = [...items];
+    const [removedItem] = shiftedArray.splice(index.from, 1);
+    shiftedArray.splice(index.to, 0, removedItem);
+    items = shiftedArray;
+    console.log(shiftedArray)
+}
+
+function moveUp(e) {
+    if(e.detail === 0) return
+    const [removedItem] = items.splice(e.detail, 1);
+    items.splice(e.detail - 1, 0, removedItem);
+    items = items
+}
+
+function moveDown(e) {
+    if(e.detail == items.length -1) return
+    const [removedItem] = items.splice(e.detail, 1);
+    items.splice(e.detail + 1, 0, removedItem);
+    items = items
+
+}
+
 </script>
 
 {#if isSpaceSettings && authenticated && isOwner}
@@ -130,9 +165,13 @@ $: buttonText = isProfile ? busy ? "Following" : "Follow" : busy ? "Joining" : "
     {/if}
 </div>
 
-{#if items?.length > 0}
-    {#each items as item}
-        <RoomListItem item={item} collapsed={collapsed} />
+{#if indexed?.length > 0}
+    {#each indexed as item, i(item.room_id)}
+            <RoomListItem item={item} 
+                collapsed={collapsed} 
+                on:move-up={moveUp}
+                on:move-down={moveDown}
+                index={i}/>
     {/each}
 {/if}
 

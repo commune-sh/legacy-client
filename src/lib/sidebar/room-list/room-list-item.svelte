@@ -1,5 +1,6 @@
 <script>
 import { PUBLIC_APP_NAME, PUBLIC_MEDIA_URL } from '$env/static/public';
+import { createEventDispatcher } from 'svelte';
 import { joinSpace, joinRoom } from '$lib/utils/request.js'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
@@ -13,7 +14,10 @@ import Popup from '$lib/popup/popup.svelte'
 import RoomTools from './room-tools.svelte'
 
 export let item;
+export let index;
 export let collapsed;
+
+const dispatch = createEventDispatcher()
 
 $: state = $store?.states[$page?.params?.space]
 $: sender_id = $store.credentials?.matrix_user_id
@@ -248,7 +252,9 @@ function dragEnter(e) {
         dragHover = true;
     }
     if($store.draggable == 'room') {
-        dragHoverRoom = true;
+        if(!el.contains(e.target)) {
+            dragHoverRoom = true;
+        }
     }
 }
 
@@ -272,14 +278,32 @@ function allowDrop(e) {
 function drop(e) {
     e.preventDefault();
     const plain = e.dataTransfer.getData('text/plain');
-    if(plain) {
-        const data = JSON.parse(plain)
-        console.log(data)
+    const data = JSON.parse(plain)
+
+    if($store.draggable == 'post') {
         $store.movingPost = data.event_id
         setTimeout(() => {
             $store.movingPost = null
         }, 1000)
     }
+
+    if($store.draggable == 'room') {
+        //console.log(data)
+        end()
+        return
+        if(data.index == item.index) {
+            end()
+            return
+        }
+        dispatch('move-room', {
+            from: data.index,
+            to: item.index
+        })
+    }
+
+}
+
+function end() {
     dragHover = false;
     dragHoverRoom = false;
     $store.draggable = null
@@ -287,7 +311,12 @@ function drop(e) {
 
 let dragging = false;
 
+let initialX;
+let initialY;
+
 function dragStart(e) {
+    initialX = e.clientX;
+    initialY = e.clientY;
     $store.draggable = 'room'
     dragging = true;
     e.dataTransfer.setData('text/plain', JSON.stringify(item));
@@ -298,6 +327,17 @@ function dragStart(e) {
 function dragEnd() {
     dragging = false;
     $store.draggable = null
+}
+
+function drag(e) {
+    if(e.clientY - initialY >= 30) {
+        initialY = e.clientY
+        dispatch('move-down', item.index)
+    }
+    if(initialY - e.clientY >= 30) {
+        initialY = e.clientY
+        dispatch('move-up', item.index)
+    }
 }
 
 
@@ -320,7 +360,8 @@ function dragEnd() {
     on:dragenter={dragEnter}
     on:dragleave={dragLeave}
     on:dragover={allowDrop}
-    class:dhov={dragHover}
+    on:drag={drag}
+    class:dhov={dragHover || dragging}
     on:drop={drop}
     bind:this={el}
     on:contextmenu={logItem}
@@ -328,7 +369,8 @@ function dragEnd() {
     on:mouseleave={() => hovered = false}
     draggable="true">
 
-    <div class="item" class:active={active}>
+    <div class="item" class:active={active}
+            class:ih={$store.draggable == null}>
 
     <div class="inner sel-no" on:click={goToRoom}>
 
@@ -416,9 +458,6 @@ function dragEnd() {
 
     </div>
 
-{#if dragHoverRoom}
-        <div class="drg"></div>
-{/if}
 </div>
 
 {/if}
@@ -429,7 +468,8 @@ function dragEnd() {
 .room-item {
     display: grid;
     grid-template-rows: 1fr auto;
-    grid-row-gap: 0.15rem;
+    margin-top: 0.1rem;
+    margin-bottom: 0.1rem;
     position: relative;
 }
 
@@ -461,8 +501,7 @@ function dragEnd() {
     display: grid;
     grid-template-columns: auto 1fr auto;
 }
-
-.item:hover {
+.ih:hover {
     background-color: var(--shade-3);
 }
 
@@ -472,6 +511,7 @@ function dragEnd() {
 .active:hover {
     background-color: var(--shade-2);
 }
+
 
 .ico {
     margin-right: 0.5rem;
