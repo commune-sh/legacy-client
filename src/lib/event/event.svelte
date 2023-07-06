@@ -127,8 +127,6 @@ function goToEvent() {
         return
     }
 
-    console.log("go to event")
-
     goto(link, {
         noscroll: true,
     })

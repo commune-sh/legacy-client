@@ -55,7 +55,7 @@ let content;
 
 let menu;
 
-onMount(() => {
+$: if(reaction && el) {
     menu = tippy(el, {
         content: content,
         placement: 'top',
@@ -63,7 +63,7 @@ onMount(() => {
         duration: 1,
         theme: 'inline',
     });
-})
+}
 
 function localpart(id) {
     return id.split(':')[0].substring(1)

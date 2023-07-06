@@ -273,7 +273,12 @@ async function removeTopic(e) {
         {:else}
         <div class="ico grd-c"
             class:inactive={!active}>
-                {@html discuss}
+                {#if isBoard}
+                    {@html discuss}
+                {:else}
+                    {@html chat}
+                {/if}
+
         </div>
         {/if}
 
