@@ -4,7 +4,7 @@ import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';
 import { onMount, createEventDispatcher } from 'svelte'
-import { down, check } from '$lib/assets/icons.js'
+import { down, check, hash } from '$lib/assets/icons.js'
 import tippy from 'tippy.js';
 
 export let items;
@@ -78,14 +78,17 @@ $: post = $page.params?.post
 $: isGeneral = item?.general === true
 
 function selected(item) {
-    return (isGeneral && item.general) || 
+    return (isGeneral && item.general && !topic) || 
     (room === item?.alias && !topic && !isGeneral)
+}
+
+function topicSelected(t) {
+    return topic == t
 }
 
 
 function goToItem(item) {
     menu.hide()
-    console.log(item)
     let url = `/`
     let alias = `/${item.alias}`
     if(item.general) {
@@ -106,6 +109,32 @@ function goToItem(item) {
         store.toggleMenu()
     }
 }
+
+function goToTopic(item, t) {
+    menu.hide()
+    let url = `/`
+    let alias = `/${item.alias}`
+    if(item.general) {
+        alias = ''
+    }
+
+    url = `/${space}${alias}`
+
+    if(isDomain) {
+        url = `/${$page.params.domain}/${space}${alias}`
+    }
+
+    url = `${url}/topic/${t}`
+
+    goto(url, {
+        noscroll: true,
+    })
+
+    if($store.menuToggled) {
+        store.toggleMenu()
+    }
+}
+
 function initials(item) {
     if(!item?.alias) {
         return item?.name?.charAt(0).toUpperCase()
@@ -114,6 +143,10 @@ function initials(item) {
         .map((n) => n[0])
         .join('')
         .toUpperCase()
+}
+
+function sortTopics (topics) {
+    return topics?.sort((a, b) => a.localeCompare(b));
 }
 
 </script>
@@ -161,6 +194,26 @@ function initials(item) {
                     </div>
                 {/if}
             </div>
+
+            {#if item?.topics}
+                {#each sortTopics(item.topics) as topic}
+                    <div class="item pa2" 
+                        on:click={e => goToTopic(item, topic)}>
+                        <div class="hash ico-s grd-c ml3">
+                            {@html hash}
+                        </div>
+                        <div class="ml2 name">
+                            {topic}
+                        </div>
+                        {#if topicSelected(topic)}
+                            <div class="ico-s grd-c">
+                                {@html check}
+                            </div>
+                        {/if}
+                    </div>
+                {/each}
+            {/if}
+
         {/each}
 
 
@@ -258,5 +311,9 @@ function initials(item) {
 .init {
     font-size: 10px;
     font-weight: 500;
+}
+.hash {
+    height: 12px;
+    width: 12px;
 }
 </style>

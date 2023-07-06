@@ -87,7 +87,8 @@ $: ownerSpace = `${PUBLIC_BASE_URL}/${localpart}`
 
 $: name = state?.owner?.display_name ? state?.owner?.display_name : localpart
 
-$: avatar = `${PUBLIC_MEDIA_URL}/${state?.owner?.avatar_url}`
+$: avatar = state?.owner?.avatar_url ?
+    `${PUBLIC_MEDIA_URL}/${state?.owner?.avatar_url}` : null
 
 $: created = dayjs(state?.origin_server_ts)?.format('MMM D YYYY')
 

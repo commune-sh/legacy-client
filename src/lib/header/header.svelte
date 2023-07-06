@@ -78,6 +78,7 @@ function sortItems(state) {
             fullpath: `/${$page.params.space}`,
             room_id: state?.room_id,
             topic: state?.space?.topic,
+            topics: JSON.parse(state?.space?.topics),
             restrictions: state?.space?.restrictions,
             avatar: state?.space?.avatar,
             pinned_events: state.space?.pinned_events != undefined ? JSON.parse(state.space?.pinned_events) : null
@@ -92,6 +93,7 @@ function sortItems(state) {
                 fullpath: `/${$page.params.space}/${child?.alias}`,
                 room_id: child?.room_id,
                 topic: child?.topic,
+                topics: JSON.parse(child?.topics),
                 avatar: child?.avatar,
                 restrictions: child.restrictions,
                 pinned_events: child?.pinned_events != undefined ? JSON.parse(child?.pinned_events) : null,
