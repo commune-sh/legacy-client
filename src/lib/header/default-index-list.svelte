@@ -93,7 +93,7 @@ $: social = $page.url.search == '?filter=social'
         {/if}
     </div>
     <div class="name grd-c ml1 pv1">
-        {indexText}
+        {indexText} {spaces ? `: Spaces` : social ? `: Social` : ``}
     </div>
     <div class="ico-s grd-c mh1">
         {@html down}
