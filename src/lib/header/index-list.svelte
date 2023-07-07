@@ -98,13 +98,20 @@ $: social = $page.url.search == '?filter=social'
     on:click|stopPropagation bind:this={el}>
     <div class="ico-s sml grd-c mh1">
         {#if isFeed}
-            {@html feed}
+            {#if spaces}
+                {@html discuss}
+            {:else if social}
+                {@html at}
+            {:else}
+                {@html feed}
+            {/if}
+
         {:else if isAll}
             {@html earth}
         {/if}
     </div>
     <div class="name grd-c ml1 pv1">
-        {indexText}
+        {indexText} {spaces ? `: Spaces` : social ? `: Social` : ``}
     </div>
     <div class="ico-s grd-c mh1">
         {@html down}

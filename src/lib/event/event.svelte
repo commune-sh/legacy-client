@@ -115,6 +115,10 @@ function buildLink(e, page) {
         url = `/${page.params.domain}${url}`
     }
 
+    if(page.url.search) {
+        url = `${url}${page.url.search}`
+    }
+
     return url
 }
 

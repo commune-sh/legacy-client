@@ -358,7 +358,7 @@ let fetchMore = () => {
 
     let filter = $page.url.searchParams.get('filter')
     if(filter) {
-        url = `${url}&?filter=${filter}`
+        url = `${url}&filter=${filter}`
     }
 
     if($page?.url.pathname == '/all') {
