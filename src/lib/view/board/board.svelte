@@ -90,7 +90,7 @@ let reloadTrigger;
 // Reload logic
 
 $: if(reloadTrigger && ($page.url?.pathname != _page?.url?.pathname) &&
-    $page.url.pathname == '/') {
+    $page.url.pathname == '/' && $page.url.search == '') {
     loadEvents()
 }
 
@@ -161,15 +161,15 @@ async function loadEvents(init) {
         opt.url = `${PUBLIC_API_URL}/feed`
     }
 
-    if($page?.url.pathname == '/all') {
-        opt.url = `${PUBLIC_API_URL}/events`
-    }
 
     let filter = $page.url.searchParams.get('filter')
     if(filter) {
         opt.url = `${opt.url}?filter=${filter}`
     }
 
+    if($page?.url.pathname == '/all') {
+        opt.url = `${PUBLIC_API_URL}/events`
+    }
 
     const resp = await loadPosts(opt)
     if(resp) {
@@ -356,13 +356,13 @@ let fetchMore = () => {
         url = `${PUBLIC_API_URL}/feed?last=${last}`
     }
 
-    if($page?.url.pathname == '/all') {
-        url = `${endpoint}/events`
-    }
-
     let filter = $page.url.searchParams.get('filter')
     if(filter) {
-        url = `${url}?filter=${filter}`
+        url = `${url}&?filter=${filter}`
+    }
+
+    if($page?.url.pathname == '/all') {
+        url = `${endpoint}/events?last=${last}`
     }
 
 

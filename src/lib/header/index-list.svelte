@@ -79,14 +79,14 @@ function sortSpaces() {
     menu.hide()
     let query = new URLSearchParams($page.url.searchParams.toString());
     query.set('filter', 'spaces');
-    goto(`?${query.toString()}`);
+    goto(`/?${query.toString()}`);
 }
 
 function sortSocial() {
     menu.hide()
     let query = new URLSearchParams($page.url.searchParams.toString());
     query.set('filter', 'social');
-    goto(`?${query.toString()}`);
+    goto(`/?${query.toString()}`);
 }
 
 $: spaces = $page.url.search == '?filter=spaces'
