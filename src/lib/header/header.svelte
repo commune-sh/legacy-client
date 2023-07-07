@@ -82,6 +82,7 @@ function sortItems(state) {
             topics: JSON.parse(state?.space?.topics),
             restrictions: state?.space?.restrictions,
             avatar: state?.space?.avatar,
+            is_profile: state?.space?.is_profile,
             pinned_events: state.space?.pinned_events != undefined ? JSON.parse(state.space?.pinned_events) : null
         }
     ]
@@ -96,6 +97,7 @@ function sortItems(state) {
                 topic: child?.topic,
                 topics: JSON.parse(child?.topics),
                 avatar: child?.avatar,
+                is_profile: state?.space?.is_profile,
                 restrictions: child.restrictions,
                 pinned_events: child?.pinned_events != undefined ? JSON.parse(child?.pinned_events) : null,
             })

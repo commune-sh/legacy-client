@@ -74,6 +74,10 @@ function go() {
         url = `${PUBLIC_BASE_URL}/${item.room_alias}/post/${post_slug}`
     }
 
+    if(item.type == `space.follow`) {
+        url = sender
+    }
+
     goto(url)
 }
 
@@ -96,9 +100,13 @@ $: avatar = item?.avatar_url ?  `${PUBLIC_MEDIA_URL}/${item?.avatar_url}` : null
         </div>
         <div class="fl-co">
             <div class="">
-
+                {#if item?.type == `space.follow`}
+                <a href={sender}><span class="href">{from}</span></a> started
+                    following you.
+                {:else}
                 <a href={sender}><span class="href">{from}</span></a> {action} to your
             post "{item?.body?.substring(0, 20)}{item?.body?.length > 20 ? `...` : ``}"
+                {/if}
             </div>
 
             <div class="mt1 sm">

@@ -92,6 +92,8 @@ $: avatar = state?.owner?.avatar_url ?
 
 $: created = dayjs(state?.origin_server_ts)?.format('MMM D YYYY')
 
+$: boardTypeText = item?.is_profile ? 'Followers' : 'Members'
+
 </script>
 
 <div class="item ml2"
@@ -126,7 +128,7 @@ $: created = dayjs(state?.origin_server_ts)?.format('MMM D YYYY')
         <div class="rid pa2">
             <div class="in fl-co">
                 <div class="label">
-                    members
+                    {boardTypeText}
                 </div>
                 <div class="mt2 tx">
                     {members}
