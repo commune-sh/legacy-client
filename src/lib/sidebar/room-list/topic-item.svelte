@@ -11,6 +11,7 @@ const dispatch = createEventDispatcher();
 
 export let roomItem;
 export let item;
+export let index;
 export let isGeneral;
 export let alias;
 
@@ -100,9 +101,46 @@ function removeTopic(e) {
     }
 }
 
+let dragging = false;
+
+let initialX;
+let initialY;
+
+function dragStart(e) {
+    initialX = e.clientX;
+    initialY = e.clientY;
+    $store.draggable = 'topic'
+    dragging = true;
+    e.dataTransfer.setData('text/plain', JSON.stringify(item));
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setDragImage(new Image(), 0, 0);
+}
+
+function dragEnd() {
+    dragging = false;
+}
+
+function drag(e) {
+    if(e.clientY - initialY >= 30) {
+        initialY = e.clientY
+        dispatch('move-down', index)
+    }
+    if(initialY - e.clientY >= 30) {
+        initialY = e.clientY
+        dispatch('move-up', index)
+    }
+}
+
+
+
 </script>
 
 <div class="topic-item"
+    on:dragstart|stopPropagation={dragStart}
+    on:dragend|stopPropagation={dragEnd}
+    on:drag|stopPropagation={drag}
+    class:dhov={dragging}
+    class:ih={$store.draggable == null}
     class:active={active} draggable="true">
 
     <div class="item sel-no" 
@@ -169,7 +207,7 @@ function removeTopic(e) {
     grid-template-columns: auto 1fr;
 }
 
-.topic-item:hover {
+.ih:hover {
     background-color: var(--shade-3);
 }
 
@@ -202,5 +240,9 @@ function removeTopic(e) {
 }
 .topic-item:hover .tools {
     opacity: 1;
+}
+.dhov {
+    outline: 2px solid var(--primary);
+    border-radius: 7px;
 }
 </style>

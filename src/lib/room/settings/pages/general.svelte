@@ -2,6 +2,7 @@
 import { PUBLIC_MEDIA_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { onMount, tick, createEventDispatcher} from 'svelte'
 import { addImage } from '$lib/assets/icons.js'
+import { goto } from '$app/navigation';
 import { debounce } from '$lib/utils/utils.js'
 import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';
@@ -226,6 +227,7 @@ function handleInput() {
 }
 
 async function removeBoard() {
+    goto(`/${$page.params.space}`)
     store.removeSpaceRoom($page.params.space, roomID)
     dispatch('kill')
     const res = await createStateEvent({

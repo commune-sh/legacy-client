@@ -284,7 +284,8 @@ function drop(e) {
         $store.movingPost = data.event_id
         setTimeout(() => {
             $store.movingPost = null
-        }, 1000)
+            end()
+        }, 100)
     }
 
     if($store.draggable == 'room') {
@@ -340,6 +341,20 @@ function drag(e) {
     }
 }
 
+
+function moveTopicUp(e) {
+    if(e.detail === 0) return
+    const [removedItem] = topics.splice(e.detail, 1);
+    topics.splice(e.detail - 1, 0, removedItem);
+    topics = topics
+}
+
+function moveTopicDown(e) {
+    if(e.detail == topics.length -1) return
+    const [removedItem] = topics.splice(e.detail, 1);
+    topics.splice(e.detail + 1, 0, removedItem);
+
+}
 
 </script>
 
@@ -442,12 +457,15 @@ function drag(e) {
     <div class="topics">
 
         {#if topics?.length > 0 && selected}
-            {#each topics as topic}
+            {#each topics as topic, i}
                 <TopicItem 
                     on:remove={removeTopic}
                     isGeneral={isGeneral}
+                    index={i}
                     alias={item.alias}
                     roomItem={item}
+                    on:move-up={moveTopicUp}
+                    on:move-down={moveTopicDown}
                     item={topic} />
             {/each}
         {/if}
