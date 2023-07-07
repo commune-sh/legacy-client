@@ -84,6 +84,7 @@ function createApp() {
     reloadFeed: false,
     movingPost: null,
     draggable: null,
+    indexSort: null,
   }
 
   if(window) {

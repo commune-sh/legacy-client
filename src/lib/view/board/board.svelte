@@ -111,10 +111,12 @@ $: if(reloadTrigger && ($page.params?.topic != _page?.params?.topic)) {
     loadEvents()
 }
 
-async function reload(opt) {
-    const resp = await loadPosts(opt)
-    return resp
+
+$: if(reloadTrigger && 
+    ($page.url.search != _page.url.search )){
+    loadEvents()
 }
+
 
 async function loadEvents(init) {
     reloading = true
@@ -161,6 +163,11 @@ async function loadEvents(init) {
 
     if($page?.url.pathname == '/all') {
         opt.url = `${PUBLIC_API_URL}/events`
+    }
+
+    let filter = $page.url.searchParams.get('filter')
+    if(filter) {
+        opt.url = `${opt.url}?filter=${filter}`
     }
 
 
@@ -352,6 +359,12 @@ let fetchMore = () => {
     if($page?.url.pathname == '/all') {
         url = `${endpoint}/events`
     }
+
+    let filter = $page.url.searchParams.get('filter')
+    if(filter) {
+        url = `${url}?filter=${filter}`
+    }
+
 
     APIRequest({
         url: url,

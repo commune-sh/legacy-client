@@ -4,7 +4,7 @@ import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';
 import { onMount, createEventDispatcher } from 'svelte'
-import { down, check, feed, earth, discuss, at } from '$lib/assets/icons.js'
+import { down, check, discuss, at, earth } from '$lib/assets/icons.js'
 import tippy from 'tippy.js';
 
 $: authenticated = $store?.authenticated && 
@@ -49,31 +49,16 @@ onMount(() => {
     });
 })
 
-function goHome() {
-    menu.hide()
-    goto('/', {
-        noscroll: true,
-    })
-    if($store.menuToggled) {
-        store.toggleMenu()
-    }
-}
-
-function goAll() {
-    menu.hide()
-    goto('/all', {
-        noscroll: true,
-    })
-    if($store.menuToggled) {
-        store.toggleMenu()
-    }
-}
-
 $: isAll = $page?.url?.pathname == `/all`
 
 $: indexText = isAll ? `All posts` : authenticated ? `Your feed` : `What's new`
 
-$: isFeed = $page?.url?.pathname == `/`
+function sortAll() {
+    menu.hide()
+    let query = new URLSearchParams($page.url.searchParams.toString());
+    query.set('filter', '');
+    goto(`/`);
+}
 
 function sortSpaces() {
     menu.hide()
@@ -89,18 +74,22 @@ function sortSocial() {
     goto(`?${query.toString()}`);
 }
 
+$: all = $page.url.search == ''
 $: spaces = $page.url.search == '?filter=spaces'
 $: social = $page.url.search == '?filter=social'
+
 </script>
 
 <div class="board-list ml2"
     class:ac={active}
     on:click|stopPropagation bind:this={el}>
     <div class="ico-s sml grd-c mh1">
-        {#if isFeed}
-            {@html feed}
-        {:else if isAll}
+        {#if all}
             {@html earth}
+        {:else if spaces}
+            {@html discuss}
+        {:else if social}
+            {@html at}
         {/if}
     </div>
     <div class="name grd-c ml1 pv1">
@@ -114,14 +103,14 @@ $: social = $page.url.search == '?filter=social'
 <div class="menu" bind:this={content}>
     <div class="content pa1 fl-co">
 
-        <div class="item pa2" on:click={goHome}>
+        <div class="item pa2" on:click={sortAll}>
             <div class="ico-s grd-c mr2">
-                {@html feed}
+                {@html earth}
             </div>
             <div class="name">
-                Your Feed
+                All posts
             </div>
-            {#if $page.url.pathname == '/' && !spaces && !social}
+            {#if all}
                 <div class="ico-s grd-c">
                     {@html check}
                 </div>
@@ -150,22 +139,6 @@ $: social = $page.url.search == '?filter=social'
                 Social
             </div>
             {#if social}
-                <div class="ico-s grd-c">
-                    {@html check}
-                </div>
-            {/if}
-        </div>
-
-        <div class="sep"></div>
-
-        <div class="item pa2" on:click={goAll}>
-            <div class="ico-s grd-c mr2">
-                {@html earth}
-            </div>
-            <div class="name">
-                All Posts
-            </div>
-            {#if $page.url.pathname == '/all'}
                 <div class="ico-s grd-c">
                     {@html check}
                 </div>
@@ -271,13 +244,5 @@ $: social = $page.url.search == '?filter=social'
 .sml {
     width: 14px;
     height: 14px;
-}
-.sep {
-    height: 1px;
-    background: var(--shade-4);
-    border-radius: 1px;
-    margin-top: 0.125rem;
-    margin-bottom: 0.125rem;
-    width: 100%;
 }
 </style>
