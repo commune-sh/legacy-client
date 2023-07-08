@@ -314,6 +314,14 @@ export async function createStateEvent(body) {
 
 export async function verifyEmail(body) {
   const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/account/verify/email`,
+    body: body,
+  })
+  return data
+}
+
+export async function sendCode(body) {
+  const data = await APIRequest({
     url: `${PUBLIC_API_URL}/account/verify/code`,
     body: body,
   })

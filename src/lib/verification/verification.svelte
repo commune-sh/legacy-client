@@ -2,7 +2,7 @@
 import { onMount, createEventDispatcher, tick } from 'svelte'
 import { store } from '$lib/store/store.js'
 import { close } from '$lib/assets/icons.js'
-import { verifyEmail, verifyCode } from '$lib/utils/request.js'
+import { sendCode, verifyCode } from '$lib/utils/request.js'
 import { v4 as uuidv4 } from 'uuid';
 
 import validator from 'validator';
@@ -79,7 +79,7 @@ async function start() {
     }
     busy = true
 
-    const res = await verifyEmail({
+    const res = await sendCode({
         email: emailInput.value,
         session: session,
     })

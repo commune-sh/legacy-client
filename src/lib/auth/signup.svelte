@@ -5,6 +5,8 @@ import { store } from '$lib/store/store.js'
 import { debounce } from '$lib/utils/utils.js'
 import { eye, eyeoff } from '$lib/assets/icons.js'
 import { APIRequest, validateEmail } from '$lib/utils/request.js'
+import { sendCode, verifyEmail } from '$lib/utils/request.js'
+import { v4 as uuidv4 } from 'uuid';
 
 import validator from 'validator';
 
@@ -71,26 +73,114 @@ let letterWarning;
 
 let verified = false;
 
+let session;
+let verifying = false;
+
+async function send() {
+    session = uuidv4();
+    if(signupDisabled) {
+        return
+    }
+
+    if(emailInput.value.length < 1){
+        emailInput.focus()
+        return
+    }
+
+    emailWarning = false
+    busy = true
+
+    let validEmail = validator.isEmail(emailInput?.value)
+    if(!validEmail) {
+        busy = false
+        emailWarning = true
+        emailInput.focus()
+        return
+    }
+
+    const res = await validateEmail(emailInput.value)
+    console.log(res)
+    if(res?.provider_forbidden) {
+        busy = false
+        provider_forbidden = true
+        focusEmailInput()
+        return
+    }
+
+    const resp = await sendCode({
+        email: emailInput.value,
+        session: session,
+    })
+
+    console.log(resp)
+    if(resp?.sent) {
+        code_sent = true
+        lockResend = true
+        focusCodeInput()
+        startCountdown()
+    }
+
+    provider_forbidden = false
+    busy = false
+}
+
+async function focusCodeInput() {
+    await tick()
+    codeInput?.focus()
+}
+
+let codeInput;
+let code;
+let codeWarning = false;
+
+let code_sent = false;
+let lockResend = false;
+
+
+let count = 60
+
+function startCountdown() {
+    let interval = setInterval(() => {
+        count--
+        if(count < 1) {
+            clearInterval(interval)
+            lockResend = false
+        }
+    }, 1000)
+}
+
+async function verify() {
+
+    if(codeInput.value.length < 1){
+        codeInput.focus()
+        return
+    }
+
+    verifying = true
+
+    const res = await verifyEmail({
+        email: emailInput.value,
+        session: session,
+        code: codeInput.value,
+    })
+
+    console.log(res)
+    if(res.valid) {
+        verified = true
+        focusUsernameInput()
+    } else {
+        codeWarning = true
+        codeInput.focus()
+    }
+}
+
+
 async function create() {
     emailWarning = false
 
     if(signupDisabled) {
         return
     }
-
-    if(require_email && emailInput.value.length < 1){
-        emailWarning = true
-        emailInput.focus()
-        return
-    }
-
-    let validEmail = validator.isEmail(emailInput?.value)
-    if(!validEmail) {
-        emailWarning = true
-        emailInput.focus()
-        return
-    }
-
 
     if(usernameInput.value.length < 2){
         usernameWarning = true
@@ -114,24 +204,22 @@ async function create() {
         return
     }
 
-    if(require_email) {
-        const res = await validateEmail(emailInput.value)
-        console.log(res)
-    }
-
-    if(require_email && !verified) {
-        return
-    }
-
     busy = true
+
+    let body = {
+        username: usernameInput.value, 
+        password: passwordInput.value,
+    }
+
+    if(require_email && verified) {
+        body.email = emailInput.value
+        body.session = session
+        body.code = code
+    }
 
     APIRequest({
         url: `${PUBLIC_API_URL}/account`,
-        body: {
-            //email: emailInput.value, 
-            username: usernameInput.value, 
-            password: passwordInput.value,
-        }
+        body: body,
     })
       .then(resp => {
 
@@ -255,7 +343,9 @@ function togglePass() {
                     Signup is currently disabled
                 </div>
             {/if}
+
             {#if require_email}
+
             <div class="mt3 pb2" class:warn={emailWarning}>
                 <span class="label">email</span>
                 {#if emailWarning}
@@ -264,16 +354,69 @@ function togglePass() {
             </div>
             <div class="mt1 pb2">
                 <input bind:this={emailInput}
-                disabled={down || busy}
+                disabled={down || busy || verified}
                 class:red={emailWarning}
                 type="text" placeholder="" />
             </div>
-            {#if provider_forbidden}
-            <div class="mt2 pb2 warn pvd">
-                Please use a personal or work email.
-            </div>
+                {#if provider_forbidden}
+                <div class="mt2 pb2 warn pvd">
+                    Please use a personal or work email.
+                </div>
+                {/if}
+                {#if code_sent && !verified}
+
+                    <div class="mt3 fl">
+                        <div class="rel fl-o">
+                            <input bind:this={codeInput}
+                            bind:value={code}
+                            class:red={codeWarning}
+                            type="text" placeholder="your code" />
+                            {#if verifying}
+                                <div class="spinner">
+                                    <div class="sloader"></div>
+                                </div>
+                            {/if}
+                        </div>
+                    </div>
+
+                    {#if codeWarning}
+                        <div class="mt3">
+                            <span class="sm">That code could not be verified.</span>
+                        </div>
+                    {:else}
+                        <div class="mt3">
+                            <span class="sm">We sent you a code. Please check
+                                your email.</span>
+                        </div>
+                    {/if}
+
+
+                {/if}
+                <div class="createc mt3">
+                    {#if !verified}
+                        {#if code_sent}
+                            <button class="create" on:click={verify} 
+                                disabled={busy || down}>
+                                    Verify Code
+                            </button>
+                        {:else}
+                            <button class="create" on:click={send} 
+                                disabled={busy || down}>
+                                Send Verification Code
+                            </button>
+                        {/if}
+                    {/if}
+                    {#if busy && !signupDisabled}
+                        <div class="spinner">
+                            <div class="sloader"></div>
+                        </div>
+                    {/if}
+                </div>
+
             {/if}
-            {/if}
+
+
+            {#if !require_email || (require_email && verified)}
             <div class="mt3 pb2" class:warn={availableWarning || usernameWarning}>
                 <span class="label">username</span>
                 {#if availableWarning}
@@ -336,6 +479,7 @@ function togglePass() {
                     </div>
                 {/if}
             </div>
+            {/if}
             <div class="mt3">
                 <span class="href sm" on:click={login}>Already have an account?</span>
             </div>
