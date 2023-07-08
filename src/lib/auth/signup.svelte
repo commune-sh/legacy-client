@@ -4,9 +4,11 @@ import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { store } from '$lib/store/store.js'
 import { debounce } from '$lib/utils/utils.js'
 import { eye, eyeoff } from '$lib/assets/icons.js'
-import { APIRequest } from '$lib/utils/request.js'
+import { APIRequest, validateEmail } from '$lib/utils/request.js'
 
 import validator from 'validator';
+
+$: require_email = $store.features?.require_email
 
 
 $: down = $store.down
@@ -20,12 +22,21 @@ let kill =() => {
 }
 
 onMount(() => {
-    focusUsernameInput()
+    if(require_email && emailInput) {
+        focusEmailInput()
+    } else {
+        focusUsernameInput()
+    }
 });
 
 async function focusUsernameInput() {
     await tick()
     usernameInput.focus()
+}
+
+async function focusEmailInput() {
+    await tick()
+    emailInput.focus()
 }
 
 function login() {
@@ -58,7 +69,28 @@ let errorMsg;
 
 let letterWarning;
 
-function create() {
+let verified = false;
+
+async function create() {
+    emailWarning = false
+
+    if(signupDisabled) {
+        return
+    }
+
+    if(require_email && emailInput.value.length < 1){
+        emailWarning = true
+        emailInput.focus()
+        return
+    }
+
+    let validEmail = validator.isEmail(emailInput?.value)
+    if(!validEmail) {
+        emailWarning = true
+        emailInput.focus()
+        return
+    }
+
 
     if(usernameInput.value.length < 2){
         usernameWarning = true
@@ -82,6 +114,14 @@ function create() {
         return
     }
 
+    if(require_email) {
+        const res = await validateEmail(emailInput.value)
+        console.log(res)
+    }
+
+    if(require_email && !verified) {
+        return
+    }
 
     busy = true
 
@@ -214,6 +254,25 @@ function togglePass() {
                 <div class="grd-c mt4 mb3 warn">
                     Signup is currently disabled
                 </div>
+            {/if}
+            {#if require_email}
+            <div class="mt3 pb2" class:warn={emailWarning}>
+                <span class="label">email</span>
+                {#if emailWarning}
+                    <span class="sm ml2">That email doesn't look right</span>
+                {/if}
+            </div>
+            <div class="mt1 pb2">
+                <input bind:this={emailInput}
+                disabled={down || busy}
+                class:red={emailWarning}
+                type="text" placeholder="" />
+            </div>
+            {#if provider_forbidden}
+            <div class="mt2 pb2 warn pvd">
+                Please use a personal or work email.
+            </div>
+            {/if}
             {/if}
             <div class="mt3 pb2" class:warn={availableWarning || usernameWarning}>
                 <span class="label">username</span>

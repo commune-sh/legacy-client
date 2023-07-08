@@ -416,6 +416,13 @@ export async function unpinFromIndex(slug) {
   return data
 }
 
+export async function validateEmail(email) {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/account/email/${email}`,
+    method: 'GET'
+  })
+  return data
+}
 
 export async function logout() {
   const data = await APIRequest({
