@@ -23,8 +23,8 @@ function kill() {
         url = url + `/topic/${$page.params?.topic}`
     }
 
-    if(page.url.search) {
-        url = `${url}${page.url.search}`
+    if($page.url.search) {
+        url = `${url}${$page.url.search}`
     }
 
     goto(url, {
