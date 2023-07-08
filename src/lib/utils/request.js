@@ -400,6 +400,23 @@ export async function suspendUser(user) {
   return data
 }
 
+export async function pinToIndex(slug) {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/admin/event/pin?slug=${slug}`,
+    method: 'PUT'
+  })
+  return data
+}
+
+export async function unpinFromIndex() {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/admin/event/unpin`,
+    method: 'PUT'
+  })
+  return data
+}
+
+
 export async function logout() {
   const data = await APIRequest({
     url: `${PUBLIC_API_URL}/account/logout`,

@@ -416,6 +416,10 @@ function dragEnd() {
 
 $: moveActive = $store.movingPost == event?.event_id
 
+function togglePin() {
+    event.pinned = !event.pinned
+}
+
 </script>
 
 <div class="event" 
@@ -593,6 +597,7 @@ $: moveActive = $store.movingPost == event?.event_id
                     isPostAuthor={isPostAuthor}
                     nested={nested}
                     on:edit={editEvent}
+                    on:toggle-pin={togglePin}
                     on:pin
                     on:redact
                     on:set-reply-thread
@@ -782,6 +787,8 @@ $: moveActive = $store.movingPost == event?.event_id
     top: 0.5rem;
     right: 0.5rem;
     fill: var(--primary);
+    height: 18px;
+    width: 18px;
 }
 
 .sender {

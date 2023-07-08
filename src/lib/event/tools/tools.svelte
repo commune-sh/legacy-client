@@ -146,6 +146,7 @@ function resetHovered() {
         on:react
         on:pin
         on:add-tag
+        on:toggle-pin
         on:mouseenter={resetHovered}
         isReply={isReply}
         isAuthor={isAuthor}

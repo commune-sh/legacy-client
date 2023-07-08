@@ -1,7 +1,7 @@
 <script>
 import { onMount, createEventDispatcher, tick } from 'svelte'
 import { store } from '$lib/store/store.js'
-import { suspendUser } from '$lib/utils/request.js'
+import { suspendUser, pinToIndex, unpinFromIndex } from '$lib/utils/request.js'
 import { more, code, trash, pin, tag as tagIcon, suspend as suspendIcon } from '$lib/assets/icons.js'
 import ViewSource from './source.svelte'
 import tippy from 'tippy.js';
@@ -145,6 +145,24 @@ function handleEnter(e) {
     }
 }
 
+async function pinToFrontPage() {
+    menu.hide()
+
+    if(event?.pinned) {
+        const res = await unpinFromIndex()
+        console.log(res)
+        if(res?.unpinned) {
+            dispatch('toggle-pin', event)
+        }
+    } else {
+        const res = await pinToIndex(event?.slug)
+        console.log(res)
+        if(res?.pinned) {
+            dispatch('toggle-pin', event)
+        }
+    }
+}
+
 </script>
 
 
@@ -153,6 +171,18 @@ function handleEnter(e) {
     bind:this={content}>
 
 {#if menuMode}
+
+    {#if authenticated && isAdmin}
+    <div class="m-item fl" on:click|stopPropagation={pinToFrontPage}>
+        <div class="grd-c mr2 fl-o">
+            {event?.pinned ? 'Unpin from' : 'Pin to'} front page
+        </div>
+        <div class="mic grd-c ico-s" >
+            {@html pin}
+        </div>
+    </div>
+    {/if}
+
 
     {#if authenticated && (isOwner || isSpaceAdmin) && !nested && !isReply && isSpace}
     <div class="m-item fl " on:click|stopPropagation={pinEvent}>
@@ -277,6 +307,7 @@ function handleEnter(e) {
     font-size: 0.8rem;
     font-weight: 500;
     padding: 0.4rem;
+    line-height: 1.5;
 }
 .m-item:hover{
     background-color: var(--context-menu-hover);
