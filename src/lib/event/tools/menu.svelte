@@ -149,7 +149,7 @@ async function pinToFrontPage() {
     menu.hide()
 
     if(event?.pinned) {
-        const res = await unpinFromIndex()
+        const res = await unpinFromIndex(event?.slug)
         console.log(res)
         if(res?.unpinned) {
             dispatch('toggle-pin', event)

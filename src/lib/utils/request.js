@@ -408,9 +408,9 @@ export async function pinToIndex(slug) {
   return data
 }
 
-export async function unpinFromIndex() {
+export async function unpinFromIndex(slug) {
   const data = await APIRequest({
-    url: `${PUBLIC_API_URL}/admin/event/unpin`,
+    url: `${PUBLIC_API_URL}/admin/event/unpin?slug=${slug}`,
     method: 'PUT'
   })
   return data
