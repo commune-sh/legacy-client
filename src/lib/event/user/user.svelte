@@ -1,5 +1,6 @@
 <script>
 import { PUBLIC_MEDIA_URL } from '$env/static/public';
+import { onMount, createEventDispatcher } from 'svelte'
 import { crown } from '$lib/assets/icons.js'
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
@@ -31,10 +32,12 @@ $: mediaURL = isDomain ? $store?.federated?.media_url : PUBLIC_MEDIA_URL
 
 $: avatar = `${mediaURL}/${user?.avatar_url}`
 
+let el;
 </script>
 
-<a class="user grd-c" href={`/@${user?.username}`}>
-<div class="flc">
+
+<a class="user grd-c" data-user={`@${user?.username}`} href={`/@${user?.username}`}>
+    <div class="flc" bind:this={el}>
     {#if !hideAvatar && avatarExists}
         <div class="grd grd-c mr1">
                 <div class="grd-c avatar-base grd"

@@ -132,8 +132,12 @@ $: joinedRoom = () => {
 }
 */
 
-$: joinedSpace = authenticated && 
+$: spaceJoined = state?.space?.is_profile ? 
+    $store?.rooms.find(x => x === room_id) != null :
     $store?.spaces.find(x => x?.room_id === space_room_id) != null 
+
+
+$: joinedSpace = authenticated && spaceJoined
 
 $: joinedRoom = authenticated && 
     $store?.rooms.find(x => x === room_id) != null 

@@ -17,6 +17,7 @@ import Modal from '$lib/modal/modal.svelte'
 import Alert from '$lib/alert/alert.svelte'
 import About from '$lib/about/about.svelte'
 import DiscoverSpaces from '$lib/discover/discover.svelte'
+import Tooltip from '$lib/tooltip/tooltip.svelte'
 
 $: isIndex = $page?.url.pathname === '/'
 
@@ -142,6 +143,7 @@ $: if(authenticated) {
 <Alert />
 <About />
 <DiscoverSpaces />
+<Tooltip />
 
 {#if (!down && isIndex && showIndex) || (!down && !isIndex)}
 
