@@ -415,7 +415,7 @@ onMount(() => {
             store.toggleMenu()
             container.style.width = `auto`
         }
-        if(e?.matches == true) {
+        if(e?.matches == true && container) {
             container.style.width = `auto`
         }
     });

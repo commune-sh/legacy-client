@@ -5,7 +5,7 @@ import { onMount, tick, createEventDispatcher } from 'svelte'
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
 import Board from './board/board.svelte'
-import SpaceSettings from '$lib/space/settings/settings.svelte'
+import Chat from './chat/chat.svelte'
 
 $: isIndex = $page?.url?.pathname === '/'
 $: isSpace = $page?.params?.space !== undefined && $page?.params?.space !== null && $page?.params?.space !== '' 
@@ -18,6 +18,8 @@ $: selectedRoomType = isRoom ? state?.children?.find(r => r?.alias ===
 
 $: isChat = selectedRoomType === 'chat'
 $: isBoard = selectedRoomType === 'board'
+
+$: isAll = $page.url.pathname.startsWith('/all')
 
 
 $: isSpaceSettings = isSpace && $page?.params?.room === 'settings'
@@ -35,8 +37,8 @@ $: isOwner = state?.owner?.user_id === sender_id
 
 </script>
 
-{#if isSpaceSettings && authenticated && isOwner}
-    <SpaceSettings />
+{#if isChat}
+    <Chat />
 {:else}
     <Board on:ready />
 {/if}

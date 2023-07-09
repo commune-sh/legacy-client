@@ -119,7 +119,7 @@ function buildLink(e, page) {
         url = `${url}${page.url.search}`
     }
 
-    if(page.url.pathname == '/all') {
+    if(page.url.pathname.startsWith('/all')) {
         url = `/all${url}`
     }
 
@@ -154,7 +154,7 @@ $: safari = isSafari()
 $: edited = event?.content?.['m.new_content']?.body !== undefined &&
         event?.content?.['m.new_content']?.title !== undefined
 
-$: formatted_body = md.render(event?.content?.body)
+$: formatted_body = event?.content?.body ? md.render(event?.content?.body) : null
 
 $: content = formatted_body ? formatted_body :
     event?.content?.body
