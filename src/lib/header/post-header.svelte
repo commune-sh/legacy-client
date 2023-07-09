@@ -27,6 +27,10 @@ function kill() {
         url = `${url}${$page.url.search}`
     }
 
+    if($page.url.pathname.startsWith('/all')) {
+        url = `/all`
+    }
+
     goto(url, {
         noscroll: true,
     })

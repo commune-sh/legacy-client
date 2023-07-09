@@ -119,6 +119,10 @@ function buildLink(e, page) {
         url = `${url}${page.url.search}`
     }
 
+    if(page.url.pathname == '/all') {
+        url = `/all${url}`
+    }
+
     return url
 }
 
