@@ -14,7 +14,7 @@ import InsertEmoji from './insert-emoji.svelte'
 import Attachments from './attachments/attachments.svelte'
 import Links from './links/links.svelte'
 import EmojiList from './emoji-list.svelte'
-import Event from '$lib/event/event.svelte'
+import Event from '$lib/board/event/event.svelte'
 import tippy from 'tippy.js';
 
 import { v4 as uuidv4 } from 'uuid';

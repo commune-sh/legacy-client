@@ -6,7 +6,7 @@ import { onMount, tick, createEventDispatcher } from 'svelte'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
-import Event from '$lib/event/event.svelte'
+import Event from '$lib/board/event/event.svelte'
 import Header from '$lib/header/header.svelte'
 import Post from '$lib/post/post.svelte'
 import SkeletonBoardEvents from '$lib/skeleton/skeleton-board-events.svelte'

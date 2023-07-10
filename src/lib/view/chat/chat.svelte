@@ -5,7 +5,7 @@ import { onMount, afterUpdate, createEventDispatcher } from 'svelte'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
-import Message from '$lib/event/message/message.svelte'
+import Event from '$lib/board/event/event.svelte'
 import Header from '$lib/header/header.svelte'
 import Post from '$lib/post/post.svelte'
 import SkeletonBoardEvents from '$lib/skeleton/skeleton-board-events.svelte'
@@ -42,7 +42,9 @@ onMount(() => {
 })
 
 function updateScroll() {
-    scrollable.scrollTop = scrollable.scrollHeight;
+    if(scrollable) {
+        scrollable.scrollTop = scrollable.scrollHeight;
+    }
 }
 
 
@@ -129,10 +131,18 @@ function syncMessages() {
         if(e?.data && e?.data != 'ping') {
             let event = JSON.parse(e.data)
             if (event && Array.isArray(event)) {
-                event = event.reverse()
-                messages = [...messages, ...event]
+                let events = event.reverse()
+                events?.forEach(e => {
+                    let ind = messages.findIndex(m => m?.event_id === e?.event_id)
+                    if(ind == -1) {
+                        messages = [...messages, e]
+                    }
+                })
             } else if (event && typeof event === 'object') {
-                messages = [...messages, event]
+                let ind = messages.findIndex(m => m?.event_id === event?.event_id)
+                if(ind == -1) {
+                    messages = [...messages, event]
+                }
             }
             updateScroll()
         }
@@ -171,13 +181,19 @@ let scrollable;
 
         <div class="inner-content" bind:this={scrollable}>
 
-            {roomID}
 
             {#if messages}
                 {#each messages as message}
-                    <div class="pa3">
-                    {JSON.stringify(message?.content)}
-                    </div>
+                    {#if message?.type === 'm.room.message'}
+                        <Event 
+                            isChat={true}
+                            event={message} 
+                            sender={null} />
+                    {:else}
+                        <div class="pa3">
+                            {JSON.stringify(message)}
+                        </div>
+                    {/if}
                 {/each}
             {/if}
 

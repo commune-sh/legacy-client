@@ -1,7 +1,7 @@
 <svelte:options accessors={true} />
 
 <script>
-import Event from '$lib/event/event.svelte'
+import Event from '$lib/board/event/event.svelte'
 import Header from '$lib/header/post-header.svelte'
 import { savePost, redactReaction } from '$lib/utils/request.js'
 import { onMount, createEventDispatcher } from 'svelte';

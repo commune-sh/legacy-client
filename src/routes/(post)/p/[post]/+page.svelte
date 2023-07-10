@@ -1,6 +1,6 @@
 <script>
 import '/static/css/main.css'
-import Event from '$lib/event/event.svelte'
+import Event from '$lib/board/event/event.svelte'
 import Header from '$lib/header/post-header.svelte'
 import { onMount, createEventDispatcher } from 'svelte';
 import { store } from '$lib/store/store.js'

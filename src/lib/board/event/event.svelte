@@ -7,8 +7,8 @@ import { goto } from '$app/navigation';
 import MediaThumbnail from './attachments/media-thumbnail.svelte'
 import LinkThumbnail from './links/link-thumbnail.svelte'
 import MediaItems from './attachments/media-items.svelte'
-import Reactions from '$lib/event/reactions/reactions.svelte'
-import Replies from '$lib/event/replies/replies.svelte'
+import Reactions from '$lib/board/event/reactions/reactions.svelte'
+import Replies from '$lib/board/event/replies/replies.svelte'
 import User from './user/user.svelte'
 import Date from './date/date.svelte'
 import Edited from './edited/edited.svelte'
@@ -28,6 +28,7 @@ import Composer from '$lib/composer/composer.svelte'
 
 const dispatch = createEventDispatcher()
 
+export let isChat = false;
 export let isPost = false;
 export let isReply = false;
 export let showAlias = true;
@@ -131,7 +132,7 @@ $: link = buildLink(event, $page)
 function goToEvent() {
 
 
-    if(isPost || isReply || toolsActive || editing) {
+    if(isPost || isReply || toolsActive || editing || isChat) {
         return
     }
 
@@ -428,14 +429,16 @@ function togglePin() {
 
 <div class="event" 
     bind:this={el}
-    draggable={!isReply && !isPost && !editing && interactive && !moveActive}
+    draggable={!isReply && !isPost && !editing && interactive && !moveActive &&
+    !isChat}
     on:dragstart={dragStart}
     on:dragend={dragEnd}
     class:dragging={dragging}
     on:contextmenu={print}
     on:mouseover={showTools}
     on:mouseleave={hideTools}
-    class:h={!isReply && !isPost && !editing}
+    class:h={!isReply && !isPost && !editing && !isChat}
+    class:ch={isChat}
     class:ha={!isReply && !isPost && (hasAttachments || hasLinks)}
     class:ma={toolsActive}
     class:bb={isPost || isReply}
@@ -499,7 +502,11 @@ function togglePin() {
 
             {:else}
 
-                {#if isPost}
+                {#if isChat}
+                    <div class="post-body ph3 mb2 pci">
+                        {@html content}
+                    </div>
+                {:else if isPost}
                     {#if !isSingleReply}
                     <div class="post-title ph3 pb2 pti">
                         {title}
@@ -538,11 +545,11 @@ function togglePin() {
 
             <div class="rec-a fl ph3">
 
-                {#if !isReply && interactive}
+                {#if !isReply && interactive && !isChat}
                         <Replies count={event?.reply_count} />
                 {/if}
 
-                {#if isReply && interactive}
+                {#if isReply && interactive && !isChat}
                     <Vote event={event} />
                 {/if}
 
@@ -561,7 +568,7 @@ function togglePin() {
 
                 <div class="fl-o"></div>
 
-                {#if isReply && interactive && hasReplies}
+                {#if isReply && interactive && hasReplies && !isChat}
                     <div class="mr2 grd-c mt2 expand" 
                         on:click={toggleReplies}>
                         {#if showingReplies}
@@ -581,11 +588,11 @@ function togglePin() {
 
     </div>
 
-    {#if showMediaThumbnail}
+    {#if showMediaThumbnail && !isChat}
         <MediaThumbnail media={media} />
     {/if}
 
-    {#if showLinkThumbnail && !showMediaThumbnail}
+    {#if showLinkThumbnail && !showMediaThumbnail && !isChat}
         <LinkThumbnail links={links} />
     {/if}
 
@@ -624,7 +631,7 @@ function togglePin() {
 </div>
 
 
-{#if hasReplies && showingReplies && interactive}
+{#if hasReplies && showingReplies && interactive && !isChat}
     <div class="replies">
         <div class="gap"></div>
         <div class="events">
@@ -688,11 +695,16 @@ function togglePin() {
     overflow-y: auto;
     max-height: 140px;
 }
+
 .h {
     cursor: pointer;
 }
 
 .h:hover {
+    background-color: var(--event-bg-hover);
+}
+
+.ch:hover {
     background-color: var(--event-bg-hover);
 }
 

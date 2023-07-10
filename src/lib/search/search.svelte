@@ -4,7 +4,7 @@ import { debounce } from '$lib/utils/utils.js'
 import { page } from '$app/stores';
 import { searchEvents } from '$lib/utils/request.js'
 import { store } from '$lib/store/store.js'
-import Event from '$lib/event/event.svelte'
+import Event from '$lib/board/event/event.svelte'
 
 $: state = $store?.states[$page?.params?.space]
 

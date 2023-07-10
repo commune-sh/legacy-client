@@ -83,6 +83,7 @@ function sortItems(state) {
             restrictions: state?.space?.restrictions,
             avatar: state?.space?.avatar,
             is_profile: state?.space?.is_profile,
+            type: state?.space?.type,
             pinned_events: state.space?.pinned_events != undefined ? JSON.parse(state.space?.pinned_events) : null
         }
     ]
@@ -98,6 +99,7 @@ function sortItems(state) {
                 topics: JSON.parse(child?.topics),
                 avatar: child?.avatar,
                 is_profile: state?.space?.is_profile,
+                type: child?.type,
                 restrictions: child.restrictions,
                 pinned_events: child?.pinned_events != undefined ? JSON.parse(child?.pinned_events) : null,
             })
@@ -118,6 +120,9 @@ $: isSpaceRoom = room_id === space_room_id
 $: isProfile = state?.space?.is_profile 
 
 $: isOwner = state?.owner?.user_id === $store?.credentials?.matrix_user_id
+
+$: isBoard = selected?.type === 'board'
+$: isChat = selected?.type === 'chat'
 
 $: ownProfile = isProfile && isOwner
 
@@ -302,7 +307,7 @@ selected?.name : selected?.alias ? selected?.alias : null
                     <Search />
                 </div>
             {/if}
-                {#if $store.verifiedSession && space && exists}
+                {#if $store.verifiedSession && space && exists && !isChat}
                     <div class="grd-c">
                     {#if (joined && !isProfile) || ownProfile}
                         {#if !editing}

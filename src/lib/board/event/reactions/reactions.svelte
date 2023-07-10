@@ -3,10 +3,9 @@ import { createEventDispatcher } from 'svelte'
 import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';
 import Reaction from './reaction.svelte'
-import React from '$lib/event/tools/react.svelte'
+import React from '$lib/board/event/tools/react.svelte'
 import { savePost, redactReaction } from '$lib/utils/request.js'
 import { isSafari } from '$lib/utils/utils.js'
-import Tags from '$lib/event/tags.svelte'
 
 const dispatch = createEventDispatcher()
 
