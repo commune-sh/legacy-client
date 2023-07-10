@@ -504,12 +504,13 @@ function handleEnter(e) {
     }
 }
 
-let keys = {enter: false, shift:false};
 
 function handleChatEnter(e) {
     if(!e.shiftKey && e.key === 'Enter' && isChat) {
         e.preventDefault()
-        createPost()
+        if(!emojiListActive) {
+            createPost()
+        }
     }
 }
 

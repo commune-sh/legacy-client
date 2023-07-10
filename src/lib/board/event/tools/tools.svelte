@@ -26,6 +26,7 @@ export let nested;
 export let isReply;
 export let isPost;
 export let isAuthor;
+export let isChat;
 
 export let isPostAuthor;
 
@@ -149,6 +150,7 @@ function resetHovered() {
         on:toggle-pin
         on:mouseenter={resetHovered}
         isReply={isReply}
+        isChat={isChat}
         isAuthor={isAuthor}
         isPostAuthor={isPostAuthor}
         nested={nested}

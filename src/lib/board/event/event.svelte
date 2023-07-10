@@ -68,6 +68,7 @@ async function save() {
     const res = await savePost(event)
     console.log(res)
     if(res?.success) {
+        dispatch('saved', res?.event)
         event.unsent = false
         event = res?.event
         event = event
@@ -644,6 +645,7 @@ $: showSender = isChat && messages && messages[index-1]?.type == 'm.room.message
                 <Tools 
                     isReply={isReply} 
                     isPost={isPost}
+                    isChat={isChat}
                     on:reply={replyToEvent}
                     active={toolsActive}
                     isAuthor={isAuthor}

@@ -28,6 +28,7 @@ export let event;
 export let isAuthor;
 export let isPostAuthor;
 export let isReply;
+export let isChat;
 export let nested;
 
 let el;
@@ -172,7 +173,7 @@ async function pinToFrontPage() {
 
 {#if menuMode}
 
-    {#if authenticated && isAdmin}
+    {#if authenticated && isAdmin && !isChat}
     <div class="m-item fl" on:click|stopPropagation={pinToFrontPage}>
         <div class="grd-c mr2 fl-o">
             {event?.pinned ? 'Unpin from' : 'Pin to'} front page
@@ -184,7 +185,7 @@ async function pinToFrontPage() {
     {/if}
 
 
-    {#if authenticated && (isOwner || isSpaceAdmin) && !nested && !isReply && isSpace}
+    {#if authenticated && (isOwner || isSpaceAdmin) && !nested && !isReply && isSpace && !isChat}
     <div class="m-item fl " on:click|stopPropagation={pinEvent}>
         <div class="grd-c mr2 fl-o">
             {event?.pinned ? 'Unpin' : 'Pin'} Post

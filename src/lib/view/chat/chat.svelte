@@ -1,6 +1,6 @@
 <script>
 import { PUBLIC_API_URL, PUBLIC_API_URL_WS } from '$env/static/public';
-import { APIRequest, loadPosts } from '$lib/utils/request.js'
+import { redactEvent, loadPosts } from '$lib/utils/request.js'
 import { onMount, afterUpdate, createEventDispatcher, tick } from 'svelte'
 import { page } from '$app/stores';
 import { joinSpace, joinRoom } from '$lib/utils/request.js'
@@ -185,7 +185,8 @@ function syncMessages() {
                 let events = event.reverse()
                 events?.forEach(e => {
                     let ind = messages.findIndex(m => m?.event_id === e?.event_id)
-                    if(ind == -1) {
+                    let indi = messages.findIndex(m => m?.session === event?.session)
+                    if(ind == -1 && indi == -1) {
                         messages = [...messages, e]
                     }
                 })
@@ -317,15 +318,44 @@ async function newMessage(e) {
             avatar_url: $store.credentials.avatar_url,
             username: $store.credentials.username,
         },
-        origin_server_ts: Date.now(),
+        origin_server_ts: new Date().getTime(),
         event_id: `local-${Date.now()}`,
         room_id: roomID,
         unsent: true,
         session: uuidv4(),
     }
     messages = [...messages, event]
+
     await tick()
     updateScroll()
+}
+
+async function saved(e) {
+    let event = e.detail
+    console.log("event saved", event)
+    let ind = messages.findIndex(m => m?.event_id === event?.event_id)
+    if(ind != -1) {
+        messages[ind].origin_server_ts = event.origin_server_ts
+        last =  event.origin_server_ts
+        messages = [...messages]
+    }
+}
+
+async function redactPost(e) {
+    const event = e.detail
+    const index = messages.findIndex(i => i.event_id === event.event_id);
+    if(index !== -1) {
+        messages.splice(index, 1);
+        messages = messages
+    }
+
+    let redaction = {
+        room_id: event.room_id,
+        event_id: event.event_id,
+        reason: "redacted",
+    }
+    const res = await redactEvent(redaction);
+    console.log(res)
 }
 
 </script>
@@ -358,8 +388,10 @@ async function newMessage(e) {
                             <Event 
                                 isChat={true}
                                 index={i}
+                                on:redact={redactPost}
                                 messages={messages}
                                 event={message} 
+                                on:saved={saved}
                                 sender={null} />
                         {/if}
                     {/each}
