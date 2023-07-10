@@ -46,6 +46,13 @@ const dispatch = createEventDispatcher()
 
 let ready = false;
 
+let login = () => {
+    store.startAuthenticating("login")
+}
+
+let signup = () => {
+    store.startAuthenticating("signup")
+}
 
 onMount(() => {
     loadMessages()
@@ -391,7 +398,8 @@ async function newMessage(e) {
             {:else if !authenticated}
                 <div class="grd">
                     <div class="comm">
-                        Login or Sign up to chat
+                            <span class="sp" on:click={login}>Login</span> or <span
+                                class="sp" on:click={signup}>Sign up</span> to chat
                     </div>
                 </div>
             {/if}
@@ -470,6 +478,16 @@ async function newMessage(e) {
     width: 100%;
     height: 30px;
 }
+.sp {
+    font-weight: 500;
+    color: var(--primary);
+    cursor: pointer;
+}
+
+.sp:hover {
+    text-decoration: underline;
+}
+
 </style>
 
 
