@@ -185,16 +185,17 @@ function syncMessages() {
                 let events = event.reverse()
                 events?.forEach(e => {
                     let ind = messages.findIndex(m => m?.event_id === e?.event_id)
-                    let indi = messages.findIndex(m => m?.session === event?.session)
-                    if(ind == -1 && indi == -1) {
+                    if(ind == -1) {
                         messages = [...messages, e]
                     }
                 })
             } else if (event && typeof event === 'object') {
-                let ind = messages.findIndex(m => m?.event_id === event?.event_id)
-                let indi = messages.findIndex(m => m?.session === event?.session)
-                console.log("looking for existing message", ind, indi)
-                if(ind == -1 && indi == -1) {
+                if(event?.sender?.id == $store?.credentials?.matrix_user_id) {
+                    return
+                }
+                let ind = messages.findIndex(m => m?.origin_server_ts === event?.event_id)
+                console.log("got new event from socket", event)
+                if(ind == -1) {
                     messages = [...messages, event]
                 }
             }
@@ -331,14 +332,10 @@ async function newMessage(e) {
 }
 
 async function saved(e) {
-    let event = e.detail
+    let event = e.detail.event
     console.log("event saved", event)
-    let ind = messages.findIndex(m => m?.event_id === event?.event_id)
-    if(ind != -1) {
-        messages[ind].origin_server_ts = event.origin_server_ts
-        last =  event.origin_server_ts
-        messages = [...messages]
-    }
+    last =  event.origin_server_ts
+    console.log("last is", last)
 }
 
 async function redactPost(e) {
