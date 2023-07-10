@@ -29,6 +29,8 @@ import Composer from '$lib/composer/composer.svelte'
 const dispatch = createEventDispatcher()
 
 export let isChat = false;
+export let messages;
+export let index;
 export let isPost = false;
 export let isReply = false;
 export let showAlias = true;
@@ -425,6 +427,11 @@ function togglePin() {
     event.pinned = !event.pinned
 }
 
+
+$: diff = (isChat && messages && messages[index-1]?.type == 'm.room.message') ?
+    (event.origin_server_ts - messages[index -1]?.origin_server_ts) / 1000: 0
+
+$: showSender = diff > 400
 </script>
 
 <div class="event" 
@@ -438,6 +445,8 @@ function togglePin() {
     on:mouseover={showTools}
     on:mouseleave={hideTools}
     class:h={!isReply && !isPost && !editing && !isChat}
+    class:chat={isChat}
+    class:shs={isChat && showSender}
     class:ha={!isReply && !isPost && (hasAttachments || hasLinks)}
     class:ma={toolsActive}
     class:bb={isPost || isReply}
@@ -462,7 +471,7 @@ function togglePin() {
 
     <div class="ev-c fl-co"
     class:ovy={!interactive}>
-        <div class="sender ph3 fl">
+        <div class="sender ph3 fl" class:hide={isChat && !showSender}>
             <User hideAvatar={false} user={user} op={op}/>
             <div class="grd-c ph1"></div>
             <Date date={event?.origin_server_ts} />
@@ -503,7 +512,7 @@ function togglePin() {
             {:else}
 
                 {#if isChat}
-                    <div class="post-body ph3 mb2 pci">
+                    <div class="post-body ph3 ml4 pci">
                         {@html content}
                     </div>
                 {:else if isPost}
@@ -686,6 +695,14 @@ function togglePin() {
     opacity: 1;
 }
 
+.chat {
+    padding-top: 0;
+    padding-bottom: 0.125rem;
+}
+
+.shs {
+    padding-top: 0.5rem;
+}
 
 .ev-c {
     overflow: hidden;
@@ -879,5 +896,8 @@ function togglePin() {
     font-size: small;
     font-weight: 500;
     border-radius: 0 0 0 7px;
+}
+.hide {
+     display: none;
 }
 </style>

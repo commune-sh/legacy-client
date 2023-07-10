@@ -1,7 +1,7 @@
 <script>
 import { PUBLIC_API_URL, PUBLIC_API_URL_WS } from '$env/static/public';
 import { APIRequest, loadPosts } from '$lib/utils/request.js'
-import { onMount, afterUpdate, createEventDispatcher } from 'svelte'
+import { onMount, afterUpdate, createEventDispatcher, tick } from 'svelte'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
@@ -90,6 +90,9 @@ async function loadMessages() {
     }
 }
 
+let sp;
+
+let fetching = false;
 async function fetchMore() {
     let endpoint = PUBLIC_API_URL
 
@@ -99,12 +102,20 @@ async function fetchMore() {
       url: url,
       method: 'GET',
     }
+    fetching = true;
     const resp = await loadPosts(opt)
     console.log(resp)
     if(resp?.events?.length > 0) {
+        sp = zone.scrollHeight - zone.scrollTop
         messages = [...resp?.events.reverse(), ...messages]
-        zone.scrollTop = zone.scrollHeight  - zone.scrollTop
+        maintainScroll()
     }
+}
+
+async function maintainScroll() {
+    await tick();
+    zone.scrollTop = zone.scrollHeight - sp;
+    fetching = false;
 }
 
 let socket;
@@ -222,6 +233,9 @@ function setupObserver() {
 let atBottom;
 
 function trackScroll(e) {
+    if(fetching) {
+        e.preventDefault()
+    }
     atBottom = zone.scrollTop + zone.clientHeight >= zone.scrollHeight - 100;
 }
 
@@ -239,29 +253,34 @@ function trackScroll(e) {
         <div class="inner-content" 
             on:scroll={trackScroll}
             bind:this={zone}>
+
             <div class="ob" bind:this={ob}></div>
 
+            {#if !ready}
+                <SkeletonBoardEvents />
+            {:else}
 
-            {#if messages}
-                {#each messages as message}
-                    {#if message?.type === 'm.room.message'}
-                        <Event 
-                            isChat={true}
-                            event={message} 
-                            sender={null} />
-                    {:else}
-                        <div class="pa3">
-                            {JSON.stringify(message.type)}
-                        </div>
-                    {/if}
-                {/each}
+                {#if messages}
+                    {#each messages as message, i}
+                        {#if message?.type === 'm.room.message'}
+                            <Event 
+                                isChat={true}
+                                index={i}
+                                messages={messages}
+                                event={message} 
+                                sender={null} />
+                        {:else}
+                            <div class="pa3">
+                                {JSON.stringify(message.type)}
+                            </div>
+                        {/if}
+                    {/each}
+                {/if}
             {/if}
 
         </div>
 
-        <div class="">
-            {atBottom}
-            <input/>
+        <div class="chat-composer">
         </div>
 
 
@@ -284,7 +303,7 @@ function trackScroll(e) {
 .inner-area {
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: 48px auto 48px;
+    grid-template-rows: 48px auto 68px;
     overflow: hidden;
 }
 
@@ -295,26 +314,8 @@ function trackScroll(e) {
     grid-template-rows: repeat(auto-fill, auto);
 }
 
-.splh {
-    grid-template-rows: auto 1fr;
-}
-
-.sph {
-}
-
-.post {
-    grid-template-columns: 50% 50%;
-}
-
-.events {
-    place-self: stretch;
-    width: 100%;
-    justify-self: center;
-    align-self: start;
-}
-
-.ina {
-    border-right: 1px solid var(--border-1);
+.chat-composer {
+    border-top: 1px solid var(--border-1);
 }
 
 @media screen and (max-width: 1280px) {

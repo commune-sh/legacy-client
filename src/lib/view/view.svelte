@@ -34,13 +34,18 @@ $: authenticated = $store?.authenticated &&
 $: sender_id = $store.credentials?.matrix_user_id
 $: isOwner = state?.owner?.user_id === sender_id
 
+$: ready = $store.stateReady
 
 </script>
+
+{#if ready}
 
 {#if isChat}
     <Chat />
 {:else}
     <Board on:ready />
+{/if}
+
 {/if}
 
 
