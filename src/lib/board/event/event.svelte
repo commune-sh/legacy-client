@@ -438,7 +438,6 @@ function togglePin() {
     on:mouseover={showTools}
     on:mouseleave={hideTools}
     class:h={!isReply && !isPost && !editing && !isChat}
-    class:ch={isChat}
     class:ha={!isReply && !isPost && (hasAttachments || hasLinks)}
     class:ma={toolsActive}
     class:bb={isPost || isReply}
@@ -488,7 +487,8 @@ function togglePin() {
 
 
 
-        <div class="body" class:nonin={!interactive}>
+        <div class="body" class:nonin={!interactive}
+            class:ch={isChat}>
 
             {#if editing && interactive}
 

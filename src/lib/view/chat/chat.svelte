@@ -42,14 +42,16 @@ onMount(() => {
 })
 
 function updateScroll() {
-    if(scrollable) {
-        scrollable.scrollTop = scrollable.scrollHeight;
+    if(zone) {
+        setTimeout(() => {
+            zone.scrollTop = zone.scrollHeight;
+        }, 40)
     }
 }
 
 
 afterUpdate(() =>{
-    updateScroll()
+    //updateScroll()
 })
 
 let _page = null;
@@ -88,7 +90,26 @@ async function loadMessages() {
     }
 }
 
+async function fetchMore() {
+    let endpoint = PUBLIC_API_URL
+
+    let url = `${endpoint}/room/${roomID}/messages?last=${first}`
+
+    let opt = {
+      url: url,
+      method: 'GET',
+    }
+    const resp = await loadPosts(opt)
+    console.log(resp)
+    if(resp?.events?.length > 0) {
+        messages = [...resp?.events.reverse(), ...messages]
+        zone.scrollTop = zone.scrollHeight  - zone.scrollTop
+    }
+}
+
 let socket;
+
+$: first = messages?.length > 0 ? messages[0]?.origin_server_ts : null
 
 $: last = messages?.length > 0 ? messages[messages.length - 1]?.origin_server_ts : null
 
@@ -144,7 +165,9 @@ function syncMessages() {
                     messages = [...messages, event]
                 }
             }
-            updateScroll()
+            if(atBottom) {
+                updateScroll()
+            }
         }
     };
 
@@ -166,7 +189,41 @@ function syncMessages() {
     }, 30000);
 }
 
-let scrollable;
+let zone;
+
+let ob;
+
+$: if(ob && ready) {
+    setTimeout(() => {
+        setupObserver()
+    }, 1000)
+}
+
+let scrollHeight;
+function setupObserver() {
+    scrollHeight = zone?.scrollHeight;
+    let options = {
+        root: zone,
+        rootMargin: `${scrollHeight/2}px`,
+    };
+
+    let callback = (entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                fetchMore()
+            }
+        });
+    };
+
+    let observer = new IntersectionObserver(callback, options);
+    observer.observe(ob);
+}
+
+let atBottom;
+
+function trackScroll(e) {
+    atBottom = zone.scrollTop + zone.clientHeight >= zone.scrollHeight - 100;
+}
 
 </script>
 
@@ -179,7 +236,10 @@ let scrollable;
 
         <Header />
 
-        <div class="inner-content" bind:this={scrollable}>
+        <div class="inner-content" 
+            on:scroll={trackScroll}
+            bind:this={zone}>
+            <div class="ob" bind:this={ob}></div>
 
 
             {#if messages}
@@ -191,7 +251,7 @@ let scrollable;
                             sender={null} />
                     {:else}
                         <div class="pa3">
-                            {JSON.stringify(message)}
+                            {JSON.stringify(message.type)}
                         </div>
                     {/if}
                 {/each}
@@ -200,6 +260,7 @@ let scrollable;
         </div>
 
         <div class="">
+            {atBottom}
             <input/>
         </div>
 
