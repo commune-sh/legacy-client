@@ -449,8 +449,10 @@ $: diff = (isChat && messages) ?
 
 //$: showSender = diff > 400
 
+$: differentSender = isChat && messages && messages[index-1]?.sender?.id !== event?.sender?.id
+
 $: showSender = isChat && messages && messages[index-1]?.type == 'm.room.message' ?
-    diff > 400 : true
+    (diff > 400 || differentSender): true
 
 
 </script>
