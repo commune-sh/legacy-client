@@ -1,5 +1,6 @@
 <script>
 import { PUBLIC_BASE_URL } from '$env/static/public';
+import { savePost } from '$lib/utils/request.js'
 import { onMount, createEventDispatcher } from 'svelte'
 import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';
@@ -63,7 +64,21 @@ $: isTopic = $page.params.topic !== undefined && $page.params.topic !== null &&
 
 let el;
 
+async function save() {
+    const res = await savePost(event)
+    console.log(res)
+    if(res?.success) {
+        event.unsent = false
+        event = res?.event
+        event = event
+    }
+}
+
 onMount(() => {
+    if(event?.unsent) {
+        save()
+    }
+
     if (isReplyEvent) {
         if(el) {
             el.scrollIntoView({ behavior: "smooth" });
@@ -180,7 +195,7 @@ $: firstIsMedia = attachments?.[0]?.type?.startsWith('image') ||
 
 
 
-$: highlight = $page.params.post === event?.slug && !isPost
+$: highlight = $page.params.post === event?.slug && !isPost && !isChat
 
 $: context = $page.url?.search == `?context=${event?.slug}`
 
@@ -524,7 +539,8 @@ $: showSender = isChat && messages && messages[index-1]?.type == 'm.room.message
                         <div class="chti">
                             <Time date={event?.origin_server_ts} />
                         </div>
-                        <div class="chp post-body pr3 pci">
+                        <div class="chp post-body pr3 pci"
+                        class:unsent={event?.unsent}>
                             {@html content}
                         </div>
                     </div>
@@ -944,4 +960,7 @@ $: showSender = isChat && messages && messages[index-1]?.type == 'm.room.message
     opacity: 1;
 }
 
+.unsent {
+    opacity: 0.2;
+}
 </style>

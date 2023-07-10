@@ -229,6 +229,10 @@ onMount(() => {
 
     $store.loadEmojiPicker = true
 
+    if(isChat) {
+        focusBodyInput()
+    }
+
 })
 
 function setupLinkPasteListener() {
@@ -449,6 +453,14 @@ async function createPost() {
 
         console.log("trying to save", post)
 
+        if(isChat) {
+            dispatch('new-message', post)
+            busy = false
+            reset()
+            focusBodyInput()
+            return
+        }
+
         const res = await savePost(post);
         console.log(res)
         if(res?.success && res?.event) {
@@ -489,6 +501,15 @@ function handleEnter(e) {
             //editor.focus()
             bodyInput.focus()
         }
+    }
+}
+
+let keys = {enter: false, shift:false};
+
+function handleChatEnter(e) {
+    if(!e.shiftKey && e.key === 'Enter' && isChat) {
+        e.preventDefault()
+        createPost()
     }
 }
 
@@ -538,10 +559,12 @@ function updateContent() {
         state.replyTo = replyTo
     }
 
-    store.updateEditorState({
-        room_id: stateKey,
-        state: state,
-    })
+    if(!isChat) {
+        store.updateEditorState({
+            room_id: stateKey,
+            state: state,
+        })
+    }
 }
 
 
@@ -729,6 +752,7 @@ function toggleFullscreen() {
                     on:keydown={updateContent}
                     on:keydown={trackCaret}
                     on:keydown={bodyKeyDown}
+                    on:keydown={handleChatEnter}
                     on:input={updateContent}
                     on:click={updateContent}
                     on:focus={handleBodyFocus}
@@ -791,7 +815,7 @@ function toggleFullscreen() {
     {#if emojiListActive && shortcode}
         <EmojiList 
             target={bodyInput}
-            reply={reply}
+            reply={reply || isChat}
             on:selected={addEmoji} 
             shortcode={shortcode} />
     {/if}

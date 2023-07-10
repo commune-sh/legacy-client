@@ -9,6 +9,7 @@ import Event from '$lib/board/event/event.svelte'
 import Header from '$lib/header/header.svelte'
 import Post from '$lib/post/post.svelte'
 import SkeletonBoardEvents from '$lib/skeleton/skeleton-board-events.svelte'
+import { v4 as uuidv4 } from 'uuid';
 
 $: authenticated = $store?.authenticated && 
     $store?.credentials != null
@@ -174,7 +175,9 @@ function syncMessages() {
                 })
             } else if (event && typeof event === 'object') {
                 let ind = messages.findIndex(m => m?.event_id === event?.event_id)
-                if(ind == -1) {
+                let indi = messages.findIndex(m => m?.session === event?.session)
+                console.log("looking for existing message", ind, indi)
+                if(ind == -1 && indi == -1) {
                     messages = [...messages, event]
                 }
             }
@@ -241,6 +244,29 @@ function trackScroll(e) {
     atBottom = zone.scrollTop + zone.clientHeight >= zone.scrollHeight - 100;
 }
 
+async function newMessage(e) {
+    let message = e.detail
+    console.log("building new message evet", message)
+    let event = {
+        content: message.content,
+        type: 'm.room.message',
+        sender: {
+            id: $store.credentials.matrix_user_id,
+            display_name: $store.credentials.display_name,
+            avatar_url: $store.credentials.avatar_url,
+            username: $store.credentials.username,
+        },
+        origin_server_ts: Date.now(),
+        event_id: `local-${Date.now()}`,
+        room_id: roomID,
+        unsent: true,
+        session: uuidv4(),
+    }
+    messages = [...messages, event]
+    await tick()
+    updateScroll()
+}
+
 </script>
 
 
@@ -252,7 +278,7 @@ function trackScroll(e) {
 
         <Header />
 
-        <div class="inner-content" 
+        <div class="inner-content fl-co" 
             on:scroll={trackScroll}
             bind:this={zone}>
 
@@ -262,7 +288,8 @@ function trackScroll(e) {
                 <SkeletonBoardEvents />
             {:else}
 
-                <div class="messages">
+                <div class="messages fl-co fl-o">
+                    <div class="emp fl-o"></div>
 
                 {#if messages}
                     {#each messages as message, i}
@@ -285,7 +312,10 @@ function trackScroll(e) {
 
         {#if Composer && ready}
         <div class="chat-composer">
-                <Composer roomID={roomID} isChat={true} />
+                <Composer 
+                    on:new-message={newMessage}
+                    roomID={roomID} 
+                    isChat={true} />
         </div>
         {/if}
 
@@ -316,13 +346,14 @@ function trackScroll(e) {
 .inner-content {
     overflow-y: auto;
     overflow-x: hidden;
-    display: grid;
-    grid-template-rows: repeat(auto-fill, auto);
     padding-bottom: 1rem;
 }
 
 .chat-composer {
     border-top: 1px solid var(--border-1);
+}
+
+.emp {
 }
 
 @media screen and (max-width: 1280px) {
