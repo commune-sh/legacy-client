@@ -209,6 +209,7 @@ function moveDown(e) {
 }
 .but {
     width: 100%;
+    height: 30px;
 }
 .spinner {
     position: absolute;

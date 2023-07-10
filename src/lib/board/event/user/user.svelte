@@ -119,6 +119,10 @@ a:hover {
         width: 12px;
         height: 12px;
     }
+    .ch {
+        width: 30px;
+        height: 30px;
+    }
 }
 
 .name {

@@ -3,6 +3,7 @@ import { PUBLIC_API_URL, PUBLIC_API_URL_WS } from '$env/static/public';
 import { APIRequest, loadPosts } from '$lib/utils/request.js'
 import { onMount, afterUpdate, createEventDispatcher, tick } from 'svelte'
 import { page } from '$app/stores';
+import { joinSpace, joinRoom } from '$lib/utils/request.js'
 import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
 import Event from '$lib/board/event/event.svelte'
@@ -31,6 +32,14 @@ $: isRoom = $page?.params?.room !== undefined && $page?.params?.room !== null &&
 $: roomID = isRoom ? state?.children?.find(r => r?.alias ===
     $page?.params?.room)?.room_id : isSpace ? state?.room_id : null
 
+$: space_room_id = state?.room_id
+$: isSpaceRoom = roomID === space_room_id
+
+$: joinedSpace = authenticated && 
+    $store.rooms?.find(x => x === space_room_id) != null 
+
+$: joinedRoom = authenticated && 
+    $store?.rooms.find(x => x === roomID) != null 
 
 const dispatch = createEventDispatcher()
 
@@ -244,6 +253,51 @@ function trackScroll(e) {
     atBottom = zone.scrollTop + zone.clientHeight >= zone.scrollHeight - 100;
 }
 
+let busy = false;
+
+async function join() {
+    if(!authenticated) {
+        store.startAuthenticating("login")
+        return
+    }
+    busy = true
+    if(!joinedSpace) {
+        const resp = await joinSpace($page.params.space);
+        if(resp && resp.space) {
+            console.log(resp)
+            store.addSpace(resp.space)
+            store.addRoom(resp.space.room_id)
+            store.updateRoomJoinStatus($page.params.space, roomID)
+        }
+        if(resp && resp?.error) {
+            console.log(resp)
+            $store.alert = {
+                active: true,
+                message: resp.error
+            }
+        }
+    } 
+
+    if(!isSpaceRoom) {
+        const resp = await joinRoom(roomID);
+        if(resp && resp?.joined && resp.room_id) {
+            console.log(resp)
+            store.addRoom(resp.room_id)
+            store.updateRoomJoinStatus($page.params.space, roomID)
+        }
+        if(resp && resp?.error) {
+            console.log(resp)
+            $store.alert = {
+                active: true,
+                message: resp.error
+            }
+        }
+    }
+    busy = false
+}
+
+$: buttonText = busy ? "Joining..." : "Join to start chatting"
+
 async function newMessage(e) {
     let message = e.detail
     console.log("building new message evet", message)
@@ -310,14 +364,39 @@ async function newMessage(e) {
 
         </div>
 
-        {#if Composer && ready}
-        <div class="chat-composer">
-                <Composer 
-                    on:new-message={newMessage}
-                    roomID={roomID} 
-                    isChat={true} />
-        </div>
+        <div class="com grd">
+        {#if ready}
+            {#if Composer && joinedRoom}
+                <div class="chat-composer">
+                    <Composer 
+                        on:new-message={newMessage}
+                        roomID={roomID} 
+                        isChat={true} />
+                </div>
+            {:else if authenticated && !joinedRoom}
+                    <div class="grd">
+                        <div class="grd-c rel">
+                            <button class="but ph4" 
+                                disabled={busy}
+                                on:click={join}>
+                                {buttonText}
+                            </button>
+                            {#if busy}
+                                <div class="spinner">
+                                    <div class="sloader"></div>
+                                </div>
+                            {/if}
+                        </div>
+                    </div>
+            {:else if !authenticated}
+                <div class="grd">
+                    <div class="comm">
+                        Login or Sign up to chat
+                    </div>
+                </div>
+            {/if}
         {/if}
+        </div>
 
 
     </div>
@@ -350,10 +429,17 @@ async function newMessage(e) {
 }
 
 .chat-composer {
-    border-top: 1px solid var(--border-1);
 }
 
-.emp {
+.com {
+    border-top: 1px solid var(--border-1);
+    height: 55px;
+}
+.comm {
+    align-self: center;
+    justify-self: center;
+    color: var(--text-light);
+    margin-left: 1rem;
 }
 
 @media screen and (max-width: 1280px) {
@@ -375,6 +461,15 @@ async function newMessage(e) {
     }
 }
 
+.spinner {
+    position: absolute;
+    top: 3px;
+    right: 5px;
+}
+.but {
+    width: 100%;
+    height: 30px;
+}
 </style>
 
 

@@ -581,7 +581,7 @@ $: showSender = isChat && messages && messages[index-1]?.type == 'm.room.message
 
 
 
-            <div class="rec-a fl ph3">
+            <div class="rec-a fl ph3" class:rch={isChat}>
 
                 {#if !isReply && interactive && !isChat}
                         <Replies count={event?.reply_count} />
@@ -962,5 +962,8 @@ $: showSender = isChat && messages && messages[index-1]?.type == 'm.room.message
 
 .unsent {
     opacity: 0.2;
+}
+.rch {
+    margin-left: 3rem;
 }
 </style>
