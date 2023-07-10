@@ -64,6 +64,7 @@ $: if(reloadTrigger && ($page.params?.room != _page?.params?.room)) {
 }
 
 async function loadMessages() {
+    ready = false;
     messages = null
     if(socket) {
         socket.close()
@@ -81,13 +82,14 @@ async function loadMessages() {
     if(resp?.events) {
         messages = resp?.events.reverse()
         updateScroll()
-        ready = true;
-        _page = $page
-        syncMessages()
-        setTimeout(() => {
-            reloadTrigger = true
-        }, 1000)
     }
+
+    ready = true;
+    _page = $page
+    syncMessages()
+    setTimeout(() => {
+        reloadTrigger = true
+    }, 1000)
 }
 
 let sp;
@@ -260,6 +262,8 @@ function trackScroll(e) {
                 <SkeletonBoardEvents />
             {:else}
 
+                <div class="messages">
+
                 {#if messages}
                     {#each messages as message, i}
                         {#if message?.type === 'm.room.message'}
@@ -269,19 +273,21 @@ function trackScroll(e) {
                                 messages={messages}
                                 event={message} 
                                 sender={null} />
-                        {:else}
-                            <div class="pa3">
-                                {JSON.stringify(message.type)}
-                            </div>
                         {/if}
                     {/each}
                 {/if}
+
+
+                </div>
             {/if}
 
         </div>
 
+        {#if Composer && ready}
         <div class="chat-composer">
+                <Composer roomID={roomID} isChat={true} />
         </div>
+        {/if}
 
 
     </div>
@@ -303,7 +309,7 @@ function trackScroll(e) {
 .inner-area {
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: 48px auto 68px;
+    grid-template-rows: 48px 1fr auto;
     overflow: hidden;
 }
 
@@ -312,6 +318,7 @@ function trackScroll(e) {
     overflow-x: hidden;
     display: grid;
     grid-template-rows: repeat(auto-fill, auto);
+    padding-bottom: 1rem;
 }
 
 .chat-composer {

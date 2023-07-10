@@ -1,6 +1,6 @@
 <script>
 import { tick, onMount, onDestroy, createEventDispatcher } from 'svelte'
-import { eye, fullscreen, fullscreenOff, close } from '$lib/assets/icons.js'
+import { eye, send, close } from '$lib/assets/icons.js'
 import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { APIRequest, getPresignedURL, uploadAttachment, savePost,
     getLinkMetadata } from '$lib/utils/request.js'
@@ -31,6 +31,8 @@ export let topic;
 export let editing;
 export let editingEvent;
 export let editingReply;
+
+export let isChat;
 
 $: stateKey = !reply ? roomID : roomID + threadEvent
 
@@ -311,7 +313,7 @@ async function createPost() {
     let title = titleInput.value
     let body = bodyInput.value
 
-    if(title.length == 0 && body.length == 0) {
+    if(title.length == 0 && body.length == 0 && !isChat) {
         if(links && links[0]?.title?.length > 0 && 
             links[0]?.description?.length > 0) {
             title = links[0].title
@@ -319,7 +321,7 @@ async function createPost() {
         }
     }
 
-    if(title.length === 0 && !reply && !editingReply) {
+    if(title.length === 0 && !reply && !editingReply && !isChat) {
         focusTitleInput()
         return
     }
@@ -388,6 +390,14 @@ async function createPost() {
                 body: body,
                 //formatted_body: md.render(bodyInput.value),
             },
+        }
+
+        if(isChat) {
+            post.type = 'm.room.message'
+            post.content['msgtype'] = 'm.text'
+            post.content['body'] = body
+            post.content['format'] = 'org.matrix.custom.html'
+            post.content['formatted_body'] = md.render(bodyInput.value)
         }
 
         /*
@@ -655,7 +665,9 @@ function toggleFullscreen() {
 
 </script>
 
-<section class="composer"  class:fs={isFullscreen}
+<section class="composer"
+    class:cnbb={isChat}
+    class:fs={isFullscreen}
     class:sf={showAttachments}
     class:rep={reply}>
 
@@ -671,8 +683,8 @@ function toggleFullscreen() {
         <Event event={replyTo} isReply={reply} interactive={false} />
     {/if}
 
-    <div class="editor-area">
-        <div class="title-container" class:hide={reply || editingReply}>
+    <div class="editor-area" class:each={isChat}>
+        <div class="title-container" class:hide={reply || editingReply || isChat}>
             <div class="">
                 <textarea 
                     class="post-title"
@@ -693,12 +705,21 @@ function toggleFullscreen() {
                 {@html close}
             </div>
         </div>
+
+        {#if isChat}
+            <div class="pl3 pt3">
+                <Attach busy={busy} on:attached={attachFiles}/>
+            </div>
+        {/if}
+
         <div class="body-container" 
+            class:bcnh={isChat}
             class:rp={reply}
             class:bs={busy} 
             on:click={focusBodyInput}>
                 <textarea 
                     class="post-body"
+                    class:pbc={isChat}
                     class:vis={previewing}
                     class:sh={reply}
                     bind:this={bodyInput}
@@ -723,6 +744,16 @@ function toggleFullscreen() {
                 </div>
             {/if}
         </div>
+
+        {#if isChat}
+            <div class="ph3 pt3">
+                <div 
+                    on:click={createPost} 
+                    class="prev c-ico grd-c ph2">
+                    {@html send}
+                </div>
+            </div>
+        {/if}
     </div>
 
     {#if showAttachments}
@@ -734,7 +765,7 @@ function toggleFullscreen() {
     {/if}
 
 
-    <div class="tools fl">
+    <div class="tools fl" class:hide={isChat}>
         <Attach busy={busy} on:attached={attachFiles}/>
         <InsertEmoji reply={reply} busy={busy} on:selected={insertEmoji}/>
         <div class="fl-o">
@@ -777,6 +808,10 @@ function toggleFullscreen() {
     max-height: 514px;
 }
 
+.cnbb {
+    border-bottom: none;
+}
+
 .fs {
     position: fixed;
     top: 0;
@@ -814,6 +849,10 @@ function toggleFullscreen() {
     grid-template-rows: auto 1fr;
     overflow-y: hidden;
 }
+.each {
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: 1fr;
+}
 
 .composer {
 }
@@ -850,6 +889,11 @@ function toggleFullscreen() {
     cursor: text;
     min-height: 140px;
     position: relative;
+}
+
+.bcnh {
+    padding-right: 0;
+    min-height: 0px;
 }
 
 .preview {
@@ -891,6 +935,10 @@ function toggleFullscreen() {
     padding-left: 1rem;
     max-height: 400px;
     overflow-x: hidden;
+}
+.pbc {
+    padding-top: 1rem;
+    height: 53px;
 }
 
 .pbfs {

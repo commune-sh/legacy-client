@@ -8,6 +8,7 @@ import { store } from '$lib/store/store.js'
 export let user;
 export let op;
 export let hideAvatar = false;
+export let isChat;
 
 $: avatarExists = user?.avatar_url !== undefined && 
     user?.avatar_url !== null && 
@@ -38,12 +39,15 @@ let el;
 
 <a class="user grd-c" data-user={`@${user?.username}`} href={`/@${user?.username}`}>
     <div class="flc" bind:this={el}>
-    {#if !hideAvatar && avatarExists}
-        <div class="grd grd-c mr1">
-                <div class="grd-c avatar-base grd"
-                style="background-image: url({avatar})">
-                </div>
-        </div>
+    {#if !hideAvatar}
+            <div class="grd-c avatar-base grd" class:ch={isChat}
+            style="background-image: url({avatar})">
+                {#if !avatarExists}
+                    <div class="initials grd-c">
+                    {initial}
+                    </div>
+                {/if}
+            </div>
     {/if}
     <div class="name grd-c" class:op={op}>
         {#if nameExists}
@@ -104,6 +108,12 @@ a:hover {
     background-position: center;
 }
 
+.ch {
+    width: 30px;
+    height: 30px;
+    margin-right: 1rem;
+}
+
 @media screen and (max-width: 768px) {
     .avatar-base {
         width: 12px;
@@ -116,7 +126,7 @@ a:hover {
     line-height: 1;
 }
 
-a {
+a:link, a:visited {
     text-decoration: none;
     color: var(--fg);
 }
@@ -130,5 +140,9 @@ a {
 }
 .crown {
     opacity: 0.7;
+}
+.initials {
+    font-size: 10px;
+    font-weight: 500;
 }
 </style>

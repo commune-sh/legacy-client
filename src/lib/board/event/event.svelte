@@ -11,6 +11,7 @@ import Reactions from '$lib/board/event/reactions/reactions.svelte'
 import Replies from '$lib/board/event/replies/replies.svelte'
 import User from './user/user.svelte'
 import Date from './date/date.svelte'
+import Time from './date/time.svelte'
 import Edited from './edited/edited.svelte'
 import Tools from './tools/tools.svelte'
 import Vote from '$lib/vote/vote.svelte'
@@ -428,10 +429,15 @@ function togglePin() {
 }
 
 
-$: diff = (isChat && messages && messages[index-1]?.type == 'm.room.message') ?
+$: diff = (isChat && messages) ?
     (event.origin_server_ts - messages[index -1]?.origin_server_ts) / 1000: 0
 
-$: showSender = diff > 400
+//$: showSender = diff > 400
+
+$: showSender = isChat && messages && messages[index-1]?.type == 'm.room.message' ?
+    diff > 400 : true
+
+
 </script>
 
 <div class="event" 
@@ -471,8 +477,10 @@ $: showSender = diff > 400
 
     <div class="ev-c fl-co"
     class:ovy={!interactive}>
-        <div class="sender ph3 fl" class:hide={isChat && !showSender}>
-            <User hideAvatar={false} user={user} op={op}/>
+        <div class="sender ph3 fl" 
+            class:snm={isChat && showSender}
+            class:hide={isChat && !showSender}>
+            <User isChat={isChat} hideAvatar={false} user={user} op={op}/>
             <div class="grd-c ph1"></div>
             <Date date={event?.origin_server_ts} />
             {#if wasEdited}
@@ -512,8 +520,13 @@ $: showSender = diff > 400
             {:else}
 
                 {#if isChat}
-                    <div class="post-body ph3 ml4 pci">
-                        {@html content}
+                    <div class="chat-message">
+                        <div class="chti">
+                            <Time date={event?.origin_server_ts} />
+                        </div>
+                        <div class="chp post-body pr3 pci">
+                            {@html content}
+                        </div>
                     </div>
                 {:else if isPost}
                     {#if !isSingleReply}
@@ -607,7 +620,9 @@ $: showSender = diff > 400
 
 
         {#if !safari && displayTools && !editing && interactive && !bannedFromSpace && !dragging}
-        <div class="tools" class:asi={event?.pinned || replyPinned}>
+        <div class="tools" 
+            class:chto={isChat && !showSender}
+            class:asi={event?.pinned || replyPinned}>
                 <Tools 
                     isReply={isReply} 
                     isPost={isPost}
@@ -742,6 +757,11 @@ $: showSender = diff > 400
     top: 0.75rem;
     right: 0.75rem;
 }
+
+.chto {
+    top: -1.75rem;
+}
+
 .asi {
     right: 2.75rem;
 }
@@ -829,6 +849,10 @@ $: showSender = diff > 400
     font-size: small;
 }
 
+.snm {
+    margin-bottom: 0;
+}
+
 .sn {
     height: 12px;
     width: 12px;
@@ -900,4 +924,24 @@ $: showSender = diff > 400
 .hide {
      display: none;
 }
+
+.chat-message {
+    position: relative;
+    display: grid;
+    grid-template-columns: calc(30px + 2rem) 1fr;
+}
+
+.event:hover .chat-message {
+    background-color: var(--event-bg-hover);
+}
+
+.chti {
+    display: grid;
+    opacity: 0;
+}
+
+.chat-message:hover .chti {
+    opacity: 1;
+}
+
 </style>
