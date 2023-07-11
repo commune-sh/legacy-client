@@ -9,7 +9,7 @@ import { store } from '$lib/store/store.js'
 import Event from '$lib/board/event/event.svelte'
 import Header from '$lib/header/header.svelte'
 import Post from '$lib/post/post.svelte'
-import SkeletonBoardEvents from '$lib/skeleton/skeleton-board-events.svelte'
+import SkeletonChatEvents from '$lib/skeleton/skeleton-chat-events.svelte'
 import { v4 as uuidv4 } from 'uuid';
 
 $: authenticated = $store?.authenticated && 
@@ -174,7 +174,10 @@ function syncMessages() {
 
     socket.onopen = function () {
         console.log("Connected to sync messages server");
-        socket.send(last);
+        socket.send(JSON.stringify({
+            type: 'sync',
+            last: last,
+        }))
         reconnectDelay = 1000; 
     };
 
@@ -217,10 +220,21 @@ function syncMessages() {
 
     setInterval(() => {
         if (socket.readyState === WebSocket.OPEN) {
-
-            socket.send(last);
+            socket.send(JSON.stringify({
+                type: 'sync',
+                last: last,
+            }))
         }
     }, 30000);
+}
+
+async function isTyping() {
+    if (socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({
+            type: 'typing',
+            value: $store?.credentials?.matrix_user_id
+        }));
+    }
 }
 
 let zone;
@@ -333,7 +347,13 @@ async function newMessage(e) {
 
 async function saved(e) {
     let event = e.detail.event
-    console.log("event saved", event)
+    let session = e.detail.session
+    const index = messages.findIndex(i => i.session === session);
+    if(index !== -1) {
+        messages[index] = event
+        messages = messages
+        console.log("event saved", event)
+    }
     last =  event.origin_server_ts
     console.log("last is", last)
 }
@@ -367,13 +387,14 @@ async function redactPost(e) {
         <Header />
 
         <div class="inner-content fl-co" 
+            class:pbr={ready}
             on:scroll={trackScroll}
             bind:this={zone}>
 
             <div class="ob" bind:this={ob}></div>
 
             {#if !ready}
-                <SkeletonBoardEvents />
+                <SkeletonChatEvents />
             {:else}
 
                 <div class="messages fl-co fl-o">
@@ -405,6 +426,7 @@ async function redactPost(e) {
             {#if Composer && joinedRoom}
                 <div class="chat-composer">
                     <Composer 
+                        on:typing={isTyping}
                         on:new-message={newMessage}
                         roomID={roomID} 
                         isChat={true} />
@@ -462,6 +484,9 @@ async function redactPost(e) {
 .inner-content {
     overflow-y: auto;
     overflow-x: hidden;
+}
+
+.pbr {
     padding-bottom: 1rem;
 }
 

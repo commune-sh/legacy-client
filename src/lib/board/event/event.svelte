@@ -69,9 +69,11 @@ async function save() {
     console.log("event was saved ",res)
     if(res?.success) {
         dispatch('saved', { event: res?.event, session: res?.session })
+        /*
         event.unsent = false
         event = res?.event
         event = event
+        */
     }
 }
 
@@ -528,7 +530,8 @@ $: showSender = isChat && messages && messages[index-1]?.type == 'm.room.message
             {#if editing && interactive}
 
                 <Composer 
-                editing={true}
+                    editing={true}
+                    isChat={isChat}
                     roomID={event.room_id}
                     editingEvent={event} 
                     editingReply={isReply}

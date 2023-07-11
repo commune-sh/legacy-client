@@ -591,11 +591,7 @@ let emojiListActive = false;
 let shortcode = '';
 
 function bodyKeyDown(e) {
-    if(e.key === 'Enter' && emojiListActive) {
-        //e.preventDefault()
-    }
-     if (event.key === 'Escape' || event.key === 'Esc') {
-    }
+    dispatch('typing', true)
 }
 
 function addEmoji(e) {
