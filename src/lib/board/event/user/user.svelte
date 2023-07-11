@@ -101,7 +101,7 @@ a:hover {
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    margin-right: 2px;
+    margin-right: 0.5rem;
     background-color: var(--avatar-bg);
     background-repeat: no-repeat;
     background-size: cover;

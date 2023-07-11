@@ -1,6 +1,7 @@
 <script>
 import { tick, onMount, onDestroy, createEventDispatcher } from 'svelte'
 import { eye, send, close } from '$lib/assets/icons.js'
+import { page } from '$app/stores';
 import { PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { APIRequest, getPresignedURL, uploadAttachment, savePost,
     getLinkMetadata } from '$lib/utils/request.js'
@@ -48,6 +49,8 @@ function kill() {
     reset()
 }
 
+
+$: isSocial = $page?.params?.space?.startsWith('@')
 
 let editor;
 let ready = false;
@@ -317,7 +320,7 @@ async function createPost() {
     let title = titleInput.value
     let body = bodyInput.value
 
-    if(title.length == 0 && body.length == 0 && !isChat) {
+    if(title.length == 0 && body.length == 0 && !isChat && !isSocial) {
         if(links && links[0]?.title?.length > 0 && 
             links[0]?.description?.length > 0) {
             title = links[0].title
@@ -325,7 +328,7 @@ async function createPost() {
         }
     }
 
-    if(title.length === 0 && !reply && !editingReply && !isChat) {
+    if(title.length === 0 && !reply && !editingReply && !isChat && !isSocial) {
         focusTitleInput()
         return
     }
@@ -390,10 +393,12 @@ async function createPost() {
             type: 'space.board.post',
             content: {
                 msgtype: 'post',
-                title: title,
                 body: body,
                 //formatted_body: md.render(bodyInput.value),
             },
+        }
+        if(title) {
+            post.content['title'] = title
         }
 
         if(isChat) {
@@ -718,7 +723,8 @@ function toggleFullscreen() {
     <div class="editor-area" 
         class:each={isChat}
         class:eached={isChat && editing}>
-        <div class="title-container" class:hide={reply || editingReply || isChat}>
+        <div class="title-container" 
+            class:hide={reply || editingReply || isChat || isSocial}>
             <div class="">
                 <textarea 
                     class="post-title"

@@ -459,6 +459,8 @@ $: showSender = isChat && messages && messages[index-1]?.type == 'm.room.message
     (diff > 400 || differentSender): true
 
 
+$: isSocial = event?.room_alias?.startsWith('@')
+
 </script>
 
 <div class="event" 
@@ -550,6 +552,10 @@ $: showSender = isChat && messages && messages[index-1]?.type == 'm.room.message
                         class:unsent={event?.unsent}>
                             {@html content}
                         </div>
+                    </div>
+                {:else if isSocial}
+                    <div class="post-body ph3 mb2 pci">
+                        {@html content}
                     </div>
                 {:else if isPost}
                     {#if !isSingleReply}
