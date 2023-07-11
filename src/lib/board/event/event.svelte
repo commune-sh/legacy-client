@@ -974,4 +974,13 @@ $: showSender = isChat && messages && messages[index-1]?.type == 'm.room.message
 .rch {
     margin-left: 3rem;
 }
+
+:global(.chp pre) {
+    margin-top: 0.5rem;
+    padding-left: 1rem;
+    max-width: 700px;
+    max-height: 500px;
+    overflow-x: auto;
+    overflow-y: auto;
+}
 </style>

@@ -197,9 +197,10 @@ function drag(e) {
     height: 30px;
     border-radius: 4px;
     font-size: 14px;
-    margin-bottom: 0.15rem;
     display: grid;
     grid-template-columns: 1fr auto;
+    margin-top: 0.1rem;
+    margin-bottom: 0.1rem;
 }
 
 .item {

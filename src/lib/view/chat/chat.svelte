@@ -80,6 +80,10 @@ $: if(reloadTrigger && ($page.params?.room != _page?.params?.room)) {
     loadMessages()
 }
 
+$: if(reloadTrigger && ($page.params?.topic != _page?.params?.topic)) {
+    loadMessages()
+}
+
 async function loadMessages() {
     ready = false;
     messages = null
@@ -89,6 +93,10 @@ async function loadMessages() {
     let endpoint = PUBLIC_API_URL
 
     let url = `${endpoint}/room/${roomID}/messages`
+
+    if($page.params.topic) {
+        url = url + `?topic=${$page.params.topic}`
+    }
 
     let opt = {
       url: url,
@@ -113,6 +121,10 @@ let sp;
 
 let fetching = false;
 async function fetchMore() {
+    if(messages?.length < 50) {
+        return
+    }
+
     let endpoint = PUBLIC_API_URL
 
     let url = `${endpoint}/room/${roomID}/messages?last=${first}`
@@ -229,12 +241,14 @@ function syncMessages() {
 }
 
 async function isTyping() {
+    /*
     if (socket.readyState === WebSocket.OPEN) {
         socket.send(JSON.stringify({
             type: 'typing',
             value: $store?.credentials?.matrix_user_id
         }));
     }
+    */
 }
 
 let zone;
@@ -433,6 +447,7 @@ async function reacted(e) {
             {#if Composer && joinedRoom}
                 <div class="chat-composer">
                     <Composer 
+                        topic={$page.params.topic}
                         on:typing={isTyping}
                         on:new-message={newMessage}
                         roomID={roomID} 
