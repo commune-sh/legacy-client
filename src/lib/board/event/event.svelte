@@ -264,6 +264,7 @@ let reactions;
 
 function reactToKey(e) {
     reactions.process(e.detail)
+    dispatch('reacted', e.detail)
 }
 
 function addTag(e) {
@@ -577,12 +578,12 @@ $: showSender = isChat && messages && messages[index-1]?.type == 'm.room.message
 
             {/if}
 
-            {#if (isPost || isReply) && hasAttachments && media}
-                <MediaItems media={media} />
+            {#if (isPost || isReply || isChat) && hasAttachments && media}
+                <MediaItems media={media} isChat={isChat} />
             {/if}
 
-            {#if (isPost || isReply) && hasLinks}
-                <Links event={event} />
+            {#if (isPost || isReply || isChat) && hasLinks}
+                <Links event={event} isChat={isChat} />
             {/if}
 
 

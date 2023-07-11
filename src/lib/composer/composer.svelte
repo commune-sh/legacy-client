@@ -703,6 +703,14 @@ function toggleFullscreen() {
         <Event event={replyTo} isReply={reply} interactive={false} />
     {/if}
 
+    {#if showAttachments && isChat}
+        <Attachments uploading={uploading} roomID={stateKey}/>
+    {/if}
+
+    {#if showLinks && isChat}
+        <Links uploading={uploading} roomID={stateKey}/>
+    {/if}
+
     <div class="editor-area" class:each={isChat}>
         <div class="title-container" class:hide={reply || editingReply || isChat}>
             <div class="">
@@ -777,11 +785,11 @@ function toggleFullscreen() {
         {/if}
     </div>
 
-    {#if showAttachments}
+    {#if showAttachments && !isChat}
         <Attachments uploading={uploading} roomID={stateKey}/>
     {/if}
 
-    {#if showLinks}
+    {#if showLinks && !isChat}
         <Links uploading={uploading} roomID={stateKey}/>
     {/if}
 

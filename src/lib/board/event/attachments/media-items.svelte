@@ -11,6 +11,7 @@ $: isDomain = $page.params.domain !== undefined &&
 $: mediaURL = isDomain ? $store?.federated?.media_url : PUBLIC_MEDIA_URL
 
 export let media;
+export let isChat;
 
 function getURL(item) {
     return `${mediaURL}/${item?.key}` || ``
@@ -68,62 +69,93 @@ function openImage() {
 
 <div class="container">
 
-{#if multiple}
 
 
-<div class="items fl mr2 ml3 mt3">
-    {#each media as item, i}
-        <div class="item mr3"
-        class:selected={selected.key === item.key}
-        on:click={() => selected = item}
-        style="background: url({getThumbnailURL(item)})">
 
-            {#if isItemVideo(item)}
-                <video class="tvi" width="40" height="40">
-                  <source src={getURL(media[0])} autoplay muted>
-                </video>
-                <div class="vid grd">
-                    <div class="ico-s grd-c">
-                        {@html play}
-                    </div>
-                </div>
+{#if isChat}
+
+
+    <div class="items fl-co mr2 ml3 mt1 mds">
+        {#each media as item, i}
+            <div class="media-item mb3">
+            {#if isImage}
+                <img class="image" class:smg={isChat} 
+                on:click={openImage}
+                width="500"
+                src={getURL(item)} 
+                loading="lazy"/>
             {/if}
 
+            {#if isVideo}
+                <div class="video-item grd-c wch">
+                    <video width="500" class="" controls>
+                      <source src={getURL(item)} type={item?.type}>
+                    </video>
+                </div>
+            {/if}
+            </div>
+        {/each}
+    </div>
 
-        </div>
-    {/each}
 
-    <div class="fl-o"></div>
-    <div class="cycle">
-        <div class="c-ico prev grd-c" on:click={goToPrevious}>
-            {@html prev}
-        </div>
-        <div class="c-ico next grd-c" on:click={goToNext}>
-            {@html next}
+{:else}
+
+    {#if multiple}
+
+    <div class="items fl mr2 ml3 mt3">
+        {#each media as item, i}
+            <div class="item mr3"
+            class:selected={selected.key === item.key}
+            on:click={() => selected = item}
+            style="background: url({getThumbnailURL(item)})">
+
+                {#if isItemVideo(item)}
+                    <video class="tvi" width="40" height="40">
+                      <source src={getURL(media[0])} autoplay muted>
+                    </video>
+                    <div class="vid grd">
+                        <div class="ico-s grd-c">
+                            {@html play}
+                        </div>
+                    </div>
+                {/if}
+
+
+            </div>
+        {/each}
+
+        <div class="fl-o"></div>
+        <div class="cycle">
+            <div class="c-ico prev grd-c" on:click={goToPrevious}>
+                {@html prev}
+            </div>
+            <div class="c-ico next grd-c" on:click={goToNext}>
+                {@html next}
+            </div>
         </div>
     </div>
-</div>
+    {/if}
+
+        <div class="pa3 con grd" class:sch={isChat}> 
+        {#if isImage}
+            <img class="image" class:smg={isChat} 
+            on:click={openImage}
+            width={selected?.info?.w}
+            height={selected?.info?.h}
+            src={getURL(selected)} 
+            loading="lazy"/>
+        {/if}
+
+        {#if isVideo}
+            <div class="video-item grd-c">
+                <video height="500" class="" controls>
+                  <source src={getURL(selected)} type={selected?.type}>
+                </video>
+            </div>
+        {/if}
+    </div>
+
 {/if}
-
-<div class="pa3 con grd"> 
-    {#if isImage}
-        <img class="image" 
-        on:click={openImage}
-        width={selected?.info?.w}
-        height={selected?.info?.h}
-        src={getURL(selected)} 
-        loading="lazy"/>
-    {/if}
-
-    {#if isVideo}
-        <div class="video-item grd-c">
-            <video height="500" class="" controls>
-              <source src={getURL(selected)} type={selected?.type}>
-            </video>
-        </div>
-    {/if}
-</div>
-
 
 </div>
 
@@ -167,6 +199,10 @@ video {
     width: 100%;
 }
 
+.wch {
+    width: 500px;
+}
+
 .tvi {
     background-color: var(--shade-2);
 }
@@ -185,5 +221,12 @@ video {
 
 .image{
     cursor: pointer;
+}
+
+.sch {
+    margin-left: calc(30px + 1rem);
+}
+.mds {
+    margin-left: calc(30px + 2rem);
 }
 </style>

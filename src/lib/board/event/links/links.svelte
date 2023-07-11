@@ -1,6 +1,8 @@
 <script>
 import YoutubeItem from './youtube-item.svelte'
 export let event;
+export let isChat;
+
 import { external } from '$lib/assets/icons.js'
 
 $: links = event?.content?.links;
@@ -11,7 +13,7 @@ $: isYoutube = (item) => {
 
 </script>
 
-<div class="links">
+<div class="links" class:mlp={isChat}>
     {#each links as item}
         {#if isYoutube(item)}
             <YoutubeItem link={item} />
@@ -58,6 +60,7 @@ $: isYoutube = (item) => {
     position: relative;
     line-height: 1.5;
 }
+
 .ovh {
     overflow: hidden;
 }
@@ -99,5 +102,8 @@ a, a:link, a:visited, a:active {
 }
 .author {
     color: var(--text-light);
+}
+.mlp {
+    margin-left: calc(30px + 1rem);
 }
 </style>

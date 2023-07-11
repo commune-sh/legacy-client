@@ -375,6 +375,12 @@ async function redactPost(e) {
     console.log(res)
 }
 
+async function reacted(e) {
+    if(atBottom) {
+        updateScroll()
+    }
+}
+
 </script>
 
 
@@ -406,6 +412,7 @@ async function redactPost(e) {
                             <Event 
                                 isChat={true}
                                 index={i}
+                                on:reacted={reacted}
                                 on:redact={redactPost}
                                 messages={messages}
                                 event={message} 
@@ -495,7 +502,7 @@ async function redactPost(e) {
 
 .com {
     border-top: 1px solid var(--border-1);
-    height: 55px;
+    min-height: 55px;
 }
 .comm {
     align-self: center;
