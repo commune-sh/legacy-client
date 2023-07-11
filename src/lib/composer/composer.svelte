@@ -453,7 +453,7 @@ async function createPost() {
 
         console.log("trying to save", post)
 
-        if(isChat) {
+        if(isChat && !editing) {
             dispatch('new-message', post)
             busy = false
             reset()
@@ -591,6 +591,10 @@ let emojiListActive = false;
 let shortcode = '';
 
 function bodyKeyDown(e) {
+    if (isChat && editing && (event.key === 'Escape' || event.key === 'Esc')) {
+        kill()
+        return
+    }
     dispatch('typing', true)
 }
 
@@ -711,7 +715,9 @@ function toggleFullscreen() {
         <Links uploading={uploading} roomID={stateKey}/>
     {/if}
 
-    <div class="editor-area" class:each={isChat}>
+    <div class="editor-area" 
+        class:each={isChat}
+        class:eached={isChat && editing}>
         <div class="title-container" class:hide={reply || editingReply || isChat}>
             <div class="">
                 <textarea 
@@ -734,7 +740,7 @@ function toggleFullscreen() {
             </div>
         </div>
 
-        {#if isChat}
+        {#if isChat && !editing}
             <div class="pl3 pt3">
                 <Attach busy={busy} on:attached={attachFiles}/>
             </div>
@@ -742,12 +748,14 @@ function toggleFullscreen() {
 
         <div class="body-container" 
             class:bcnh={isChat}
+            class:edbc={editing && isChat}
             class:rp={reply}
             class:bs={busy} 
             on:click={focusBodyInput}>
                 <textarea 
                     class="post-body"
                     class:pbc={isChat}
+                    class:pbce={isChat && editing}
                     class:vis={previewing}
                     class:sh={reply}
                     bind:this={bodyInput}
@@ -764,6 +772,11 @@ function toggleFullscreen() {
                     on:blur={handleBodyBlur}
                     disabled={busy}
                 ></textarea>
+            {#if isChat && editing}
+                <div class="esc">
+                    escape to cancel • enter to save
+                </div>
+            {/if}
 
             {#if previewing}
                 <div class="preview">
@@ -774,7 +787,7 @@ function toggleFullscreen() {
             {/if}
         </div>
 
-        {#if isChat}
+        {#if isChat && !editing}
             <div class="ph3 pt3">
                 <div 
                     on:click={createPost} 
@@ -883,6 +896,18 @@ function toggleFullscreen() {
     grid-template-rows: 1fr;
 }
 
+.eached {
+    padding-top: 0.5rem;
+    grid-template-columns: auto;
+    grid-template-rows: auto auto;
+    background-color: var(--event-bg-hover);
+}
+
+.edbc {
+    margin-left: calc(30px + 1rem);
+    margin-right: 1rem;
+}
+
 .composer {
 }
 
@@ -970,6 +995,14 @@ function toggleFullscreen() {
     height: 53px;
 }
 
+.pbce {
+    border: 1px solid var(--primary);
+    font-size: 15px;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    height: 20px;
+}
+
 .pbfs {
     max-height: 100%;
 }
@@ -1019,4 +1052,9 @@ button {
     height: 18px;
 }
 
+.esc {
+    font-size: 10px;
+    margin-left: 1rem;
+    margin-bottom: 0.5rem;
+}
 </style>
