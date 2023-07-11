@@ -75,7 +75,7 @@ function openImage() {
 {#if isChat}
 
 
-    <div class="items fl-co mr2 ml3 mt1 mds">
+    <div class="items fl-co mr3 ml3 mt1 mds">
         {#each media as item, i}
             <div class="media-item mb3">
             {#if isImage}

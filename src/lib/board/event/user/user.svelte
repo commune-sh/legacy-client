@@ -31,7 +31,7 @@ $: isDomain = $page.params.domain !== undefined &&
 
 $: mediaURL = isDomain ? $store?.federated?.media_url : PUBLIC_MEDIA_URL
 
-$: avatar = `${mediaURL}/${user?.avatar_url}`
+$: avatar = user?.avatar_url ? `${mediaURL}/${user?.avatar_url}` : null
 
 let el;
 </script>
