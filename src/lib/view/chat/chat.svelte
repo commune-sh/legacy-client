@@ -387,37 +387,12 @@ async function redactPost(e) {
         <Header />
 
         <div class="inner-content fl-co" 
-            class:pbr={ready}
             on:scroll={trackScroll}
             bind:this={zone}>
 
             <div class="ob" bind:this={ob}></div>
 
-            {#if !ready}
                 <SkeletonChatEvents />
-            {:else}
-
-                <div class="messages fl-co fl-o">
-                    <div class="emp fl-o"></div>
-
-                {#if messages}
-                    {#each messages as message, i}
-                        {#if message?.type === 'm.room.message'}
-                            <Event 
-                                isChat={true}
-                                index={i}
-                                on:redact={redactPost}
-                                messages={messages}
-                                event={message} 
-                                on:saved={saved}
-                                sender={null} />
-                        {/if}
-                    {/each}
-                {/if}
-
-
-                </div>
-            {/if}
 
         </div>
 

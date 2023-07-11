@@ -1,4 +1,5 @@
 <script>
+import { onMount } from 'svelte'
 export let num = 20;
 export let reply;
 
@@ -18,9 +19,14 @@ function tp() {
     const max = 10;
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+let el;
+onMount(() => {
+    el.scrollTop = el.scrollHeight;
+})
 </script>
 
 <section class="events">
+    <div class="co" bind:this={el}>
     {#each Array(num) as _, i}
         <div class="event pa3">
             <div class="img sklt"></div>
@@ -33,6 +39,7 @@ function tp() {
             </div>
         </div>
     {/each}
+    </div>
     <div class="fade"></div>
 </section>
 
@@ -43,6 +50,10 @@ function tp() {
     overflow: hidden;
     pointer-events: none;
     position: relative;
+}
+
+.co {
+    overflow: hidden;
 }
 
 .fade {
