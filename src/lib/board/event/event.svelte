@@ -275,7 +275,7 @@ function addTag(e) {
 $: showRoomAlias = !isSpace && !isRoom && !isReply && !isTopic && !isPost
 
 let md = new MarkdownIt({
-  html: true,
+  html: false,
   linkify: true,
   breaks: true,
   typographer: true
