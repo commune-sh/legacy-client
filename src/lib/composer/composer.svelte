@@ -838,6 +838,7 @@ function toggleFullscreen() {
 
     {#if emojiListActive && shortcode}
         <EmojiList 
+            isChat={isChat}
             target={bodyInput}
             reply={reply || isChat}
             on:selected={addEmoji} 

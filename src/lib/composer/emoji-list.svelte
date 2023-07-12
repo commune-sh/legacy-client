@@ -8,9 +8,14 @@ export let target;
 export let reply;
 export let hide;
 
+export let isChat = false;
+
 $: bounds = target.getBoundingClientRect()
 $: top = bounds.top + bounds.height
-$: bottom = bounds.height + 180
+
+$: offset = isChat ? 60 : 180
+
+$: bottom = bounds.height + offset
 
 $: matchedEmojis = window?.emoji?.filter(x => x.shortcode.includes(shortcode))
 

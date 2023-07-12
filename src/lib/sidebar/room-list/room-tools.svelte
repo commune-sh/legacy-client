@@ -61,7 +61,7 @@ function boardSettings() {
     //goto(`/${$page.params.space}/settings`)
     kill()
 
-    if(room.alias == `general`) {
+    if(room.alias == `general` || room.alias == $page.params.space) {
         $store.spaceSettingsOpen = true
     } else {
         $store.roomSettings = {

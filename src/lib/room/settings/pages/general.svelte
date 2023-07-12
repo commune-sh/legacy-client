@@ -19,6 +19,13 @@ $: state = $store?.states[$page?.params?.space]
 $: room = state?.children?.find(c => c.room_id == room_id)
 $: roomID = room?.room_id
 
+$: if(room) {
+    console.log(room)
+    console.log(room)
+    console.log(room)
+    console.log(room)
+}
+
 let nameInput;
 let name;
 
@@ -292,7 +299,7 @@ async function updateIndex(e) {
             on:input={check}
             on:keydown={validate}
             bind:value={name}
-            type="text" placeholder={room.alias} />
+            type="text" placeholder={room?.alias} />
         </div>
         {#if nameWarning}
             <div class="mt1 pb2 red">
