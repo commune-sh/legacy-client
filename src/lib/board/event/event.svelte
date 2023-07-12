@@ -184,6 +184,9 @@ $: content = formatted_body ? formatted_body :
 
 $: clipped = getFirstParagraphNode(content)
 
+$: shortened = content?.length > 600 ? `${content?.substring(0, 600)}...` :
+    content
+
 $: title = event?.content?.title ? event?.content?.title : `Untitled`
 
 $: attachments = event?.content?.attachments
@@ -553,9 +556,9 @@ $: isSocial = event?.room_alias?.startsWith('@')
                             {@html content}
                         </div>
                     </div>
-                {:else if isSocial}
+                {:else if isSocial && !isPost && !isReply}
                     <div class="post-body ph3 mb2 pci">
-                        {@html content}
+                        {@html shortened}
                     </div>
                 {:else if isPost}
                     {#if !isSingleReply}
