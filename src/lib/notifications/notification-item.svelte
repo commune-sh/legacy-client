@@ -74,6 +74,10 @@ function go() {
         url = `${PUBLIC_BASE_URL}/${item.room_alias}/post/${post_slug}`
     }
 
+    if(item.type == `reply.reaction`) {
+        url = `${PUBLIC_BASE_URL}/${item.room_alias}/post/${thread_slug}?context=${post_slug}`
+    }
+
     if(item.type == `space.follow`) {
         url = sender
     }

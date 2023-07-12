@@ -13,6 +13,8 @@ export let event;
 export let isReply;
 export let hovered;
 
+export let postEventID = null;
+
 $: authenticated = $store?.authenticated && 
     $store?.credentials != null
     $store?.credentials?.access_token?.length > 0
@@ -95,6 +97,8 @@ export function process(key) {
     event.reactions = event.reactions
 }
 
+$: isReply = postEventID != null
+
 async function saveReaction(key) {
     let post = {
         room_id: event.room_id,
@@ -107,6 +111,10 @@ async function saveReaction(key) {
                 "key": key,
             }
         },
+    }
+
+    if(isReply) {
+        post.in_thread = postEventID
     }
 
     const res = await savePost(post);

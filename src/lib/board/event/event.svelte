@@ -31,13 +31,15 @@ import Composer from '$lib/composer/composer.svelte'
 const dispatch = createEventDispatcher()
 
 export let isChat = false;
-export let messages;
-export let index;
+export let messages = null;
+export let index = null;
 export let isPost = false;
 export let isReply = false;
 export let showAlias = true;
 export let interactive = true;
 export let search = false;
+
+export let postEventID = null;
 
 export let isPostAuthor = false;;
 
@@ -556,7 +558,7 @@ $: isSocial = event?.room_alias?.startsWith('@')
                             {@html content}
                         </div>
                     </div>
-                {:else if isSocial && !isPost && !isReply}
+                {:else if isSocial}
                     <div class="post-body ph3 mb2 pci">
                         {@html shortened}
                     </div>
@@ -611,6 +613,7 @@ $: isSocial = event?.room_alias?.startsWith('@')
 
                 {#if interactive}
                     <Reactions 
+                        postEventID={postEventID}
                         on:update-reactions
                         bind:this={reactions}
                         on:react={reactToKey}
@@ -695,6 +698,7 @@ $: isSocial = event?.room_alias?.startsWith('@')
         {#each event.children as reply}
             <svelte:self 
                 isReply={true} 
+                postEventID={postEventID}
                 depth={depth + 1}
                 nested={true}
                 on:redact

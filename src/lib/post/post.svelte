@@ -440,6 +440,7 @@ export function updateReactions(e) {
                 {#each replies as reply}
                     <Event isReply={true} 
                         sender={post?.sender?.id}
+                        postEventID={post?.event_id}
                         on:set-reply-thread={setReplyThread}
                         on:redact={redactReply}
                         on:pin={pinReply}
