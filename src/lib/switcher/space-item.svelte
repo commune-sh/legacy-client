@@ -125,7 +125,7 @@ $: name = space?.name?.length > 0 ? space?.name : space?.alias
             </div>
         {/if}
         {#if isProfile && !avatar}
-            <div class="grd-c ico">
+            <div class="grd-c ico us">
                 {@html user}
             </div>
         {/if}
@@ -165,7 +165,7 @@ $: name = space?.name?.length > 0 ? space?.name : space?.alias
     height: 22px;
     width: 22px;
     fill: var(--text-1);
-    opacity: 0.5;
+    opacity: 1;
 }
 
 .item:hover .ico {
@@ -175,6 +175,7 @@ $: name = space?.name?.length > 0 ? space?.name : space?.alias
 .active {
     background-color: var(--primary);
     color: white;
+    fill: var(--text-1);
 }
 
 
