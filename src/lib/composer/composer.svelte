@@ -317,10 +317,12 @@ $: postText = uploading ? 'Uploading...' : busy ? 'Saving...' : 'Save'
 
 async function createPost() {
 
-    let title = titleInput.value
-    let body = bodyInput.value
+    let title;
+    let body;
 
-    if(title.length == 0 && body.length == 0 && !isChat && !isSocial) {
+    // to start with, if links exist, we'll use the first link item's title and
+    // body
+    if(!isChat && !isSocial) {
         if(links && links[0]?.title?.length > 0 && 
             links[0]?.description?.length > 0) {
             title = links[0].title
@@ -328,7 +330,15 @@ async function createPost() {
         }
     }
 
-    if(title.length === 0 && !reply && !editingReply && !isChat && !isSocial) {
+    // if user inputs title or body, we'll use those instead
+    if(titleInput?.value?.length > 0) {
+        title = titleInput.value
+    }
+    if(bodyInput?.value?.length > 0) {
+        body = bodyInput.value
+    }
+
+    if(title?.length === 0 && !reply && !editingReply && !isChat && !isSocial) {
         focusTitleInput()
         return
     }
