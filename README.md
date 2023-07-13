@@ -1,1 +1,22 @@
-WIP
+#### Commune Client
+This is the frontend to the [Commune server](https://github.com/commune-os/commune-server). 
+
+#### How to run
+This is a standard sveltekit app and runs on Node, Cloudflare etc. Our main instance  [Shpong](https://shpong.com) is deployed to Cloudflare pages, directly from a mirror of this repository.
+
+If you'd like to run it on a node server on a regular vps, you'll need to change the Sveltekit adapter. Follow instructions [here](https://kit.svelte.dev/docs/adapter-node).  
+
+#### Config
+The app requires some environment variables to be set. Add them in an `.env` file at the root if you're running this on Node. On Cloudflare, add the variables from the appropriate settings page.
+
+```
+PUBLIC_APP_NAME=Shpong
+PUBLIC_API_URL=https://api.shpong.com
+PUBLIC_BASE_URL=https://shpong.com
+PUBLIC_MEDIA_URL=https://static.shpong.com
+PUBLIC_API_URL_WS=ws://api.shpong.com
+PUBLIC_INDEX=true
+PUBLIC_META_DESCRIPTION=Build new internet communities with Shpong
+```
+
+The values `PUBLIC_API_URL`, and `PUBLIC_API_URL_WS` should point to wherever you're hosting the Commune server. `PUBLIC_MEDIA_URL` is where your S3-compatible storage is located. (Cloudflare R2 in `shpong.com`'s case)
