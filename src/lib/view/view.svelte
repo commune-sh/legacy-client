@@ -6,6 +6,8 @@ import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
 import Board from './board/board.svelte'
 import Chat from './chat/chat.svelte'
+import SkeletonBoardEvents from '$lib/skeleton/skeleton-board-events.svelte'
+import Header from '$lib/header/header.svelte'
 
 $: isIndex = $page?.url?.pathname === '/'
 $: isSpace = $page?.params?.space !== undefined && $page?.params?.space !== null && $page?.params?.space !== '' 
@@ -45,6 +47,13 @@ $: ready = $store.stateReady
         {:else}
             <Board on:ready />
         {/if}
+    {:else}
+        <div class="space-container">
+            <div class="inner-area">
+                <Header />
+                <SkeletonBoardEvents />
+            </div>
+        </div>
     {/if}
 {:else}
     <Board />
@@ -78,9 +87,8 @@ $: ready = $store.stateReady
     overflow: hidden;
 }
 
-.inner-content {
-    overflow-y: auto;
-    display: grid;
+.header {
+    border-bottom: 1px solid var(--border-1);
 }
 
 .post {
