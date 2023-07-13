@@ -55,7 +55,9 @@ $: from = item?.display_name ? item?.display_name : localpart
 
 $: sender = `${PUBLIC_BASE_URL}/${localpart}`
 
-$: action = (item?.type == `post.reply` || item?.type == `reply.reply`) ? `replied` : item?.type == `reaction` ? `reacted` : ``
+$: action = (item?.type == `post.reply` || item?.type == `reply.reply`) ?
+    `replied` : item?.type == `reaction` ? `reacted` : item?.type ==
+        `reply.reaction` ? `reacted` : ``
 
 $: post_slug = item?.relates_to_event_id?.slice(-11);
 $: reply_slug = item?.event_id?.slice(-11);
@@ -87,6 +89,8 @@ function go() {
 
 $: avatar = item?.avatar_url ?  `${PUBLIC_MEDIA_URL}/${item?.avatar_url}` : null
 
+$: thing = item?.type == `reply.reaction` ? `reply` : `post`
+
 </script>
 
 
@@ -109,7 +113,7 @@ $: avatar = item?.avatar_url ?  `${PUBLIC_MEDIA_URL}/${item?.avatar_url}` : null
                     following you.
                 {:else}
                 <a href={sender}><span class="href">{from}</span></a> {action} to your
-            post "{item?.body?.substring(0, 20)}{item?.body?.length > 20 ? `...` : ``}"
+                    {thing} "{item?.body?.substring(0, 20)}{item?.body?.length > 20 ? `...` : ``}"
                 {/if}
             </div>
 

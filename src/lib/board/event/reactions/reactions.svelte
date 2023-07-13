@@ -115,6 +115,8 @@ async function saveReaction(key) {
 
     if(isReply) {
         post.in_thread = postEventID
+    } else {
+        post.in_thread = event.event_id
     }
 
     const res = await savePost(post);
