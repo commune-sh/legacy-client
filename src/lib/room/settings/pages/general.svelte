@@ -19,13 +19,6 @@ $: state = $store?.states[$page?.params?.space]
 $: room = state?.children?.find(c => c.room_id == room_id)
 $: roomID = room?.room_id
 
-$: if(room) {
-    console.log(room)
-    console.log(room)
-    console.log(room)
-    console.log(room)
-}
-
 let nameInput;
 let name;
 
@@ -97,6 +90,7 @@ async function save() {
         })
         console.log(res)
         current.name = nameInput.value
+        goto(`/${$page.params.space}/${nameInput.value}`)
     }
     if(topic != current.topic) {
         const resp = await createStateEvent({
@@ -234,6 +228,7 @@ function handleInput() {
 }
 
 async function removeBoard() {
+    return
     goto(`/${$page.params.space}`)
     store.removeSpaceRoom($page.params.space, roomID)
     dispatch('kill')
