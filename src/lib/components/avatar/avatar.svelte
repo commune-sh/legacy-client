@@ -21,7 +21,8 @@ let build = async (e) => {
 
         const file = e.target.files[i]
 
-        if (file.size > 8388608) {
+        if (file.size > 3145728) {
+            alert("That's too large. 3MB max.")
             break
         }
 
