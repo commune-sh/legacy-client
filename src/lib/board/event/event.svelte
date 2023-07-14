@@ -17,6 +17,7 @@ import Edited from './edited/edited.svelte'
 import Tools from './tools/tools.svelte'
 import Vote from '$lib/vote/vote.svelte'
 import Links from './links/links.svelte'
+import RoomAlias from '$lib/board/event/room-alias/room-alias.svelte'
 import { pin, hash } from '$lib/assets/icons.js'
 import { isSafari } from '$lib/utils/utils.js'
 
@@ -423,8 +424,6 @@ $: replyPinned = isReply && event?.reactions?.filter(r => r.key === 'pinned').le
 $: state = $store?.states[$page?.params?.space]
 $: bannedFromSpace = state?.banned === true
 
-$: roomAlias = isDomain ? `${$page.params.domain}/${event.room_alias}` :
-    event.room_alias
 
 $: showMediaThumbnail = !isPost && !isReply && hasAttachments && firstIsMedia && !editing && !search
 
@@ -515,9 +514,7 @@ $: isSocial = event?.room_alias?.startsWith('@')
                 <Edited date={event?.edited_on} />
             {/if}
             {#if showRoomAlias}
-                <div class="grd-c ml2">
-                    <a href={`/${roomAlias}`}>{event.room_alias}</a>
-                </div>
+                <RoomAlias {event}/>
             {/if}
             {#if showTopic}
                 <div class="ico-s sn grd-c ml2">

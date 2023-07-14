@@ -204,4 +204,7 @@ $: name = space?.name?.length > 0 ? space?.name : space?.alias
 .name {
     font-weight: 500;
 }
+.sm {
+    line-height: 1.5rem;
+}
 </style>
