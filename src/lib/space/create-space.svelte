@@ -2,7 +2,7 @@
 import { onMount, onDestroy } from 'svelte'
 import { close } from '$lib/assets/icons.js'
 import { createSpace } from '$lib/utils/request.js'
-import { PUBLIC_API_URL } from '$env/static/public';
+import { PUBLIC_API_URL, PUBLIC_BASE_URL } from '$env/static/public';
 import { goto } from '$app/navigation';
 import { page } from '$app/stores';
 import { tick } from 'svelte'
@@ -136,6 +136,9 @@ let error;
                     disabled={busy}
                     type="text" placeholder="mycommunity" />
                 </div>
+                <div class="mt1 preview pb1">
+                        {PUBLIC_BASE_URL}/{username ? username : 'mycommunity'}
+                </div>
                 <div class="mt3 pb2">
                     <span class="label">topic</span>
                 </div>
@@ -251,5 +254,9 @@ button {
 
 .ln {
     line-height: 1.5;
+}
+.preview {
+    font-size: small;
+    color: var(--text-light);
 }
 </style>
