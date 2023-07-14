@@ -110,6 +110,7 @@ $: name = space?.name?.length > 0 ? space?.name : space?.alias
     <div class="item grd-c"
     draggable="true"
     class:active={active}
+    class:acf={active && !avatar}
     class:profile={isProfile}
     bind:this={el}
     on:contextmenu={log}
@@ -173,9 +174,12 @@ $: name = space?.name?.length > 0 ? space?.name : space?.alias
 }
 
 .active {
-    background-color: var(--primary);
     color: white;
     fill: var(--text-1);
+}
+
+.acf {
+    background-color: var(--primary);
 }
 
 

@@ -25,7 +25,26 @@ let build = async (e) => {
             break
         }
 
-        if(file.type.includes('image')) {
+        if(file.type.includes('image/gif')) {
+            let image = new Image();
+            image.src = URL.createObjectURL(file)
+            image.onload = async () => {
+                file.info = {}
+                file.info.h = image.height
+                file.info.w = image.width
+                image.remove()
+                URL.revokeObjectURL(image.src);
+                file.thumbnail = file
+            } 
+            avatar = URL.createObjectURL(file);
+
+            const extension = file.name.split('.').pop();
+            const presignedURL = await getPresignedURL(extension);
+            await uploadAttachment(file, presignedURL.url);
+
+            dispatch('uploaded', presignedURL.key )
+            uploading = false
+        } else if(file.type.includes('image')) {
             var image = new Image();
             image.src = URL.createObjectURL(file)
             image.onload = () => {

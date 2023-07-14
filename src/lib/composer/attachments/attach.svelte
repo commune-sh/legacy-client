@@ -31,7 +31,18 @@ let build = async (e) => {
             break
         }
 
-        if(file.type.includes('image')) {
+        if(file.type.includes('image/gif')) {
+            let image = new Image();
+            image.src = URL.createObjectURL(file)
+            image.onload = async () => {
+                file.info = {}
+                file.info.h = image.height
+                file.info.w = image.width
+                image.remove()
+                URL.revokeObjectURL(image.src);
+                file.thumbnail = file
+            } 
+        } else if(file.type.includes('image')) {
             let image = new Image();
             image.src = URL.createObjectURL(file)
             image.onload = async () => {
