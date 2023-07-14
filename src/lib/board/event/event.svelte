@@ -432,6 +432,10 @@ $: showLinkThumbnail = !isPost && !isReply && hasLinks && !editing && !search
 let dragging = false;
 
 function dragStart(e) {
+    if(!isSpace) {
+        e.preventDefault()
+        return
+    }
     $store.draggable = 'post'
     dragging = true;
     e.dataTransfer.setData('text/plain', JSON.stringify(event));
