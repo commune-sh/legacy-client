@@ -569,7 +569,7 @@ $: isMatrixMedia = event?.content?.msgtype == 'm.image' ||
                             {@html content}
                         </div>
                     </div>
-                {:else if isSocial}
+                {:else if isSocial && !isPost && !isReply}
                     <div class="post-body ph3 mb2 pci">
                         {@html shortened}
                     </div>
