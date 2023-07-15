@@ -41,7 +41,7 @@ export let count;
     height: 14px;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1020px) {
     .rep {
         height: 18px;
     }

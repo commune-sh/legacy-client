@@ -14,7 +14,7 @@ $: spaces = $store.spaces
 onMount(() => {
 })
 
-$: if(spaces?.length > 1) {
+$: if(spaces?.length > 0) {
     ready = true;
 }
 $: if(authenticated && spaces?.length == 1) {
