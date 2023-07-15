@@ -10,13 +10,15 @@ If you'd like to run it on a node server on a regular vps, you'll need to change
 The app requires some environment variables to be set. Add them in an `.env` file at the root if you're running this on Node. On Cloudflare, add the variables from the appropriate settings page.
 
 ```
-PUBLIC_APP_NAME=Shpong
-PUBLIC_API_URL=https://api.shpong.com
-PUBLIC_BASE_URL=https://shpong.com
-PUBLIC_MEDIA_URL=https://static.shpong.com
-PUBLIC_API_URL_WS=ws://api.shpong.com
+PUBLIC_APP_NAME=Commune
+PUBLIC_API_URL=https://api.commune.sh
+PUBLIC_BASE_URL=https://commune.sh
+PUBLIC_MEDIA_URL=https://static.commune.sh
+PUBLIC_API_URL_WS=ws://api.commune.sh
+PUBLIC_MATRIX_URL=https://matrix.commune.sh
 PUBLIC_INDEX=true
-PUBLIC_META_DESCRIPTION=Build new internet communities with Shpong
+PUBLIC_META_DESCRIPTION=Build new internet communities with Commune
+PUBLIC_FAVICON=https://commune.sh/favicon.png #Optional custom location
 ```
 
-The values `PUBLIC_API_URL`, and `PUBLIC_API_URL_WS` should point to wherever you're hosting the Commune server. `PUBLIC_MEDIA_URL` is where your S3-compatible storage is located. (Cloudflare R2 in `shpong.com`'s case)
+The values `PUBLIC_API_URL`, and `PUBLIC_API_URL_WS` should point to wherever you're hosting the Commune server. `PUBLIC_MEDIA_URL` is where your S3-compatible storage is located. (Cloudflare R2 in `shpong.com`'s case). `PUBLIC_MATRIX_URL` points to your Matrix homeserver or a proxy to it.

@@ -683,6 +683,10 @@ let preview;
 let previewing = false;
 
 function togglePreview() {
+    if(bodyInput.value.length === 0) {
+        focusBodyInput()
+        return
+    }
     previewing = !previewing
     if(!previewing) {
         focusBodyInput()
@@ -763,6 +767,7 @@ function toggleFullscreen() {
         {/if}
 
         <div class="body-container" 
+            class:pa1={isSocial}
             class:bcnh={isChat}
             class:edbc={editing && isChat}
             class:rp={reply}
@@ -836,7 +841,7 @@ function toggleFullscreen() {
                 {@html eye}
             </div>
         </div>
-        {#if editing}
+        {#if editing || isSocial}
             <div class="grd-c mr3 href" on:click={kill}>cancel</div>
         {/if}
 
@@ -983,6 +988,7 @@ function toggleFullscreen() {
 }
 
 .markdown-c {
+    padding-top: 0.5rem;
     padding-right: 1rem;
     overflow-y: auto;
     height: 100%;
@@ -1043,7 +1049,10 @@ button {
 .prev {
     opacity: 0.4;
     transition: 0.1s;
+    height: 18px;
+    width: 18px;
 }
+
 .prev:hover {
     opacity: 0.8;
 }

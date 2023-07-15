@@ -18,6 +18,8 @@ import Tools from './tools/tools.svelte'
 import Vote from '$lib/vote/vote.svelte'
 import Links from './links/links.svelte'
 import RoomAlias from '$lib/board/event/room-alias/room-alias.svelte'
+import MatrixMedia from '$lib/chat/event/media/media.svelte'
+
 import { pin, hash } from '$lib/assets/icons.js'
 import { isSafari } from '$lib/utils/utils.js'
 
@@ -469,6 +471,12 @@ $: showSender = isChat && messages && messages[index-1]?.type == 'm.room.message
 
 $: isSocial = event?.room_alias?.startsWith('@')
 
+
+$: isMatrixMedia = event?.content?.msgtype == 'm.image' ||
+    event?.content?.msgtype == 'm.video' ||
+    event?.content?.msgtype == 'm.audio' ||
+    event?.content?.msgtype == 'm.file'
+
 </script>
 
 <div class="event" 
@@ -549,7 +557,9 @@ $: isSocial = event?.room_alias?.startsWith('@')
 
             {:else}
 
-                {#if isChat}
+                {#if isMatrixMedia}
+                    <MatrixMedia {event}/>
+                {:else if isChat}
                     <div class="chat-message">
                         <div class="chti">
                             <Time date={event?.origin_server_ts} />
