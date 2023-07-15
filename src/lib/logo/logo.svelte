@@ -12,30 +12,21 @@ function goHome() {
     }
 }
 
-let ready = false;
 
 $: initials = PUBLIC_APP_NAME?.charAt(0)?.toUpperCase()
 
-$: isDefault = PUBLIC_APP_NAME?.charAt(0)?.toLowerCase() === 'g';
+$: isDefault = PUBLIC_APP_NAME?.charAt(0)?.toLowerCase() === 's';
 
-$: if(isDefault) {
-    ready = true;
-} else {
-    loadFont()
-}
+let ready = false;
 
-function loadFont() {
-    const fontFace = `@font-face {
-        font-family: "'Silkscreen', cursive";
-        src: url("/fonts/Silkscreen-Regular.ttf");
-    }`;
-
-    const style = document.createElement('style');
-    style.appendChild(document.createTextNode(fontFace));
-    document.head.appendChild(style);
-    style.onload = () => {
-        ready = true
-    }
+$: if(!isDefault) {
+    document.fonts.ready.then(() => {
+        const font = new FontFace('Silkscreen', 'url(/fonts/Silkscreen-Regular.ttf)');
+        font.load().then(() => {
+            ready = true
+        });
+        document.fonts.add(font);
+    });
 }
 
 </script>
@@ -44,9 +35,9 @@ function loadFont() {
     <a on:click={goHome} class="" href="/">
         <div class="l-c grd" class:lg={large} class:ldr={loader}>
             <div class="l-c-i grd-c" class:lgr={loader}>
-                {#if ready && isDefault}
+                {#if isDefault}
                     {@html logo}
-                {:else if ready && !isDefault}
+                {:else if ready}
                     <div class="logo-initials">
                         <div class="init">
                             {initials}
