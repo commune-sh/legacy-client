@@ -46,8 +46,6 @@ $: verifiedSession = $store.verifiedSession
 
 $: spacesFetched = $store.spacesFetched
 
-$: isIndex = $page?.url?.pathname === '/'
-
 </script>
 <div class="switcher">
     <div class="switcher-container fl-co sel-no">
@@ -61,20 +59,15 @@ $: isIndex = $page?.url?.pathname === '/'
             <div class="sep grd-c"></div>
         </div>
 
-        {#if isIndex && verifiedSession && !authenticated}
-            <div class="switcher-items"></div>
-        {:else if !isIndex}
-            {#if spacesFetched}
-            <div class="items">
-                <div class="tf"></div>
-                <SpaceItems spaces={spaces}/>
-                <div class="bf"></div>
-            </div>
-            {:else}
-                <SkeletonSpaceItems />
-            {/if}
+
+        {#if spacesFetched}
+        <div class="items">
+            <div class="tf"></div>
+            <SpaceItems spaces={spaces}/>
+            <div class="bf"></div>
+        </div>
         {:else}
-            <div class="switcher-items" ></div>
+            <SkeletonSpaceItems />
         {/if}
 
 
@@ -155,11 +148,4 @@ $: isIndex = $page?.url?.pathname === '/'
     z-index: 100;
 }
 
-.switcher-items {
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
-    overflow-y: auto;
-    overflow-x: hidden;
-    height: calc(100% - 0.75rem);
-}
 </style>

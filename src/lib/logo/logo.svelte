@@ -12,9 +12,31 @@ function goHome() {
     }
 }
 
+let ready = false;
 
 $: initials = PUBLIC_APP_NAME?.charAt(0)?.toUpperCase()
-$: isDefault = PUBLIC_APP_NAME?.charAt(0)?.toLowerCase() === 's';
+
+$: isDefault = PUBLIC_APP_NAME?.charAt(0)?.toLowerCase() === 'g';
+
+$: if(isDefault) {
+    ready = true;
+} else {
+    loadFont()
+}
+
+function loadFont() {
+    const fontFace = `@font-face {
+        font-family: "'Silkscreen', cursive";
+        src: url("/fonts/Silkscreen-Regular.ttf");
+    }`;
+
+    const style = document.createElement('style');
+    style.appendChild(document.createTextNode(fontFace));
+    document.head.appendChild(style);
+    style.onload = () => {
+        ready = true
+    }
+}
 
 </script>
 
@@ -22,9 +44,9 @@ $: isDefault = PUBLIC_APP_NAME?.charAt(0)?.toLowerCase() === 's';
     <a on:click={goHome} class="" href="/">
         <div class="l-c grd" class:lg={large} class:ldr={loader}>
             <div class="l-c-i grd-c" class:lgr={loader}>
-                {#if isDefault}
+                {#if ready && isDefault}
                     {@html logo}
-                {:else}
+                {:else if ready && !isDefault}
                     <div class="logo-initials">
                         <div class="init">
                             {initials}
