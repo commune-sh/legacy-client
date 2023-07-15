@@ -94,6 +94,12 @@ $: created = dayjs(state?.origin_server_ts)?.format('MMM D YYYY')
 
 $: boardTypeText = item?.is_profile ? 'Followers' : 'Members'
 
+let stripHTTPS  = (url) => {
+    return url.replace(/(^\w+:|^)\/\//, '');
+}
+
+$: room_alias = `#${$page.params.space}:${stripHTTPS(PUBLIC_BASE_URL)}`
+
 </script>
 
 <div class="item ml2"
@@ -150,22 +156,24 @@ $: boardTypeText = item?.is_profile ? 'Followers' : 'Members'
         <div class="sep mv2">
         </div>
 
+        {#if item.general}
         <div class="rid it pa2" on:click={copyID}>
             <div class="in fl-co">
                 <div class="label">
-                    matrix room id 
+                    matrix room alias
                     {#if copied}
                         <span class="cop">(copied)</span>
                     {/if}
                 </div>
                 <div class="mt2 tx">
-                    {item?.room_id}
+                    {room_alias}
                 </div>
             </div>
             <div class="ico-s grd-c mh2" class:copied={copied}>
                 {@html clipboard}
             </div>
         </div>
+        {/if}
 
         <div class="rid it pa2" on:click={openFeed}>
             <div class="in fl-co">
