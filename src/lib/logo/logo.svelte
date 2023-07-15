@@ -1,4 +1,5 @@
 <script>
+import { PUBLIC_APP_NAME } from '$env/static/public';
 import { store } from '$lib/store/store.js'
 import { logo } from '$lib/assets/logo.js'
 
@@ -11,13 +12,44 @@ function goHome() {
     }
 }
 
+let ready = false;
+
+$: initials = PUBLIC_APP_NAME?.charAt(0)?.toUpperCase()
+
+$: isDefault = PUBLIC_APP_NAME?.charAt(0)?.toLowerCase() === 's';
+
+$: if(isDefault) {
+    ready = true;
+} else {
+    const fontFace = `@font-face {
+        font-family: "'Silkscreen', cursive";
+        src: url("/fonts/Silkscreen-Regular.ttf");
+    }`;
+
+    const style = document.createElement('style');
+    style.appendChild(document.createTextNode(fontFace));
+    document.head.appendChild(style);
+    ready = true
+}
+
 </script>
 
 <div class="logo">
     <a on:click={goHome} class="" href="/">
         <div class="l-c grd" class:lg={large} class:ldr={loader}>
             <div class="l-c-i grd-c" class:lgr={loader}>
-                {@html logo}
+                {#if ready && isDefault}
+                    {@html logo}
+                {:else}
+                    <div class="logo-initials">
+                        <div class="init">
+                            {initials}
+                        </div>
+                        <div class="overlay">
+                            {initials}
+                        </div>
+                    </div>
+                {/if}
             </div>
         </div>
     </a>
@@ -77,50 +109,85 @@ function goHome() {
     fill: var(--logo-shade-2);
 }
 
-.rainbow-bg{
+.logo-initials {
+    font-family: 'Silkscreen';
+    font-size: 32px;
+    line-height: 16px;
+    margin: 0;
+    padding: 0;
+    position: relative;
 }
 
-.auth {
-    display: grid;
+.init {
+    color: var(--logo-shade-1);
+    opacity: 0.5;
+    margin-left: -4px;
 }
 
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: var(--logo-shade-1);
+}
+
+.l-c:hover .init {
+    animation: rainbow 1.5s linear;
+    animation-iteration-count: infinite;
+}
+.l-c:hover .overlay {
+    animation: rainbow 1.5s linear;
+    animation-iteration-count: infinite;
+}
 
 @keyframes rainbow{
 		100%,0%{
 			fill: rgb(255,0,0);
+			color: rgb(255,0,0);
 		}
 		90%{
 			fill: rgb(255,127,0);
+			color: rgb(255,127,0);
 		}
 		80%{
 			fill: rgb(255,255,0);
+			color: rgb(255,255,0);
 		}
 		70%{
 			fill: rgb(127,255,0);
+			color: rgb(127,255,0);
 		}
 		60%{
 			fill: rgb(0,255,0);
+			color: rgb(0,255,0);
 		}
 		50%{
 			fill: rgb(0,255,127);
+			color: rgb(0,255,127);
 		}
 		40%{
 			fill: rgb(0,255,255);
+			color: rgb(0,255,255);
 		}
 		30%{
 			fill: rgb(0,127,255);
+			color: rgb(0,127,255);
 		}
 		20%{
 			fill: rgb(0,0,255);
+			color: rgb(0,0,255);
 		}
 		10%{
 			fill: rgb(127,0,255);
+			color: rgb(127,0,255);
 		}
 		0%{
 			fill: rgb(255,0,255);
+			color: rgb(255,0,255);
 		}
 		91%{
 			fill: rgb(255,0,127);
+			color: rgb(255,0,127);
 		}
 }
 </style>

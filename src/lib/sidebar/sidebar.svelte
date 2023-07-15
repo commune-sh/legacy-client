@@ -63,7 +63,7 @@ $: items = buildItems(state)
 <div class="sidebar">
     <Header state={state} ready={ready}/>
 
-    <div class="content fl-co">
+    <div class="content fl-co sel-no">
         {#if isNotSpace}
             <IndexSidebar />
 
