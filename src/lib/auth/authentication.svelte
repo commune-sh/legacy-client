@@ -34,7 +34,6 @@ let syncCreds = (token) => {
         })
           .then(resp => {
 
-            console.log('Response:', resp);
             if(resp?.valid && resp?.credentials) {
                 store.saveCredentials(resp.credentials)
                 store.saveRooms(resp.rooms)
@@ -43,7 +42,7 @@ let syncCreds = (token) => {
                 store.verifiedSession(true)
                 store.spacesFetched()
             } else {
-                //localStorage.removeItem('access_token')
+                localStorage.removeItem('access_token')
                 store.verifiedSession(true)
             }
 
