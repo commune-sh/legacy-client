@@ -264,13 +264,27 @@ onMount(() => {
     if(isDomain) {
         return
     }
-    loadEvents(true)
+    //loadEvents(true)
     return
     if(!data.error && !data.down) {
         scrollHeight = scrollable?.scrollHeight;
         handleScroll();
     }
 })
+
+let init = false;
+
+$: if($store.verifiedSession && !init) {
+    init = true
+    initLoad()
+}
+
+function initLoad(){
+    if(isDomain) {
+        return
+    }
+    loadEvents(true)
+}
 
 function setupObserver() {
     handleScroll();
