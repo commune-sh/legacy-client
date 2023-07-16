@@ -57,6 +57,10 @@ $: space = $page.params.space
 
 $: banned = state?.banned === true
 
+$: isDomain = $page.params.domain !== undefined && 
+    $page.params.domain !== 'undefined' && 
+    $page.params.domain?.length > 0
+
 async function join() {
     if(!authenticated) {
         store.startAuthenticating("login")
@@ -64,7 +68,13 @@ async function join() {
     }
     busy = true
     if(!joinedSpace) {
-        const resp = await joinSpace(state?.room_id);
+
+        let sp = $page.params.space
+        if(isDomain) {
+            sp = `#${sp}:${$page.params.domain}`
+        }
+
+        const resp = await joinSpace(state.room_id);
         if(resp && resp.space) {
             console.log(resp)
             if(!resp?.space?.is_profile) {

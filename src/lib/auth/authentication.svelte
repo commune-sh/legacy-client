@@ -34,6 +34,7 @@ let syncCreds = (token) => {
         })
           .then(resp => {
 
+            console.log('Response:', resp);
             if(resp?.valid && resp?.credentials) {
                 store.saveCredentials(resp.credentials)
                 store.saveRooms(resp.rooms)

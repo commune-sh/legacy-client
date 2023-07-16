@@ -15,6 +15,8 @@ const dispatch = createEventDispatcher();
 $: state = $store?.states[$page?.params?.space]
 $: roomID = state?.room_id
 
+$: isProfile = state?.space?.type == 'profile'
+
 let nameInput;
 let name;
 
@@ -259,6 +261,7 @@ async function updateIndex(e) {
             placeholder="topic"></textarea>
         </div>
 
+        {#if !isProfile}
         <div class="mt3 pb2">
             <span class="label">space type</span>
         </div>
@@ -267,6 +270,7 @@ async function updateIndex(e) {
                 value={roomType} 
                 on:change={changeRoomType} />
         </div>
+        {/if}
 
         <div class="mt3 pb2">
             <span class="label">restrictions</span>

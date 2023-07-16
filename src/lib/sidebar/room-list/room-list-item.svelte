@@ -139,6 +139,8 @@ function goToRoom() {
 
 $: isBoard = item?.type === 'board'
 
+$: isProfile = item?.type === 'profile'
+
 function logItem(e) {
     e.preventDefault()
     popup.activate()
@@ -397,7 +399,7 @@ function moveTopicDown(e) {
         {:else}
         <div class="ico grd-c"
             class:inactive={!active}>
-                {#if isBoard}
+                {#if isBoard || isProfile}
                     {@html discuss}
                 {:else}
                     {@html chat}
