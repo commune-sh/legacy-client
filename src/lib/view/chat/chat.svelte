@@ -84,6 +84,10 @@ $: if(reloadTrigger && ($page.params?.topic != _page?.params?.topic)) {
     loadMessages()
 }
 
+$: isDomain = $page.params.domain !== undefined && 
+    $page.params.domain !== 'undefined' && 
+    $page.params.domain?.length > 0
+
 async function loadMessages() {
     ready = false;
     messages = null
@@ -91,6 +95,10 @@ async function loadMessages() {
         socket.close()
     }
     let endpoint = PUBLIC_API_URL
+
+    if(isDomain && $store.federated?.active && $store.federated.endpoint) {
+        endpoint = $store.federated?.endpoint
+    }
 
     let url = `${endpoint}/room/${roomID}/messages`
 
