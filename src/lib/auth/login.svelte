@@ -121,6 +121,15 @@ function ukey(e) {
 
 }
 
+function validateUsername(e) {
+    if (/[A-Z]/.test(e.key)) {
+        const key = e.key.toLowerCase();
+        e.preventDefault();
+        usernameInput.value += key;
+        return
+    }
+}
+
 function plw() {
     if(passwordInput.value.length >= 8) {
         passwordWarning = false
@@ -178,6 +187,7 @@ function togglePass() {
                 <input bind:this={usernameInput}
                 disabled={down}
                 on:keyup={ukey}
+                on:keypress={validateUsername}
                 on:keydown={rlw}
                 type="text" placeholder="" />
             </div>

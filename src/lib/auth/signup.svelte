@@ -60,6 +60,13 @@ let showInvalid = false;
 let provider_forbidden = false;
 
 function validateUsername(e) {
+    if (/[A-Z]/.test(e.key)) {
+        const key = e.key.toLowerCase();
+        e.preventDefault();
+        usernameInput.value += key;
+        return
+    }
+
     const letters = /^[0-9a-zA-Z]+$/;
     if(!e.key.match(letters)){
         e.preventDefault()
