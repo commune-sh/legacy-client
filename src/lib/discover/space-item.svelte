@@ -36,7 +36,7 @@ async function join() {
     }
     busy = true
     if(!joinedSpace) {
-        const resp = await joinSpace(space?.alias);
+        const resp = await joinSpace(space?.room_id);
         if(resp && resp.space) {
             console.log(resp)
             if(!resp?.space?.is_profile) {

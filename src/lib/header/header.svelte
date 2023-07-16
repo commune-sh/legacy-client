@@ -175,7 +175,7 @@ async function join() {
     }
     busy = true
     if(!joinedSpace) {
-        const resp = await joinSpace(space);
+        const resp = await joinSpace(state?.room_id);
         if(resp && resp.space) {
             console.log(resp)
             store.addSpace(resp.space)
