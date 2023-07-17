@@ -157,7 +157,7 @@ async function loadEvents(init) {
         opt.url = url + `?topic=${topic}`
     }
 
-    if(token && !isSpace && !isRoom && !$store.federated.active) {
+    if(authenticated && !isSpace && !isRoom && !$store.federated.active) {
         opt.url = `${PUBLIC_API_URL}/feed`
     }
 
