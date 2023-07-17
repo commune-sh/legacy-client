@@ -28,7 +28,18 @@ function verify() {
 }
 
 function editProfile() {
-    $store.userSettings = true
+    $store.userSettings = {
+        active: true,
+        mode: 'profile'
+    }
+    kill()
+}
+
+function accountSettings() {
+    $store.userSettings = {
+        active: true,
+        mode: 'account'
+    }
     kill()
 }
 
@@ -59,6 +70,16 @@ $: verified = $store.credentials?.verified
                 {@html edit}
             </div>
         </div>
+
+        <div class="item fl" on:click={accountSettings}>
+            <div class="grd-c fl-o">
+                Account Settings
+            </div>
+            <div class="ico-s leave">
+                {@html edit}
+            </div>
+        </div>
+
 
 
         <div class="item fl" on:click={logOut}>

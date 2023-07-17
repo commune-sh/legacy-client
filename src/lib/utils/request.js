@@ -360,6 +360,14 @@ export async function resetPassword(body) {
   return data
 }
 
+export async function updatePassword(body) {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/account/password/update`,
+    body: body,
+  })
+  return data
+}
+
 export async function updateAvatar(body) {
   const data = await APIRequest({
     url: `${PUBLIC_API_URL}/account/avatar`,

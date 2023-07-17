@@ -159,7 +159,7 @@ async function avatarRemoved() {
         <div class="mt1 pb2">
             <textarea bind:this={topicInput}
             bind:value={topic}
-            placeholder="topic"></textarea>
+            placeholder="about"></textarea>
         </div>
 
 

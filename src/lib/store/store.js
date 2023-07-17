@@ -76,7 +76,10 @@ function createApp() {
     addingRoom: false,
     spaceSettingsOpen: false,
     roomSettings: false,
-    userSettings: false,
+    userSettings: {
+      active: false,
+      mode: null,
+    },
     discoverSpacesOpen: false,
     aboutOpen: false,
     accountCreated: false,
