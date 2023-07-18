@@ -3,6 +3,7 @@ import { onMount, createEventDispatcher } from 'svelte'
 import { store } from '$lib/store/store.js'
 import { addLine } from '$lib/assets/icons.js'
 import { page } from '$app/stores';
+import { validAge } from '$lib/utils/time.js'
 import tippy from 'tippy.js';
 
 let el;
@@ -36,16 +37,35 @@ $: if(authenticated && createSpaceAfterLogin)  {
 
 $: senderVerified = authenticated && $store.credentials?.verified
 
+$: requireVerification = $store.restrictions?.space?.require_verification
+
+$: requireSenderAge = $store.restrictions?.space?.sender_age || 0
+
+$: senderAge = $store.credentials?.age
+
+$: ageIsOk = validAge(senderAge, requireSenderAge)
+
+$: ageWarning = `Your account needs to be at least ${requireSenderAge} days old to create a space.`
+
 function createSpace() {
     if(!authenticated) {
         store.startAuthenticating("login")
         createSpaceAfterLogin = true
         return
     }
-    if(!senderVerified) {
+    if(!ageIsOk && requireSenderAge) {
+        $store.alert = {
+            active: true,
+            message: ageWarning,
+        }
+        return
+    }
+
+    if(!senderVerified && requireVerification) {
         $store.showVerificationAlert = true
         return
     }
+
     store.toggleCreateSpace()
 }
 

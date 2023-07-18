@@ -51,6 +51,9 @@ function checkHealth(init) {
         if(resp?.features) {
             store.setFeatures(resp.features)
         }
+        if(resp?.restrictions) {
+            store.setRestrictions(resp.restrictions)
+        }
     })
 }
 

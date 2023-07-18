@@ -10,6 +10,7 @@ function createApp() {
     active: false,
     ready: false,
     features: null,
+    restrictions: null,
     authenticated: false,
     authenticating: {
       active: false,
@@ -122,6 +123,13 @@ function createApp() {
   let setFeatures = (v) => {
     update(p => {
       p.features = v
+      return p
+    })
+  }
+
+  let setRestrictions = (v) => {
+    update(p => {
+      p.restrictions = v
       return p
     })
   }
@@ -859,6 +867,7 @@ function createApp() {
     setDownState,
     setHealth,
     setFeatures,
+    setRestrictions,
     saveCredentials,
     removeCredentials,
     saveRooms,
