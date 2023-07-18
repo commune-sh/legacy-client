@@ -353,7 +353,8 @@ async function createPost() {
         return
     }
 
-    if(!title) {
+    if(!title && !isChat && !isSocial && !reply) {
+    console.log("hmmmm")
         focusTitleInput()
         return
     }
