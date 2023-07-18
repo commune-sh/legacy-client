@@ -31,7 +31,9 @@ $: isdomain = $page?.params?.domain != null &&
 onMount(() => {
 })
 
-$: if(!down && !authenticated && active) {
+let defaultSpacesFetched = false
+
+$: if(!down && !authenticated && active && !defaultSpacesFetched) {
     fetchDefaultSpaces()
 }
 
@@ -50,6 +52,7 @@ function fetchDefaultSpaces() {
             store.saveDefaultSpaces(resp.spaces)
             store.stateReady()
             store.spacesFetched()
+            defaultSpacesFetched = true
         }
     })
 }
