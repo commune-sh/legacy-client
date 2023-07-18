@@ -17,10 +17,13 @@ onMount(() => {
 $: if(spaces?.length > 0) {
     ready = true;
 }
+
+let defaultSpacesFetched = false
+
 $: if(authenticated && spaces?.length == 1) {
     if($store.defaultSpaces?.length > 0) {
         spaces = $store.defaultSpaces
-    } else {
+    } else if(!defaultSpacesFetched) {
         fetchDefaultSpaces()
     }
 }
@@ -37,6 +40,7 @@ function fetchDefaultSpaces() {
     .then(resp => {
         if(resp) {
             spaces = resp.spaces
+            defaultSpacesFetched = true
         }
     })
 }
