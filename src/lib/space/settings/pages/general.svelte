@@ -8,7 +8,7 @@ import { page } from '$app/stores';
 import Avatar from '$lib/components/avatar/avatar.svelte'
 import Banner from '$lib/components/banner/banner.svelte'
 import Select from '$lib/components/select/select.svelte'
-import { createStateEvent } from '$lib/utils/request.js'
+import { createStateEvent, updateAvatar } from '$lib/utils/request.js'
 
 const dispatch = createEventDispatcher();
 
@@ -71,6 +71,7 @@ async function save() {
 async function avatarUploaded(e) {
     console.log("avatar uploaded! ", e.detail)
     store.updateSpaceAvatar($page.params.space, e.detail)
+
     const res = await createStateEvent({
         room_id: roomID,
         event_type: 'm.room.avatar',
@@ -78,8 +79,16 @@ async function avatarUploaded(e) {
             url: e.detail,
         }
     })
-
     console.log(res)
+
+    if(isProfile) {
+        $store.credentials.avatar_url = e.detail
+        const resp = await updateAvatar({
+            url: e.detail,
+        })
+        console.log(resp)
+    }
+
 }
 
 async function bannerUploaded(e) {
