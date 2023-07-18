@@ -34,10 +34,28 @@ $: mediaURL = isDomain ? $store?.federated?.media_url : PUBLIC_MEDIA_URL
 $: avatar = user?.avatar_url ? `${mediaURL}/${user?.avatar_url}` : null
 
 let el;
+
+function homeserver(room_id) {
+  const parts = room_id.split(":");
+  const lastPart = parts[parts.length - 1];
+  if (lastPart.includes(":")) {
+    return parts.slice(1, -1).join(":");
+  }
+  return parts.slice(1).join(":");
+}
+
+
+$: federated = !user?.id?.includes($page.url.host)
+
+$: hs = homeserver(user?.id)
+
+$: link = federated ? `https://${hs}/@${user?.username}` :
+        `/@${user?.username}`
+
 </script>
 
 
-<a class="user grd-c" data-user={`@${user?.username}`} href={`/@${user?.username}`}>
+<a class="user grd-c" data-user={`@${user?.username}`} href={link}>
     <div class="flc" bind:this={el}>
     {#if !hideAvatar}
             <div class="grd-c avatar-base grd" class:ch={isChat}
