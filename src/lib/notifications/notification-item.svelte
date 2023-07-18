@@ -150,8 +150,10 @@ $: thing = item?.type == `reply.reaction` ? `reply` : `post`
 }
 
 .avatar-base {
+    min-width: 30px;
     width: 30px;
     height: 30px;
+    min-height: 30px;
     border-radius: 50%;
     background-color: var(--shade-4);
     background-repeat: no-repeat;

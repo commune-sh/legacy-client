@@ -39,6 +39,15 @@ $: spacePath = $store?.spacePaths[space?.alias]?.pathname
 
 $: initials = space?.initials?.toUpperCase()
 
+function homeserver(room_id) {
+  const parts = room_id.split(":");
+  const lastPart = parts[parts.length - 1];
+  if (lastPart.includes(":")) {
+    return parts.slice(1, -1).join(":");
+  }
+  return parts.slice(1).join(":");
+}
+
 function goToSpace() {
     menu.hide()
 
@@ -49,8 +58,8 @@ function goToSpace() {
         url = spacePath
     }
 
-    const domain = space?.room_id.split(':')[1]
-    const federated = space?.room_id.split(':')[1] != $page?.url?.hostname
+    const domain = homeserver(space?.room_id)
+    const federated = space.room_id.includes($page.url.host)
 
     if(federated) {
         url = `/${domain}/${space?.alias}`

@@ -47,13 +47,15 @@ $: ageIsOk = validAge(senderAge, requireSenderAge)
 
 $: ageWarning = `Your account needs to be at least ${requireSenderAge} days old to create a space.`
 
+$: isAdmin = $store.credentials?.admin
+
 function createSpace() {
     if(!authenticated) {
         store.startAuthenticating("login")
         createSpaceAfterLogin = true
         return
     }
-    if(!ageIsOk && requireSenderAge) {
+    if(!ageIsOk && requireSenderAge && !isAdmin) {
         $store.alert = {
             active: true,
             message: ageWarning,
