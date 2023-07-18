@@ -87,12 +87,7 @@ onMount(() => {
         save()
     }
 
-    if (isReplyEvent) {
-        if(el) {
-            el.scrollIntoView({ behavior: "smooth" });
-        }
-    }
-    if (event?.just_posted) {
+    if (event?.just_posted || context || isReplyEvent) {
         if(el) {
             el.scrollIntoView({ behavior: "smooth" });
         }

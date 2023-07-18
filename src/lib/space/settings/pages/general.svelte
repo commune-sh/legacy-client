@@ -125,6 +125,15 @@ async function avatarRemoved() {
         }
     })
     console.log(res)
+
+    if(isProfile) {
+        $store.credentials.avatar_url = null
+        const resp = await updateAvatar({
+            url: null,
+        })
+        console.log(resp)
+    }
+
 }
 async function bannerRemoved() {
     console.log("hmm")

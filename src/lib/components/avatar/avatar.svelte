@@ -91,7 +91,7 @@ let build = async (e) => {
                     dispatch('uploaded', presignedURL.key )
                     uploading = false
 
-                }, 'image/jpeg', 0.8);
+                });
 
             }
 

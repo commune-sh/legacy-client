@@ -330,6 +330,12 @@ async function createPost() {
         }
     }
 
+    // fallback for when only image attachments are uploaded
+    if(attachments) {
+        title = 'attachment'
+        body = 'attachment'
+    }
+
     // if user inputs title or body, we'll use those instead
     if(titleInput?.value?.length > 0) {
         title = titleInput.value
@@ -347,10 +353,17 @@ async function createPost() {
         return
     }
 
-    if(body.length === 0) {
+    if(!title) {
+        focusTitleInput()
+        return
+    }
+
+    if(!body) {
         focusBodyInput()
         return
     }
+
+
     busy = true
 
     try {
@@ -407,9 +420,16 @@ async function createPost() {
                 //formatted_body: md.render(bodyInput.value),
             },
         }
+
         if(title) {
             post.content['title'] = title
         }
+
+        if(attachments && title == 'attachment' && body == 'attachment') {
+            post.content['msgtype'] = 'space.board.post.image'
+            delete post.content['title']
+        }
+
 
         if(isChat) {
             post.type = 'm.room.message'
