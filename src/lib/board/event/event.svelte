@@ -593,6 +593,11 @@ $: isMatrixMedia = event?.content?.msgtype == 'm.image' ||
                         {@html content}
                     </div>
                 {:else if isPost && hasFullBody}
+                    {#if !isSingleReply}
+                    <div class="post-title ph3 pb2 pti">
+                        {title}
+                    </div>
+                    {/if}
                     <div class="post-body ph3 mb2 pci">
                         {@html full_body_content}
                     </div>
