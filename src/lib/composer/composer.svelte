@@ -322,10 +322,11 @@ async function createPost() {
 
     // to start with, if links exist, we'll use the first link item's title and
     // body
-    if(!isChat && !isSocial) {
-        if(links && links[0]?.title?.length > 0 && 
-            links[0]?.description?.length > 0) {
+    if(!isChat && !isSocial && links) {
+        if(links[0]?.title?.length > 0) {
             title = links[0].title
+        }
+        if(links[0]?.description?.length > 0) {
             body = links[0].description
         }
     }
@@ -354,7 +355,6 @@ async function createPost() {
     }
 
     if(!title && !isChat && !isSocial && !reply) {
-    console.log("hmmmm")
         focusTitleInput()
         return
     }
@@ -405,19 +405,17 @@ async function createPost() {
             }
         }
 
-        /*
         let bo = body
-        if(body?.length > 500) {
-            bo = body.substring(0, 500)
+        if(body?.length > 2000) {
+            bo = body.substring(0, 2000)
         }
-        */
 
         let post = {
             room_id: roomID,
             type: 'space.board.post',
             content: {
                 msgtype: 'post',
-                body: body,
+                body: bo,
                 //formatted_body: md.render(bodyInput.value),
             },
         }
@@ -440,8 +438,7 @@ async function createPost() {
             post.content['formatted_body'] = md.render(bodyInput.value)
         }
 
-        /*
-        if(body?.length > 500) {
+        if(body?.length > 2000) {
             const presignedURL = await getPresignedURL('txt');
             const file = new File([body], presignedURL.key, { type: 'text/plain' });
             await uploadAttachment(file, presignedURL.url);
@@ -449,7 +446,6 @@ async function createPost() {
                 key: presignedURL.key,
             }
         }
-        */
 
         if(topic) {
             post.content['topic'] = topic
@@ -802,7 +798,7 @@ function toggleFullscreen() {
                     class:sh={reply}
                     bind:this={bodyInput}
                     placeholder={placeholder}
-                    maxlength="2000"
+                    maxlength="10000"
                     on:keydown={focusOnTitle}
                     on:keydown={updateContent}
                     on:keydown={trackCaret}

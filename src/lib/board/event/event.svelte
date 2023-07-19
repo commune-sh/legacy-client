@@ -1,5 +1,5 @@
 <script>
-import { PUBLIC_BASE_URL } from '$env/static/public';
+import { PUBLIC_BASE_URL, PUBLIC_MEDIA_URL } from '$env/static/public';
 import { savePost } from '$lib/utils/request.js'
 import { onMount, createEventDispatcher } from 'svelte'
 import { store } from '$lib/store/store.js'
@@ -186,6 +186,26 @@ $: clipped = getFirstParagraphNode(content)
 
 $: shortened = content?.length > 600 ? `${content?.substring(0, 600)}...` :
     content
+
+$: hasFullBody = event?.content?.full_body?.key?.length > 0
+
+$: fullBodyURL = `${PUBLIC_MEDIA_URL}/${event?.content?.full_body?.key}`
+
+let full_body;
+$: full_body_content = full_body ? md.render(full_body) : content + '...'
+let fetch_error;
+
+$: if(hasFullBody && isPost) {
+    fetch(fullBodyURL)
+        .then(response => response.text())
+        .then(data => {
+            full_body = data
+        })
+        .catch((error) => {
+            fetch_error = error
+        });
+}
+
 
 $: title = event?.content?.title ? event?.content?.title : `Untitled`
 
@@ -571,6 +591,10 @@ $: isMatrixMedia = event?.content?.msgtype == 'm.image' ||
                 {:else if isSocial && (isPost || !isReply)}
                     <div class="post-body ph3 mb2 pci">
                         {@html content}
+                    </div>
+                {:else if isPost && hasFullBody}
+                    <div class="post-body ph3 mb2 pci">
+                        {@html full_body_content}
                     </div>
                 {:else if isPost}
                     {#if !isSingleReply}
