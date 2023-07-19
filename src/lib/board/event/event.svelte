@@ -176,7 +176,11 @@ $: safari = isSafari()
 $: edited = event?.content?.['m.new_content']?.body !== undefined &&
         event?.content?.['m.new_content']?.title !== undefined
 
-$: formatted_body = event?.content?.body ? md.render(event?.content?.body) : null
+$: raw_content = hasFullBody && full_body ? full_body :
+    hasFullBody && !full_body ? `${event?.content?.body}...` :
+    event?.content?.body
+
+$: formatted_body = raw_content ? md.render(raw_content) : null
 
 $: content = formatted_body ? formatted_body :
     event?.content?.body
@@ -196,10 +200,28 @@ $: full_body_content = full_body ? md.render(full_body) : content + '...'
 let fetch_error;
 
 $: if(hasFullBody && isPost) {
+    /*
     fetch(fullBodyURL)
         .then(response => response.text())
         .then(data => {
             full_body = data
+        })
+        .catch((error) => {
+            fetch_error = error
+        });
+    */
+}
+
+let full_body_fetched = false;
+let fetchingMore = false;
+
+function loadFullBody() {
+    fetchingMore = true;
+    fetch(fullBodyURL)
+        .then(response => response.text())
+        .then(data => {
+            full_body = data
+            full_body_fetched = true;
         })
         .catch((error) => {
             fetch_error = error
@@ -592,15 +614,6 @@ $: isMatrixMedia = event?.content?.msgtype == 'm.image' ||
                     <div class="post-body ph3 mb2 pci">
                         {@html content}
                     </div>
-                {:else if isPost && hasFullBody}
-                    {#if !isSingleReply}
-                    <div class="post-title ph3 pb2 pti">
-                        {title}
-                    </div>
-                    {/if}
-                    <div class="post-body ph3 mb2 pci">
-                        {@html full_body_content}
-                    </div>
                 {:else if isPost}
                     {#if !isSingleReply}
                     <div class="post-title ph3 pb2 pti">
@@ -611,12 +624,30 @@ $: isMatrixMedia = event?.content?.msgtype == 'm.image' ||
                     <div class="post-body ph3 mb2 pci">
                         {@html content}
                     </div>
+                    {#if hasFullBody && !full_body_fetched}
+                        <div class="ml3 mb2">
+                            <button class="readmore" 
+                                disabled={fetchingMore}
+                                on:click={loadFullBody}>
+                                {fetchingMore ? 'Loading...' : 'Read More'}
+                            </button>
+                        </div>
+                    {/if}
                 {:else if isReply}
 
 
                     <div class="post-body ph3">
                         {@html content}
                     </div>
+                    {#if hasFullBody && !full_body_fetched}
+                        <div class="ml3 mb2">
+                            <button class="readmore" 
+                                disabled={fetchingMore}
+                                on:click={loadFullBody}>
+                                {fetchingMore ? 'Loading...' : 'Read More'}
+                            </button>
+                        </div>
+                    {/if}
                 {:else}
                     <div class="post-title ph3">
                         {title}
@@ -1034,5 +1065,8 @@ $: isMatrixMedia = event?.content?.msgtype == 'm.image' ||
     max-height: 500px;
     overflow-x: auto;
     overflow-y: auto;
+}
+.readmore {
+    padding: 0.125rem 0.25rem;
 }
 </style>
