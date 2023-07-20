@@ -1,11 +1,9 @@
-import { PUBLIC_MATRIX_URL } from '$env/static/public';
+import { PUBLIC_MATRIX_DELEGATION_SERVER } from '$env/static/public';
 import { json } from '@sveltejs/kit';
-
-let stripped = PUBLIC_MATRIX_URL.replace('https://', '');
 
 export function GET() {
   const data = {
-    'm.server': `${stripped}:443`,
+    'm.server': PUBLIC_MATRIX_DELEGATION_SERVER
   }
 
 	return json(data);
