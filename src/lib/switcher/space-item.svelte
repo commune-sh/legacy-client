@@ -59,12 +59,13 @@ async function fetchAPIEndpoint() {
 function goToSpace() {
     menu.hide()
 
-
     let url = `/${space?.alias}`
 
-    if(spacePath != undefined) {
+    /*
+    if(spacePath) {
         url = spacePath
     }
+    */
 
     if(federated) {
         url = `/${homeserver}/${space?.alias}`

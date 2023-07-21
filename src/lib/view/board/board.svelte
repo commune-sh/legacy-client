@@ -99,6 +99,10 @@ $: if(reloadTrigger && ($page.url?.pathname != _page?.url?.pathname) &&
     loadEvents()
 }
 
+$: if(reloadTrigger && ($page.params?.domain != _page?.params?.domain)) {
+    loadEvents()
+}
+
 $: if(reloadTrigger && ($page.params?.space != _page?.params?.space)) {
     loadEvents()
 }

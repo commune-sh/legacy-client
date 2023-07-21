@@ -110,6 +110,7 @@ async function fetchPowerLevels() {
     })
 }
 
+$: domain = $page.params?.domain
 $: space = $page.params?.space
 $: room = $page.params?.room
 $: post = $page.params?.post
