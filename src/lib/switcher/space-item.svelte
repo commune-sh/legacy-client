@@ -61,7 +61,7 @@ $: if(federated) {
 
 let federated_media_url;
 async function fetchAPIEndpoint() {
-    const endpoint = await getAPIEndpoint($page.params?.domain)
+    const endpoint = await getAPIEndpoint(homeserver)
     console.log(endpoint)
     if(endpoint?.media_url) {
         federated_media_url = endpoint.media_url
