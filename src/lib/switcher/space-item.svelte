@@ -76,7 +76,7 @@ function goToSpace() {
 let hovered = false;
 
 $: federated_active = homeserver == $page.params?.domain
-$: local_active = $page.params?.space === space?.alias
+$: local_active = $page.params?.space === space?.alias && !$page.params?.domain
 
 $: active = federated ? federated_active : local_active
 
