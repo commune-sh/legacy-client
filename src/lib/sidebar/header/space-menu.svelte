@@ -30,13 +30,17 @@ function kill() {
     dispatch('kill')
 }
 
-$: space = $page.params.space
 
 async function leave() {
     dispatch('kill')
     store.removeSpace($page.params.space)
     store.removeRoom(space_room_id)
-    const resp = await leaveSpace(space);
+    if(state?.children) {
+        state?.children?.forEach(x => {
+            store.removeRoom(x.room_id)
+        })
+    }
+    const resp = await leaveSpace(state?.room_id);
     if(resp) {
         console.log(resp)
     }

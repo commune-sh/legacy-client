@@ -182,6 +182,10 @@ $: if(active && el) {
 
 let busy = false;
 
+$: isDomain = $page.params.domain !== undefined && 
+    $page.params.domain !== 'undefined' && 
+    $page.params.domain?.length > 0
+
 async function join() {
     if(!authenticated) {
         store.startAuthenticating("login")
