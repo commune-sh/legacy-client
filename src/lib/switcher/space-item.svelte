@@ -1,6 +1,7 @@
 <script>
-import { PUBLIC_MEDIA_URL } from '$env/static/public';
+import { PUBLIC_MEDIA_URL, PUBLIC_MATRIX_SERVER_NAME } from '$env/static/public';
 import { onMount, createEventDispatcher } from 'svelte'
+import { getAPIEndpoint } from '$lib/utils/request.js'
 import { user } from '$lib/assets/icons.js'
 import { isInViewport } from '$lib/utils/utils.js'
 import { store } from '$lib/store/store.js'
@@ -39,13 +40,32 @@ $: spacePath = $store?.spacePaths[space?.alias]?.pathname
 
 $: initials = space?.initials?.toUpperCase()
 
-function homeserver(room_id) {
+function getHS(room_id) {
   const parts = room_id.split(":");
   const lastPart = parts[parts.length - 1];
   if (lastPart.includes(":")) {
     return parts.slice(1, -1).join(":");
   }
   return parts.slice(1).join(":");
+}
+
+$: homeserver = getHS(space?.room_id)
+
+$: federated = homeserver != PUBLIC_MATRIX_SERVER_NAME
+
+
+
+$: if(federated) {
+    fetchAPIEndpoint()
+}
+
+let federated_media_url;
+async function fetchAPIEndpoint() {
+    const endpoint = await getAPIEndpoint($page.params?.domain)
+    console.log(endpoint)
+    if(endpoint?.media_url) {
+        federated_media_url = endpoint.media_url
+    }
 }
 
 function goToSpace() {
@@ -58,11 +78,8 @@ function goToSpace() {
         url = spacePath
     }
 
-    const domain = homeserver(space?.room_id)
-    const federated = space.room_id.includes($page.url.host)
-
     if(federated) {
-        url = `/${domain}/${space?.alias}`
+        url = `/${homeserver}/${space?.alias}`
     }
 
     goto(url, {noscroll: true})
@@ -92,9 +109,9 @@ $: isDomain = $page.params.domain !== undefined &&
     $page.params.domain !== 'undefined' && 
     $page.params.domain?.length > 0
 
-$: mediaURL = isDomain ? $store?.federated?.media_url : PUBLIC_MEDIA_URL
+$: mediaURL = federated && federated_media_url ? federated_media_url : PUBLIC_MEDIA_URL
 
-$: avatar = space?.avatar?.length > 0 ? `${PUBLIC_MEDIA_URL}/${space?.avatar}` :
+$: avatar = space?.avatar?.length > 0 ? `${mediaURL}/${space?.avatar}` :
 null
 
 $: isProfile = space?.is_profile && space?.room_id ===
