@@ -1,14 +1,13 @@
 <script>
 import { store } from '$lib/store/store.js'
-import { page } from '$app/stores';
-import { PUBLIC_MEDIA_URL } from '$env/static/public'
-import { discuss } from '$lib/assets/icons.js'
+import { getAPIEndpoint } from '$lib/utils/request.js'
+import { PUBLIC_MEDIA_URL, PUBLIC_MATRIX_SERVER_NAME } from '$env/static/public'
+import { getHomeserver } from '$lib/utils/utils.js'
 
 export let space;
 
-$: isDomain = $page?.params?.domain != null && $page?.params?.domain?.length > 0
-//$: mediaURL = isDomain ? $store?.federated?.media_url : PUBLIC_MEDIA_URL
-$: avatar = space?.avatar ? `${PUBLIC_MEDIA_URL}/${space?.avatar}` : null
+$: mediaURL = federated && federated_media_url ? federated_media_url : PUBLIC_MEDIA_URL
+$: avatar = space?.avatar ? `${mediaURL}/${space?.avatar}` : null
 
 $: initials = space?.alias?.split(' ')
     .map((n) => n[0])
@@ -23,6 +22,21 @@ function goToSpace() {
 
 $: link = `/${space.alias}`
 
+$: homeserver = getHomeserver(space?.room_id)
+
+$: federated = homeserver != PUBLIC_MATRIX_SERVER_NAME
+
+$: if(federated) {
+    fetchAPIEndpoint()
+}
+
+let federated_media_url;
+async function fetchAPIEndpoint() {
+    const endpoint = await getAPIEndpoint(homeserver)
+    if(endpoint?.media_url) {
+        federated_media_url = endpoint.media_url
+    }
+}
 </script>
 
 <div class="space-item">

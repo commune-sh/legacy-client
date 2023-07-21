@@ -1,6 +1,6 @@
 <script>
-import { PUBLIC_MEDIA_URL } from '$env/static/public';
-import { onMount, createEventDispatcher } from 'svelte'
+import { PUBLIC_MEDIA_URL, PUBLIC_MATRIX_SERVER_NAME } from '$env/static/public';
+import { getHomeserver } from '$lib/utils/utils.js'
 import { crown } from '$lib/assets/icons.js'
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
@@ -35,19 +35,9 @@ $: avatar = user?.avatar_url ? `${mediaURL}/${user?.avatar_url}` : null
 
 let el;
 
-function homeserver(room_id) {
-  const parts = room_id.split(":");
-  const lastPart = parts[parts.length - 1];
-  if (lastPart.includes(":")) {
-    return parts.slice(1, -1).join(":");
-  }
-  return parts.slice(1).join(":");
-}
+$: federated = !user?.id?.includes(PUBLIC_MATRIX_SERVER_NAME)
 
-
-$: federated = !user?.id?.includes($page.url.host)
-
-$: hs = homeserver(user?.id)
+$: hs = getHomeserver(user?.id)
 
 $: link = federated ? `https://${hs}/@${user?.username}` :
         `/@${user?.username}`

@@ -1,13 +1,14 @@
 <script>
-import { page } from '$app/stores';
+import { getHomeserver } from '$lib/utils/utils.js'
+import { PUBLIC_MATRIX_SERVER_NAME } from '$env/static/public';
 
 export let event;
 
-$: isDomain = $page.params.domain !== undefined && 
-    $page.params.domain !== 'undefined' && 
-    $page.params.domain?.length > 0
+$: homeserver = getHomeserver(event?.room_id)
 
-$: roomAlias = isDomain ? `${$page.params.domain}/${event?.room_alias}` :
+$: federated = homeserver != PUBLIC_MATRIX_SERVER_NAME
+
+$: roomAlias = federated ? `${PUBLIC_MATRIX_SERVER_NAME}/${event?.room_alias}` :
     event?.room_alias
 
 </script>

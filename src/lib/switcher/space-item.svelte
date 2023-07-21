@@ -3,7 +3,7 @@ import { PUBLIC_MEDIA_URL, PUBLIC_MATRIX_SERVER_NAME } from '$env/static/public'
 import { onMount, createEventDispatcher } from 'svelte'
 import { getAPIEndpoint } from '$lib/utils/request.js'
 import { user } from '$lib/assets/icons.js'
-import { isInViewport } from '$lib/utils/utils.js'
+import { isInViewport, getHomeserver } from '$lib/utils/utils.js'
 import { store } from '$lib/store/store.js'
 import { goto } from '$app/navigation';
 import { page } from '$app/stores';
@@ -40,20 +40,9 @@ $: spacePath = $store?.spacePaths[space?.alias]?.pathname
 
 $: initials = space?.initials?.toUpperCase()
 
-function getHS(room_id) {
-  const parts = room_id.split(":");
-  const lastPart = parts[parts.length - 1];
-  if (lastPart.includes(":")) {
-    return parts.slice(1, -1).join(":");
-  }
-  return parts.slice(1).join(":");
-}
-
-$: homeserver = getHS(space?.room_id)
+$: homeserver = getHomeserver(space?.room_id)
 
 $: federated = homeserver != PUBLIC_MATRIX_SERVER_NAME
-
-
 
 $: if(federated) {
     fetchAPIEndpoint()
@@ -62,7 +51,6 @@ $: if(federated) {
 let federated_media_url;
 async function fetchAPIEndpoint() {
     const endpoint = await getAPIEndpoint(homeserver)
-    console.log(endpoint)
     if(endpoint?.media_url) {
         federated_media_url = endpoint.media_url
     }
@@ -104,10 +92,6 @@ function log() {
     console.log(space)
 }
 
-
-$: isDomain = $page.params.domain !== undefined && 
-    $page.params.domain !== 'undefined' && 
-    $page.params.domain?.length > 0
 
 $: mediaURL = federated && federated_media_url ? federated_media_url : PUBLIC_MEDIA_URL
 

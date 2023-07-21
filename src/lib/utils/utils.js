@@ -186,3 +186,12 @@ export function copyToClipboard(text) {
   document.execCommand('copy');
   document.body.removeChild(input);
 }
+
+export function getHomeserver(room_id) {
+  const parts = room_id.split(":");
+  const lastPart = parts[parts.length - 1];
+  if (lastPart.includes(":")) {
+    return parts.slice(1, -1).join(":");
+  }
+  return parts.slice(1).join(":");
+}
