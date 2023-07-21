@@ -20,7 +20,7 @@ function goToSpace() {
     }
 }
 
-$: link = `/${space.alias}`
+$: link = federated ? `/${homeserver}/${space?.alias}` : `/${space.alias}`
 
 $: homeserver = getHomeserver(space?.room_id)
 

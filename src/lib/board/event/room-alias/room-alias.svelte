@@ -8,7 +8,7 @@ $: homeserver = getHomeserver(event?.room_id)
 
 $: federated = homeserver != PUBLIC_MATRIX_SERVER_NAME
 
-$: roomAlias = federated ? `${PUBLIC_MATRIX_SERVER_NAME}/${event?.room_alias}` :
+$: roomAlias = federated ? `${homeserver}/${event?.room_alias}` :
     event?.room_alias
 
 </script>

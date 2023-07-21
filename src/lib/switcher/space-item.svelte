@@ -75,7 +75,10 @@ function goToSpace() {
 
 let hovered = false;
 
-$: active = $page.params?.space === space?.alias
+$: federated_active = homeserver == $page.params?.domain
+$: local_active = $page.params?.space === space?.alias
+
+$: active = federated ? federated_active : local_active
 
 $: if(active && el) {
     isInViewport(el)
