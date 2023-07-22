@@ -59,7 +59,8 @@ async function read() {
       item.read = true;
     });
     $store.notifications = $store.notifications;
-    const res = await readNotifications();
+    const last = $store.notifications[0]?.created_at
+    const res = await readNotifications(last);
     console.log(res)
 }
 

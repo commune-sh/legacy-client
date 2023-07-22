@@ -400,9 +400,9 @@ export async function getNotifications() {
   return data
 }
 
-export async function readNotifications() {
+export async function readNotifications(last) {
   const data = await APIRequest({
-    url: `${PUBLIC_API_URL}/account/notifications/read`,
+    url: `${PUBLIC_API_URL}/account/notifications/read?last=${last}`,
     method: 'PUT'
   })
   return data

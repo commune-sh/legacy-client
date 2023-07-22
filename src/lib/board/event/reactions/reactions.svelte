@@ -108,6 +108,7 @@ async function saveReaction(key) {
             "m.relates_to": {
                 "rel_type": "m.annotation",
                 "event_id": event.event_id,
+                "thread_event_id": event.event_id,
                 "key": key,
             }
         },
@@ -115,6 +116,7 @@ async function saveReaction(key) {
 
     if(isReply) {
         post.in_thread = postEventID
+        post.content["m.relates_to"].thread_event_id = postEventID
     } else {
         post.in_thread = event.event_id
     }

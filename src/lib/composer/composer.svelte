@@ -458,6 +458,7 @@ async function createPost() {
             post.replying_to = replyTo.event_id
             post.content['m.relates_to'] = {
                 event_id: replyTo.event_id,
+                thread_event_id: threadEvent,
                 'rel_type': 'm.nested_reply',
             }
         }
