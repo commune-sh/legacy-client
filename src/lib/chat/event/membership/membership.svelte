@@ -37,9 +37,24 @@ $: joined = state === 'join'
 $: left = state === 'leave'
 $: action = joined ? 'joined' : left ? 'left' : 'unknown'
 
+$: hasPrevContent = event?.unsigned?.prev_content !== undefined 
+
+$: isSameMembership = event?.unsigned?.prev_content?.membership ==
+    event?.content?.membership
+
+$: newAvatar = event?.unsigned?.prev_content?.avatar_url !==
+    event?.content?.avatar_url
+
+$: newName = event?.unsigned?.prev_content?.display_name !==
+    event?.sender?.display_name
+
+function logEvent() {
+    console.log(event)
+}
+
 </script>
 
-<div class="membership fl">
+<div class="membership fl" on:contextmenu={logEvent}>
     <div class="avatar grd"
         style="background-image: url({avatarIMG})">
             {#if !avatarExists}
@@ -56,7 +71,16 @@ $: action = joined ? 'joined' : left ? 'left' : 'unknown'
             {user.username}
         {/if}
         </span>
-        {action} the room
+        {#if !hasPrevContent || !isSameMembership}
+            {action} the room
+        {:else if isSameMembership}
+            {#if newAvatar}
+                changed their profile picture
+            {/if}
+            {#if !newAvatar && newName}
+                changed their name
+            {/if}
+        {/if}
     </div>
 </div>
 
