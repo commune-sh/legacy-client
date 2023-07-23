@@ -54,6 +54,10 @@ function validate(e) {
 
 function check(e) {
     let index = state?.children?.findIndex(x => x.alias == nameInput.value)
+    if(nameInput.value == 'general') {
+        exists = true
+        return
+    }
     if(index > -1) {
         exists = true
     } else {
