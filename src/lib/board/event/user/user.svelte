@@ -33,6 +33,7 @@ $: isDomain = $page.params.domain !== undefined &&
 //$: mediaURL = isDomain ? $store?.federated?.media_url : PUBLIC_MEDIA_URL
 $: mediaURL = isDomain && federated && domainIsHS ? $store?.federated?.media_url
     : isDomain && !domainIsHS && federated_media_url ? federated_media_url :
+     !isDomain && federated && federated_media_url ? federated_media_url :
         PUBLIC_MEDIA_URL
 
 $: domainIsHS = $page.params?.domain == homeserver
