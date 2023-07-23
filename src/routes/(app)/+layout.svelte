@@ -101,6 +101,58 @@ $: if(authenticated) {
     })
 }
 
+$: isMobile = window.innerWidth <= 768
+
+onMount(() => {
+    if(isMobile) {
+        setupSwipeGestures()
+    }
+})
+
+function setupSwipeGestures() {
+    window.addEventListener("touchstart", startTouch, false);
+    window.addEventListener("touchmove", moveTouch, false);
+}
+
+let initialX = null;
+let initialY = null;
+
+function startTouch(e) {
+    initialX = e.touches[0].clientX;
+    initialY = e.touches[0].clientY;
+};
+ 
+function moveTouch(e) {
+    if (initialX === null) {
+        return;
+    }
+    if (initialY === null) {
+        return;
+    }
+    let currentX = e.touches[0].clientX;
+    let currentY = e.touches[0].clientY;
+
+    let diffX = initialX - currentX;
+    let diffY = initialY - currentY;
+ 
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+        if (diffX > 0) {
+            if(menuToggled) {
+                collapse()
+            }
+        } else {
+            if(!menuToggled) {
+                store.toggleMenu()
+            }
+        }  
+    }
+ 
+    initialX = null;
+    initialY = null;
+
+    e.preventDefault();
+};
+
 </script>
 <svelte:head>
 {#if isIndex}

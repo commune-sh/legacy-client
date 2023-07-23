@@ -33,6 +33,7 @@
 		"dayjs": "^1.11.7",
 		"emojibase-data": "^7.0.1",
 		"highlight.js": "^11.8.0",
+		"jwt-decode": "^3.1.2",
 		"markdown-it": "^13.0.1",
 		"markdown-it-emoji": "^2.0.2",
 		"markdown-it-link-attributes": "^4.0.1",

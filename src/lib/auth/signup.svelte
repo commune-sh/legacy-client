@@ -7,6 +7,7 @@ import { eye, eyeoff } from '$lib/assets/icons.js'
 import { APIRequest, validateEmail } from '$lib/utils/request.js'
 import { sendCode, verifyEmail } from '$lib/utils/request.js'
 import { v4 as uuidv4 } from 'uuid';
+//import jwtDecode from 'jwt-decode';
 
 import validator from 'validator';
 
@@ -23,12 +24,21 @@ let kill =() => {
     dispatch('kill', true)
 }
 
+let gloaded = false
+
 onMount(() => {
     if(require_email && emailInput) {
         focusEmailInput()
     } else {
         focusUsernameInput()
     }
+
+    /*
+    const script = document.createElement('script');
+    script.src = "https://accounts.google.com/gsi/client"
+    document.body.appendChild(script);
+    gloaded = true
+    */
 });
 
 async function focusUsernameInput() {
@@ -335,7 +345,16 @@ function togglePass() {
     passwordInput.focus()
 }
 
+window.handleGauth = (e) => {
+    console.log(e)
+    if(e?.credential) {
+        const decoded = jwtDecode(e.credential);
+        console.log(decoded)
+    }
+}
+
 </script>
+
 
 
 
@@ -490,6 +509,7 @@ function togglePass() {
             <div class="mt3">
                 <span class="href sm" on:click={login}>Already have an account?</span>
             </div>
+
         </div>
 
     </div>
@@ -583,4 +603,7 @@ input {
     }
 }
 
+.hide {
+    visibility: none;
+}
 </style>
