@@ -129,7 +129,7 @@ onMount(() => {
     });
 
     md = new MarkdownIt({
-      html: false,
+      html: true,
       linkify: true,
       breaks: true,
       typographer: true

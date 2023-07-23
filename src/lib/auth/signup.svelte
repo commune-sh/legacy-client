@@ -509,7 +509,6 @@ window.handleGauth = (e) => {
             <div class="mt3">
                 <span class="href sm" on:click={login}>Already have an account?</span>
             </div>
-
         </div>
 
     </div>

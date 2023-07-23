@@ -33,6 +33,14 @@ $: mediaURL = isDomain ? $store?.federated?.media_url : PUBLIC_MEDIA_URL
 
 $: avatar = user?.avatar_url ? `${mediaURL}/${user?.avatar_url}` : null
 
+$: isMXC = user?.avatar_url?.includes('mxc://')
+$: stripped = user?.avatar_url?.replace('mxc://', '');
+$: splitMXC = stripped?.split('/')
+$: hs = splitMXC?.[0]
+$: mediaID = splitMXC?.[1]
+$: avatarIMG = isMXC ? `http://${hs}/_matrix/media/r0/thumbnail/${hs}/${mediaID}?width=96&height=96&method=crop` : avatar
+
+
 let el;
 
 $: federated = !user?.id?.includes(PUBLIC_MATRIX_SERVER_NAME)
@@ -49,7 +57,7 @@ $: link = federated ? `https://${hs}/@${user?.username}` :
     <div class="flc" bind:this={el}>
     {#if !hideAvatar}
             <div class="grd-c avatar-base grd" class:ch={isChat}
-            style="background-image: url({avatar})">
+            style="background-image: url({avatarIMG})">
                 {#if !avatarExists}
                     <div class="initials grd-c">
                     {initial}
