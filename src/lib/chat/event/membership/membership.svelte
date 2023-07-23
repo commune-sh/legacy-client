@@ -1,5 +1,7 @@
 <script>
-import { PUBLIC_MEDIA_URL } from '$env/static/public';
+import { PUBLIC_MEDIA_URL, PUBLIC_MATRIX_SERVER_NAME } from '$env/static/public';
+import { getHomeserver } from '$lib/utils/utils.js'
+import { getAPIEndpoint } from '$lib/utils/request.js'
 import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';
 
@@ -22,7 +24,27 @@ $: isDomain = $page.params.domain !== undefined &&
     $page.params.domain !== 'undefined' && 
     $page.params.domain?.length > 0
 
-$: mediaURL = isDomain ? $store?.federated?.media_url : PUBLIC_MEDIA_URL
+$: mediaURL = isDomain && federated && domainIsHS ? $store?.federated?.media_url
+    : isDomain && !domainIsHS && federated_media_url ? federated_media_url :
+        PUBLIC_MEDIA_URL
+
+$: domainIsHS = $page.params?.domain == homeserver
+
+$: homeserver = getHomeserver(user?.id)
+
+$: if(federated) {
+    fetchAPIEndpoint()
+}
+
+let federated_media_url;
+async function fetchAPIEndpoint() {
+    const endpoint = await getAPIEndpoint(homeserver)
+    if(endpoint?.media_url) {
+        federated_media_url = endpoint.media_url
+    }
+}
+$: federated = !user?.id?.includes(PUBLIC_MATRIX_SERVER_NAME)
+
 $: avatar = user?.avatar_url ? `${mediaURL}/${user?.avatar_url}` : null
 
 $: isMXC = user?.avatar_url?.includes('mxc://')
