@@ -1,6 +1,7 @@
 <script>
 import { PUBLIC_MEDIA_URL, PUBLIC_MATRIX_SERVER_NAME } from '$env/static/public';
 import { getHomeserver } from '$lib/utils/utils.js'
+import { getAPIEndpoint } from '$lib/utils/request.js'
 import { crown } from '$lib/assets/icons.js'
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
@@ -29,7 +30,12 @@ $: isDomain = $page.params.domain !== undefined &&
     $page.params.domain !== 'undefined' && 
     $page.params.domain?.length > 0
 
-$: mediaURL = isDomain ? $store?.federated?.media_url : PUBLIC_MEDIA_URL
+//$: mediaURL = isDomain ? $store?.federated?.media_url : PUBLIC_MEDIA_URL
+$: mediaURL = isDomain && federated && domainIsHS ? $store?.federated?.media_url
+    : isDomain && !domainIsHS && federated_media_url ? federated_media_url :
+        PUBLIC_MEDIA_URL
+
+$: domainIsHS = $page.params?.domain == homeserver
 
 $: avatar = user?.avatar_url ? `${mediaURL}/${user?.avatar_url}` : null
 
@@ -40,6 +46,19 @@ $: hs = splitMXC?.[0]
 $: mediaID = splitMXC?.[1]
 $: avatarIMG = isMXC ? `http://${hs}/_matrix/media/r0/thumbnail/${hs}/${mediaID}?width=96&height=96&method=crop` : avatar
 
+$: homeserver = getHomeserver(user?.id)
+
+$: if(federated) {
+    fetchAPIEndpoint()
+}
+
+let federated_media_url;
+async function fetchAPIEndpoint() {
+    const endpoint = await getAPIEndpoint(homeserver)
+    if(endpoint?.media_url) {
+        federated_media_url = endpoint.media_url
+    }
+}
 
 let el;
 
