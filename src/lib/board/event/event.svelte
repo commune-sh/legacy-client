@@ -73,7 +73,7 @@ async function save() {
     const res = await savePost(event)
     console.log("event was saved ",res)
     if(res?.success) {
-        dispatch('saved', { event: res?.event, session: res?.session })
+        dispatch('saved', { event: res?.event, transaction_id: res?.txn_id })
         /*
         event.unsent = false
         event = res?.event

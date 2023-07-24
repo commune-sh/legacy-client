@@ -111,7 +111,6 @@ async function loadMessages() {
       method: 'GET',
     }
     const resp = await loadPosts(opt)
-    console.log(resp)
     if(resp?.events) {
         messages = resp?.events.reverse()
         updateScroll()
@@ -143,7 +142,6 @@ async function fetchMore() {
     }
     fetching = true;
     const resp = await loadPosts(opt)
-    console.log(resp)
     if(resp?.events?.length > 0) {
         sp = zone.scrollHeight - zone.scrollTop
         messages = [...resp?.events.reverse(), ...messages]
@@ -213,11 +211,8 @@ function syncMessages() {
                     }
                 })
             } else if (event && typeof event === 'object') {
-                if(event?.sender?.id == $store?.credentials?.matrix_user_id) {
-                    return
-                }
-                let ind = messages.findIndex(m => m?.origin_server_ts === event?.event_id)
-                console.log("got new event from socket", event)
+                let ind = messages.findIndex(m => m?.transaction_id ===
+                    event?.transaction_id)
                 if(ind == -1) {
                     messages = [...messages, event]
                 }
@@ -345,7 +340,6 @@ $: buttonText = busy ? "Joining..." : "Join to start chatting"
 
 async function newMessage(e) {
     let message = e.detail
-    console.log("building new message evet", message)
     let event = {
         content: message.content,
         type: 'm.room.message',
@@ -359,7 +353,7 @@ async function newMessage(e) {
         event_id: `local-${Date.now()}`,
         room_id: roomID,
         unsent: true,
-        session: uuidv4(),
+        transaction_id: `co${Date.now()}`,
     }
     messages = [...messages, event]
 
@@ -369,15 +363,13 @@ async function newMessage(e) {
 
 async function saved(e) {
     let event = e.detail.event
-    let session = e.detail.session
-    const index = messages.findIndex(i => i.session === session);
+    let transaction_id = e.detail.transaction_id
+    const index = messages.findIndex(i => i.transaction_id === transaction_id);
     if(index !== -1) {
         messages[index] = event
         messages = messages
-        console.log("event saved", event)
     }
     last =  event.origin_server_ts
-    console.log("last is", last)
 }
 
 async function redactPost(e) {
