@@ -24,7 +24,9 @@ function kill() {
     }
 
     if($page.url.search) {
-        url = `${url}${$page.url.search}`
+        if(!$page.url.search.startsWith('?context')) {
+            url = `${url}${$page.url.search}`
+        }
     }
 
     if($page.url.pathname.startsWith('/all')) {

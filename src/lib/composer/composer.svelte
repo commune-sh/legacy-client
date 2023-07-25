@@ -559,16 +559,19 @@ function addEmoji(e) {
 function trackCaret(e) {
     setTimeout(() => {
         const pt = bodyInput.value.substring(0, bodyInput.selectionStart);
-        const pattern = /:\S{2,}$/;
-        //const pattern = /(?<=\s):(\S{2,})$/;
-        //const pattern = /([ \n]?)[:](\S{2,})$/;
+        const emp = /:\S{2,}$/;
+        const lmp = /\/\S{1,}$/;
 
-        if (pattern.test(pt)) {
-            let et = pt.match(pattern)[0];
+        if (emp.test(pt)) {
+            let et = pt.match(emp)[0];
             et = et.substring(1);
             shortcode = et;
             emojiListActive = true
-        } else{
+        } else if(lmp.test(pt)){
+            let et = pt.match(lmp)[0];
+            et = et.substring(1);
+            console.log("matched", et)
+        } else {
             emojiListActive = false
             shortcode = '';
         }

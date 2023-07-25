@@ -101,6 +101,7 @@ $: isReply = postEventID != null
 
 async function saveReaction(key) {
     let post = {
+        transaction_id: `co${Date.now()}`,
         room_id: event.room_id,
         type: "m.reaction",
         reacting_to: event.event_id,
