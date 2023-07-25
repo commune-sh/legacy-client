@@ -1,7 +1,7 @@
 <script>
 import { PUBLIC_APP_NAME } from '$env/static/public'
 import { onMount, createEventDispatcher } from 'svelte'
-import { close } from '$lib/assets/icons.js'
+import { close, github } from '$lib/assets/icons.js'
 import { store } from '$lib/store/store.js'
 import { discoverSpaces } from '$lib/utils/request.js'
 
@@ -23,6 +23,8 @@ $: active = $store.aboutOpen
         <div class="close c-ico grd-c ph3" on:click={kill}>
             {@html close}
         </div>
+
+
         <div class="about pa4 fl-co">
 
             <section class="pa">
@@ -81,6 +83,17 @@ $: active = $store.aboutOpen
             </section>
 
 
+            <section class="pa mt4 fl">
+                <div class="grd-c ico-s git">
+                    {@html github}
+                </div>
+                <div class="grd-c ml2">
+                        <a href="https://github.com/commune-os/commune-server" target="_blank">
+                    Check out the code
+                    </a>
+                </div>
+            </section>
+
         </div>
 
 
@@ -133,6 +146,11 @@ $: active = $store.aboutOpen
     .about {
         margin-top: 3rem;
     }
+}
+
+.git {
+    height: 30px;
+    width: 30px;
 }
 </style>
 

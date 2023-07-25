@@ -570,7 +570,6 @@ function trackCaret(e) {
         } else if(lmp.test(pt)){
             let et = pt.match(lmp)[0];
             et = et.substring(1);
-            console.log("matched", et)
         } else {
             emojiListActive = false
             shortcode = '';

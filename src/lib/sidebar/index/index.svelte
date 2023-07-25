@@ -2,7 +2,7 @@
 import { APIRequest } from '$lib/utils/request.js'
 import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public'
 import { onMount } from 'svelte'
-import { addLine } from '$lib/assets/icons.js'
+import { addLine, github } from '$lib/assets/icons.js'
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
 import PublicSpaceItem from './public-space-item.svelte'
@@ -80,8 +80,10 @@ function createSpace() {
                 Welcome to {PUBLIC_APP_NAME}'s Matrix-powered 
                 communities. 
             </div>
-            <div class="mt2">
-                <span class="href" on:click={showAbout}>Learn More</span>
+            <div class="mt2 fl">
+                <div class="fl-o grd">
+                    <div class="href grd-c" on:click={showAbout}>Learn More</div>
+                </div>
             </div>
         </div>
 
@@ -100,7 +102,7 @@ function createSpace() {
                     {/if}
                 {/each}
                 <div class="mt3 cr" on:click={createSpace}>
-                    <div class="ico-s grd grd-c mh2">
+                    <div class="addl ico-s grd grd-c mh2">
                         {@html addLine}
                     </div>
                     <div class="crs">
@@ -157,12 +159,16 @@ function createSpace() {
     color: white;
 }
 
+.addl {
+    fill: var(--primary);
+}
+
 .ico-s {
     height: 18px;
     width: 18px;
-    fill: var(--primary);
     opacity: 1;
 }
+
 .cr:hover .ico-s{
     fill: white;
 }
@@ -170,4 +176,8 @@ function createSpace() {
     justify-self: start;
     align-self: center;
 }
+.git {
+    cursor: pointer;
+}
+
 </style>

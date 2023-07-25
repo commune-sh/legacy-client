@@ -14,7 +14,6 @@ export let md = new MarkdownIt({
 md.linkify.set({ fuzzyEmail: false })
 
 
-
 md.linkify.add('@', {
     validate: function (text, pos, self) {
         var tail = text.slice(pos);

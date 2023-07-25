@@ -31,6 +31,7 @@ $: initial = space?.alias?.charAt(0)?.toUpperCase()
 
 function goToSpace() {
     let url = `/settings`
+    return
     goto(url, {noscroll: true})
 }
 
