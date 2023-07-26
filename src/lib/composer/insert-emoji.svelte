@@ -9,6 +9,8 @@ let id = uuidv4()
 
 export let busy;
 export let reply;
+export let position = 'right';
+export let center = true;
 
 let reactEl;
 function insertEmoji() {
@@ -17,7 +19,7 @@ function insertEmoji() {
     }
     store.activateEmojiPicker({
         reacting_to: id,
-        position: 'right',
+        position: position || 'right',
         target: reactEl,
     })
 }
@@ -36,7 +38,9 @@ $: if(emojiSelected) {
 
 </script>
 
-<div class="ml2 c-ico grd-c"
+<div class="ml2 c-ico"
+    class:grd-c={center}
+    class:pt3={!center}
     on:click={insertEmoji}
     bind:this={reactEl}>
     {@html em1}

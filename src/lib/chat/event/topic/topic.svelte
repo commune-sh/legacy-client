@@ -68,7 +68,7 @@ $: avatarIMG = isMXC ? `http://${hs}/_matrix/media/r0/thumbnail/${hs}/${mediaID}
                 {/if}
         </div>
     </div>
-    <div class="">
+    <div class="mr3">
         <span class="name">
         {#if nameExists}
             {event?.content?.displayname}
@@ -90,6 +90,7 @@ $: avatarIMG = isMXC ? `http://${hs}/_matrix/media/r0/thumbnail/${hs}/${mediaID}
     color: var(--text-light);
 }
 .avatar {
+    margin-top: 3px;
     min-width: 14px;
     min-height: 14px;
     border-radius: 50%;

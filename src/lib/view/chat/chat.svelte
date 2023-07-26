@@ -268,7 +268,9 @@ function syncMessages() {
                     }
                 }
 
-                if(event.type == 'm.room.member') {
+                if(event.type == 'm.room.member' || 
+                event.type == 'm.room.name' || 
+                event.type == 'm.room.topic') {
                     messages = [...messages, event]
                     messages = messages
                 }
@@ -502,7 +504,7 @@ async function reacted(e) {
                                 memberships={message}/>
                         {/if}
                         {#if message?.type === 'm.room.topic'}
-                                <Topic event={message}/>
+                            <Topic event={message}/>
                         {/if}
                     {/each}
                 {/if}

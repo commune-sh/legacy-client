@@ -5,9 +5,7 @@ import { getAPIEndpoint } from '$lib/utils/request.js'
 import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';
 
-export let events;
 export let event;
-export let index;
 
 $: user = event?.sender
 

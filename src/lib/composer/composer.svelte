@@ -728,12 +728,20 @@ function toggleFullscreen() {
                 </div>
             {/if}
         </div>
+        {#if isChat}
+            <InsertEmoji 
+                center={false}
+                position={"left"} 
+                reply={reply} 
+                busy={busy} 
+                on:selected={insertEmoji}/>
+        {/if}
 
         {#if isChat && !editing}
             <div class="ph3 pt3">
                 <div 
                     on:click={createPost} 
-                    class="prev c-ico grd-c ph2">
+                    class="c-ico grd-c ph2">
                     {@html send}
                 </div>
             </div>
@@ -835,7 +843,7 @@ function toggleFullscreen() {
     overflow-y: hidden;
 }
 .each {
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto 1fr auto auto;
     grid-template-rows: 1fr;
 }
 
