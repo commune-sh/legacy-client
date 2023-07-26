@@ -1,4 +1,5 @@
 <script>
+import { onMount, onDestroy } from 'svelte';
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import tz from 'dayjs/plugin/timezone'
@@ -36,6 +37,19 @@ $: isThisWeek = dayjs().diff(dayjs(date), 'day') < 7
 $: when = dayjs(date)?.fromNow(true)
 $: created = dayjs(date)?.format('MMM D')
 
+let interval;
+
+onMount(() => {
+    updateTime()
+    interval = setInterval(updateTime, 1000)
+})
+onDestroy(() => {
+    clearInterval(interval)
+})
+
+function updateTime() {
+    when = dayjs(date)?.fromNow(true)
+}
 
 $: title = dayjs(date)?.format()
 
