@@ -41,7 +41,9 @@ function kill() {
         return
     }
     dispatch('kill')
-    reset()
+    if(!isChat) {
+        reset()
+    }
 }
 
 
@@ -691,7 +693,7 @@ function toggleFullscreen() {
             class:pa1={isSocial}
             class:bcnh={isChat}
             class:edbc={editing && isChat}
-            class:rp={reply}
+            class:rp={reply && !isChat}
             class:bs={busy} 
             on:click={focusBodyInput}>
                 <textarea 

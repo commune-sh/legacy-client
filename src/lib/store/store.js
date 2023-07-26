@@ -89,6 +89,7 @@ function createApp() {
     movingPost: null,
     draggable: null,
     indexSort: null,
+    redactedEvent: null,
   }
 
   if(window) {

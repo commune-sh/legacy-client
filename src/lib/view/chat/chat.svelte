@@ -258,6 +258,7 @@ function syncMessages() {
                 })
             } else if (event && typeof event === 'object') {
                 if(event.type == 'm.room.redaction') {
+                    $store.redactedEvent = event
                     let ind = messages.findIndex(m => m?.event_id ===
                         event?.content?.redacts)
                     if(ind != -1) {
@@ -330,7 +331,10 @@ function addNewReaction(e) {
                 let j = event?.reactions[i].senders.findIndex(s => s?.transaction_id === txn_id);
                 if(j === -1) {
                     // if it doesn't, add sender
-                    event?.reactions[i].senders.push({sender: sender});
+                    event?.reactions[i].senders.push({
+                        sender: sender,
+                        event_id: e.event_id
+                    });
                 }
 
                 // if there are no senders, remove reaction
@@ -341,7 +345,10 @@ function addNewReaction(e) {
             } else {
                 let newReaction = {
                     key: key,
-                    senders: [{sender: sender}]
+                    senders: [{
+                        sender: sender,
+                        event_id: e.event_id
+                    }]
                 };
 
                 event.reactions.push(newReaction);
@@ -350,7 +357,10 @@ function addNewReaction(e) {
             event.reactions = [
                 {
                     key: key,
-                    senders: [{sender: sender}]
+                    senders: [{
+                        sender: sender,
+                        event_id: e.event_id
+                    }]
                 }
             ]
         } 
@@ -514,6 +524,22 @@ async function reacted(e) {
     }
 }
 
+let replying = false;
+let replyToEvent;
+
+function reply(e) {
+    let event = e.detail
+    replying = true
+    replyToEvent = event
+    setTimeout(() => {
+        zone.scrollTop = zone.scrollHeight;
+    }, 10)
+}
+function cancelReply() {
+    replying = false
+    replyToEvent = null
+}
+
 </script>
 
 
@@ -545,6 +571,7 @@ async function reacted(e) {
                             <Event 
                                 isChat={true}
                                 index={i}
+                                on:replyTo={reply}
                                 on:reacted={reacted}
                                 on:redact={redactPost}
                                 messages={processed}
@@ -575,8 +602,11 @@ async function reacted(e) {
                     <Composer 
                         topic={$page.params.topic}
                         on:typing={isTyping}
+                        reply={replying}
+                        replyTo={replyToEvent}
                         on:new-message={newMessage}
                         roomID={roomID} 
+                        on:kill={cancelReply}
                         isChat={true} />
                 </div>
             {:else if authenticated && !joinedRoom}

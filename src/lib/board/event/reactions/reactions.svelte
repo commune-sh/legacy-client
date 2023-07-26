@@ -159,6 +159,27 @@ async function redact(key) {
     dispatch('update-reactions', event)
 }
 
+$: if($store.redactedEvent) {
+    let ev = $store.redactedEvent
+
+
+    if(event?.reactions) {
+
+        event.reactions.forEach((r, item) => {
+            let i = r?.senders?.findIndex(s => s?.event_id === ev?.content?.redacts);
+            if(i !== -1) {
+                r.senders.splice(i, 1)
+                if(r?.senders.length === 0) {
+                    console.log("remove this", item)
+                    event.reactions.splice(item, 1)
+                    event.reactions = event.reactions
+                }
+            }
+        })
+    }
+
+}
+
 let skip = ['pinned', 'tagged']
 
 $: state = $store?.states[$page?.params?.space]
