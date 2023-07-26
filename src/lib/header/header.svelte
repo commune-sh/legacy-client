@@ -13,6 +13,8 @@ import BoardList from './board-list.svelte'
 import DefaultIndexList from './default-index-list.svelte'
 import IndexList from './index-list.svelte'
 import BoardInfo from './board-info.svelte'
+import { md } from '$lib/composer/md/md.js'
+
 
 $: authenticated = $store?.authenticated && 
     $store?.credentials != null
@@ -255,7 +257,7 @@ selected?.name : selected?.alias ? selected?.alias : null
             {/if}
         </div>
 
-        <div class="fl mr3 sel-no">
+        <div class="ovf mr3 sel-no">
 
             <div class="name grd-c fl">
             {#if (isIndex || indexPost || isAll)}
@@ -295,35 +297,36 @@ selected?.name : selected?.alias ? selected?.alias : null
 
             </div>
 
-            {#if selected?.topic && !isPost}
-                <div class="topic grd-c">
-                    {selected?.topic}
-                </div>
-            {/if}
+            <div class="topic grd-c sel">
+                {#if selected?.topic && !isPost}
+                    {@html md.render(selected?.topic)}
+                {/if}
+            </div>
 
-            <div class="fl-o"></div>
             {#if $store.verifiedSession}
                 <div class="grd-c">
                     <Search />
                 </div>
             {/if}
                 {#if $store.verifiedSession && space && exists && !isChat}
-                    <div class="grd-c">
                     {#if (joined && !isProfile) || ownProfile}
+                    <div class="grd-c">
                         {#if !editing}
                         <button class="new-post light ml3" on:click={newPost}>New Post</button>
                             <div class="new-post-alt c-ico" on:click={newPost}>
                                 {@html addLine}
                             </div>
                         {/if}
+                    </div>
                     {:else if authenticated && (!joined)}
+                    <div class="grd-c">
                         <button class="light ml3" 
                             disabled={busy}
                             on:click={join}>
                             {buttonText}
                         </button>
-                    {/if}
                     </div>
+                    {/if}
                 {/if}
             {#if $store.verifiedSession && !authenticated}
                 <div class="grd-c ml2 signup">
@@ -341,12 +344,14 @@ selected?.name : selected?.alias ? selected?.alias : null
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: auto;
+    overflow: hidden;
 }
 
 .container {
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: auto;
+    overflow: hidden;
 }
 
 .dne {
@@ -425,21 +430,26 @@ selected?.name : selected?.alias ? selected?.alias : null
     margin-right: 0.75rem;
     margin-left: 0.75rem;
 }
+
 .topic {
     color: var(--text-light);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    overflow-wrap: break-word;
     margin-right: 0.5rem;
     font-size: 13px;
-    font-weight: 500;
     line-height: normal;
+    max-width: 100%;
+    justify-self: start;
+    align-self: center;
+}
+
+div :global(p) {
+    display: inline;
 }
 
 @media screen and (max-width: 1020px) {
-    .topic {
-        display: none;
-    }
 }
 a, a:link, a:visited, a:active {
     text-decoration: none;
@@ -453,5 +463,14 @@ a, a:link, a:visited, a:active {
 .dot {
     right: 8px;
     top: 8px;
+}
+.ovf {
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    grid-template-rows: auto;
+}
+.bb {
+    grid-template-columns: auto 1fr auto auto;
 }
 </style>

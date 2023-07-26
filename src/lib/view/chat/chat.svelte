@@ -9,6 +9,7 @@ import { store } from '$lib/store/store.js'
 import Event from '$lib/board/event/event.svelte'
 import Header from '$lib/header/header.svelte'
 import Memberships from '$lib/chat/event/membership/memberships.svelte'
+import Topic from '$lib/chat/event/topic/topic.svelte'
 import SkeletonChatEvents from '$lib/skeleton/skeleton-chat-events.svelte'
 import { v4 as uuidv4 } from 'uuid';
 
@@ -499,6 +500,9 @@ async function reacted(e) {
                         {#if message?.type === 'm.room.members'}
                                 <Memberships
                                 memberships={message}/>
+                        {/if}
+                        {#if message?.type === 'm.room.topic'}
+                                <Topic event={message}/>
                         {/if}
                     {/each}
                 {/if}

@@ -357,6 +357,13 @@ a:hover {
     user-select: none;
 }
 
+.sel {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+
 button {
     cursor: pointer;
     line-height: 1;
