@@ -101,11 +101,16 @@ function resetHovered() {
     showFrequent = false;
 }
 
+function reacted(e) {
+    showFrequent = false;
+    dispatch('react', e.detail)
+}
+
 </script>
 
 <div class="event-tools">
     {#if showFrequent}
-        <ShowFrequent on:active on:react event={event} />
+        <ShowFrequent on:active on:react={reacted} event={event} />
     {/if}
 
     <React inline={false} 
@@ -115,7 +120,7 @@ function resetHovered() {
         on:react
         on:active />
 
-    {#if isPost || isReply}
+    {#if isPost || isReply || isChat}
     <div class="icon grd-c c-ico" 
         on:mouseenter={resetHovered}
         on:click|stopPropagation={replyToEvent}>

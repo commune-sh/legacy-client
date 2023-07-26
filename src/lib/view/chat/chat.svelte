@@ -275,6 +275,10 @@ function syncMessages() {
                     messages = messages
                 }
 
+                if(event.type == 'm.reaction') {
+                    addNewReaction(event)
+                }
+
                 let ind = messages.findIndex(m => m?.transaction_id ===
                     event?.transaction_id)
                 if(ind == -1) {
@@ -305,6 +309,55 @@ function syncMessages() {
             }))
         }
     }, 30000);
+}
+
+function addNewReaction(e) {
+    let txn_id = e?.transaction_id
+    let mev = e?.content?.['m.relates_to']?.event_id
+    let key = e?.content?.['m.relates_to']?.key
+    let ind = messages.findIndex(m => m?.event_id === mev)
+    if(ind != -1) {
+        let event = messages[ind]
+        let sender = e?.sender?.id
+
+        if(event?.reactions) {
+            // check if reaction key exists
+            let i = event?.reactions?.findIndex(r => r.key === key);
+            console.log("does emoji exist?", i)
+            // add sender if it does
+            if (i !== -1) {
+                // check if sender exists 
+                let j = event?.reactions[i].senders.findIndex(s => s?.transaction_id === txn_id);
+                if(j === -1) {
+                    // if it doesn't, add sender
+                    event?.reactions[i].senders.push({sender: sender});
+                }
+
+                // if there are no senders, remove reaction
+                if(event?.reactions[i].senders.length === 0) {
+                    event?.reactions.splice(i, 1);
+                }
+            // if not, add new reaction with sender
+            } else {
+                let newReaction = {
+                    key: key,
+                    senders: [{sender: sender}]
+                };
+
+                event.reactions.push(newReaction);
+            }
+        } else {
+            event.reactions = [
+                {
+                    key: key,
+                    senders: [{sender: sender}]
+                }
+            ]
+        } 
+        event.reactions = event.reactions
+        console.log("new reactions", event.reactions)
+        messages = messages
+    }
 }
 
 async function isTyping() {

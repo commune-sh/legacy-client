@@ -23,10 +23,10 @@ export let isTag;
 
 $: sender= $store.credentials?.matrix_user_id
 
-$: reacted = reaction?.senders?.findIndex(s => s === sender) > -1
+$: reacted = reaction?.senders?.findIndex(s => s?.sender === sender) > -1
 
 $: notOP = isTag && 
-    reaction?.senders?.[0] != sender_id
+    reaction?.senders?.[0]?.sender != sender_id
 
 function reactToEvent() {
     if(isTag && !authenticated) {
@@ -75,7 +75,7 @@ function localpart(id) {
 <div class="tip fl-co" bind:this={content}>
     {#each reaction.senders as sender, i}
         <div class="sen" class:mb2={i != (reaction?.senders?.length - 1)}>
-            @{localpart(sender)}
+            @{localpart(sender?.sender)}
         </div>
     {/each}
 </div>

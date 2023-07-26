@@ -314,6 +314,9 @@ function addTag(e) {
     reactions.process(e.detail)
 }
 
+export function addNewReaction(e) {
+    console.log("adding new reaction", e)
+}
 
 $: showRoomAlias = !isSpace && !isRoom && !isReply && !isTopic && !isPost
 

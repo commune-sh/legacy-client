@@ -50,6 +50,8 @@ export function process(key) {
     }
 
 
+    let txn_id =  `co${Date.now()}`
+
     if(event?.reactions) {
         // check if reaction key exists
         let i = event?.reactions?.findIndex(r => r.key === key);
@@ -57,12 +59,15 @@ export function process(key) {
         // add sender if it does
         if (i !== -1) {
             // check if sender exists 
-            let j = event?.reactions[i].senders.findIndex(s => s === sender);
+            let j = event?.reactions[i].senders.findIndex(s => s?.sender === sender);
             console.log("does sender exist?", j)
             if(j === -1) {
                 // if it doesn't, add sender
-                event?.reactions[i].senders.push(sender);
-                saveReaction(key)
+                event?.reactions[i].senders.push({
+                    sender: sender,
+                    transaction_id: txn_id
+                });
+                saveReaction(key, txn_id)
             } else {
                 // if it does, remove sender
                 console.log("removing sender")
@@ -78,20 +83,26 @@ export function process(key) {
         } else {
             let newReaction = {
                 key: key,
-                senders: [sender]
+                senders: [{
+                    sender: sender,
+                    transaction_id: txn_id
+                }]
             };
 
             event.reactions.push(newReaction);
-            saveReaction(key)
+            saveReaction(key, txn_id)
         }
     } else {
         event.reactions = [
             {
                 key: key,
-                senders: [sender]
+                senders: [{
+                    sender: sender,
+                    transaction_id: txn_id
+                }]
             }
         ]
-        saveReaction(key)
+        saveReaction(key, txn_id)
         
     } 
     event.reactions = event.reactions
@@ -99,9 +110,9 @@ export function process(key) {
 
 $: isReply = postEventID != null
 
-async function saveReaction(key) {
+async function saveReaction(key, txn_id) {
     let post = {
-        transaction_id: `co${Date.now()}`,
+        transaction_id: txn_id,
         room_id: event.room_id,
         type: "m.reaction",
         reacting_to: event.event_id,
@@ -124,6 +135,16 @@ async function saveReaction(key) {
 
     const res = await savePost(post);
     console.log(res)
+    if(res?.txn_id) {
+        let i = event?.reactions?.findIndex(r => r.key === key);
+        if(i !== -1) {
+        let j = event?.reactions[i].senders.findIndex(s => s?.transaction_id ===
+            res?.txn_id);
+            if(j !== -1) {
+                event.reactions[i].senders[j].event_id = res?.event?.event_id
+            }
+        }
+    }
     dispatch('update-reactions', event)
 }
 
