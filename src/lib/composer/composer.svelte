@@ -364,6 +364,13 @@ async function createPost() {
                 thread_event_id: threadEvent,
                 'rel_type': 'm.nested_reply',
             }
+            if(isChat) {
+                post.type = 'm.room.message'
+                post.content['m.relates_to'] = {
+                    event_id: replyTo.event_id,
+                    'rel_type': 'm.reference',
+                }
+            }
         }
 
         if(editing) {
@@ -629,6 +636,8 @@ function toggleFullscreen() {
     isFullscreen = !isFullscreen
 }
 
+$: replyToName = replyTo?.sender?.display_name ? replyTo.sender.display_name :
+replyTo?.sender?.username ? replyTo.sender.username : ``
 </script>
 
 <section class="composer"
@@ -638,15 +647,15 @@ function toggleFullscreen() {
     class:rep={reply}>
 
     {#if reply && replyTo}
-        <div class="reply-header">
-            <div class="fw5 pa3 sm">
-                Replying
+            <div class="reply-header">
+                <div class="fw5 pa3 sm">
+                    Replying
+                </div>
+                <div class="grd-c c-ico ph2 mr2" on:click={kill}>
+                    {@html close}
+                </div>
             </div>
-            <div class="grd-c c-ico ph2 mr2" on:click={kill}>
-                {@html close}
-            </div>
-        </div>
-        <Event event={replyTo} isReply={reply} interactive={false} />
+            <Event event={replyTo} isReply={reply} interactive={false} />
     {/if}
 
     {#if showAttachments && isChat}

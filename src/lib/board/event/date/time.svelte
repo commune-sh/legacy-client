@@ -14,7 +14,7 @@ $: title = dayjs(date)?.format()
 
 </script>
 
-<div class="time grd-c" title={title}>
+<div class="time grd-c sel-no" title={title}>
     {created}
 </div>
 
