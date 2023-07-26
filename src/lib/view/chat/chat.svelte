@@ -212,6 +212,17 @@ function syncMessages() {
                     }
                 })
             } else if (event && typeof event === 'object') {
+                if(event.type == 'm.room.redaction') {
+                    let ind = messages.findIndex(m => m?.event_id ===
+                        event?.content?.redacts)
+                    console.log("we redacting?", ind)
+                    if(ind != -1) {
+                        messages[ind].content = {
+                            redacted: true,
+                        }
+                        messages = messages
+                    }
+                }
                 let ind = messages.findIndex(m => m?.transaction_id ===
                     event?.transaction_id)
                 if(ind == -1) {
@@ -377,7 +388,9 @@ async function redactPost(e) {
     const event = e.detail
     const index = messages.findIndex(i => i.event_id === event.event_id);
     if(index !== -1) {
-        messages.splice(index, 1);
+        messages[index].content = {
+            redacted: true,
+        }
         messages = messages
     }
 
