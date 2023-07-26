@@ -434,6 +434,7 @@ $: redacted = event?.content?.redacted
     on:mouseleave={hideTools}
     class:h={!isReply && !isPost && !editing && !isChat}
     class:chat={isChat}
+    class:nch={!isChat}
     class:shs={isChat && showSender}
     class:ha={!isReply && !isPost && (hasAttachments || hasLinks)}
     class:ma={toolsActive}
@@ -897,7 +898,7 @@ $: redacted = event?.content?.redacted
 
 
 @media screen and (max-width: 768px) {
-    .event {
+    .nch {
         padding-bottom: 0.5rem;
         padding-top: 0.5rem;
     }

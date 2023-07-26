@@ -202,7 +202,7 @@ function syncMessages() {
     socket.onmessage = function (e) {
         if(e?.data && e?.data != 'ping') {
             let event = JSON.parse(e.data)
-            console.log(event)
+
             if (event && Array.isArray(event)) {
                 let events = event.reverse()
                 events?.forEach(e => {
@@ -215,7 +215,6 @@ function syncMessages() {
                 if(event.type == 'm.room.redaction') {
                     let ind = messages.findIndex(m => m?.event_id ===
                         event?.content?.redacts)
-                    console.log("we redacting?", ind)
                     if(ind != -1) {
                         messages[ind].content = {
                             redacted: true,
@@ -223,6 +222,11 @@ function syncMessages() {
                         messages = messages
                     }
                 }
+
+                if(event.type == 'm.room.member') {
+                    messages = [...messages, event]
+                }
+
                 let ind = messages.findIndex(m => m?.transaction_id ===
                     event?.transaction_id)
                 if(ind == -1) {
