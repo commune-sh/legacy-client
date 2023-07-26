@@ -94,6 +94,7 @@ function logEvent() {
             {user.username}
         {/if}
         </span>
+        <span class="action">
         {#if !hasPrevContent || !isSameMembership}
             {action} the room
         {:else if isSameMembership}
@@ -104,6 +105,7 @@ function logEvent() {
                 changed their name
             {/if}
         {/if}
+        </span>
     </div>
 </div>
 
@@ -132,5 +134,7 @@ function logEvent() {
 }
 .name {
     font-weight: 500;
+}
+.action {
 }
 </style>

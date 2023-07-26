@@ -202,6 +202,7 @@ function syncMessages() {
     socket.onmessage = function (e) {
         if(e?.data && e?.data != 'ping') {
             let event = JSON.parse(e.data)
+            console.log(event)
             if (event && Array.isArray(event)) {
                 let events = event.reverse()
                 events?.forEach(e => {

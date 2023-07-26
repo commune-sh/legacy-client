@@ -418,6 +418,8 @@ $: isMatrixMedia = event?.content?.msgtype == 'm.image' ||
     event?.content?.msgtype == 'm.audio' ||
     event?.content?.msgtype == 'm.file'
 
+$: redacted = event?.content?.redacted
+
 </script>
 
 <div class="event" 
@@ -483,7 +485,7 @@ $: isMatrixMedia = event?.content?.msgtype == 'm.image' ||
 
 
         <div class="body" class:nonin={!interactive}
-            class:ch={isChat}>
+            class:ch={isChat && !redacted}>
 
             {#if editing && interactive}
 
@@ -503,11 +505,17 @@ $: isMatrixMedia = event?.content?.msgtype == 'm.image' ||
                 {:else if isChat}
                     <div class="chat-message">
                         <div class="chti">
+                            {#if !redacted}
                             <Time date={event?.origin_server_ts} />
+                            {/if}
                         </div>
                         <div class="chp post-body pr3 pci"
                         class:unsent={event?.unsent}>
-                            {@html content}
+                            {#if redacted}
+                                <span class="del">Message deleted</span>
+                            {:else}
+                                {@html content}
+                            {/if}
                         </div>
                     </div>
                 {:else if isSocial && !isPost && !isReply}
@@ -628,7 +636,8 @@ $: isMatrixMedia = event?.content?.msgtype == 'm.image' ||
     {/if}
 
 
-        {#if !safari && displayTools && !editing && interactive && !bannedFromSpace && !dragging}
+        {#if !safari && displayTools && !editing && interactive &&
+            !bannedFromSpace && !dragging && !redacted}
         <div class="tools" 
             class:chto={isChat && !showSender}
             class:asi={event?.pinned || replyPinned}>
@@ -972,5 +981,8 @@ $: isMatrixMedia = event?.content?.msgtype == 'm.image' ||
 }
 .readmore {
     padding: 0.125rem 0.25rem;
+}
+.del {
+    color: var(--text-light);
 }
 </style>
