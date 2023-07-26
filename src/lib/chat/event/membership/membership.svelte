@@ -5,18 +5,20 @@ import { getAPIEndpoint } from '$lib/utils/request.js'
 import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';
 
+export let events;
 export let event;
+export let index;
 
 $: user = event?.sender
 
-$: avatarExists = user?.avatar_url !== undefined && 
-    user?.avatar_url !== null && 
-    user?.avatar_url !== '';
+$: avatarExists = event?.content?.avatar_url !== undefined && 
+    event?.content?.avatar_url !== null && 
+    event?.content?.avatar_url !== '';
 
-$: nameExists = user?.display_name !== undefined && 
-    user?.display_name !== null && 
-    user?.display_name !== '' &&
-    user?.display_name !== user?.username;
+$: nameExists = event?.content?.displayname !== undefined && 
+    event?.content?.displayname !== null && 
+    event?.content?.displayname !== '' &&
+    event?.content?.displayname !== user?.username;
 
 $: initial = user?.username?.charAt(0).toUpperCase();
 
@@ -46,10 +48,11 @@ async function fetchAPIEndpoint() {
 }
 $: federated = !user?.id?.includes(PUBLIC_MATRIX_SERVER_NAME)
 
-$: avatar = user?.avatar_url ? `${mediaURL}/${user?.avatar_url}` : null
+$: avatar = event?.content?.avatar_url ?
+    `${mediaURL}/${event?.content?.avatar_url}` : null
 
-$: isMXC = user?.avatar_url?.includes('mxc://')
-$: stripped = user?.avatar_url?.replace('mxc://', '');
+$: isMXC = event?.content?.avatar_url?.includes('mxc://')
+$: stripped = event?.content?.avatar_url?.replace('mxc://', '');
 $: splitMXC = stripped?.split('/')
 $: hs = splitMXC?.[0]
 $: mediaID = splitMXC?.[1]
@@ -69,7 +72,7 @@ $: newAvatar = event?.unsigned?.prev_content?.avatar_url !==
     event?.content?.avatar_url
 
 $: newName = event?.unsigned?.prev_content?.display_name !==
-    event?.sender?.display_name
+    event?.content?.displayname
 
 function logEvent() {
     console.log(event)
@@ -89,7 +92,7 @@ function logEvent() {
     <div class="">
         <span class="name">
         {#if nameExists}
-            {user.display_name}
+            {event?.content?.displayname}
         {:else}
             {user.username}
         {/if}
@@ -112,7 +115,8 @@ function logEvent() {
 
 <style>
 .membership {
-    margin-top: 0.5rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
     margin-left: calc(30px + 2rem);
     font-size: 13px;
     color: var(--text-light);

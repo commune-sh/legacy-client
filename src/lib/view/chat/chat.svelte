@@ -8,7 +8,7 @@ import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
 import Event from '$lib/board/event/event.svelte'
 import Header from '$lib/header/header.svelte'
-import MembershipEvent from '$lib/chat/event/membership/membership.svelte'
+import Memberships from '$lib/chat/event/membership/memberships.svelte'
 import SkeletonChatEvents from '$lib/skeleton/skeleton-chat-events.svelte'
 import { v4 as uuidv4 } from 'uuid';
 
@@ -75,6 +75,50 @@ let _page = null;
 let reloadTrigger;
 
 let messages;
+
+function process(m) {
+    if(!m) return []
+    let processedEvents = [];
+    let currentMembershipEvents = [];
+
+    for (const event of m) {
+    if (event.type === 'm.room.member') {
+        if(!event?.sender?.display_name) {
+            event.sender.display_name = event.sender.user_id
+        }
+        if (!currentMembershipEvents) {
+        // If there is no ongoing aggregation, start a new one
+            currentMembershipEvents = [event];
+        } else {
+        // If there is an ongoing aggregation, continue adding to it
+            currentMembershipEvents.push(event);
+        }
+    } else {
+        // If the current event is not a membership event, add the aggregated membership events
+        if (currentMembershipEvents.length > 0) {
+            processedEvents.push({
+                type: 'm.room.members',
+                events: currentMembershipEvents,
+            });
+            currentMembershipEvents = []; // Clear the temporary array for the next group of events
+        }
+
+    // Add the non-membership event to the processedEvents array
+        processedEvents.push(event);
+        }
+    }
+
+  // If there are any remaining membership events at the end, add them as an aggregated group
+    if (currentMembershipEvents.length > 0) {
+        processedEvents.push({
+            type: 'm.room.members',
+            events: currentMembershipEvents,
+        });
+    }
+    return processedEvents
+}
+
+$: processed = process(messages)
 
 $: if(reloadTrigger && ($page.params?.room != _page?.params?.room)) {
     loadMessages()
@@ -225,6 +269,7 @@ function syncMessages() {
 
                 if(event.type == 'm.room.member') {
                     messages = [...messages, event]
+                    messages = messages
                 }
 
                 let ind = messages.findIndex(m => m?.transaction_id ===
@@ -438,21 +483,22 @@ async function reacted(e) {
                 <div class="messages fl-co fl-o">
                     <div class="emp fl-o"></div>
 
-                {#if messages}
-                    {#each messages as message, i}
+                {#if processed}
+                    {#each processed as message, i}
                         {#if message?.type === 'm.room.message'}
                             <Event 
                                 isChat={true}
                                 index={i}
                                 on:reacted={reacted}
                                 on:redact={redactPost}
-                                messages={messages}
+                                messages={processed}
                                 event={message} 
                                 on:saved={saved}
                                 sender={null} />
                         {/if}
-                        {#if message?.type === 'm.room.member'}
-                                <MembershipEvent event={message}/>
+                        {#if message?.type === 'm.room.members'}
+                                <Memberships
+                                memberships={message}/>
                         {/if}
                     {/each}
                 {/if}
