@@ -717,7 +717,6 @@ replyTo?.sender?.username ? replyTo.sender.username : ``
                     class:sh={reply}
                     bind:this={bodyInput}
                     placeholder={placeholder}
-                    maxlength="10000"
                     on:keydown={focusOnTitle}
                     on:keydown={updateContent}
                     on:keydown={trackCaret}
