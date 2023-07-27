@@ -13,8 +13,10 @@ import BoardList from './board-list.svelte'
 import DefaultIndexList from './default-index-list.svelte'
 import IndexList from './index-list.svelte'
 import BoardInfo from './board-info.svelte'
-import { md } from '$lib/composer/md/md.js'
+import { newMD } from '$lib/composer/md/md.js'
 
+let md = newMD()
+md.disable("image")
 
 $: authenticated = $store?.authenticated && 
     $store?.credentials != null

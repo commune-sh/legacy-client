@@ -19,6 +19,7 @@ import Vote from '$lib/vote/vote.svelte'
 import Links from './links/links.svelte'
 import RoomAlias from '$lib/board/event/room-alias/room-alias.svelte'
 import MatrixMedia from '$lib/chat/event/media/media.svelte'
+import emojiRegex from 'emoji-regex';
 
 import { pin, hash } from '$lib/assets/icons.js'
 import { isSafari } from '$lib/utils/utils.js'
@@ -348,6 +349,22 @@ function print(e) {
     console.log(event)
 }
 
+function emojiOnly(body) {
+    if(!body) {
+        return false
+    }
+    const emojiMatcher = emojiRegex();
+    const matches = body.match(emojiMatcher);
+    const alp = /[\p{L}\p{N}]+/u;
+
+    let hasEmoji = matches !== null && matches.length > 0
+    let hasText = alp.test(body) === true
+    return !hasText && hasEmoji
+}
+
+$: isEmojiOnly= emojiOnly(event?.content?.body)
+
+
 $: wasEdited = event?.edited_on !== undefined && event?.edited_on !== null &&
     event?.edited_on > 0
 
@@ -514,6 +531,7 @@ $: redacted = event?.content?.redacted
                             {/if}
                         </div>
                         <div class="chp post-body pr3 pci"
+                        class:just-emoji={isEmojiOnly}
                         class:unsent={event?.unsent}>
                             {#if redacted}
                                 <span class="del">Message deleted</span>
@@ -975,7 +993,11 @@ $: redacted = event?.content?.redacted
     margin-left: 3rem;
 }
 
-:global(.chp pre) {
+div :global(.chp img) {
+    max-width: 400px;
+}
+
+div :global(.chp pre) {
     margin-top: 0.5rem;
     padding-left: 1rem;
     max-width: 700px;
@@ -988,5 +1010,8 @@ $: redacted = event?.content?.redacted
 }
 .del {
     color: var(--text-light);
+}
+.just-emoji {
+    font-size: 1.8rem;
 }
 </style>

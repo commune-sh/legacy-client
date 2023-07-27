@@ -450,6 +450,7 @@ function handleEnter(e) {
 
 function handleChatEnter(e) {
     if(!e.shiftKey && e.key === 'Enter' && isChat) {
+    console.log("hmm")
         e.preventDefault()
         if(!emojiListActive) {
             createPost()
@@ -568,10 +569,11 @@ function addEmoji(e) {
 function trackCaret(e) {
     setTimeout(() => {
         const pt = bodyInput.value.substring(0, bodyInput.selectionStart);
-        const emp = /:\S{2,}$/;
+        const emp = /:[^\t\n\r\f\v/]{2,}$/;
         const lmp = /\/\S{1,}$/;
 
         if (emp.test(pt)) {
+            console.log("yyy")
             let et = pt.match(emp)[0];
             et = et.substring(1);
             shortcode = et;

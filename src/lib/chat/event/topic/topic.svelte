@@ -4,7 +4,10 @@ import { getHomeserver } from '$lib/utils/utils.js'
 import { getAPIEndpoint } from '$lib/utils/request.js'
 import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';
-import { md } from '$lib/composer/md/md.js'
+import { newMD } from '$lib/composer/md/md.js'
+
+let md = newMD()
+md.disable("image")
 
 export let event;
 

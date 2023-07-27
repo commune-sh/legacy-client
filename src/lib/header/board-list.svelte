@@ -228,6 +228,8 @@ function sortTopics (topics) {
     background: var(--shade-3);
     cursor: pointer;
     overflow: hidden;
+    font-weight: 500;
+    color: var(--text-light);
 }
 
 .name {

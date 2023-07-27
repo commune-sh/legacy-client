@@ -75,3 +75,12 @@ md.use(MarkdownItLinkAttributes, [
     },
 ]);
 
+export function newMD() {
+  let md = new MarkdownIt({
+    html: true,
+    linkify: true,
+    breaks: true,
+    typographer: true
+  });
+  return md;
+}
