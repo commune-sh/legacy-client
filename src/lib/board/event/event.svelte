@@ -1,5 +1,7 @@
 <script>
-import { PUBLIC_BASE_URL, PUBLIC_MEDIA_URL } from '$env/static/public';
+import { PUBLIC_BASE_URL, PUBLIC_MEDIA_URL, PUBLIC_MATRIX_SERVER_NAME } from '$env/static/public';
+import { getHomeserver } from '$lib/utils/utils.js'
+import { getAPIEndpoint } from '$lib/utils/request.js'
 import { savePost } from '$lib/utils/request.js'
 import { onMount, createEventDispatcher } from 'svelte'
 import { store } from '$lib/store/store.js'
@@ -192,7 +194,24 @@ $: shortened = content?.length > 600 ? `${content?.substring(0, 600)}...` :
 
 $: hasFullBody = event?.content?.full_body?.key?.length > 0
 
-$: fullBodyURL = `${PUBLIC_MEDIA_URL}/${event?.content?.full_body?.key}`
+$: mediaURL = federated && federated_media_url ? federated_media_url :
+!federated ? PUBLIC_MEDIA_URL : null
+
+$: if(federated) {
+    fetchAPIEndpoint()
+}
+
+let federated_media_url;
+async function fetchAPIEndpoint() {
+    const endpoint = await getAPIEndpoint(homeserver)
+    if(endpoint?.media_url) {
+        federated_media_url = endpoint.media_url
+    }
+}
+
+$: fullBodyURL = `${mediaURL}/${event?.content?.full_body?.key}`
+$: homeserver = getHomeserver(event?.room_id)
+$: federated = !event?.room_id?.includes(PUBLIC_MATRIX_SERVER_NAME)
 
 let full_body;
 $: full_body_content = full_body ? md.render(full_body) : content + '...'
