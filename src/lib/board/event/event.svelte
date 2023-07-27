@@ -440,6 +440,16 @@ $: isMatrixMedia = event?.content?.msgtype == 'm.image' ||
 
 $: redacted = event?.content?.redacted
 
+
+function findURLs(text) {
+    if (!text) return [];
+    const urlRegex = /(?:https?|ftp):\/\/[^\s/$.?#].[^\s]*/gi;
+    const allUrls = text.match(urlRegex) || [];
+    return allUrls.filter(url => new URL(url).origin === PUBLIC_BASE_URL);
+}
+
+$: urls = findURLs(event?.content?.body)
+
 </script>
 
 <div class="event" 
@@ -694,6 +704,9 @@ $: redacted = event?.content?.redacted
     {/if}
 
 </div>
+
+{#if urls}
+{/if}
 
 
 {#if hasReplies && showingReplies && interactive && !isChat}

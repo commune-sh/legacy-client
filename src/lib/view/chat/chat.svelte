@@ -389,7 +389,7 @@ let ob;
 $: if(ob && ready) {
     setTimeout(() => {
         setupObserver()
-    }, 1000)
+    }, 3000)
 }
 
 let scrollHeight;

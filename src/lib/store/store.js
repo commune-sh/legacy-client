@@ -708,6 +708,9 @@ function createApp() {
 
   let addLink = (x) => {
     update(p => {
+      if(!p.editorStates[x.room_id]) {
+        p.editorStates[x.room_id] = {}
+      }
       if(p.editorStates[x.room_id]?.links == undefined) {
         p.editorStates[x.room_id].links = []
       }

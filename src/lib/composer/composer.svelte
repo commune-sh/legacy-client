@@ -162,6 +162,8 @@ function setupLinkPasteListener() {
 
 }
 
+
+
 async function processLink(href) {
     const res = await getLinkMetadata(href)
     console.log(res)
@@ -182,6 +184,7 @@ async function processLink(href) {
         if(res?.metadata?.youtube_id) {
             link.youtube_id = res.metadata.youtube_id
         }
+        console.log("adding new link", stateKey, link)
         store.addLink({
             room_id: stateKey,
             link: link,
@@ -573,7 +576,6 @@ function trackCaret(e) {
         const lmp = /\/\S{1,}$/;
 
         if (emp.test(pt)) {
-            console.log("yyy")
             let et = pt.match(emp)[0];
             et = et.substring(1);
             shortcode = et;

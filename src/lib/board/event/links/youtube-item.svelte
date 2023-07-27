@@ -23,7 +23,7 @@ function activate() {
 </script>
 
 
-<div class="lic pa3 fl " 
+<div class="lic ph3 pv2 fl " 
     on:click={activate} >
 
     <div class="link-item fl fl-co">
@@ -98,8 +98,17 @@ function activate() {
     fill: white;
 }
 
+.link-item {
+     width: 100%;
+}
+
 .link-item:hover .play-icon {
     fill: var(--white);
+}
+@media only screen and (max-width: 768px) {
+    .vp-i {
+        width: 100%;
+    }
 }
 </style>
 
