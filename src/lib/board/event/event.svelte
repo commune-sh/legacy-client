@@ -203,6 +203,8 @@ $: if(federated && isPost) {
 
 let federated_media_url;
 async function fetchAPIEndpoint() {
+    console.log("room_id is ", event?.room_id)
+    let homeserver = getHomeserver(event?.room_id)
     console.log("homeserver is", homeserver)
     const endpoint = await getAPIEndpoint(homeserver)
     console.log("endpoint is", endpoint)
@@ -212,7 +214,6 @@ async function fetchAPIEndpoint() {
 }
 
 $: fullBodyURL = `${mediaURL}/${event?.content?.full_body?.key}`
-$: homeserver = getHomeserver(event?.room_id)
 $: federated = !event?.room_id?.includes(PUBLIC_MATRIX_SERVER_NAME)
 
 let full_body;
