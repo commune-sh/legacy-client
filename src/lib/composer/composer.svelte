@@ -311,8 +311,21 @@ async function createPost() {
         }
 
         let bo = body
+        let save_full = false
+        let remaining_words = 0;
         if(body?.length > 2000) {
-            bo = body.substring(0, 2000)
+            save_full = true
+            const lastSpaceIndex = body.lastIndexOf(' ', 2000);
+            if (lastSpaceIndex > 0) {
+                const trimmedText = body.substring(0, lastSpaceIndex);
+                bo = trimmedText
+                const remainingText = body.substring(lastSpaceIndex);
+                const trimmedStr = remainingText.trim();
+                const wordsArray = trimmedStr.split(/\s+/);
+                remaining_words = wordsArray.length
+            } else {
+                bo = body.substring(0, 2000)
+            }
         }
 
         let post = {
@@ -344,13 +357,13 @@ async function createPost() {
             post.content['formatted_body'] = md.render(bodyInput.value)
         }
 
-        if(body?.length > 2000) {
+        if(save_full) {
             const presignedURL = await getPresignedURL('txt');
             const file = new File([body], presignedURL.key, { type: 'text/plain' });
             await uploadAttachment(file, presignedURL.url);
             post.content['full_body'] = {
                 key: presignedURL.key,
-                exceeds: body.length - 2000,
+                words: remaining_words,
             }
         }
 

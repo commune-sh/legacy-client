@@ -213,6 +213,7 @@ $: if(hasFullBody && isPost) {
 
 let full_body_fetched = false;
 let fetchingMore = false;
+$: remaining = event?.content?.full_body?.words
 
 function loadFullBody() {
     fetchingMore = true;
@@ -573,7 +574,7 @@ $: urls = findURLs(event?.content?.body)
                             <button class="readmore" 
                                 disabled={fetchingMore}
                                 on:click={loadFullBody}>
-                                {fetchingMore ? 'Loading...' : 'Read More'}
+                                {fetchingMore ? 'Loading...' : `Read More (${remaining} words)`}
                             </button>
                         </div>
                     {/if}
@@ -592,7 +593,7 @@ $: urls = findURLs(event?.content?.body)
                             <button class="readmore" 
                                 disabled={fetchingMore}
                                 on:click={loadFullBody}>
-                                {fetchingMore ? 'Loading...' : 'Read More'}
+                                {fetchingMore ? 'Loading...' : `Read More (${remaining} words)`}
                             </button>
                         </div>
                     {/if}
