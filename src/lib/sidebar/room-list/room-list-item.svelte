@@ -38,7 +38,7 @@ $: active = (isGeneral && !room && !topic) ||
 $: selected = (isGeneral && !room) || 
     (room === item?.alias)
 
-$: if(selected) {
+$: if(selected && !post) {
     document.title = `${item.title} - ${PUBLIC_APP_NAME}`
 }
 

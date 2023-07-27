@@ -8,7 +8,7 @@ import { onMount, createEventDispatcher } from 'svelte';
 import { store } from '$lib/store/store.js'
 import { redactEvent, loadPostWithReplies } from '$lib/utils/request.js'
 import { deleteEvent } from '$lib/utils/events.js'
-import { PUBLIC_API_URL } from '$env/static/public';
+import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { page } from '$app/stores';
 import SkeletonBoardEvents from '$lib/skeleton/skeleton-board-events.svelte'
 import SkeletonBoardEvent from '$lib/skeleton/skeleton-board-event.svelte'
@@ -31,6 +31,11 @@ $: if(authenticated) {
 export let post;
 export let embed = false;
 
+
+$: if(post?.content?.title) {
+    document.title = `${post?.content?.title} - @${post?.sender?.username} /
+${PUBLIC_APP_NAME}`
+}
 
 $: state = $store?.states[$page?.params?.space]
 

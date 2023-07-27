@@ -92,10 +92,6 @@ function createApp() {
     redactedEvent: null,
   }
 
-  if(window) {
-    window.app = app
-  }
-
   let theme = localStorage.getItem(`theme`) || "{}"
   if(theme == 'light') {
     app.settings.theme = 'light'

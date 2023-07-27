@@ -350,6 +350,7 @@ async function createPost() {
             await uploadAttachment(file, presignedURL.url);
             post.content['full_body'] = {
                 key: presignedURL.key,
+                exceeds: body.length - 2000,
             }
         }
 
@@ -674,7 +675,7 @@ replyTo?.sender?.username ? replyTo.sender.username : ``
         class:each={isChat}
         class:eached={isChat && editing}>
         <div class="title-container" 
-            class:hide={reply || editingReply || isChat || isSocial}>
+            class:hide={reply || editingReply || isChat}>
             <div class="">
                 <textarea 
                     class="post-title"
@@ -703,7 +704,6 @@ replyTo?.sender?.username ? replyTo.sender.username : ``
         {/if}
 
         <div class="body-container" 
-            class:pa1={isSocial}
             class:bcnh={isChat}
             class:edbc={editing && isChat}
             class:rp={reply && !isChat}
