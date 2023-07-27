@@ -280,11 +280,12 @@ function syncMessages() {
                     addNewReaction(event)
                 }
 
-                let ind = messages.findIndex(m => m?.transaction_id ===
-                    event?.transaction_id)
-                if(ind == -1) {
-                    messages = [...messages, event]
-                }
+                    let ind = messages.findIndex(m => m?.transaction_id ===
+                        event?.transaction_id)
+                    console.log
+                    if(ind == -1) {
+                        messages = [...messages, event]
+                    }
             }
             if(atBottom) {
                 updateScroll()
@@ -466,6 +467,7 @@ async function join() {
 $: buttonText = busy ? "Joining..." : "Join to start chatting"
 
 async function newMessage(e) {
+
     let message = e.detail
     let event = {
         content: message.content,
@@ -490,6 +492,7 @@ async function newMessage(e) {
 
 async function saved(e) {
     let event = e.detail.event
+    event.transaction_id = e.detail.transaction_id
     let transaction_id = e.detail.transaction_id
     const index = messages.findIndex(i => i.transaction_id === transaction_id);
     if(index !== -1) {
