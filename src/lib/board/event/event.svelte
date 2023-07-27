@@ -197,13 +197,15 @@ $: hasFullBody = event?.content?.full_body?.key?.length > 0
 $: mediaURL = federated && federated_media_url ? federated_media_url :
 !federated ? PUBLIC_MEDIA_URL : null
 
-$: if(federated) {
+$: if(federated && isPost) {
     fetchAPIEndpoint()
 }
 
 let federated_media_url;
 async function fetchAPIEndpoint() {
+    console.log("homeserver is", homeserver)
     const endpoint = await getAPIEndpoint(homeserver)
+    console.log("endpoint is", endpoint)
     if(endpoint?.media_url) {
         federated_media_url = endpoint.media_url
     }
@@ -366,7 +368,6 @@ function finishedEditing(e) {
 
 function print(e) {
     e.preventDefault()
-    console.log(event)
 }
 
 function emojiOnly(body) {
