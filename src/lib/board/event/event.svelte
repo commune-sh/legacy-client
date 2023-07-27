@@ -203,11 +203,8 @@ $: if(federated && isPost) {
 
 let federated_media_url;
 async function fetchAPIEndpoint() {
-    console.log("room_id is ", event?.room_id)
     let homeserver = getHomeserver(event?.room_id)
-    console.log("homeserver is", homeserver)
     const endpoint = await getAPIEndpoint(homeserver)
-    console.log("endpoint is", endpoint)
     if(endpoint?.media_url) {
         federated_media_url = endpoint.media_url
     }
