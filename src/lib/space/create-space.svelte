@@ -1,12 +1,13 @@
 <script>
 import { onMount, onDestroy } from 'svelte'
-import { close } from '$lib/assets/icons.js'
+import { close, earth, lock } from '$lib/assets/icons.js'
 import { createSpace } from '$lib/utils/request.js'
 import { PUBLIC_API_URL, PUBLIC_BASE_URL } from '$env/static/public';
 import { goto } from '$app/navigation';
 import { page } from '$app/stores';
 import { tick } from 'svelte'
 import { store } from '$lib/store/store.js'
+import Avatar from '$lib/components/avatar/avatar.svelte'
 import Toggle from '$lib/components/toggle/toggle.svelte'
 
 let active = false;
@@ -65,20 +66,37 @@ function validateUsername(e) {
 let usernameWarning = false;
 
 async function create() {
-    busy = true
     if(name == null || name.length < 1){
         nameInput.focus()
         return
     }
-    if(username == null || username.length < 1){
-        usernameInput.focus()
-        return
+    if(isPublic) {
+        if(username == null || username.length < 1){
+            usernameInput.focus()
+            return
+        }
     }
-    const res = await createSpace({
+
+    busy = true
+
+    let space = {
         name: name,
-        username: username,
-        topic: topic
-    })
+        topic: topic,
+    }
+    if(isPublic) {
+        space.username = username
+    }
+
+    if(!isPublic) {
+        space.private = true
+    }
+
+    if(avatar) {
+        space.avatar_url = avatar
+    }
+
+    const res = await createSpace(space)
+
     console.log(res)
     if(res?.exists) {
         busy = false
@@ -107,6 +125,14 @@ function togglePublic() {
     isPublic = !isPublic
 }
 
+let avatar = null;
+function avatarUploaded(e) {
+    avatar = e.detail
+}
+function avatarRemoved(e) {
+    avatar = null
+}
+
 </script>
 
 {#if active}
@@ -121,7 +147,14 @@ function togglePublic() {
             </div>
 
             <div class="con fl-co">
+
                 <div class="mt3 pb2">
+                    <Avatar 
+                        on:removed={avatarRemoved}
+                        on:uploaded={avatarUploaded}/>
+                </div>
+
+                <div class="pb2">
                     <span class="label">Name</span>
                 </div>
                 <div class="mt1 pb2">
@@ -132,21 +165,45 @@ function togglePublic() {
                 </div>
 
                 <div class="mt3 pb2">
-                    <span class="label">
-                        Public space
-                    </span>
+                    <div class="">
+                        <div class="pit fl ph3 pv2 mb1" 
+                            on:click={togglePublic}
+                            class:active={isPublic}>
+                            <div class="grd-c mr3">
+                                <div class="ico-s grd-c">
+                                    {@html earth}
+                                </div>
+                            </div>
+                            <div class="fl-co">
+                                <div class="ti">
+                                    Public
+                                </div>
+                                <div class="mt2 des">
+                                    Open space for that anyone can view and join
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pit fl ph3 pv2"
+                            on:click={togglePublic}
+                            class:active={!isPublic}>
+                            <div class="grd-c mr3">
+                                <div class="ico-s grd-c">
+                                    {@html lock}
+                                </div>
+                            </div>
+                            <div class="fl-co">
+                                <div class="ti">
+                                        Private
+                                </div>
+                                <div class="mt2 des">
+                                    Invite only space that is not visible to others
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="mt1 pb2 fl">
-                    <div class="grd-c fl-o lh mr3">
-                        Anyone can view and join a public space. They have a
-                            top-level username.
-                    </div>
-                    <div class="grd-c">
-                        <Toggle toggled={isPublic} on:toggle={togglePublic}/>
-                    </div>
-                </div>
-
+                {#if isPublic}
                 <div class="mt3 pb2" class:warn={usernameWarning}>
                     <span class="label">Username</span>
                     {#if usernameWarning}
@@ -164,6 +221,7 @@ function togglePublic() {
                 <div class="mt1 preview pb1">
                         {PUBLIC_BASE_URL}/{username ? username : 'mycommunity'}
                 </div>
+                {/if}
 
                 <div class="mt3 pb2">
                     <span class="label">topic</span>
@@ -183,7 +241,7 @@ function togglePublic() {
 
                 <div class="createc mt3 pb2">
                         <button on:click={create} disabled={busy}>
-                            {busy ? 'Creating...' : 'Create'}
+                            {busy ? 'Creating Space...' : 'Create Space'}
                         </button>
                 {#if busy}
                     <div class="spinner">
@@ -284,5 +342,26 @@ button {
 .preview {
     font-size: small;
     color: var(--text-light);
+}
+.ti {
+    font-weight: 500;
+}
+.pit {
+    border: 1px solid var(--border-1);
+    border-radius: 5px;
+    cursor: pointer;
+}
+.pit:hover {
+    border: 1px solid var(--shade-3);
+}
+.des {
+    font-size: 13px;
+    color: var(--text-light);
+}
+.active {
+    border: 1px solid var(--primary);
+}
+.active:hover {
+    border: 1px solid var(--primary);
 }
 </style>
