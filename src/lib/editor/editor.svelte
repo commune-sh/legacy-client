@@ -3,6 +3,7 @@ import { tick, onMount, onDestroy, createEventDispatcher } from 'svelte'
 import { Editor } from '@tiptap/core'
 import Placeholder from '@tiptap/extension-placeholder'
 import StarterKit from '@tiptap/starter-kit'
+import EmojiList from '$lib/composer/emoji-list.svelte'
 
 
 const dispatch = createEventDispatcher()
@@ -12,39 +13,70 @@ const dispatch = createEventDispatcher()
 
 let editor;
 let composer;
+export let isChat = false;
 
 export let initFocus = true;
 
+let shortcode;
+let emojiListActive = false;
+
 onMount(() => {
     editor = new Editor({
-      element: composer,
-      extensions: [
-        StarterKit,
-        Placeholder.configure({
-          placeholder: `What's on your mind?`,
-        }),
-      ],
-      content: '',
-      onTransaction: () => {
-        // force re-render so `editor.isActive` works as expected
-        editor = editor
-            dispatch('change', {
-                html: editor.getHTML(),
-                text: editor.state.doc.textContent,
-            })
-      },
+        element: composer,
+        extensions: [
+            StarterKit,
+            Placeholder.configure({
+                placeholder: `What's on your mind?`,
+            }),
+        ],
+        editorProps: {
+            handleKeyDown: handleKeyDown,
+            attributes: {
+                class: "Editor"
+            }
+        },
+        content: '',
+        onTransaction: () => {
+            editor = editor
+                dispatch('update', {
+                    //html: editor.getHTML(),
+                    text: editor.state.doc.textContent,
+                    position: {
+                        from: editor.state.selection.from,
+                        to: editor.state.selection.to
+                    }
+                })
+                const to = editor.state.selection.to
+                const pt = editor.state.doc.textContent.substring(0, to)
+                const emp = /:[^\t\n\r\f\v/]{2,}$/;
+                if (emp.test(pt)) {
+                    let et = pt.match(emp)[0];
+                    et = et.substring(1);
+                    shortcode = et;
+                    emojiListActive = true
+                } else {
+                    emojiListActive = false
+                    shortcode = null;
+                }
+        },
     })
     if(initFocus) {
         focusEditor()
     }
-    /*
-    composer.addEventListener('keydown', (e) => {
-        if(e.key === 'Backspace' && editor.state.doc.textContent === '') {
-            dispatch('focusTitle')
-        }
-    })
-    */
 })
+
+function handleKeyDown(view, e) {
+    if(e.code === 'Enter') {
+        return false
+    }
+}
+
+export function insertText(text) {
+    console.log("inserting", text)
+    console.log(editor)
+    editor.commands.insertContent({type: "text", text: text})
+}
+
 
 export function focus() {
     focusEditor()
@@ -61,10 +93,25 @@ onDestroy(() => {
     }
 })
 
+function addEmoji(e) {
+    console.log("adding emoji", e.detail)
+}
+
 </script>
 
-<section class="editor" on:click={focus}>
-        <div class="container"  bind:this={composer}>
+{#if emojiListActive && shortcode}
+    <EmojiList 
+        isChat={false}
+        target={composer}
+        reply={false}
+        on:selected={addEmoji} 
+        shortcode={shortcode} />
+{/if}
+
+<section class="editor" 
+    on:click={focus}>
+    <div class="container" 
+        bind:this={composer}>
         </div>
 </section>
 

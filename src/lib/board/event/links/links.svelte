@@ -104,6 +104,7 @@ a, a:link, a:visited, a:active {
     color: var(--text-light);
 }
 .mlp {
+    max-width: 500px;
     margin-left: calc(30px + 1rem);
 }
 </style>
