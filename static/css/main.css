@@ -459,6 +459,10 @@ textarea[disabled]{
 }
 
 
+.lh {
+    line-height: 1.5;
+}
+
 select {
     border: none;
     padding: 0.25rem;

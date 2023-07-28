@@ -7,6 +7,7 @@ import { goto } from '$app/navigation';
 import { page } from '$app/stores';
 import { tick } from 'svelte'
 import { store } from '$lib/store/store.js'
+import Toggle from '$lib/components/toggle/toggle.svelte'
 
 let active = false;
 
@@ -100,6 +101,12 @@ async function create() {
 let showError = false;
 let error;
 
+let isPublic = true;
+
+function togglePublic() {
+    isPublic = !isPublic
+}
+
 </script>
 
 {#if active}
@@ -107,7 +114,7 @@ let error;
     on:click|self={kill}>
 
     <div class="modal grd-c grd">
-        <div class="create grd-c">
+        <div class="create grd-c sel-no">
 
             <div class="title grd-c pt3 ph3 mv2">
                     Create Space
@@ -123,12 +130,30 @@ let error;
                     disabled={busy}
                     type="text" placeholder="My community" />
                 </div>
+
+                <div class="mt3 pb2">
+                    <span class="label">
+                        Public space
+                    </span>
+                </div>
+
+                <div class="mt1 pb2 fl">
+                    <div class="grd-c fl-o lh mr3">
+                        Anyone can view and join a public space. They have a
+                            top-level username.
+                    </div>
+                    <div class="grd-c">
+                        <Toggle toggled={isPublic} on:toggle={togglePublic}/>
+                    </div>
+                </div>
+
                 <div class="mt3 pb2" class:warn={usernameWarning}>
                     <span class="label">Username</span>
                     {#if usernameWarning}
                         <span class="sm ml2">That username is not available</span>
                     {/if}
                 </div>
+
                 <div class="mt1 pb2">
                     <input bind:this={usernameInput}
                     bind:value={username}
@@ -139,6 +164,7 @@ let error;
                 <div class="mt1 preview pb1">
                         {PUBLIC_BASE_URL}/{username ? username : 'mycommunity'}
                 </div>
+
                 <div class="mt3 pb2">
                     <span class="label">topic</span>
                 </div>

@@ -4,6 +4,8 @@ import { Editor } from '@tiptap/core'
 import Placeholder from '@tiptap/extension-placeholder'
 import StarterKit from '@tiptap/starter-kit'
 import EmojiList from '$lib/composer/emoji-list.svelte'
+import { Extension } from "@tiptap/core";
+
 
 
 const dispatch = createEventDispatcher()
@@ -20,6 +22,18 @@ export let initFocus = true;
 let shortcode;
 let emojiListActive = false;
 
+const PreventEnter = Extension.create({
+  addKeyboardShortcuts() {
+    return {
+      'Enter': () => emojiListActive ? true : false
+    }
+  },
+})
+
+let position = {
+    from: 0,
+    to: 0
+}
 onMount(() => {
     editor = new Editor({
         element: composer,
@@ -28,6 +42,7 @@ onMount(() => {
             Placeholder.configure({
                 placeholder: `What's on your mind?`,
             }),
+            PreventEnter,
         ],
         editorProps: {
             handleKeyDown: handleKeyDown,
@@ -38,26 +53,32 @@ onMount(() => {
         content: '',
         onTransaction: () => {
             editor = editor
-                dispatch('update', {
-                    //html: editor.getHTML(),
-                    text: editor.state.doc.textContent,
-                    position: {
-                        from: editor.state.selection.from,
-                        to: editor.state.selection.to
-                    }
-                })
-                const to = editor.state.selection.to
-                const pt = editor.state.doc.textContent.substring(0, to)
-                const emp = /:[^\t\n\r\f\v/]{2,}$/;
-                if (emp.test(pt)) {
-                    let et = pt.match(emp)[0];
-                    et = et.substring(1);
-                    shortcode = et;
-                    emojiListActive = true
-                } else {
-                    emojiListActive = false
-                    shortcode = null;
+            position = {
+                from: editor.state.selection.from,
+                to: editor.state.selection.to
+            }
+            dispatch('update', {
+                //html: editor.getHTML(),
+                text: editor.state.doc.textContent,
+                position: {
+                    from: editor.state.selection.from,
+                    to: editor.state.selection.to
                 }
+            })
+            const to = editor.state.selection.to
+            const from = editor.state.selection.to - shortcode?.length + 1
+            const pt = editor.state.doc.textContent.substring(0, to)
+            console.log(editor)
+            const emp = /:[^\t\n\r\f\v/]{2,}$/;
+            if (emp.test(pt)) {
+                let et = pt.match(emp)[0];
+                et = et.substring(1);
+                shortcode = et;
+                emojiListActive = true
+            } else {
+                emojiListActive = false
+                shortcode = null;
+            }
         },
     })
     if(initFocus) {
@@ -72,8 +93,8 @@ function handleKeyDown(view, e) {
 }
 
 export function insertText(text) {
+    emojiListActive = false
     console.log("inserting", text)
-    console.log(editor)
     editor.commands.insertContent({type: "text", text: text})
 }
 
@@ -94,10 +115,13 @@ onDestroy(() => {
 })
 
 function addEmoji(e) {
-    console.log("adding emoji", e.detail)
+    emojiListActive = false
+    editor.commands.deleteRange(position.to - shortcode.length, position.to)
+    editor.commands.insertContent({type: "text", text: e.detail})
 }
 
 </script>
+{emojiListActive}
 
 {#if emojiListActive && shortcode}
     <EmojiList 
