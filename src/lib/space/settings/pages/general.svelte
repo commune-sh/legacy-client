@@ -246,9 +246,9 @@ async function updateIndex(e) {
 
 </script>
 
-<div class="sco grd-c">
+<div class="sco">
 
-    <div class="banner grd ph3 pb3">
+    <div class="banner grd pb3">
         <Avatar avatar={avatar} 
             on:removed={avatarRemoved}
             on:uploaded={avatarUploaded}/>
@@ -258,7 +258,7 @@ async function updateIndex(e) {
             on:uploaded={bannerUploaded}/>
     </div>
 
-    <div class="pa3 grd-c fl-co">
+    <div class="pv3 grd-c fl-co">
 
         <div class="pb2">
             <span class="label">name</span>
@@ -386,9 +386,10 @@ async function updateIndex(e) {
 <style>
 
 .sco {
-    background: var(--modal);
     width: 100%;
     border-radius: 7px;
+    justify-self: start;
+    align-self: center;
 }
 
 .header {

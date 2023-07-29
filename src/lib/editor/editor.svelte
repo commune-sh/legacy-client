@@ -5,7 +5,7 @@ import Placeholder from '@tiptap/extension-placeholder'
 import StarterKit from '@tiptap/starter-kit'
 import EmojiList from '$lib/composer/emoji-list.svelte'
 import { Extension } from "@tiptap/core";
-
+import { Emoji } from './tiptap/emoji.ts'
 
 
 const dispatch = createEventDispatcher()
@@ -43,6 +43,7 @@ onMount(() => {
                 placeholder: `What's on your mind?`,
             }),
             PreventEnter,
+            Emoji
         ],
         editorProps: {
             handleKeyDown: handleKeyDown,
@@ -68,9 +69,11 @@ onMount(() => {
             const to = editor.state.selection.to
             const from = editor.state.selection.to - shortcode?.length + 1
             const pt = editor.state.doc.textContent.substring(0, to)
-            console.log(editor)
-            const emp = /:[^\t\n\r\f\v/]{2,}$/;
-            if (emp.test(pt)) {
+            const emp = /:(\s*[a-zA-Z]+)\s*$/;
+
+            const isSpace = pt.substring(pt.length - 1) === " "
+
+            if (emp.test(pt) && !isSpace) {
                 let et = pt.match(emp)[0];
                 et = et.substring(1);
                 shortcode = et;
@@ -116,8 +119,14 @@ onDestroy(() => {
 
 function addEmoji(e) {
     emojiListActive = false
-    editor.commands.deleteRange(position.to - shortcode.length, position.to)
-    editor.commands.insertContent({type: "text", text: e.detail})
+    editor.commands.deleteRange({
+        from: position.to - shortcode.length - 1,
+        to: position.to
+    })
+    editor.commands.insertContent({type: "text", text: e.detail.text})
+
+    editor.commands.setImage({ src: e.detail.src })
+
 }
 
 </script>

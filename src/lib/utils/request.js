@@ -8,13 +8,6 @@ export async function APIRequest(r) {
 
     const token = localStorage.getItem('access_token')
 
-    if(token) {
-      headers['Authorization'] = `Bearer ${token}`
-    }
-
-    if(r.token) {
-      headers['Authorization'] = `Bearer ${r.token}`
-    }
     let options = {
       method: 'POST',
       headers: headers,
@@ -26,6 +19,19 @@ export async function APIRequest(r) {
 
     if(r.body) {
       options.body = JSON.stringify(r.body)
+    }
+
+    if(r.formData) {
+      options.body = r.formData
+      options.headers = {}
+    }
+
+    if(token) {
+      options.headers['Authorization'] = `Bearer ${token}`
+    }
+
+    if(r.token) {
+      options.headers['Authorization'] = `Bearer ${r.token}`
     }
 
     const response = await fetch(r.url, options);
@@ -447,3 +453,13 @@ export async function logout() {
   })
   return data
 }
+
+export async function uploadFile(formData) {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/upload`,
+    method: 'POST',
+    formData: formData
+  })
+  return data
+}
+

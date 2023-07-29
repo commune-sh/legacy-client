@@ -102,13 +102,15 @@ export function generateInitials(items) {
   const initialsMap = new Map();
 
   items.forEach((item) => {
-    const firstChar = item.alias.charAt(0);
+    let alias = item?.name ? item.name : item.alias;
+
+    const firstChar = alias.charAt(0);
     let initials = firstChar;
 
     if (initialsMap.has(firstChar)) {
       let index = 1;
-      while (index < item.alias.length && initialsMap.has(initials)) {
-        initials = item.alias.substr(0, index + 1);
+      while (index < alias.length && initialsMap.has(initials)) {
+        initials = alias.substr(0, index + 1);
         index++;
       }
     }
