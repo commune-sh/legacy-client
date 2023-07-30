@@ -68,6 +68,9 @@ $: if(reaction && el) {
 function localpart(id) {
     return id.split(':')[0].substring(1)
 }
+
+$: has_URL = reaction?.url != null && reaction?.url != undefined
+
 </script>
 
 {#if !isTag}
@@ -85,9 +88,15 @@ function localpart(id) {
     bind:this={el}
     on:click|stopPropagation={reactToEvent}
     class:reacted={reacted}>
-    <div class="emoji">
-        {reaction.key}
-    </div>
+
+    {#if has_URL}
+        <img class="custom" src={reaction?.url}>
+    {:else}
+        <div class="emoji">
+            {reaction.key}
+        </div>
+    {/if}
+
     <div class="t ml1">
         {reaction?.senders?.length}
     </div>
@@ -143,6 +152,12 @@ function localpart(id) {
     border: 1px solid var(--primary);
 }
 
+.custom {
+    height: 16px;
+    width: 16px;
+    margin-top: 2px;
+}
+
 .bg {
     background-color: var(--reaction-bg);
 }
@@ -182,6 +197,11 @@ function localpart(id) {
     }
     .t {
         font-size: 10px;
+    }
+    .custom {
+        height: 12px;
+        width: 12px;
+        margin-top: 2px;
     }
 }
 </style>

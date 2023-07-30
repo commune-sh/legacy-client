@@ -317,6 +317,7 @@ function addNewReaction(e) {
     let txn_id = e?.transaction_id
     let mev = e?.content?.['m.relates_to']?.event_id
     let key = e?.content?.['m.relates_to']?.key
+    let url = e?.content?.['m.relates_to']?.url
     let ind = messages.findIndex(m => m?.event_id === mev)
     if(ind != -1) {
         let event = messages[ind]
@@ -351,22 +352,23 @@ function addNewReaction(e) {
                         event_id: e.event_id
                     }]
                 };
+                if(url) newReaction.url = url
 
                 event.reactions.push(newReaction);
             }
         } else {
-            event.reactions = [
-                {
-                    key: key,
-                    senders: [{
-                        sender: sender,
-                        event_id: e.event_id
-                    }]
-                }
-            ]
+            let newReaction = {
+                key: key,
+                senders: [{
+                    sender: sender,
+                    event_id: e.event_id
+                }]
+            };
+            if(url) newReaction.url = url
+
+            event.reactions = [newReaction];
         } 
         event.reactions = event.reactions
-        console.log("new reactions", event.reactions)
         messages = messages
     }
 }

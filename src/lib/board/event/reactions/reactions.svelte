@@ -38,8 +38,15 @@ $: emojiSelected = $store.emojiPicker.reacting_to == event?.event_id &&
 $: joinedRoom = authenticated && 
     $store?.rooms.find(x => x === event.room_id) != null 
 
+let url;
+
 export function process(key) {
-    console.log("reacting with", key)
+    if(key?.name && key?.url) {
+        url = key.url
+        key = key.name
+    } else {
+        url = null
+    }
 
     if(!joinedRoom) {
         $store.alert = {
@@ -60,7 +67,6 @@ export function process(key) {
         if (i !== -1) {
             // check if sender exists 
             let j = event?.reactions[i].senders.findIndex(s => s?.sender === sender);
-            console.log("does sender exist?", j)
             if(j === -1) {
                 // if it doesn't, add sender
                 event?.reactions[i].senders.push({
@@ -70,7 +76,6 @@ export function process(key) {
                 saveReaction(key, txn_id)
             } else {
                 // if it does, remove sender
-                console.log("removing sender")
                 event?.reactions[i].senders.splice(j, 1);
                 redact(key)
             }
@@ -88,20 +93,25 @@ export function process(key) {
                     transaction_id: txn_id
                 }]
             };
+            if(url) {
+                newReaction.url = url
+            }
 
             event.reactions.push(newReaction);
             saveReaction(key, txn_id)
         }
     } else {
-        event.reactions = [
-            {
-                key: key,
-                senders: [{
-                    sender: sender,
-                    transaction_id: txn_id
-                }]
-            }
-        ]
+        let newReaction = {
+            key: key,
+            senders: [{
+                sender: sender,
+                transaction_id: txn_id
+            }]
+        };
+        if(url) {
+            newReaction.url = url
+        }
+        event.reactions = [newReaction]
         saveReaction(key, txn_id)
         
     } 
@@ -124,6 +134,9 @@ async function saveReaction(key, txn_id) {
                 "key": key,
             }
         },
+    }
+    if(url) {
+        post.content["m.relates_to"].url = url
     }
 
     if(isReply) {

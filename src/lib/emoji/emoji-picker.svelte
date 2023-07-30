@@ -134,6 +134,13 @@ function selectEmoji(item) {
     query = ''
 
 }
+function selectCustomEmoji(item) {
+    $store.emojiPicker.selected = {
+        name: item.name,
+        url: item.url
+    }
+    query = ''
+}
 
 $: hoveredEmoji = people[0].unicode
 let hoveredEmojiIsCustom = false
@@ -309,7 +316,7 @@ function filterEmoji() {
                                     <div class="grd-c custom-emoji-key emoji-item cei grd"
                                         url={item.url}
                                         title={`:${item.name}:`}
-                                        on:click={selectEmoji(item)}>
+                                        on:click={selectCustomEmoji(item)}>
                                         <div class="">
                                             <img class="custom" 
                                             src={item.url} />
