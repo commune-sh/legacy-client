@@ -13,6 +13,7 @@ let active = false;
 let kill =() => {
     active = false;
     $store.spaceSettingsOpen = false;
+    selected = pages[0];
 }
 
 

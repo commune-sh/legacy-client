@@ -8,6 +8,13 @@ export async function APIRequest(r) {
 
     const token = localStorage.getItem('access_token')
 
+    if(token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+
+    if(r.token) {
+      headers['Authorization'] = `Bearer ${r.token}`
+    }
     let options = {
       method: 'POST',
       headers: headers,
@@ -19,19 +26,6 @@ export async function APIRequest(r) {
 
     if(r.body) {
       options.body = JSON.stringify(r.body)
-    }
-
-    if(r.formData) {
-      options.body = r.formData
-      options.headers = {}
-    }
-
-    if(token) {
-      options.headers['Authorization'] = `Bearer ${token}`
-    }
-
-    if(r.token) {
-      options.headers['Authorization'] = `Bearer ${r.token}`
     }
 
     const response = await fetch(r.url, options);
@@ -99,6 +93,16 @@ export async function uploadAttachment(file, url) {
   return data;
 }
 
+export async function uploadImage(file, url) {
+    let options = {
+      method: "POST",
+      body: file,
+    }
+
+  const response = await fetch(url, options)
+  const data = await response.json();
+  return data;
+}
 export async function savePost(body) {
 
     let headers = { 
@@ -453,12 +457,10 @@ export async function logout() {
   })
   return data
 }
-
-export async function uploadFile(formData) {
+export async function getUploadURL() {
   const data = await APIRequest({
-    url: `${PUBLIC_API_URL}/upload`,
-    method: 'POST',
-    formData: formData
+    url: `${PUBLIC_API_URL}/media/upload_url`,
+    method: 'GET'
   })
   return data
 }

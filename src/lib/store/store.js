@@ -631,6 +631,30 @@ function createApp() {
   }
 
 
+  let addSpaceEmoji = (space, emoji) => {
+    update(p => {
+      if(p.states[space]?.space) {
+        if(!p.states[space].space.settings.emoji) {
+          p.states[space].space.settings.emoji = []
+        }
+        p.states[space].space.settings.emoji.push(emoji)
+      }
+      return p
+    })
+  }
+
+  let updateSpaceEmoji = (space, emoji) => {
+    update(p => {
+      if(p.states[space]?.space) {
+        if(!p.states[space].space.settings.emoji) {
+          p.states[space].space.settings.emoji = []
+        }
+        p.states[space].space.settings.emoji = emoji
+      }
+      return p
+    })
+  }
+
 
 
   let addSpacePath = (space, path) => {
@@ -937,6 +961,8 @@ function createApp() {
     removeSpaceRoom,
     savePowerLevels,
     addNotification,
+    addSpaceEmoji,
+    updateSpaceEmoji,
   };
 }
 

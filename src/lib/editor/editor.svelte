@@ -123,9 +123,9 @@ function addEmoji(e) {
         from: position.to - shortcode.length - 1,
         to: position.to
     })
-    editor.commands.insertContent({type: "text", text: e.detail.text})
+    editor.commands.insertContent({type: "text", text: e.detail})
 
-    editor.commands.setImage({ src: e.detail.src })
+    editor.commands.setImage({ src: 'https://static.shpong.com/media/attachments/fAaCHNYWaLfmDw9pHTVFverfcKLQ0rGw.gif' })
 
 }
 
@@ -171,11 +171,25 @@ function addEmoji(e) {
 }
 
 
-:global(.ProseMirror p.is-editor-empty:first-child::before) {
+div :global(.ProseMirror p.is-editor-empty:first-child::before) {
   color: var(--placeholder-color);
   content: attr(data-placeholder);
   float: left;
   height: 0;
   pointer-events: none;
+}
+
+div :global(.Editor) {
+    font-size: 16px;
+}
+div :global(.Editor p) {
+    line-height: 1.6;
+}
+
+div :global(.Editor img) {
+    height: 20px;
+    width: 20px;
+    object-fit: contain;
+    vertical-align: bottom;
 }
 </style>
