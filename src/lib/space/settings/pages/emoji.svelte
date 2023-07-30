@@ -169,6 +169,7 @@ function updateEmoji(e) {
 
     <div class="emojis mt4">
         <div class="items fl-co">
+            {#if items?.length > 0}
             <div class="lbls label mb3">
                 <div class="">
                     image
@@ -177,9 +178,11 @@ function updateEmoji(e) {
                     name
                 </div>
             </div>
+            {/if}
             {#each items as item}
 
                 <EmojiItem 
+                    disabled={uploading}
                     on:remove={removeEmoji} 
                     on:update={updateEmoji}
                     items={items.filter(i => i.url !== item.url)}

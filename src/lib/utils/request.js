@@ -418,6 +418,14 @@ export async function readNotifications(last) {
   return data
 }
 
+export async function getSpaceEmoji() {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/space/emoji`,
+    method: 'GET'
+  })
+  return data
+}
+
 export async function suspendUser(user) {
   const data = await APIRequest({
     url: `${PUBLIC_API_URL}/admin/user/suspend?id=${user}`,

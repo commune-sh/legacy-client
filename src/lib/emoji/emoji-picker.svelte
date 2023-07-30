@@ -1,9 +1,16 @@
 <script>
+import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
 import { onMount, onDestroy, tick } from 'svelte'
 import { em1, em2, em3, em4, em5, em6, em7, em8, em0 } from '$lib/assets/icons.js'
 import EMOJIBASE from 'emojibase-data/en/compact.json';
 import SHORTCODES from 'emojibase-data/en/shortcodes/joypixels.json';
+
+$: state = $store?.states[$page?.params?.space]
+
+$: room_emoji = state?.space?.settings?.emoji || []
+
+$: space_emoji = $store.space_emoji
 
 EMOJIBASE.forEach(item => {
     let code = ``
@@ -129,12 +136,21 @@ function selectEmoji(item) {
 }
 
 $: hoveredEmoji = people[0].unicode
+let hoveredEmojiIsCustom = false
 $: hoveredShortcode = people[0].shortcode
+
 let placeholder = "Search";
 let moved = false
 
 function changePlaceholder(e) {
-    if(e.target?.className?.includes?.('emoji-key')) {
+    if(e.target?.className?.includes?.('custom-emoji-key')) {
+        hoveredEmojiIsCustom = true
+        moved = true
+        placeholder = e.target.title
+        hoveredEmoji = e.target.getAttribute('url')
+        hoveredShortcode = e.target.title
+    } else if(e.target?.className?.includes?.('emoji-key')) {
+        hoveredEmojiIsCustom = false
         moved = true
         placeholder = e.target.title
         hoveredEmoji = e.target.getAttribute('alt')
@@ -188,7 +204,6 @@ let query;
 $: filtering = query?.length > 0
 
 $: if(filtering) {
-    console.log("hmm")
     highlighted = ``
 }
 
@@ -277,6 +292,38 @@ function filterEmoji() {
 
 
                 {#if !filtering}
+
+
+                {#if space_emoji?.length > 0}
+                    {#each space_emoji as space}
+
+                        <div id="em-{space.alias}" class="fl fl-co mb3">
+                            <div id="title-{space.alias}" 
+                                class="emoji-title fl">
+                                <div class="tt ml1 grd-c">
+                                    {space.alias}
+                                </div>
+                            </div>
+                            <div class="con">
+                                {#each space.emoji as item (item.url)}
+                                    <div class="grd-c custom-emoji-key emoji-item cei grd"
+                                        url={item.url}
+                                        title={`:${item.name}:`}
+                                        on:click={selectEmoji(item)}>
+                                        <div class="">
+                                            <img class="custom" 
+                                            src={item.url} />
+                                        </div>
+                                    </div>
+                                {/each}
+                            </div>
+                        </div>
+
+                    {/each}
+                {/if}
+
+
+
                         {#each Object.entries(emojis) as [title, set] ,i}
                             <div id="em-{title}" class="fl fl-co mb3">
                                 <div id="title-{title}" class="emoji-title pl1 fl">
@@ -289,7 +336,9 @@ function filterEmoji() {
                                 </div>
                                 <div class="con">
                                     {#each set.emoji as item (item.order)}
-                                        <div class="emoji-item gr-default"
+                                        <div class="emoji-item grd-c grd emoji-key"
+                                            alt={item.unicode}
+                                            title={item.shortcode}
                                             on:click={selectEmoji(item)}>
                                             <div class="emoji-key"
                                             alt={item.unicode}
@@ -308,7 +357,12 @@ function filterEmoji() {
 
                 <div class="emoji-preview fl">
                     <div class="grd-c ml2 hov-e">
-                        {hoveredEmoji} 
+                        {#if hoveredEmojiIsCustom}
+                            <img height="28" width="28"
+                                src={hoveredEmoji} />
+                        {:else}
+                            {hoveredEmoji} 
+                        {/if}
                     </div>
                     <div class="hov-s ml2 grd-c fl-o">
                         {hoveredShortcode}
@@ -343,7 +397,7 @@ function filterEmoji() {
     pointer-events: auto;
     overflow: hidden;
     height: 550px;
-    width: 400px;
+    width: 410px;
     background: var(--emoji-picker);
     border-radius: 8px;
     display: grid;
@@ -364,7 +418,7 @@ function filterEmoji() {
 
 
 .header {
-    border-bottom: 1px solid var(--bg);
+    border-bottom: 2px solid var(--border-1);
 }
 
 .container {
@@ -381,6 +435,7 @@ function filterEmoji() {
 
 .categories {
     width: 40px;
+    border-right: 2px solid var(--border-1);
 }
 
 .cat {
@@ -417,6 +472,10 @@ function filterEmoji() {
     border-radius: 3px;
 }
 
+.cei {
+    padding: 0.4rem;
+}
+
 .emoji-item:hover {
     background-color: var(--shade-4);
 }
@@ -429,6 +488,10 @@ function filterEmoji() {
     align-self: center;
 }
 
+.custom {
+    width: 20px;
+    height: 20px;
+}
 
 
 .emojis {

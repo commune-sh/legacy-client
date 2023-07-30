@@ -5,6 +5,7 @@ const dispatch = createEventDispatcher()
 
 export let items;
 export let item;
+export let disabled = false;
 
 function remove() {
     dispatch('remove', item.url)
@@ -45,6 +46,14 @@ $: label = `:${item.name}:`
 
 let editing = false;
 
+function focus() {
+    if(disabled) return
+    editing = true
+}
+
+function blur() {
+    editing = false
+}
 
 </script>
 
@@ -56,8 +65,8 @@ let editing = false;
     <div class="input ml3">
         <input type="text" 
             class:editing={editing}
-            on:focus={() => editing = true}
-            on:blur={() => editing = false}
+            on:focus={focus}
+            on:blur={blur}
             class:exists={exists}
             bind:this={nameInput}
             bind:value={item.name}

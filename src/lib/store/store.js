@@ -26,6 +26,7 @@ function createApp() {
     spaces: [],
     spacesFetched: false,
     states: [],
+    space_emoji: [],
     alert: {
       active: false,
       message: null,

@@ -21,6 +21,7 @@ $: if($page?.params?.space !== lastSpace && $page?.params?.space && !down) {
 
 $: if(authenticated){
     fetchPowerLevels()
+    fetchSpaceEmoji()
 }
 
 
@@ -106,6 +107,22 @@ async function fetchPowerLevels() {
     .then(resp => {
         if(resp?.power_levels) {
             store.savePowerLevels(resp.power_levels)
+        }
+    })
+}
+
+async function fetchSpaceEmoji() {
+
+    let opt = {
+      url: `${PUBLIC_API_URL}/space/emoji`,
+      method: 'GET',
+    }
+
+    APIRequest(opt)
+    .then(resp => {
+        if(resp?.emoji) {
+                console.log(resp.emoji)
+            $store.space_emoji = resp.emoji
         }
     })
 }
