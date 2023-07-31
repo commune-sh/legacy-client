@@ -62,9 +62,9 @@ export function process(key) {
     if(event?.reactions) {
         // check if reaction key exists
         let i = event?.reactions?.findIndex(r => r.key === key);
-        console.log("does emoji exist?", i)
         // add sender if it does
         if (i !== -1) {
+        console.log("does emoji exist?", i)
             // check if sender exists 
             let j = event?.reactions[i].senders.findIndex(s => s?.sender === sender);
             if(j === -1) {

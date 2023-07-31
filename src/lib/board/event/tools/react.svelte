@@ -23,11 +23,16 @@ function reactToEvent() {
         store.startAuthenticating("login")
         return
     }
+    let ra = event?.room_alias
+    if(ra.includes('/')) {
+        ra = ra.split('/')[0]
+    }
     let e = {
         reacting_to: event?.event_id,
         is_reply: isReply,
         target: reactEl,
-        position: 'left'
+        position: 'left',
+        space_alias: ra,
     }
     store.activateEmojiPicker(e)
     dispatch('active')

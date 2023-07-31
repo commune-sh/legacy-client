@@ -803,6 +803,7 @@ function createApp() {
       p.emojiPicker.target = v.target
       p.emojiPicker.position = v.position
       p.emojiPicker.is_reply = v.is_reply
+      p.emojiPicker.space_alias = v.space_alias
       p.emojiPicker.active = true
       return p
     })

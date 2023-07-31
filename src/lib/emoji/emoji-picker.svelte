@@ -89,6 +89,7 @@ $: emojis = {
 let root;
 
 $: target = $store.emojiPicker.target 
+$: space_alias = $store.emojiPicker?.space_alias
 
 
 $: active = $store.emojiPicker.active &&
@@ -304,7 +305,9 @@ function filterEmoji() {
                 {#if space_emoji?.length > 0}
                     {#each space_emoji as space}
 
-                        <div id="em-{space.alias}" class="fl fl-co mb3">
+                        <div id="em-{space.alias}" 
+                            class:disable={space_alias != space.alias}
+                            class="fl fl-co mb3">
                             <div id="title-{space.alias}" 
                                 class="emoji-title fl">
                                 <div class="tt ml1 grd-c">
@@ -452,6 +455,10 @@ function filterEmoji() {
     border-radius: 4px;
     cursor: pointer;
     transition: 0.1s;
+}
+.disable {
+    filter: grayscale(1);
+    pointer-events: none;
 }
 
 .cat:hover {
