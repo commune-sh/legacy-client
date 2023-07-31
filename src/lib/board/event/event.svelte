@@ -543,6 +543,7 @@ $: urls = findURLs(event?.content?.body)
                     editing={true}
                     isChat={isChat}
                     roomID={event.room_id}
+                    room_alias={event?.room_alias}
                     editingEvent={event} 
                     editingReply={isReply}
                     on:saved={finishedEditing}

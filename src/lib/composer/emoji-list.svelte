@@ -1,5 +1,6 @@
 <script>
 export let shortcode;
+import { store } from '$lib/store/store.js'
 import {onMount, onDestroy, createEventDispatcher } from 'svelte'
 
 const dispatch = createEventDispatcher()
@@ -9,6 +10,10 @@ export let reply;
 export let hide;
 
 export let isChat = false;
+export let room_alias = null;
+
+$: space_emoji = $store.space_emoji?.find(x => x.alias == room_alias)?.emoji
+$: matchedCustom = space_emoji?.filter(x => x.name.includes(shortcode))
 
 $: bounds = target.getBoundingClientRect()
 $: top = bounds.top + bounds.height
@@ -19,13 +24,19 @@ $: bottom = bounds.height + offset
 
 $: matchedEmojis = window?.emoji?.filter(x => x.shortcode.includes(shortcode))
 
-$: matched = matchedEmojis[0]
+$: matched = items[0]
+
+$: items = [...matchedCustom, ...matchedEmojis];
 
 $: if(matched) {
-    dispatch('matched', matched.unicode)
+    if(matched.url && matched.name) {
+        dispatch('matched', matched)
+    } else {
+        dispatch('matched', matched.unicode)
+    }
 }
 
-$: if(matchedEmojis.length == 0) {
+$: if(items.length == 0) {
     window.removeEventListener('keydown', handleKeydown)
 }
 
@@ -46,31 +57,41 @@ function handleKeydown(e) {
 
     if(e.key == 'ArrowDown' || e.key == 'Tab' && !e.shiftKey) {
         e.preventDefault()
-        const currentIndex = matchedEmojis.indexOf(matched);
-        const nextIndex = (currentIndex + 1) % matchedEmojis.length;
-        matched = matchedEmojis[nextIndex];
+        const currentIndex = items.indexOf(matched);
+        const nextIndex = (currentIndex + 1) % items.length;
+        matched = items[nextIndex];
     }
 
     if(e.key == 'ArrowUp' || (e.key == 'Tab' && e.shiftKey)) {
         e.preventDefault()
-        const currentIndex = matchedEmojis.indexOf(matched);
-        const previousIndex = (currentIndex - 1 + matchedEmojis.length) % matchedEmojis.length;
-        matched = matchedEmojis[previousIndex];
+        const currentIndex = items.indexOf(matched);
+        const previousIndex = (currentIndex - 1 + items.length) % items.length;
+        matched = items[previousIndex];
     }
 
     if(e.key == 'Enter') {
         if(matched) {
             e.preventDefault()
-            dispatch('selected', matched.unicode)
-            matchedEmojis = []
+
+            if(matched.url && matched.name) {
+                dispatch('selected', matched)
+            } else {
+                dispatch('selected', matched.unicode)
+            }
+
+            items = []
             matched = undefined
         }
     }
 }
 
 function select(item) {
-    dispatch('selected', item.unicode)
-    matchedEmojis = []
+    if(item.url && item.name) {
+        dispatch('selected', item)
+    } else {
+        dispatch('selected', item.unicode)
+    }
+    items = []
     matched = undefined
 }
 
@@ -78,11 +99,18 @@ function select(item) {
 let root;
 
 
+function highlight(item) {
+    console.log(matched.shortcode)
+    if(matched.shortcode == item.shortcode) {
+        return true
+    }
+    return false
+}
 
 
 </script>
 
-{#if matchedEmojis.length > 0}
+{#if items.length > 0}
 <div class="emoji-list" tabindex="0"
     bind:this={root}
     class:hide={hide}
@@ -97,15 +125,28 @@ let root;
 
     <div class="list fl fl-co">
 
-        {#each matchedEmojis as item (item.hexcode)}
+
+        {#each items as item}
             <div class="emoji-item fl pa2" 
                 on:click={select(item)}
-                class:high={matched.shortcode == item.shortcode}>
+                    class:high={(item.shortcode && (matched.shortcode ==
+                    item.shortcode)) || !item.shortcode && (item.url ==
+                            matched.url)}>
+
                 <div class="emoji-key">
-                    {@html item.unicode}
+                    {#if item?.url}
+                        <img src={item.url} height="16" width="16" />
+                    {:else}
+                        {@html item.unicode}
+                    {/if}
                 </div>
+
                 <div class="emoji-shortcode ml3">
-                    {item.shortcode}
+                    {#if item?.name}
+                        :{item.name}:
+                    {:else}
+                        {item.shortcode}
+                    {/if}
                 </div>
             </div>
         {/each}

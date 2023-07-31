@@ -611,6 +611,7 @@ function cancelReply() {
                         replyTo={replyToEvent}
                         on:new-message={newMessage}
                         roomID={roomID} 
+                        room_alias={$page.params.space}
                         on:kill={cancelReply}
                         isChat={true} />
                 </div>

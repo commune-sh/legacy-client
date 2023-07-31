@@ -18,6 +18,7 @@ import tippy from 'tippy.js';
 import { v4 as uuidv4 } from 'uuid';
 
 export let roomID = null;
+export let room_alias = null;
 export let placeholder = `What's on your mind?`;
 export let replyTo = false;
 export let threadEvent = null;
@@ -610,7 +611,10 @@ function killEmojiList() {
 }
 
 function insertEmoji(e) {
-    const emoji = e.detail
+    let emoji = e.detail
+    if(e.detail?.name && e.detail?.url) {
+        emoji = `:${e.detail.name}: `
+    }
     let startPosition = bodyInput.selectionStart;
     let endPosition = bodyInput.selectionEnd;
     bodyInput.value = bodyInput.value.substring(0, startPosition) + emoji + bodyInput.value.substring(endPosition);
@@ -619,6 +623,7 @@ function insertEmoji(e) {
     bodyInput.setSelectionRange(newCursorPosition, newCursorPosition);
     //killEmojiList()
     focusBodyInput()
+    editor.insertEmoji(e.detail)
 }
 
 $: attachments = $store.editorStates[stateKey]?.attachments
@@ -757,6 +762,7 @@ replyTo?.sender?.username ? replyTo.sender.username : ``
         </div>
         {#if isChat}
             <InsertEmoji 
+                room_alias={room_alias}
                 center={false}
                 position={"left"} 
                 reply={reply} 
@@ -775,6 +781,7 @@ replyTo?.sender?.username ? replyTo.sender.username : ``
         {/if}
     </div>
 
+
     {#if showAttachments && !isChat}
         <Attachments uploading={uploading} roomID={stateKey}/>
     {/if}
@@ -786,7 +793,7 @@ replyTo?.sender?.username ? replyTo.sender.username : ``
 
     <div class="tools fl" class:hide={isChat}>
         <Attach busy={busy} on:attached={attachFiles}/>
-        <InsertEmoji reply={reply} busy={busy} on:selected={insertEmoji}/>
+        <InsertEmoji room_alias={room_alias} reply={reply} busy={busy} on:selected={insertEmoji}/>
         <div class="fl-o">
         </div>
         <div class="grd mr3">
@@ -809,6 +816,7 @@ replyTo?.sender?.username ? replyTo.sender.username : ``
 
     {#if emojiListActive && shortcode}
         <EmojiList 
+            room_alias={room_alias}
             isChat={isChat}
             target={bodyInput}
             reply={reply || isChat}

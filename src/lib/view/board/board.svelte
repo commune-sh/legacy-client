@@ -624,6 +624,7 @@ function updatePostReactions(e) {
                 {#if authenticated && editing}
                     <Composer 
                         roomID={roomID}
+                        room_alias={$page.params.space}
                         topic={topic}
                         on:saved={postSaved} 
                         on:kill={stopEditing}/>

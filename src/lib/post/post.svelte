@@ -466,6 +466,7 @@ export function updateReactions(e) {
         <Composer 
             bind:this={composer}
             roomID={roomID}
+            room_alias={post?.room_alias}
             reply={true} 
             threadEvent={post?.event_id}
             replyTo={replyingTo}

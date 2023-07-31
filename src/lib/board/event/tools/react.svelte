@@ -34,6 +34,7 @@ function reactToEvent() {
         position: 'left',
         space_alias: ra,
     }
+
     store.activateEmojiPicker(e)
     dispatch('active')
 }

@@ -12,16 +12,25 @@ export let reply;
 export let position = 'right';
 export let center = true;
 
+export let room_alias = null;
+
 let reactEl;
 function insertEmoji() {
     if(busy) {
         return
     }
-    store.activateEmojiPicker({
+    let ra = room_alias
+    if(ra?.includes('/')) {
+        ra = ra?.split('/')[0]
+    }
+    let e = {
         reacting_to: id,
         position: position || 'right',
         target: reactEl,
-    })
+        space_alias: ra,
+    }
+
+    store.activateEmojiPicker(e)
 }
 
 $: selectedEmoji = $store.emojiPicker.selected

@@ -16,6 +16,7 @@ const dispatch = createEventDispatcher()
 let editor;
 let composer;
 export let isChat = false;
+export let room_alias = null;
 
 export let initFocus = true;
 
@@ -117,16 +118,29 @@ onDestroy(() => {
     }
 })
 
+export function insertEmoji(e) {
+    console.log("adding emoji", e)
+    if(e.name && e.url) {
+        editor.commands.setImage({src: e.url})
+        editor.commands.insertContent({type: "text", text: ` `})
+        return
+    }
+    editor.commands.insertContent({type: "text", text: `${e} `})
+}
+
 function addEmoji(e) {
     emojiListActive = false
     editor.commands.deleteRange({
         from: position.to - shortcode.length - 1,
         to: position.to
     })
-    editor.commands.insertContent({type: "text", text: e.detail})
 
-    editor.commands.setImage({ src: 'https://static.shpong.com/media/attachments/fAaCHNYWaLfmDw9pHTVFverfcKLQ0rGw.gif' })
-
+    if(e.detail.name && e.detail.url) {
+        editor.commands.setImage({src: e.detail.url})
+        editor.commands.insertContent({type: "text", text: ` `})
+        return
+    }
+    editor.commands.insertContent({type: "text", text: `${e.detail} `})
 }
 
 </script>
@@ -134,6 +148,7 @@ function addEmoji(e) {
 
 {#if emojiListActive && shortcode}
     <EmojiList 
+        room_alias={room_alias}
         isChat={false}
         target={composer}
         reply={false}
@@ -190,6 +205,6 @@ div :global(.Editor img) {
     height: 20px;
     width: 20px;
     object-fit: contain;
-    vertical-align: bottom;
+    vertical-align: text-bottom;
 }
 </style>
