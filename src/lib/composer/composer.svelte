@@ -343,6 +343,25 @@ async function createPost() {
         if(title) {
             post.content['title'] = title
         }
+        /*
+        let post = {
+            transaction_id: `co${Date.now()}`,
+            room_id: roomID,
+            type: 'm.room.message',
+            content: {
+                msgtype: 'm.text',
+                format: 'org.matrix.custom.html',
+                body: bo,
+                formatted_body: editor_content.html,
+            },
+        }
+
+        if(title) {
+            post.content['title'] = title
+            let fb = `<p><h3>${title}</h3></p>${editor_content.html}`
+            post.content['formatted_body'] = fb
+        }
+        */
 
         if(attachments && title == 'attachment' && body == 'attachment') {
             post.content['msgtype'] = 'space.board.post.image'
@@ -562,7 +581,11 @@ function bodyKeyDown(e) {
 
 function addEmoji(e) {
 
-    const emoji = e.detail + ` `
+    let emoji = e.detail + ` `
+
+    if(e.detail.url && e.detail.name) {
+        emoji = `:${e.detail.name}: `
+    }
 
     const count = shortcode.length + 1;
 
@@ -587,7 +610,7 @@ function addEmoji(e) {
 function trackCaret(e) {
     setTimeout(() => {
         const pt = bodyInput.value.substring(0, bodyInput.selectionStart);
-        const emp = /:[^\t\n\r\f\v/]{2,}$/;
+        const emp = /:(\s*[a-zA-Z]+)\s*$/;
         const lmp = /\/\S{1,}$/;
 
         if (emp.test(pt)) {
@@ -661,6 +684,14 @@ function toggleFullscreen() {
 
 $: replyToName = replyTo?.sender?.display_name ? replyTo.sender.display_name :
 replyTo?.sender?.username ? replyTo.sender.username : ``
+
+
+let editor_content = null;
+function updateEditorContent(e) {
+    editor_content = e.detail
+    console.log(editor_content)
+}
+
 </script>
 
 <section class="composer"
@@ -780,7 +811,6 @@ replyTo?.sender?.username ? replyTo.sender.username : ``
             </div>
         {/if}
     </div>
-
 
     {#if showAttachments && !isChat}
         <Attachments uploading={uploading} roomID={stateKey}/>

@@ -37,7 +37,10 @@ md.linkify.add('@', {
     }
 });
 
-md.use(MarkdownItEmoji);
+md.use(MarkdownItEmoji, { defs: {
+  '1000': 'https://twemoji.maxcdn.com/2/72x72/1f4af.png',
+}});
+
 md.use(MarkdownItLinkAttributes, [
     {
         matcher(href) {
@@ -74,6 +77,13 @@ md.use(MarkdownItLinkAttributes, [
         },
     },
 ]);
+
+export function newDefaultMD(opts) {
+  if(opts?.emoji_defs) {
+    md.use(MarkdownItEmoji, { defs: opts.emoji_defs});
+  }
+  return md;
+}
 
 export function newMD() {
   let md = new MarkdownIt({

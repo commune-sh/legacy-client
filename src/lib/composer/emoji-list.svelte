@@ -7,7 +7,7 @@ const dispatch = createEventDispatcher()
 
 export let target;
 export let reply;
-export let hide;
+export let hide = false;
 
 export let isChat = false;
 export let room_alias = null;

@@ -2,19 +2,17 @@
 import { tick, onMount, onDestroy, createEventDispatcher } from 'svelte'
 import { Editor } from '@tiptap/core'
 import Placeholder from '@tiptap/extension-placeholder'
+import Link from '@tiptap/extension-link'
 import StarterKit from '@tiptap/starter-kit'
 import EmojiList from '$lib/composer/emoji-list.svelte'
 import { Extension } from "@tiptap/core";
 import { Emoji } from './tiptap/emoji.ts'
 
-
 const dispatch = createEventDispatcher()
-
-
-
 
 let editor;
 let composer;
+
 export let isChat = false;
 export let room_alias = null;
 
@@ -39,12 +37,18 @@ onMount(() => {
     editor = new Editor({
         element: composer,
         extensions: [
-            StarterKit,
+            StarterKit.configure({
+            }),
             Placeholder.configure({
                 placeholder: `What's on your mind?`,
             }),
             PreventEnter,
-            Emoji
+            Emoji,
+            Link.configure({
+                openOnClick: false,
+                autolink: true,
+                linkOnPaste: true,
+            }),
         ],
         editorProps: {
             handleKeyDown: handleKeyDown,
@@ -60,7 +64,7 @@ onMount(() => {
                 to: editor.state.selection.to
             }
             dispatch('update', {
-                //html: editor.getHTML(),
+                html: editor.getHTML(),
                 text: editor.state.doc.textContent,
                 position: {
                     from: editor.state.selection.from,
