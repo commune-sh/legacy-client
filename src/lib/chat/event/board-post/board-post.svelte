@@ -10,16 +10,17 @@ $: title = event?.content?.title ? event?.content?.title : `Untitled`
 $: content = event?.content?.body
 
 function shorten(body) {
-    const lastSpaceIndex = body.lastIndexOf(' ', 200);
+    if(!body) return ''
+    const lastSpaceIndex = body?.lastIndexOf(' ', 200);
     if (lastSpaceIndex > 0) {
-        const trimmedText = body.substring(0, lastSpaceIndex);
+        const trimmedText = body?.substring(0, lastSpaceIndex);
         return trimmedText + '...';
     } else {
         return body.substring(0, 200)
     }
 }
 
-$: shortened = md.render(shorten(content))
+$: shortened = content ? md.render(shorten(content)) : ''
 
 function goToPost() {
     let url = `${$page.url.pathname}/post/${event.slug}?view=board`
