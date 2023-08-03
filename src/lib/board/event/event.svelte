@@ -21,6 +21,10 @@ import Vote from '$lib/vote/vote.svelte'
 import Links from './links/links.svelte'
 import RoomAlias from '$lib/board/event/room-alias/room-alias.svelte'
 import MatrixMedia from '$lib/chat/event/media/media.svelte'
+
+import EventThreadSummary from '$lib/chat/event/thread/thread-summary.svelte'
+import BoardPost from '$lib/chat/event/board-post/board-post.svelte'
+
 import emojiRegex from 'emoji-regex';
 
 import { pin, hash } from '$lib/assets/icons.js'
@@ -42,6 +46,8 @@ export let isReply = false;
 export let showAlias = true;
 export let interactive = true;
 export let search = false;
+
+export let isBoardPostInChat = false;
 
 export let postEventID = null;
 
@@ -486,7 +492,7 @@ $: urls = findURLs(event?.content?.body)
     class:nch={!isChat}
     class:shs={isChat && showSender}
     class:ha={!isReply && !isPost && (hasAttachments || hasLinks)}
-    class:ma={toolsActive}
+    class:ma={toolsActive && !isBoardPostInChat}
     class:bb={isPost || isReply}
     on:click={goToEvent} 
     class:fresh={event?.just_posted}
@@ -513,6 +519,11 @@ $: urls = findURLs(event?.content?.body)
             class:snm={isChat && showSender}
             class:hide={isChat && !showSender}>
             <User isChat={isChat} hideAvatar={false} user={user} op={op}/>
+            {#if isBoardPostInChat}
+                <div class="grd-c ml2 dis">
+                started a discussion
+                </div>
+            {/if}
             <div class="grd-c ph1"></div>
             <Date date={event?.origin_server_ts} />
             {#if wasEdited}
@@ -535,7 +546,7 @@ $: urls = findURLs(event?.content?.body)
 
 
         <div class="body" class:nonin={!interactive}
-            class:ch={isChat && !redacted}>
+            class:ch={isChat && !isBoardPostInChat && !redacted}>
 
             {#if editing && interactive}
 
@@ -553,7 +564,9 @@ $: urls = findURLs(event?.content?.body)
 
                 {#if isMatrixMedia}
                     <MatrixMedia {event}/>
-                {:else if isChat}
+                {:else if isChat && isBoardPostInChat}
+                    <BoardPost event={event} />
+                {:else if isChat && !isBoardPostInChat}
                     <div class="chat-message">
                         <div class="chti">
                             {#if !redacted}
@@ -713,6 +726,7 @@ $: urls = findURLs(event?.content?.body)
             class:chto={isChat && !showSender}
             class:asi={event?.pinned || replyPinned}>
                 <Tools 
+                    isBoardPostInChat={isBoardPostInChat}
                     isReply={isReply} 
                     isPost={isPost}
                     isChat={isChat}
@@ -745,6 +759,10 @@ $: urls = findURLs(event?.content?.body)
 </div>
 
 {#if urls}
+{/if}
+
+{#if isChat && event?.last_thread_reply}
+    <EventThreadSummary event={event} />
 {/if}
 
 
@@ -1065,5 +1083,8 @@ div :global(.chp pre) {
 }
 .just-emoji {
     font-size: 1.8rem;
+}
+.dis {
+    color: var(--text-light);
 }
 </style>

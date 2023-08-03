@@ -11,7 +11,7 @@ import Header from '$lib/header/header.svelte'
 import Memberships from '$lib/chat/event/membership/memberships.svelte'
 import Topic from '$lib/chat/event/topic/topic.svelte'
 import SkeletonChatEvents from '$lib/skeleton/skeleton-chat-events.svelte'
-import { v4 as uuidv4 } from 'uuid';
+import Thread from '$lib/thread/thread.svelte'
 
 $: authenticated = $store?.authenticated && 
     $store?.credentials != null
@@ -271,6 +271,7 @@ function syncMessages() {
 
                 if(event.type == 'm.room.member' || 
                 event.type == 'm.room.name' || 
+                event.type == 'space.board.post' || 
                 event.type == 'm.room.topic') {
                     messages = [...messages, event]
                     messages = messages
@@ -545,16 +546,26 @@ function cancelReply() {
     replyToEvent = null
 }
 
+$: queryExists = $page.url.search.length > 0
+$: threadQuery = $page.url.searchParams.get('thread')
+
+$: isThread = threadQuery && threadQuery.length > 0
+
+let container;
 </script>
 
 
 
 
-<section class="space-container">
+<section class="space-container"
+    bind:this={container}
+    class:thread={isThread}>
 
-    <div class="inner-area" >
+    <div class="inner-area" 
+        class:ina={isThread}>
 
-        <Header />
+        <Header 
+            on:toggle-view/>
 
         <div class="inner-content fl-co" 
             class:pbr={ready}
@@ -590,6 +601,18 @@ function cancelReply() {
                         {/if}
                         {#if message?.type === 'm.room.topic'}
                             <Topic event={message}/>
+                        {/if}
+                        {#if message?.type === 'space.board.post'}
+                            <Event 
+                                isChat={true}
+                                isBoardPostInChat={true}
+                                on:replyTo={reply}
+                                on:reacted={reacted}
+                                on:redact={redactPost}
+                                messages={processed}
+                                event={message} 
+                                on:saved={saved}
+                                sender={null} />
                         {/if}
                     {/each}
                 {/if}
@@ -644,6 +667,11 @@ function cancelReply() {
 
     </div>
 
+    {#if isThread}
+        <Thread />
+    {/if}
+
+
 
 </section>
 
@@ -658,11 +686,19 @@ function cancelReply() {
     overflow: hidden;
 }
 
+.thread {
+    grid-template-columns: 1fr 500px;
+}
+
 .inner-area {
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: 48px 1fr auto;
     overflow: hidden;
+}
+
+.ina {
+    border-right: 1px solid var(--border-1);
 }
 
 .inner-content {

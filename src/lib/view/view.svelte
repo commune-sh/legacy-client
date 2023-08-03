@@ -9,42 +9,44 @@ import Chat from './chat/chat.svelte'
 import SkeletonBoardEvents from '$lib/skeleton/skeleton-board-events.svelte'
 import Header from '$lib/header/header.svelte'
 
-$: isIndex = $page?.url?.pathname === '/'
 $: isSpace = $page?.params?.space !== undefined && $page?.params?.space !== null && $page?.params?.space !== '' 
 $: isRoom = $page?.params?.room !== undefined && $page?.params?.room !== null && $page?.params?.room !== '' 
-$: isPost = $page?.params?.post !== undefined && $page?.params?.post !== null && $page?.params?.post !== ''
+
 $: state = $store?.states[$page?.params?.space]
 
-$: selectedRoomType = isRoom ? state?.children?.find(r => r?.alias ===
+$: roomID = isRoom ? state?.children?.find(r => r?.alias ===
+    $page?.params?.room)?.room_id : isSpace ? state?.room_id : null
+
+$: defaultView = isRoom ? state?.children?.find(r => r?.alias ===
     $page?.params?.room)?.type : isSpace ? state?.space?.type : null
 
-$: isChat = selectedRoomType === 'chat'
-$: isBoard = selectedRoomType === 'board'
-
-$: isAll = $page.url.pathname.startsWith('/all')
+$: isChat = defaultView === 'chat'
+$: isBoard = defaultView === 'board'
 
 
-$: isSpaceSettings = isSpace && $page?.params?.room === 'settings'
-
-const dispatch = createEventDispatcher()
-
-$: authenticated = $store?.authenticated && 
-    $store?.credentials != null
-    $store?.credentials?.access_token?.length > 0
-
-
-$: sender_id = $store.credentials?.matrix_user_id
-$: isOwner = state?.owner?.user_id === sender_id
 
 $: ready = $store.stateReady
+
+$: query = $page.url.search
+$: queries = $page.url.searchParams
+
+$: queryExists = $page.url.search.length > 0
+$: viewQuery = $page.url.searchParams.get('view')
+
+$: chatView = viewQuery === 'chat'
+$: boardView = viewQuery === 'board'
+
+$: showBoardView = (!viewQuery && isBoard) || boardView
+$: showChatView = (!viewQuery && isChat) || chatView
+
 
 </script>
 
 {#if isSpace}
     {#if ready}
-        {#if isChat}
+        {#if showChatView}
             <Chat />
-        {:else}
+        {:else if showBoardView}
             <Board on:ready />
         {/if}
     {:else}

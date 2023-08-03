@@ -11,6 +11,7 @@ import Header from '$lib/header/header.svelte'
 import Post from '$lib/post/post.svelte'
 import SkeletonBoardEvents from '$lib/skeleton/skeleton-board-events.svelte'
 
+
 $: authenticated = $store?.authenticated && 
     $store?.credentials != null
     $store?.credentials?.access_token?.length > 0
@@ -31,11 +32,6 @@ $: stateReady = $store.stateReady
 $: roomID = isRoom ? state?.children?.find(r => r?.alias ===
     $page?.params?.room)?.room_id : isSpace ? state?.room_id : null
 
-$: selectedRoomType = isRoom ? state?.children?.find(r => r?.alias ===
-    $page?.params?.room)?.type : isSpace ? state?.space?.type : null
-
-$: isChat = selectedRoomType === 'chat'
-$: isBoard = selectedRoomType === 'board'
 
 $: pinned = isRoom ? state?.children?.find(r => r?.alias ===
     $page?.params?.room)?.pinned_events : isSpace ? state?.space?.pinned_events : null
@@ -72,7 +68,7 @@ $: topic = $page?.params?.topic
 $: if(loaded && roomID) {
     let es = store.getEditorState(roomID)
     if(es != undefined) {
-        editing = true
+        //editing = true
     }
 }
 
@@ -264,10 +260,14 @@ $: if(!isDomain && domainPinged) {
     loadEvents()
 }
 
+let loadEditor = false;
 onMount(() => {
     if(isDomain) {
         return
     }
+    setTimeout(() => {
+        loadEditor = true
+    }, 100)
     //loadEvents(true)
     return
     if(!data.error && !data.down) {
@@ -470,6 +470,10 @@ function postSaved(e) {
         url = `/${e.detail?.room_alias}/topic/${e.detail?.content?.topic}/post/${e.detail?.slug}`
     }
 
+    if($page.url?.search?.includes('view=board')) {
+        url = `/${e.detail?.room_alias}/post/${e.detail?.slug}?view=board`
+    }
+
     goto(url, {
         noscroll: true,
     })
@@ -602,7 +606,8 @@ function updatePostReactions(e) {
     <div class="inner-area" 
         class:ina={isPost}>
 
-        <Header 
+        <Header on:toggle-view
+            isBoard={true}
             editing={editing} 
             on:newPost={newPost} />
 
@@ -621,12 +626,13 @@ function updatePostReactions(e) {
                 <SkeletonBoardEvents reply={false}/>
 
             {:else if (stateReady || !isSpace)}
-                {#if authenticated && editing}
+                {#if authenticated && editing && loadEditor}
                     <Composer 
                         roomID={roomID}
                         room_alias={$page.params.space}
                         topic={topic}
                         on:saved={postSaved} 
+                        isChat={false}
                         on:kill={stopEditing}/>
                 {/if}
 

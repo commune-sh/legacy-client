@@ -91,6 +91,7 @@ function createApp() {
     draggable: null,
     indexSort: null,
     redactedEvent: null,
+    roomViews: [],
   }
 
   let theme = localStorage.getItem(`theme`) || "{}"
@@ -876,6 +877,14 @@ function createApp() {
     })
   }
 
+  let updateRoomView = (room_id, view) => {
+    update(p => {
+      p.roomViews[room_id] = view
+      return p
+    })
+  }
+
+
   let addNotification = (x) => {
     update(p => {
       p.notifications?.unshift(x)
@@ -965,6 +974,7 @@ function createApp() {
     addNotification,
     addSpaceEmoji,
     updateSpaceEmoji,
+    updateRoomView,
   };
 }
 

@@ -473,3 +473,11 @@ export async function getUploadURL() {
   return data
 }
 
+export async function getEventThread(event_id) {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/event/${event_id}/thread`,
+    method: 'GET'
+  })
+  return data
+}
+

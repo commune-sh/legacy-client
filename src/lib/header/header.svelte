@@ -14,6 +14,8 @@ import DefaultIndexList from './default-index-list.svelte'
 import IndexList from './index-list.svelte'
 import BoardInfo from './board-info.svelte'
 import { newMD } from '$lib/composer/md/md.js'
+import ToggleView from './toggle-view/toggle-view.svelte'
+
 
 let md = newMD()
 md.disable("image")
@@ -30,6 +32,8 @@ $: state = $store?.states[$page?.params?.space]
 $: ready = state != undefined
 
 export let type = 'space';
+
+export let isBoard = false;
 
 $: exists = state != undefined && state?.room_id != undefined
 
@@ -88,6 +92,7 @@ function sortItems(state) {
             avatar: state?.space?.avatar,
             is_profile: state?.space?.is_profile,
             type: state?.space?.type,
+            view: state?.space?.type,
             pinned_events: state.space?.pinned_events != undefined ? JSON.parse(state.space?.pinned_events) : null
         }
     ]
@@ -104,6 +109,7 @@ function sortItems(state) {
                 avatar: child?.avatar,
                 is_profile: state?.space?.is_profile,
                 type: child?.type,
+                view: child?.type,
                 restrictions: child.restrictions,
                 pinned_events: child?.pinned_events != undefined ? JSON.parse(child?.pinned_events) : null,
             })
@@ -125,8 +131,11 @@ $: isProfile = state?.space?.is_profile
 
 $: isOwner = state?.owner?.user_id === $store?.credentials?.matrix_user_id
 
-$: isBoard = selected?.type === 'board'
-$: isChat = selected?.type === 'chat'
+$: viewQuery = $page.url.searchParams.get('view')
+$: chatView = viewQuery === 'chat'
+
+$: isChat = selected?.type === 'chat' || chatView
+
 
 $: ownProfile = isProfile && isOwner
 
@@ -261,6 +270,8 @@ selected?.name : selected?.alias ? selected?.alias : null
 
         <div class="ovf mr3 sel-no">
 
+            <ToggleView 
+                on:toggle-view />
 
             <div class="name grd-c fl">
             {#if (isIndex || indexPost || isAll)}
@@ -311,7 +322,7 @@ selected?.name : selected?.alias ? selected?.alias : null
                     <Search />
                 </div>
             {/if}
-                {#if $store.verifiedSession && space && exists && !isChat}
+                {#if $store.verifiedSession && space && exists && isBoard}
                     {#if (joined && !isProfile) || ownProfile}
                     <div class="grd-c">
                         {#if !editing}
@@ -470,10 +481,10 @@ a, a:link, a:visited, a:active {
 .ovf {
     overflow: hidden;
     display: grid;
-    grid-template-columns: auto 1fr auto auto;
+    grid-template-columns: auto auto 1fr auto auto;
     grid-template-rows: auto;
 }
 .bb {
-    grid-template-columns: auto 1fr auto auto;
+    grid-template-columns: auto auto 1fr auto auto;
 }
 </style>

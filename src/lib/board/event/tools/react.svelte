@@ -24,7 +24,7 @@ function reactToEvent() {
         return
     }
     let ra = event?.room_alias
-    if(ra.includes('/')) {
+    if(ra?.includes('/')) {
         ra = ra.split('/')[0]
     }
     let e = {

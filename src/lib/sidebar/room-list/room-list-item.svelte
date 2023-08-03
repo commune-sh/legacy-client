@@ -127,6 +127,12 @@ function goToRoom() {
         url = `/${$page.params.domain}/${space}${alias}`
     }
 
+    let rv = $store.roomViews[item.room_id]
+    if(rv) {
+        url = rv
+    }
+
+
 
     goto(url, {
         noscroll: true,

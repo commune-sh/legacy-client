@@ -28,6 +28,8 @@ export let isPost;
 export let isAuthor;
 export let isChat;
 
+export let isBoardPostInChat = false;
+
 export let isPostAuthor;
 
 function kill() {
@@ -120,46 +122,50 @@ function reacted(e) {
         on:react
         on:active />
 
-    {#if isPost || isReply || isChat}
-    <div class="icon grd-c c-ico" 
-        on:mouseenter={resetHovered}
-        on:click|stopPropagation={replyToEvent}>
-        {@html reply}
-    </div>
-    {/if}
+    {#if !isBoardPostInChat}
 
-    {#if isReply}
-        <div class="icon grd-c c-ico" 
-        on:mouseenter={resetHovered}
-            on:click|stopPropagation={goToEvent}>
-            {@html external}
-        </div>
-    {/if}
-
-    {#if isAuthor}
+        {#if isPost || isReply || isChat}
         <div class="icon grd-c c-ico" 
             on:mouseenter={resetHovered}
-            on:click|stopPropagation={editEvent}>
-            {@html edit}
+            on:click|stopPropagation={replyToEvent}>
+            {@html reply}
         </div>
+        {/if}
+
+        {#if isReply}
+            <div class="icon grd-c c-ico" 
+            on:mouseenter={resetHovered}
+                on:click|stopPropagation={goToEvent}>
+                {@html external}
+            </div>
+        {/if}
+
+        {#if isAuthor}
+            <div class="icon grd-c c-ico" 
+                on:mouseenter={resetHovered}
+                on:click|stopPropagation={editEvent}>
+                {@html edit}
+            </div>
+        {/if}
+
+
+        <Menu 
+            on:active ={menuIsActive}
+            on:kill 
+            on:redact
+            on:react
+            on:pin
+            on:add-tag
+            on:toggle-pin
+            on:mouseenter={resetHovered}
+            isReply={isReply}
+            isChat={isChat}
+            isAuthor={isAuthor}
+            isPostAuthor={isPostAuthor}
+            nested={nested}
+            event={event} />
+
     {/if}
-
-
-    <Menu 
-        on:active ={menuIsActive}
-        on:kill 
-        on:redact
-        on:react
-        on:pin
-        on:add-tag
-        on:toggle-pin
-        on:mouseenter={resetHovered}
-        isReply={isReply}
-        isChat={isChat}
-        isAuthor={isAuthor}
-        isPostAuthor={isPostAuthor}
-        nested={nested}
-        event={event} />
 
 </div>
 
