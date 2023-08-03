@@ -920,6 +920,14 @@ div :global(.post-body p img){
     margin-bottom: 0.5rem;
 }
 
+div :global(.clipped img){
+    height: 20px;
+    width: 20px;
+    object-fit: contain;
+    vertical-align: text-bottom;
+}
+
+
 .clipped p {
     margin-block-start: 0;
     margin-block-end: 0;
