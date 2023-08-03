@@ -430,7 +430,7 @@ selected?.name : selected?.alias ? selected?.alias : null
         fill: var(--hamburger);
     }
     .name {
-        padding-left: 0.5rem;
+        padding-left: 0;
     }
     .new-post {
         display: none;

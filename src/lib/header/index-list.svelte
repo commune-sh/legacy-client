@@ -93,7 +93,7 @@ $: spaces = $page.url.search == '?filter=spaces'
 $: social = $page.url.search == '?filter=social'
 </script>
 
-<div class="board-list ml2"
+<div class="board-list"
     class:ac={active}
     on:click|stopPropagation bind:this={el}>
     <div class="ico-s sml grd-c mh1">
@@ -191,6 +191,7 @@ $: social = $page.url.search == '?filter=social'
     background: var(--shade-3);
     cursor: pointer;
     overflow: hidden;
+    margin-left: 0.5rem;
 }
 
 .name {
@@ -286,5 +287,11 @@ $: social = $page.url.search == '?filter=social'
     margin-top: 0.125rem;
     margin-bottom: 0.125rem;
     width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+    .board-list {
+        margin-left: 0;
+    }
 }
 </style>
