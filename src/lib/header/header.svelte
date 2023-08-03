@@ -442,7 +442,6 @@ selected?.name : selected?.alias ? selected?.alias : null
         display: block;
     }
     .topic {
-        display: none;
     }
 }
 .slash {

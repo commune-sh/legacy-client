@@ -82,7 +82,7 @@ function kd(e) {
 
 <div class="search-container">
     <div class="sec fl" on:click={focusInput}>
-        <div class="fl-o">
+        <div class="scc fl-o">
             <input class="Search" 
                 bind:this={searchInput}
                 bind:value={query}
@@ -132,6 +132,7 @@ function kd(e) {
     background: var(--shade-2);
     border: none;
     border-radius: 4px;
+    margin-left: 1rem;
 }
 
 .sec {
@@ -159,8 +160,8 @@ input {
 }
 
 @media screen and (max-width: 768px) {
-    input {
-        width: 80px;
+    .scc {
+        display: none;
     }
 }
 

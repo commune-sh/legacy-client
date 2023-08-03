@@ -138,7 +138,8 @@ $: isChat = (defaultView === 'chat' && !viewQuery) ||  viewQuery == 'chat'
 
 @media screen and (max-width: 768px) {
     .toggle-view {
-        display: none;
+        margin-left: 0rem;
+        margin-right: 0rem;
     }
 }
 
