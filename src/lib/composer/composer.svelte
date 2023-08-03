@@ -646,7 +646,9 @@ function insertEmoji(e) {
     bodyInput.setSelectionRange(newCursorPosition, newCursorPosition);
     //killEmojiList()
     focusBodyInput()
-    editor.insertEmoji(e.detail)
+    if(editor) {
+        editor.insertEmoji(e.detail)
+    }
 }
 
 $: attachments = $store.editorStates[stateKey]?.attachments

@@ -252,7 +252,7 @@ function syncMessages() {
                 let events = event.reverse()
                 events?.forEach(e => {
                     let ind = messages.findIndex(m => m?.event_id === e?.event_id)
-                    if(ind == -1) {
+                    if(ind == -1 && !e?.content?.['m.relates_to']) {
                         messages = [...messages, e]
                     }
                 })
@@ -284,7 +284,7 @@ function syncMessages() {
                     let ind = messages.findIndex(m => m?.transaction_id ===
                         event?.transaction_id)
                     console.log
-                    if(ind == -1) {
+                    if(ind == -1 && !event?.content?.['m.relates_to']) {
                         messages = [...messages, event]
                     }
             }
@@ -728,6 +728,10 @@ let container;
     .post {
         grid-template-columns: auto;
     }
+    .thread {
+        grid-template-columns: 1fr;
+    }
+
 }
 
 

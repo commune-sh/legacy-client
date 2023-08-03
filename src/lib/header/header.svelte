@@ -268,7 +268,7 @@ selected?.name : selected?.alias ? selected?.alias : null
             {/if}
         </div>
 
-        <div class="ovf mr3 sel-no" class:ns={!isSpace}>
+        <div class="ovf mr3 sel-no" class:ns={!isSpace || isProfile}>
 
             {#if isSpace && !isProfile}
             <ToggleView 
