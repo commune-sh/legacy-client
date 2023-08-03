@@ -317,7 +317,7 @@ async function updateIndex(e) {
         </div>
 
         <div class="mt3 pb2">
-            <span class="label">space type</span>
+            <span class="label">default view</span>
         </div>
         <div class="mt1 pb2">
             <Select items={roomTypes} 

@@ -23,6 +23,8 @@ $: defaultView = isRoom ? state?.children?.find(r => r?.alias ===
 $: isChat = defaultView === 'chat'
 $: isBoard = defaultView === 'board'
 
+$: isProfile = defaultView === 'profile'
+
 
 
 $: ready = $store.stateReady
@@ -44,7 +46,9 @@ $: showChatView = (!viewQuery && isChat) || chatView
 
 {#if isSpace}
     {#if ready}
-        {#if showChatView}
+        {#if isProfile}
+            <Board on:ready />
+        {:else if showChatView}
             <Chat />
         {:else if showBoardView}
             <Board on:ready />

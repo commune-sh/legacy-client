@@ -270,8 +270,10 @@ selected?.name : selected?.alias ? selected?.alias : null
 
         <div class="ovf mr3 sel-no">
 
+            {#if isSpace && !isProfile}
             <ToggleView 
                 on:toggle-view />
+            {/if}
 
             <div class="name grd-c fl">
             {#if (isIndex || indexPost || isAll)}
