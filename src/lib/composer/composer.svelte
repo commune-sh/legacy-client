@@ -4,6 +4,7 @@ import { eye, send, close } from '$lib/assets/icons.js'
 import { page } from '$app/stores';
 import {getPresignedURL, uploadAttachment, savePost,
     getLinkMetadata } from '$lib/utils/request.js'
+import { replaceEmoji } from '$lib/utils/utils.js'
 import { md } from './md/md.js'
 import autosize from '$lib/vendor/autosize/autosize'
 import { store } from '$lib/store/store.js'
@@ -47,6 +48,8 @@ function kill() {
     }
 }
 
+$: space_emoji = $store.space_emoji?.filter(x => x.alias ==
+    room_alias)[0]?.emoji
 
 $: isSocial = $page?.params?.space?.startsWith('@')
 
@@ -311,7 +314,9 @@ async function createPost() {
             }
         }
 
-        let bo = body
+        //replace :emoji: with img urls
+        let bo = replaceEmoji(body, space_emoji)
+
         let save_full = false
         let remaining_words = 0;
         if(body?.length > 2000) {

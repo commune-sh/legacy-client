@@ -897,6 +897,13 @@ $: urls = findURLs(event?.content?.body)
     font-weight: 400;
 }
 
+div :global(.post-body p img){
+    height: 20px;
+    width: 20px;
+    object-fit: contain;
+    vertical-align: text-bottom;
+}
+
 .pba {
     color: var(--text-light);
 }

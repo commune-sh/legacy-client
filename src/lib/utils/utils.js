@@ -197,3 +197,18 @@ export function getHomeserver(room_id) {
   }
   return parts.slice(1).join(":");
 }
+
+export function replaceEmoji(inputString, emojiMapping) {
+  const emojiRegex = /:(\w+):/g;
+
+  const replacedString = inputString.replace(emojiRegex, (match, emojiText) => {
+    const emojiObj = emojiMapping.find((emoji) => emoji.name === emojiText);
+    if (emojiObj) {
+      return `<img class="emoji" src="${emojiObj.url}" alt=":${emojiText}:" />`;
+    } else {
+      return match;
+    }
+  });
+
+  return replacedString;
+}
