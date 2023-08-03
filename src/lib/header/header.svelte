@@ -268,7 +268,7 @@ selected?.name : selected?.alias ? selected?.alias : null
             {/if}
         </div>
 
-        <div class="ovf mr3 sel-no">
+        <div class="ovf mr3 sel-no" class:ns={!isSpace}>
 
             {#if isSpace && !isProfile}
             <ToggleView 
@@ -319,11 +319,13 @@ selected?.name : selected?.alias ? selected?.alias : null
                 {/if}
             </div>
 
+
             {#if $store.verifiedSession}
                 <div class="grd-c">
                     <Search />
                 </div>
             {/if}
+
                 {#if $store.verifiedSession && space && exists && isBoard}
                     {#if (joined && !isProfile) || ownProfile}
                     <div class="grd-c">
@@ -439,6 +441,9 @@ selected?.name : selected?.alias ? selected?.alias : null
     .signup {
         display: block;
     }
+    .topic {
+        display: none;
+    }
 }
 .slash {
     font-weight: 500;
@@ -488,5 +493,8 @@ a, a:link, a:visited, a:active {
 }
 .bb {
     grid-template-columns: auto auto 1fr auto auto;
+}
+.ns {
+    grid-template-columns: auto 1fr auto auto;
 }
 </style>

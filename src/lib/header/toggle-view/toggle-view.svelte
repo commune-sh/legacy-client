@@ -135,8 +135,12 @@ $: isChat = (defaultView === 'chat' && !viewQuery) ||  viewQuery == 'chat'
     width: 14px;
     padding: 0.25rem 0.5rem 0.25rem 0.5rem;
 }
-.di {
+
+@media screen and (max-width: 768px) {
+    .toggle-view {
+        display: none;
+    }
 }
-.ch {
-}
+
+
 </style>
