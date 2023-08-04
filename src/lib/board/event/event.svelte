@@ -329,6 +329,16 @@ $: isSingleReply = $page.params.reply !== undefined && $page.params.reply !== nu
 
 $: sender_id = $store.credentials?.matrix_user_id
 
+function justIMG(e) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(e?.content?.body, 'text/html');
+    const imgTags = doc.getElementsByTagName('img');
+    return imgTags.length === 1 && 
+        doc.documentElement.textContent.trim() === '';
+}
+
+$: isSingleCustomEmoji = justIMG(event)
+
 
 let reactions;
 
@@ -547,6 +557,7 @@ $: urls = findURLs(event?.content?.body)
 
 
         <div class="body" class:nonin={!interactive}
+            class:semj={isSingleCustomEmoji}
             class:ch={isChat && !isBoardPostInChat && !redacted}>
 
             {#if editing && interactive}
@@ -927,12 +938,20 @@ div :global(.post-body p img){
     margin-bottom: 0.5rem;
 }
 
-div :global(.clipped img){
+div :global(.body .emoji){
     height: 20px;
     width: 20px;
     object-fit: contain;
     vertical-align: text-bottom;
 }
+
+div :global(.semj .emoji){
+    height: 30px;
+    width: 30px;
+    object-fit: contain;
+    vertical-align: text-bottom;
+}
+
 
 
 .clipped p {

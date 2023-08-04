@@ -383,9 +383,9 @@ async function createPost() {
         if(isChat) {
             post.type = 'm.room.message'
             post.content['msgtype'] = 'm.text'
-            post.content['body'] = body
+            post.content['body'] = bo
             post.content['format'] = 'org.matrix.custom.html'
-            post.content['formatted_body'] = md.render(bodyInput.value)
+            post.content['formatted_body'] = md.render(bo)
         }
 
         if(save_full) {
