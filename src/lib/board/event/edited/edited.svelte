@@ -39,11 +39,11 @@ export let date;
 </script>
 
 
-<div class="edited ml2 fl">
-    <div class="ico-s">
+<div class="edited grd-c ml2 fl">
+    <div class="ico-s grd-c">
         {@html edit}
     </div>
-    <div class="ml2">
+    <div class="ml2 grd-c">
         {isThisWeek ? when : created}
     </div>
 </div>
