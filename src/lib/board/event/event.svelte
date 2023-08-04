@@ -99,6 +99,9 @@ onMount(() => {
             el.scrollIntoView({ behavior: "smooth" });
         }
     }
+    if(hasFullBody) {
+        loadFullBody()
+    }
 })
 
 
@@ -613,15 +616,7 @@ $: urls = findURLs(event?.content?.body)
                     <div class="post-body ph3 mb2 pci">
                         {@html content}
                     </div>
-                    {#if hasFullBody && !full_body_fetched}
-                        <div class="ml3 mb2">
-                            <button class="readmore" 
-                                disabled={fetchingMore}
-                                on:click={loadFullBody}>
-                                {fetchingMore ? 'Loading...' : `Read More (${remaining} words)`}
-                            </button>
-                        </div>
-                    {/if}
+
                 {:else if isPost}
                     {#if !isSingleReply}
                     <div class="post-title ph3 pb2 pti">
@@ -632,30 +627,10 @@ $: urls = findURLs(event?.content?.body)
                     <div class="post-body ph3 mb2 pci">
                         {@html content}
                     </div>
-                    {#if hasFullBody && !full_body_fetched}
-                        <div class="ml3 mb2">
-                            <button class="readmore" 
-                                disabled={fetchingMore}
-                                on:click={loadFullBody}>
-                                {fetchingMore ? 'Loading...' : `Read More (${remaining} words)`}
-                            </button>
-                        </div>
-                    {/if}
                 {:else if isReply}
-
-
                     <div class="post-body ph3">
                         {@html content}
                     </div>
-                    {#if hasFullBody && !full_body_fetched}
-                        <div class="ml3 mb2">
-                            <button class="readmore" 
-                                disabled={fetchingMore}
-                                on:click={loadFullBody}>
-                                {fetchingMore ? 'Loading...' : 'Read More'}
-                            </button>
-                        </div>
-                    {/if}
                 {:else}
                     <div class="post-title ph3">
                         {title}

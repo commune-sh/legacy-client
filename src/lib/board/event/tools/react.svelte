@@ -5,7 +5,7 @@ import { store } from '$lib/store/store.js'
 import tippy from 'tippy.js';
 
 onMount(() => {
-    tippy('.react', {
+    tippy(reactEl, {
         content: 'Click for full list of reactions',
         arrow: true,
         duration: 1,
@@ -72,7 +72,7 @@ function queryState() {
 
 </script>
 
-<div class="react icon grd-c c-ico" 
+<div class="icon grd-c c-ico" 
     on:mouseenter={queryState}
     class:inline={inline}
     bind:this={reactEl}

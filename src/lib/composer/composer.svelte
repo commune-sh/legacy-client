@@ -330,18 +330,19 @@ async function createPost() {
 
         let save_full = false
         let remaining_words = 0;
-        if(body?.length > 2000) {
+        if(body?.length > 1000) {
             save_full = true
-            const lastSpaceIndex = body.lastIndexOf(' ', 2000);
+            const lastSpaceIndex = body.lastIndexOf(' ', 1000);
             if (lastSpaceIndex > 0) {
                 const trimmedText = body.substring(0, lastSpaceIndex);
-                bo = trimmedText
+                bo = replaceEmoji(trimmedText, space_emoji)
                 const remainingText = body.substring(lastSpaceIndex);
                 const trimmedStr = remainingText.trim();
-                const wordsArray = trimmedStr.split(/\s+/);
+                const wordsArray = trimmedStr.split(/\S+/);
                 remaining_words = wordsArray.length
             } else {
-                bo = body.substring(0, 2000)
+                bo = bo.substring(0, 1000)
+                bo = replaceEmoji(bo, space_emoji)
             }
         }
 
@@ -393,9 +394,11 @@ async function createPost() {
             post.content['formatted_body'] = md.render(bo)
         }
 
+
         if(save_full) {
             const presignedURL = await getPresignedURL('txt');
-            const file = new File([body], presignedURL.key, { type: 'text/plain' });
+            let full_body = replaceEmoji(body, space_emoji)
+            const file = new File([full_body], presignedURL.key, { type: 'text/plain' });
             await uploadAttachment(file, presignedURL.url);
             post.content['full_body'] = {
                 key: presignedURL.key,
@@ -503,7 +506,7 @@ function handleEnter(e) {
 
 function handleChatEnter(e) {
     if(!e.shiftKey && e.key === 'Enter' && isChat) {
-    console.log("hmm")
+        console.log("hmmm", emojiListActive)
         e.preventDefault()
         if(!emojiListActive) {
             createPost()
@@ -626,7 +629,7 @@ function addEmoji(e) {
 function trackCaret(e) {
     setTimeout(() => {
         const pt = bodyInput.value.substring(0, bodyInput.selectionStart);
-        const emp = /:(\s*[a-zA-Z]+)\s*$/;
+        const emp = /:(?!.*\s)([a-zA-Z]+\S*)$/;
         const lmp = /\/\S{1,}$/;
 
         if (emp.test(pt)) {
@@ -804,7 +807,7 @@ function updateEditorContent(e) {
             {#if previewing}
                 <div class="preview">
                     <div class="markdown-c">
-                        {@html md.render(bodyInput.value)}
+                        {@html md.render(replaceEmoji(bodyInput.value, space_emoji))}
                     </div>
                 </div>
             {/if}
@@ -863,6 +866,7 @@ function updateEditorContent(e) {
     </div>
 
     {#if emojiListActive && shortcode}
+        ok {shortcode}
         <EmojiList 
             room_alias={room_alias}
             isChat={isChat}
@@ -1005,6 +1009,15 @@ function updateEditorContent(e) {
     overflow-y: auto;
     height: 100%;
 }
+
+
+div :global(.preview .emoji){
+    height: 20px;
+    width: 20px;
+    object-fit: contain;
+    vertical-align: text-bottom;
+}
+
 
 .rp {
     padding-right: calc(1rem - 6px);
