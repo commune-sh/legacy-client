@@ -41,7 +41,7 @@ $: active = threadQuery === event.slug
 </script>
 
 <div class="thread-container">
-    <div class="thread fl" 
+    <div class="thread-summary fl" 
         class:active={active}
         on:click={goToThread}>
         <User user={user} />
@@ -64,7 +64,7 @@ $: active = threadQuery === event.slug
         display: flex;
 }
 
-.thread {
+.thread-summary {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
     margin-left: calc( 30px + 2rem );

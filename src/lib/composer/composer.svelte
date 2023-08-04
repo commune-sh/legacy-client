@@ -127,6 +127,12 @@ onMount(() => {
         arrow: false,
         duration: 1,
     });
+    tippy('.send', {
+        content: 'Send Message',
+        arrow: true,
+        duration: 1,
+        theme: 'inline',
+    });
 
 
     if(replyTo) {
@@ -809,7 +815,7 @@ function updateEditorContent(e) {
         {/if}
 
         {#if isChat && !editing}
-            <div class="ph3 pt3">
+            <div class="send ph3 pt3">
                 <div 
                     on:click={createPost} 
                     class="c-ico grd-c ph2">

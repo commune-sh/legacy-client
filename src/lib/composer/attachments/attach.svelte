@@ -1,7 +1,17 @@
 <script>
-import { createEventDispatcher } from 'svelte'
+import { onMount, createEventDispatcher } from 'svelte'
 import { add } from '$lib/assets/icons.js'
+import tippy from 'tippy.js';
 
+onMount (() => {
+    tippy('.attach', {
+        content: 'Attach Media',
+        arrow: true,
+        duration: 1,
+        theme: 'inline',
+    });
+
+})
 
 export let busy;
 
@@ -165,7 +175,7 @@ function upload() {
 
 </script>
 
-<div class="c-ico grd-c" on:click={upload}>
+<div class="attach c-ico grd-c" on:click={upload}>
     {@html add}
     <input 
         type="file" 

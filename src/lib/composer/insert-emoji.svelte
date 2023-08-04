@@ -3,6 +3,8 @@ import { tick, onMount, onDestroy, createEventDispatcher } from 'svelte'
 import { em1 } from '$lib/assets/icons.js'
 import { store } from '$lib/store/store.js'
 import { v4 as uuidv4 } from 'uuid';
+import tippy from 'tippy.js';
+
 const dispatch = createEventDispatcher()
 
 let id = uuidv4()
@@ -45,9 +47,17 @@ $: if(emojiSelected) {
     dispatch('selected', selectedEmoji)
 }
 
+onMount(() => {
+    tippy('.insert-emoji', {
+        content: 'Insert emoji',
+        arrow: true,
+        duration: 1,
+        theme: 'inline',
+    });
+})
 </script>
 
-<div class="ml2 c-ico"
+<div class="insert-emoji ml2 c-ico"
     class:grd-c={center}
     class:pt3={!center}
     on:click={insertEmoji}
