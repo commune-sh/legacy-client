@@ -8,10 +8,10 @@ import User from './user.svelte'
 export let event;
 
 $: user = {
-    avatar_url: event?.sender?.avatar_url,
-    display_name: event?.sender?.display_name,
-    id: event?.sender?.id,
-    username: event?.sender?.username
+    avatar_url: event?.last_thread_reply?.sender?.avatar_url,
+    display_name: event?.last_thread_reply?.sender?.display_name,
+    id: event?.last_thread_reply?.sender?.id,
+    username: event?.last_thread_reply?.sender?.username
 }
 
 $: content = JSON.parse(event?.last_thread_reply?.content)
@@ -102,6 +102,7 @@ $: active = threadQuery === event.slug
 .count {
     font-weight: 500;
     font-size: 13px;
+    color: var(--text-light);
 }
 .ico-s {
     height: 14px;

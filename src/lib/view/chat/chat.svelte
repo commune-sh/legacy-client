@@ -288,7 +288,9 @@ function syncMessages() {
                     messages = [...messages, event]
                 }
 
-                if(ind == -1 && event?.content?.['m.relates_to']) {
+                let isMR = event?.content?.['m.relates_to']?.rel_type == 'm.thread'
+
+                if(ind == -1 && isMR) {
                     let event_id = event?.content?.['m.relates_to']?.event_id
                     const slug = event_id.substr(-11)
 
