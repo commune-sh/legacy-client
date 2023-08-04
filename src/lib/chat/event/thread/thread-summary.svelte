@@ -44,7 +44,9 @@ $: active = threadQuery === event.slug
     <div class="thread-summary fl" 
         class:active={active}
         on:click={goToThread}>
-        <User user={user} />
+        <div class="np grd-c">
+            <User user={user} />
+        </div>
         <div class="content ml2 fl-o grd-c">
             {content?.body}
         </div>
@@ -76,8 +78,12 @@ $: active = threadQuery === event.slug
     padding: 0.5rem 0.75rem;
     cursor: pointer;
 }
-.thread:hover {
+.thread-summary:hover {
     border: 1px solid var(--primary);
+}
+
+.np {
+    pointer-events: none;
 }
 
 .active {
