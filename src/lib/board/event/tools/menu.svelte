@@ -39,6 +39,12 @@ let menu;
 let active = false;
 
 onMount(() => {
+    tippy('.more', {
+        content: 'Options',
+        arrow: true,
+        duration: 1,
+        theme: 'inline',
+    });
     menu = tippy(el, {
         content: content,
         allowHTML: true,

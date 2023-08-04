@@ -38,7 +38,7 @@ function goToPost() {
         <div class="post-title">
             {title}
         </div>
-        <div class="post-body mt2">
+        <div class="post-body">
             {@html shortened}
         </div>
     </div>
@@ -56,7 +56,7 @@ function goToPost() {
     background: var(--event-highlight);
     border-radius: 7px;
     border: 1px solid transparent;
-    padding: 0.75rem;
+    padding: 0.5rem 0.75rem;
     cursor: pointer;
 }
 .board-post:hover {

@@ -1,5 +1,6 @@
 <script>
 import { getEventThread } from '$lib/utils/request.js'
+import {thread} from '$lib/assets/icons.js'
 import { goto } from '$app/navigation'
 import { page } from '$app/stores'
 import User from './user.svelte'
@@ -34,16 +35,26 @@ function goToThread() {
     goto(url)
 }
 
+$: threadQuery = $page.url.searchParams.get('thread')
+$: active = threadQuery === event.slug
+
 </script>
 
 <div class="thread-container">
-    <div class="thread fl" on:click={goToThread}>
+    <div class="thread fl" 
+        class:active={active}
+        on:click={goToThread}>
         <User user={user} />
         <div class="content ml2 fl-o grd-c">
             {content?.body}
         </div>
-        <div class="ml3 count grd-c">
-            {event?.reply_count} >
+        <div class="ml3 count grd-c fl">
+            <div class="ico-s grd-c">
+                {@html thread}
+            </div>
+            <div class="ml2 grd-c">
+                {event?.thread_reply_count}
+            </div>
         </div>
     </div>
 </div>
@@ -62,10 +73,14 @@ function goToThread() {
     background: var(--event-highlight);
     border-radius: 7px;
     border: 1px solid transparent;
-    padding: 0.75rem;
+    padding: 0.5rem 0.75rem;
     cursor: pointer;
 }
 .thread:hover {
+    border: 1px solid var(--primary);
+}
+
+.active {
     border: 1px solid var(--primary);
 }
 
@@ -79,8 +94,12 @@ function goToThread() {
     word-break: break-word;
 }
 .count {
-    color: var(--primary);
     font-weight: 500;
     font-size: 13px;
 }
+.ico-s {
+    height: 14px;
+    width: 14px;
+}
+
 </style>

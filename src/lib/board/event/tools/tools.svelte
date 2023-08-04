@@ -1,12 +1,34 @@
 <script>
-import { reply, external, edit } from '$lib/assets/icons.js'
+import { reply, external, edit, thread } from '$lib/assets/icons.js'
 import React from './react.svelte'
 import Menu from './menu.svelte'
 import ShowFrequent from './frequent-reactions.svelte'
-import { createEventDispatcher } from 'svelte'
+import { onMount, createEventDispatcher } from 'svelte'
 import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';
+import tippy from 'tippy.js';
+
+onMount(() => {
+    tippy('.reply', {
+        content: 'Reply',
+        arrow: true,
+        duration: 1,
+        theme: 'inline',
+    });
+    tippy('.thread', {
+        content: 'Start a thread',
+        arrow: true,
+        duration: 1,
+        theme: 'inline',
+    });
+    tippy('.edit', {
+        content: 'Edit',
+        arrow: true,
+        duration: 1,
+        theme: 'inline',
+    });
+})
 
 $: state = $store?.states[$page?.params?.space]
 $: sender_id = $store.credentials?.matrix_user_id
@@ -108,6 +130,32 @@ function reacted(e) {
     dispatch('react', e.detail)
 }
 
+function startThread() {
+    let url = `/`
+
+    if($page.params?.space) {
+        url = `/${$page.params?.space}`
+    }
+    if($page.params?.room) {
+        url = `/${$page.params?.space}/${$page.params?.room}`
+    }
+
+    if($page.params.topic) {
+        url = url + `/topic/${$page.params?.topic}`
+    }
+
+
+    if($page.url.search.includes('?view=chat')) {
+        url = `${url}?view=chat&thread=${event?.slug}`
+    } else {
+        url = `${url}?thread=${event?.slug}`
+    }
+
+    goto(url, {
+        noscroll: true,
+    })
+}
+
 </script>
 
 <div class="event-tools">
@@ -125,10 +173,18 @@ function reacted(e) {
     {#if !isBoardPostInChat}
 
         {#if isPost || isReply || isChat}
-        <div class="icon grd-c c-ico" 
+        <div class="reply icon grd-c c-ico" 
             on:mouseenter={resetHovered}
             on:click|stopPropagation={replyToEvent}>
             {@html reply}
+        </div>
+        {/if}
+
+        {#if isChat}
+        <div class="thread icon grd-c c-ico" 
+            on:mouseenter={resetHovered}
+            on:click|stopPropagation={startThread}>
+            {@html thread}
         </div>
         {/if}
 
@@ -141,7 +197,7 @@ function reacted(e) {
         {/if}
 
         {#if isAuthor}
-            <div class="icon grd-c c-ico" 
+            <div class="edit icon grd-c c-ico" 
                 on:mouseenter={resetHovered}
                 on:click|stopPropagation={editEvent}>
                 {@html edit}

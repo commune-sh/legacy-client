@@ -372,6 +372,7 @@ function finishedEditing(e) {
 
 function print(e) {
     e.preventDefault()
+    console.log(event)
 }
 
 function emojiOnly(body) {
@@ -667,8 +668,14 @@ $: urls = findURLs(event?.content?.body)
 
             <div class="rec-a fl ph3" class:rch={isChat}>
 
-                {#if !isReply && interactive && !isChat}
+                {#if !isReply && interactive && !(isChat && !isBoardPostInChat)}
+                    {#if isBoardPostInChat}
+                        {#if event?.reply_count > 0}
+                            <Replies count={event?.reply_count} />
+                        {/if}
+                    {:else}
                         <Replies count={event?.reply_count} />
+                    {/if}
                 {/if}
 
                 {#if isReply && interactive && !isChat}

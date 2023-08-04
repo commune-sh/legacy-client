@@ -12,6 +12,7 @@ const dispatch = createEventDispatcher()
 
 function kill() {
     let url = `/`
+
     if($page.params?.space) {
         url = `/${$page.params?.space}`
     }
@@ -23,14 +24,8 @@ function kill() {
         url = url + `/topic/${$page.params?.topic}`
     }
 
-    if($page.url.search) {
-        if(!$page.url.search.startsWith('?context')) {
-            url = `${url}${$page.url.search}`
-        }
-    }
-
-    if($page.url.pathname.startsWith('/all')) {
-        url = `/all`
+    if($page.url.search.includes('?view=chat')) {
+            url = `${url}?view=chat`
     }
 
     goto(url, {
