@@ -301,6 +301,9 @@ function syncMessages() {
 
                     let index = messages.findIndex(m => m?.event_id === event_id)
                     if(index != -1) {
+                        if(!messages[index].thread_reply_count) {
+                            messages[index].thread_reply_count = 0
+                        }
                         messages[index].thread_reply_count += 1
                         event.content = JSON.stringify(event?.content)
                         messages[index].last_thread_reply = event

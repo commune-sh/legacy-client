@@ -823,10 +823,10 @@ function updateEditorContent(e) {
         {/if}
 
         {#if isChat && !editing}
-            <div class="send ph3 pt3">
+            <div class="send ptop">
                 <div 
                     on:click={createPost} 
-                    class="c-ico grd-c ph2">
+                    class="c-ico grd-c">
                     {@html send}
                 </div>
             </div>
@@ -1107,5 +1107,10 @@ button {
     font-size: 10px;
     margin-left: 1rem;
     margin-bottom: 0.5rem;
+}
+.ptop {
+    padding: 0.5rem;
+    margin-top: 9px;
+    margin-right: 0.5rem;
 }
 </style>

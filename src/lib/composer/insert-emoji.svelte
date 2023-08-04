@@ -59,16 +59,22 @@ onMount(() => {
 
 <div class="insert-emoji ml2 c-ico"
     class:grd-c={center}
-    class:pt3={!center}
+    class:ptop={!center}
     on:click={insertEmoji}
     bind:this={reactEl}>
     {@html em1}
 </div>
 
 <style>
+.insert-emoji {
+}
 .c-ico {
     height: 20px;
     width: 20px;
     filter: grayscale(1);
+}
+.ptop {
+    margin-top: 10px;
+    padding: 0.5rem;
 }
 </style>
