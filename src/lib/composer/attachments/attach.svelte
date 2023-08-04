@@ -2,6 +2,7 @@
 import { onMount, createEventDispatcher } from 'svelte'
 import { add } from '$lib/assets/icons.js'
 import tippy from 'tippy.js';
+import { v4 as uuidv4 } from 'uuid';
 
 onMount (() => {
     tippy('.attach', {
@@ -23,7 +24,6 @@ let files = [];
 let tooLarge = false;
 
 let build = async (e) => {
-    console.log("attaching....")
 
     if(e.target.files.length > 13) {
         alert("That's too many attachments at once.")
@@ -88,7 +88,6 @@ let build = async (e) => {
                 ctx.drawImage(image, -offsetX, -offsetY, width, height);
 
                 const blob = await new Promise(resolve => canvas.toBlob(resolve));
-                console.log(blob)
                 file.thumbnail = blob
 
                 canvas.remove()
@@ -114,6 +113,7 @@ let build = async (e) => {
             });
         }
 
+        file.is = uuidv4()
 
         files = [...files, file]
     }

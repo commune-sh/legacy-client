@@ -32,7 +32,12 @@ export let editingReply = false;
 
 export let isChat = false;
 
-$: stateKey = !reply ? roomID : roomID + threadEvent
+export let thread_view = false;
+export let thread_view_event = null;
+
+$: isthreadView = thread_view && thread_view_event
+
+$: stateKey = isthreadView ? thread_view_event : !reply ? roomID : roomID + threadEvent
 
 $: state = $store.editorStates[stateKey]
 

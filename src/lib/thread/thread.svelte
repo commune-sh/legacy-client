@@ -557,6 +557,8 @@ $: if(messages?.length > 0 && messages?.length !== lastLength) {
             {#if Composer && joinedRoom}
                 <div class="chat-composer">
                     <Composer 
+                        thread_view={true}
+                        thread_view_event={event_id}
                         topic={$page.params.topic}
                         on:typing={isTyping}
                         reply={replying}
