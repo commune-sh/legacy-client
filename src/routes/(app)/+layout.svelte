@@ -105,7 +105,7 @@ $: isMobile = window.innerWidth <= 768
 
 onMount(() => {
     if(isMobile) {
-        setupSwipeGestures()
+        //setupSwipeGestures()
     }
 })
 

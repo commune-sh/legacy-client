@@ -318,4 +318,10 @@ function sortTopics (topics) {
     height: 12px;
     width: 12px;
 }
+
+@media screen and (max-width: 768px) {
+    .board-list {
+        margin-left: 0.5rem;
+    }
+}
 </style>
