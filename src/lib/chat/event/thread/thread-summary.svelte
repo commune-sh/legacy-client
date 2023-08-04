@@ -1,5 +1,6 @@
 <script>
 import { getEventThread } from '$lib/utils/request.js'
+import {getLocalpart} from '$lib/utils/utils.js'
 import {thread} from '$lib/assets/icons.js'
 import { goto } from '$app/navigation'
 import { page } from '$app/stores'
@@ -11,7 +12,7 @@ $: user = {
     avatar_url: event?.last_thread_reply?.sender?.avatar_url,
     display_name: event?.last_thread_reply?.sender?.display_name,
     id: event?.last_thread_reply?.sender?.id,
-    username: event?.last_thread_reply?.sender?.username
+    username: getLocalpart(event?.last_thread_reply?.sender?.id)
 }
 
 $: content = JSON.parse(event?.last_thread_reply?.content)

@@ -198,6 +198,11 @@ export function getHomeserver(room_id) {
   return parts.slice(1).join(":");
 }
 
+export function getLocalpart(user_id) {
+  const parts = user_id.split(":");
+  return parts[0].slice(1);
+}
+
 export function replaceEmoji(inputString, emojiMapping) {
   const emojiRegex = /:(\w+):/g;
 
