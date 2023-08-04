@@ -75,7 +75,6 @@ afterUpdate(() =>{
 let _page = null;
 let reloadTrigger;
 
-let messages;
 
 function process(m) {
     if(!m) return []
@@ -131,6 +130,12 @@ $: isDomain = $page.params.domain !== undefined &&
     $page.params.domain !== 'undefined' && 
     $page.params.domain?.length > 0
 
+$: event_id = $page.url.searchParams.get('thread')
+
+$: messages = $store.thread_events[event_id]
+
+let thread_event;
+
 async function loadMessages() {
     ready = false;
     messages = null
@@ -143,7 +148,6 @@ async function loadMessages() {
         endpoint = $store.federated?.endpoint
     }
 
-    let event_id = $page.url.searchParams.get('thread')
     let url = `${endpoint}/event/${event_id}/thread`
 
     if($page.params.topic) {
@@ -157,9 +161,17 @@ async function loadMessages() {
 
     const resp = await loadPosts(opt)
 
+    if(resp?.event) {
+        thread_event = resp?.event
+    }
+
     if(resp?.events) {
-        messages = resp?.events
+        //messages = resp?.events
+        $store.thread_events[event_id] = resp?.events
         updateScroll()
+        setTimeout(() => {
+            updateScroll()
+        }, 10)
     }
 
     ready = true;
@@ -380,7 +392,18 @@ async function newMessage(e) {
         unsent: true,
         transaction_id: `co${Date.now()}`,
     }
-    messages = [...messages, event]
+
+    event.content['m.relates_to'] = {
+        event_id: thread_event.event_id,
+        /*
+        "m.in_reply_to": {
+            event_id: message.reply_to ? message.reply_to : thread_event.event_id
+        },
+        */
+        rel_type: "m.thread"
+    }
+
+    $store.thread_events[event_id]?.push(event)
 
     await tick()
     updateScroll()
@@ -447,6 +470,18 @@ $: isThread = threadQuery && threadQuery.length > 0
 let container;
 
 $: menuToggled = $store.menuToggled
+
+let lastLength = 0;
+
+$: if(messages?.length > 0 && messages?.length !== lastLength) {
+    lastLength = messages.length
+    setTimeout(() => {
+        if(atBottom) {
+            updateScroll()
+        }
+    }, 10)
+}
+
 </script>
 
 
@@ -515,6 +550,7 @@ $: menuToggled = $store.menuToggled
             {/if}
 
         </div>
+
 
         <div class="com grd">
         {#if ready}

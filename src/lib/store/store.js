@@ -37,6 +37,7 @@ function createApp() {
     pageState: [],
     events: [],
     events_cache: [],
+    thread_events: [],
     replies: [],
     menuToggled: false,
     editorStates: [],
@@ -892,6 +893,16 @@ function createApp() {
     })
   }
 
+  let addThreadEvent = (slug, event) => {
+    update(p => {
+      let ind = p.thread_events[slug]?.findIndex(e => e.transaction_id == event.transaction_id)
+      if(ind == -1) {
+        p.thread_events[slug]?.push(event)
+      }
+      return p
+    })
+  }
+
 
   const { subscribe, set, update } = writable(app);
 
@@ -975,6 +986,7 @@ function createApp() {
     addSpaceEmoji,
     updateSpaceEmoji,
     updateRoomView,
+    addThreadEvent,
   };
 }
 

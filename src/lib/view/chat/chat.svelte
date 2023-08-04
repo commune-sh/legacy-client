@@ -281,12 +281,30 @@ function syncMessages() {
                     addNewReaction(event)
                 }
 
-                    let ind = messages.findIndex(m => m?.transaction_id ===
-                        event?.transaction_id)
-                    console.log
-                    if(ind == -1 && !event?.content?.['m.relates_to']) {
-                        messages = [...messages, event]
+
+                let ind = messages.findIndex(m => m?.transaction_id ===
+                    event?.transaction_id)
+                if(ind == -1 && !event?.content?.['m.relates_to']) {
+                    messages = [...messages, event]
+                }
+
+                if(ind == -1 && event?.content?.['m.relates_to']) {
+                    let event_id = event?.content?.['m.relates_to']?.event_id
+                    const slug = event_id.substr(-11)
+
+                    let pi = $store.thread_events.findIndex(m => m?.transaction_id === event.transaction_id)
+                    if(pi == -1) {
+                        store.addThreadEvent(slug, event)
                     }
+
+                    let index = messages.findIndex(m => m?.event_id === event_id)
+                    if(index != -1) {
+                        messages[index].thread_reply_count += 1
+                        event.content = JSON.stringify(event?.content)
+                        messages[index].last_thread_reply = event
+                        //messages = messages
+                    }
+                }
             }
             if(atBottom) {
                 updateScroll()
