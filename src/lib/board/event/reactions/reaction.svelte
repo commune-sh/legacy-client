@@ -92,7 +92,7 @@ $: has_URL = reaction?.url != null && reaction?.url != undefined
     {#if has_URL}
         <img class="custom" src={reaction?.url}>
     {:else}
-        <div class="emoji">
+        <div class="emo">
             {reaction.key}
         </div>
     {/if}
@@ -172,7 +172,7 @@ $: has_URL = reaction?.url != null && reaction?.url != undefined
     --reaction-border: #f0f0f0;
 }
 
-.emoji {
+.emo {
     font-size: small;
     font-weight: 500;
     line-height: 1.6;
@@ -192,7 +192,7 @@ $: has_URL = reaction?.url != null && reaction?.url != undefined
     .reaction {
         max-height: 16px;
     }
-    .emoji {
+    .emo {
         font-size: 10px;
     }
     .t {

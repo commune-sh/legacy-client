@@ -9,26 +9,39 @@ import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';
 import tippy from 'tippy.js';
 
+let rel;
+let thr;
+let ed;
+
 onMount(() => {
-    tippy('.reply', {
+})
+
+$:if(rel) {
+    tippy(rel, {
         content: 'Reply',
         arrow: true,
         duration: 1,
         theme: 'inline',
     });
-    tippy('.thread', {
+}
+
+$:if(thr) {
+    tippy(thr, {
         content: 'Start a thread',
         arrow: true,
         duration: 1,
         theme: 'inline',
     });
-    tippy('.edit', {
+}
+
+$:if(ed) {
+    tippy(ed, {
         content: 'Edit',
         arrow: true,
         duration: 1,
         theme: 'inline',
     });
-})
+}
 
 $: state = $store?.states[$page?.params?.space]
 $: sender_id = $store.credentials?.matrix_user_id
@@ -173,7 +186,7 @@ function startThread() {
     {#if !isBoardPostInChat}
 
         {#if isPost || isReply || isChat}
-        <div class="reply icon grd-c c-ico" 
+            <div bind:this={rel} class="reply icon grd-c c-ico" 
             on:mouseenter={resetHovered}
             on:click|stopPropagation={replyToEvent}>
             {@html reply}
@@ -181,7 +194,7 @@ function startThread() {
         {/if}
 
         {#if isChat}
-        <div class="thread icon grd-c c-ico" 
+        <div bind:this={thr} class="thread icon grd-c c-ico" 
             on:mouseenter={resetHovered}
             on:click|stopPropagation={startThread}>
             {@html thread}
@@ -197,7 +210,7 @@ function startThread() {
         {/if}
 
         {#if isAuthor}
-            <div class="edit icon grd-c c-ico" 
+            <div bind:this={ed} class="edit icon grd-c c-ico" 
                 on:mouseenter={resetHovered}
                 on:click|stopPropagation={editEvent}>
                 {@html edit}

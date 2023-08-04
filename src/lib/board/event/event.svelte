@@ -32,8 +32,6 @@ import { isSafari } from '$lib/utils/utils.js'
 
 import { getReplyCount } from '$lib/utils/utils.js'
 
-import { md } from '$lib/composer/md/md.js'
-
 import Composer from '$lib/composer/composer.svelte'
 
 const dispatch = createEventDispatcher()
@@ -99,7 +97,7 @@ onMount(() => {
             el.scrollIntoView({ behavior: "smooth" });
         }
     }
-    if(hasFullBody) {
+    if(hasFullBody && isPost) {
         loadFullBody()
     }
 })
@@ -186,22 +184,25 @@ $: safari = isSafari()
 $: edited = event?.content?.['m.new_content']?.body !== undefined &&
         event?.content?.['m.new_content']?.title !== undefined
 
-$: raw_content = hasFullBody && full_body ? full_body :
-    hasFullBody && !full_body ? `${event?.content?.body}...` :
-    event?.content?.body
+$: body = event?.content?.formatted_body ? event?.content?.formatted_body :
+    event?.content?.body ? event?.content?.body : null
 
-$: formatted_body = raw_content ? md.render(raw_content) : null
+$: raw_content = hasFullBody && full_body ? full_body :
+    hasFullBody && !full_body ? `${body}...` : body
+
+$: formatted_body = raw_content ? raw_content : null
 
 $: content = formatted_body ? formatted_body :
     event?.content?.body
 
 
-$: clipped = getFirstParagraphNode(content)
+$: clipped = getFirstParagraphNode(content) ? getFirstParagraphNode(content) :
+    content
 
 $: shortened = content?.length > 600 ? `${content?.substring(0, 600)}...` :
     content
 
-$: hasFullBody = event?.content?.full_body?.key?.length > 0
+$: hasFullBody = event?.content?.full_body?.rendered_key?.length > 0
 
 $: mediaURL = federated && federated_media_url ? federated_media_url :
 !federated ? PUBLIC_MEDIA_URL : null
@@ -219,11 +220,11 @@ async function fetchAPIEndpoint() {
     }
 }
 
-$: fullBodyURL = `${mediaURL}/${event?.content?.full_body?.key}`
+$: fullBodyURL = `${mediaURL}/${event?.content?.full_body?.rendered_key}`
 $: federated = !event?.room_id?.includes(PUBLIC_MATRIX_SERVER_NAME)
 
 let full_body;
-$: full_body_content = full_body ? md.render(full_body) : content + '...'
+$: full_body_content = full_body ? full_body : content + '...'
 let fetch_error;
 
 $: if(hasFullBody && isPost) {
@@ -376,6 +377,7 @@ function stopEditing() {
 function finishedEditing(e) {
     event.content.title = e.detail.content.title
     event.content.body = e.detail.content.body
+    event.content.formatted_body = e.detail.content.formatted_body
     editing = false
     if(isPost) {
         dispatch('edited', event)

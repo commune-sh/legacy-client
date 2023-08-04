@@ -2,16 +2,6 @@
 import { react} from '$lib/assets/icons.js'
 import { onMount, createEventDispatcher } from 'svelte'
 import { store } from '$lib/store/store.js'
-import tippy from 'tippy.js';
-
-onMount(() => {
-    tippy(reactEl, {
-        content: 'Click for full list of reactions',
-        arrow: true,
-        duration: 1,
-        theme: 'inline',
-    });
-})
 
 $: authenticated = $store?.authenticated && 
     $store?.credentials != null
@@ -72,7 +62,7 @@ function queryState() {
 
 </script>
 
-<div class="icon grd-c c-ico" 
+<div id="#te" class="icon grd-c c-ico" 
     on:mouseenter={queryState}
     class:inline={inline}
     bind:this={reactEl}

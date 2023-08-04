@@ -1,5 +1,6 @@
 <script>
 import { tick, onMount, onDestroy, createEventDispatcher } from 'svelte'
+import { PUBLIC_MEDIA_URL } from '$env/static/public';
 import { eye, send, close } from '$lib/assets/icons.js'
 import { page } from '$app/stores';
 import {getPresignedURL, uploadAttachment, savePost,
@@ -62,10 +63,29 @@ let editor;
 let ready = false;
 
 
+async function loadFullBody() {
+    let fullBodyURL = `${PUBLIC_MEDIA_URL}/${editingEvent?.content?.full_body?.key}`
+    console.log("getting full body")
+    fetch(fullBodyURL)
+        .then(response => response.text())
+        .then(data => {
+            bodyInput.value = data
+            console.log(data)
+        })
+        .catch((error) => {
+            fetch_error = error
+        });
+}
+
 onMount(() => {
 
     if(editing && editingEvent) {
+
         bodyInput.value = editingEvent?.content?.body
+        if(editingEvent?.content?.full_body) {
+            loadFullBody()
+        }
+
         titleInput.value = editingEvent?.content?.title
         autosize(titleInput)
         autosize(bodyInput)
@@ -326,7 +346,7 @@ async function createPost() {
         }
 
         //replace :emoji: with img urls
-        let bo = replaceEmoji(body, space_emoji)
+        let bo = body
 
         let save_full = false
         let remaining_words = 0;
@@ -335,14 +355,13 @@ async function createPost() {
             const lastSpaceIndex = body.lastIndexOf(' ', 1000);
             if (lastSpaceIndex > 0) {
                 const trimmedText = body.substring(0, lastSpaceIndex);
-                bo = replaceEmoji(trimmedText, space_emoji)
+                bo = trimmedText
                 const remainingText = body.substring(lastSpaceIndex);
                 const trimmedStr = remainingText.trim();
                 const wordsArray = trimmedStr.split(/\S+/);
                 remaining_words = wordsArray.length
             } else {
                 bo = bo.substring(0, 1000)
-                bo = replaceEmoji(bo, space_emoji)
             }
         }
 
@@ -353,7 +372,7 @@ async function createPost() {
             content: {
                 msgtype: 'post',
                 body: bo,
-                //formatted_body: md.render(bodyInput.value),
+                formatted_body: md.render(replaceEmoji(bo, space_emoji)),
             },
         }
 
@@ -391,17 +410,24 @@ async function createPost() {
             post.content['msgtype'] = 'm.text'
             post.content['body'] = bo
             post.content['format'] = 'org.matrix.custom.html'
+            bo = replaceEmoji(bo, space_emoji)
             post.content['formatted_body'] = md.render(bo)
         }
 
 
         if(save_full) {
             const presignedURL = await getPresignedURL('txt');
-            let full_body = replaceEmoji(body, space_emoji)
-            const file = new File([full_body], presignedURL.key, { type: 'text/plain' });
+            const file = new File([body], presignedURL.key, { type: 'text/plain' });
             await uploadAttachment(file, presignedURL.url);
+
+            const presignedURL_r = await getPresignedURL('txt');
+            let rendered = md.render(replaceEmoji(body, space_emoji))
+            const rendered_file = new File([rendered], presignedURL_r.key, { type: 'text/plain' });
+            await uploadAttachment(rendered_file, presignedURL_r.url);
+
             post.content['full_body'] = {
                 key: presignedURL.key,
+                rendered_key: presignedURL_r.key,
                 words: remaining_words,
             }
         }
@@ -430,11 +456,13 @@ async function createPost() {
         }
 
         if(editing) {
+            let bod = bodyInput.value
             post.editing = true
             post.content['m.new_content'] = {
                 msgtype: 'm.text',
                 title: titleInput.value,
-                body: bodyInput.value,
+                body: bod,
+                formatted_body: md.render(replaceEmoji(bod, space_emoji)),
             }
             post.content['m.relates_to'] = {
                 event_id: editingEvent.event_id,
@@ -506,7 +534,6 @@ function handleEnter(e) {
 
 function handleChatEnter(e) {
     if(!e.shiftKey && e.key === 'Enter' && isChat) {
-        console.log("hmmm", emojiListActive)
         e.preventDefault()
         if(!emojiListActive) {
             createPost()
@@ -866,7 +893,6 @@ function updateEditorContent(e) {
     </div>
 
     {#if emojiListActive && shortcode}
-        ok {shortcode}
         <EmojiList 
             room_alias={room_alias}
             isChat={isChat}
