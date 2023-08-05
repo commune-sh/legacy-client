@@ -48,7 +48,7 @@ function findHeader(s) {
     let spaceHeader = s?.space?.header ?
     `${mediaURL}/${s?.space?.header}` : null
 
-    if(isRoom) {
+    if(isRoom && s?.children) {
         let ind = s?.children?.findIndex(r => r?.alias === $page?.params?.room)
         if(ind !== -1) {
             return s?.children[ind]?.header ?
@@ -64,7 +64,7 @@ function findAvatar(s) {
     let spaceAvatar = s?.space?.avatar ?
     `${mediaURL}/${s?.space?.avatar}` : null
 
-    if(isRoom) {
+    if(isRoom && s?.children) {
         let ind = s?.children?.findIndex(r => r?.alias === $page?.params?.room)
         if(ind !== -1) {
             return s?.children[ind]?.avatar ?
