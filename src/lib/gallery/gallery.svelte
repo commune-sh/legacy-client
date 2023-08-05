@@ -1,5 +1,5 @@
 <script>
-import { PUBLIC_MEDIA_URL } from '$env/static/public';
+import { PUBLIC_MEDIA_URL, PUBLIC_MATRIX_URL } from '$env/static/public';
 import { store } from '$lib/store/store.js'
 import { prev, next, close } from '$lib/assets/icons.js';
 
@@ -15,7 +15,9 @@ function kill() {
 
 $: selected = $store.gallery?.index
 
-$: src = active ? `${PUBLIC_MEDIA_URL}/${images[selected]?.key}` : null
+$: isMXC = $store.gallery?.mxc
+
+$: src = active ? isMXC ? images[0]?.key : `${PUBLIC_MEDIA_URL}/${images[selected]?.key}` : null
 
 $: noPrev = selected === 0
 $: noNext = selected === images.length - 1

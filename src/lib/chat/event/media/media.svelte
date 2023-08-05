@@ -1,5 +1,6 @@
 <script>
 import { PUBLIC_MATRIX_URL } from '$env/static/public';
+import { store } from '$lib/store/store.js'
 
 export let event;
 
@@ -16,7 +17,16 @@ $: imgSrc = isImage
     : null;
 
 function openImage() {
-    window.open(imgSrc, '_blank')
+    //window.open(imgSrc, '_blank')
+    $store.gallery = {
+        active: true,
+        items: [{
+            key: imgSrc,
+        }],
+        mxc: true,
+        index: 0,
+    }
+    console.log($store.gallery)
 }
 
 </script>
