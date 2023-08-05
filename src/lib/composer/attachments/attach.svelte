@@ -3,6 +3,7 @@ import { onMount, createEventDispatcher } from 'svelte'
 import { add } from '$lib/assets/icons.js'
 import tippy from 'tippy.js';
 import { v4 as uuidv4 } from 'uuid';
+import { store } from '$lib/store/store.js'
 
 onMount (() => {
     tippy('.attach', {
@@ -25,8 +26,11 @@ let tooLarge = false;
 
 let build = async (e) => {
 
-    if(e.target.files.length > 13) {
-        alert("That's too many attachments at once.")
+    if(e.target.files.length > 10) {
+        $store.alert = {
+            active: true,
+            message: "You can only upload 10 files at a time."
+        }
         return
     }
 

@@ -491,6 +491,9 @@ function findURLs(text) {
 
 $: urls = findURLs(event?.content?.body)
 
+$: isIMG = event?.content?.msgtype == 'm.image' ||
+    event?.content?.msgtype == 'm.images'
+
 </script>
 
 <div class="event" 
@@ -577,7 +580,7 @@ $: urls = findURLs(event?.content?.body)
                     on:saved={finishedEditing}
                     on:kill={stopEditing}/>
 
-            {:else}
+            {:else if !isIMG}
 
                 {#if isMatrixMedia}
                     <MatrixMedia {event}/>

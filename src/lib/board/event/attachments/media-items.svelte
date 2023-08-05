@@ -65,6 +65,11 @@ function openImage() {
     window.open(url, '_blank')
 }
 
+$: nitems = `items-${media.length}`
+
+$: images = media.filter(i => isItemImage(i))
+$: videos = media.filter(i => isItemVideo(i))
+
 </script>
 
 <div class="container">
@@ -76,25 +81,28 @@ function openImage() {
 
 
     <div class="items fl-co mr3 ml3 mt1 mds">
-        {#each media as item, i}
-            <div class="media-item mb3">
-            {#if isImage}
-                <img class="image" class:smg={isChat} 
-                on:click={openImage}
-                width="500"
-                src={getURL(item)} 
-                loading="lazy"/>
-            {/if}
+    <div class="nitems"
+    style="--columns:{media.length}">
 
-            {#if isVideo}
-                <div class="video-item grd-c wch">
-                    <video width="500" class="" controls>
-                      <source src={getURL(item)} type={item?.type}>
-                    </video>
+            {#each images as item, i}
+                <div class="media-item mb1">
+                    <img class="image" class:smg={isChat} 
+                    on:click={openImage}
+                    width={item?.info?.w > 500 ? 500 : item?.info?.w}
+                    src={getURL(item)} 
+                    loading="lazy"/>
                 </div>
-            {/if}
-            </div>
-        {/each}
+            {/each}
+
+            {#each videos as item, i}
+                    <div class="video-item grd-c wch">
+                        <video width="500" class="" controls>
+                          <source src={getURL(item)} type={item?.type}>
+                        </video>
+                    </div>
+            {/each}
+
+        </div>
     </div>
 
 
@@ -194,6 +202,10 @@ function openImage() {
     -ms-user-select: none;
     user-select: none;
 }
+img {
+    border-radius: 9px;
+}
+
 video {
     max-height: 500px;
     width: 100%;
@@ -229,4 +241,19 @@ video {
 .mds {
     margin-left: calc(30px + 2rem);
 }
+
+.items {
+    display: grid;
+    justify-content: start;
+}
+
+.nitems {
+    display: grid;
+    grid-template-columns: repeat(var(--columns), 1fr);
+    grid-template-rows: auto;
+    grid-gap: 1rem;
+    max-width: 500px;
+}
+
+
 </style>

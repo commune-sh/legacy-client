@@ -69,7 +69,7 @@ $: active = threadQuery === event.slug
 
 .thread-summary {
     margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
     margin-left: calc( 30px + 2rem );
     margin-right: 2rem;
     max-width: 500px;
@@ -108,6 +108,9 @@ $: active = threadQuery === event.slug
 .ico-s {
     height: 14px;
     width: 14px;
+}
+
+@media screen and (max-width: 1000px) {
 }
 
 @media screen and (max-width: 768px) {

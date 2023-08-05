@@ -714,10 +714,15 @@ function createApp() {
 
   let addAttachment = (x) => {
     update(p => {
-      if(p.editorStates[x.room_id]?.attachments == undefined) {
-        p.editorStates[x.room_id].attachments = []
+      if(!p.editorStates[x.room_id]) {
+        p.editorStates[x.room_id] = {}
       }
-      p.editorStates[x.room_id]?.attachments.push(x.attachment)
+      if(p.editorStates[x.room_id]) {
+        if(!p.editorStates[x.room_id]?.attachments) {
+          p.editorStates[x.room_id].attachments = []
+        }
+        p.editorStates[x.room_id]?.attachments.push(x.attachment)
+      }
       return p
     })
   }

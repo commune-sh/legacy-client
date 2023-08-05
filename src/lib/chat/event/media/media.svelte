@@ -32,6 +32,7 @@ function openImage() {
 <style>
 .item {
     margin-left: calc(30px + 2rem);
+    margin-right: 1.5rem;
 }
 .item img {
     cursor: pointer;

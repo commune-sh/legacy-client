@@ -35,6 +35,7 @@ function kill() {
     right: 0;
     z-index: 10000;
     margin-top: 1rem;
+    pointer-events: none;
 }
 
 .mes {
@@ -46,6 +47,7 @@ function kill() {
     box-shadow: 4px 4px 18px -10px rgba(0, 0, 0, 0.21);
     font-weight: 500;
     line-height: 1.5;
+    pointer-events: all;
 }
 
 .ico-s{

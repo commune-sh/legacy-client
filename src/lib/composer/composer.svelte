@@ -322,7 +322,8 @@ async function createPost() {
                     info: file.info,
                     key: presignedURL.key,
                 }
-                if(file.type.startsWith('image')){
+
+                if(!isChat && file.type.startsWith('image')){
                     const thumbnailURL = await getPresignedURL(extension);
                     await uploadAttachment(file.thumbnail, thumbnailURL.url);
                     item.thumbnail = {
@@ -399,11 +400,6 @@ async function createPost() {
         }
         */
 
-        if(attachments && title == 'attachment' && body == 'attachment') {
-            post.content['msgtype'] = 'space.board.post.image'
-            delete post.content['title']
-        }
-
 
         if(isChat) {
             post.type = 'm.room.message'
@@ -412,6 +408,22 @@ async function createPost() {
             post.content['format'] = 'org.matrix.custom.html'
             bo = replaceEmoji(bo, space_emoji)
             post.content['formatted_body'] = md.render(bo)
+        }
+
+        if(attachments && title == 'attachment' && body == 'attachment') {
+
+            let type = 'm.image'
+            if(attachments?.length > 1) {
+                type = 'm.images'
+            }
+            let body = attachments[0].name
+            if(attachments?.length > 1) {
+                body = `${attachments.length} attachments`
+            }
+
+            post.content['body'] = body
+            post.content['msgtype'] = type
+            delete post.content['title']
         }
 
 
