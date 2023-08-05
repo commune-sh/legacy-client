@@ -60,9 +60,16 @@ function goToNext() {
     }
 }
 
-function openImage() {
+function openImage(index) {
+    /*
     let url = getURL(selected)
     window.open(url, '_blank')
+    */
+    $store.gallery = {
+        active: true,
+        items: images,
+        index: index || 0
+    }
 }
 
 $: nitems = `items-${media.length}`
@@ -87,7 +94,7 @@ $: videos = media.filter(i => isItemVideo(i))
             {#each images as item, i}
                 <div class="media-item mb1">
                     <img class="image" class:smg={isChat} 
-                    on:click={openImage}
+                            on:click={() => openImage(i)}
                     width={item?.info?.w > 500 ? 500 : item?.info?.w}
                     src={getURL(item)} 
                     loading="lazy"/>
@@ -249,11 +256,20 @@ video {
 
 .nitems {
     display: grid;
-    grid-template-columns: repeat(var(--columns), 1fr);
-    grid-template-rows: auto;
+    grid-template-columns: repeat(auto-fit, minmax(100px, auto));
+    grid-auto-rows: auto;
     grid-gap: 1rem;
     max-width: 500px;
+    margin-right: 1rem;
 }
 
+
+@media screen and (max-width: 768px) {
+    .nitems {
+        grid-template-columns: repeat(auto-fit, minmax(60px, auto));
+        grid-gap: 0.5rem;
+        max-width: 300px;
+    }
+}
 
 </style>

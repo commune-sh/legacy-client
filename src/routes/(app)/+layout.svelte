@@ -17,6 +17,7 @@ import Modal from '$lib/modal/modal.svelte'
 import Alert from '$lib/alert/alert.svelte'
 import About from '$lib/about/about.svelte'
 import DiscoverSpaces from '$lib/discover/discover.svelte'
+import Gallery from '$lib/gallery/gallery.svelte'
 
 $: isIndex = $page?.url.pathname === '/'
 
@@ -189,6 +190,8 @@ function moveTouch(e) {
 
 <Sync />
 <Health />
+
+<Gallery />
 
 <Modal />
 <Alert />

@@ -83,6 +83,9 @@ function createApp() {
       active: false,
       mode: null,
     },
+    gallery: {
+      active: false,
+    },
     discoverSpacesOpen: false,
     aboutOpen: false,
     accountCreated: false,
