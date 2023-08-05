@@ -106,6 +106,8 @@ function removeEmoji(e) {
         event_type: 'room.settings',
         content: settings
     })
+
+    fetchSpaceEmoji()
 }
 
 function updateEmoji(e) {
@@ -123,6 +125,7 @@ function updateEmoji(e) {
         event_type: 'room.settings',
         content: settings
     })
+    fetchSpaceEmoji()
 }
 
 </script>
