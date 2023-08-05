@@ -64,14 +64,14 @@ $: active = threadQuery === event.slug
 
 <style>
 .thread-container {
-        display: flex;
+    display: flex;
 }
 
 .thread-summary {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
     margin-left: calc( 30px + 2rem );
-    margin-right: 1rem;
+    margin-right: 2rem;
     max-width: 500px;
     background: var(--event-highlight);
     border-radius: 7px;
@@ -110,4 +110,14 @@ $: active = threadQuery === event.slug
     width: 14px;
 }
 
+@media screen and (max-width: 768px) {
+    .thread-summary {
+        margin-right: 1.5rem;
+        max-width: auto;
+    }
+    .thread-container {
+        display: block;
+    }
+
+}
 </style>

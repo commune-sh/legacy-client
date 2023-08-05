@@ -52,6 +52,7 @@ function goToPost() {
 .board-post {
     margin-left: calc(30px + 2rem);
     margin-bottom: 0.5rem;
+    margin-right: 1.5rem;
     max-width: 500px;
     background: var(--event-highlight);
     border-radius: 7px;
@@ -66,6 +67,7 @@ function goToPost() {
     font-weight: 500;
 }
 .post-body {
+    margin-top: 0.125rem;
     font-weight: 400;
     font-size: 14px;
     color: var(--text-light);
