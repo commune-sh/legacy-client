@@ -580,11 +580,11 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
                     on:saved={finishedEditing}
                     on:kill={stopEditing}/>
 
+            {:else if isMatrixMedia}
+                <MatrixMedia {event}/>
             {:else if !isIMG}
 
-                {#if isMatrixMedia}
-                    <MatrixMedia {event}/>
-                {:else if isChat && isBoardPostInChat}
+                {#if isChat && isBoardPostInChat}
                     <BoardPost event={event} />
                 {:else if isChat && !isBoardPostInChat}
                     <div class="chat-message">

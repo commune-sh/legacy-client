@@ -25,7 +25,7 @@ function openImage() {
     {#if isImage}
         <img src={imgSrc} 
             on:click={openImage}
-            width="500" />
+            width={width > 500 ? 500 : width} />
     {/if}
 </div>
 
