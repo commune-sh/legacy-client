@@ -91,6 +91,7 @@ async function fetchSpaceState() {
                 fetchPowerLevels()
             }
         } else {
+            store.addSpaceState($page?.params?.space, resp)
             store.stateReady()
         }
     })

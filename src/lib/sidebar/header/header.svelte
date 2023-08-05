@@ -12,7 +12,8 @@ import tippy from 'tippy.js';
 $: state = $store?.states[$page?.params?.space]
 export let ready;
 
-$: name = state?.space?.name ? state?.space?.name : state?.space?.alias;
+$: name = state?.space?.name ? state?.space?.name : state?.space?.alias ?
+    state?.space?.alias : null;
 
 $: isStaticRoute = $store.staticRoutes.some(r => r.path === $page?.url?.pathname);
 $: staticRoute = $store.staticRoutes.find(r => r.path === $page?.url?.pathname);
@@ -148,7 +149,7 @@ function kill() {
                         </div>
                     {:else}
 
-                        <span class="nm" class:ish={headerExists}>{name}</span>
+                        <span class="nm" class:ish={headerExists}>{ name ? name : ``}</span>
                     {/if}
                 </div>
 

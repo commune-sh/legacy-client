@@ -42,17 +42,38 @@ $: showBoardView = (!viewQuery && isBoard) || boardView
 $: showChatView = (!viewQuery && isChat) || chatView
 
 
+$: space_exists = $store?.states[$page?.params?.space]?.exists != false
+
+$: isRoom = $page.params?.room !== undefined && $page.params?.room !== null && $page.params?.room !== ''
+
+$: room_exists = isRoom &&
+    $store?.states[$page?.params?.space]?.children?.find(r => r?.alias ===
+        $page?.params?.room) != null
+
 </script>
 
 {#if isSpace}
-    {#if ready}
-        {#if isProfile}
+    {#if ready && space_exists}
+
+        {#if isRoom && !room_exists}
+            <div class="grd">
+                <div class="grd-c">
+                    This board does not exist.
+                </div>
+            </div>
+        {:else if isProfile}
             <Board on:ready />
         {:else if showChatView}
             <Chat />
         {:else if showBoardView}
             <Board on:ready />
         {/if}
+    {:else if ready && !space_exists}
+        <div class="grd">
+            <div class="grd-c">
+                This space does not exist.
+            </div>
+        </div>
     {:else}
         <div class="space-container">
             <div class="inner-area">
