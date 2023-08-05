@@ -34,6 +34,11 @@ function goNext() {
     }
 }
 
+function open() {
+    let url = isMXC ? images[0]?.key : `${PUBLIC_MEDIA_URL}/${images[selected]?.key}`
+    window.open(url, '_blank')
+}
+
 $: name = images[selected]?.name
 </script>
 
@@ -45,7 +50,7 @@ $: name = images[selected]?.name
         <div class="grd-c">
             <img src={src}
                 class="" 
-                on:click={kill}>
+                on:click={open}>
         </div>
     </div>
 
