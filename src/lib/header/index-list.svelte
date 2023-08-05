@@ -73,7 +73,10 @@ $: isAll = $page?.url?.pathname == `/all`
 
 $: indexText = isAll ? `All posts` : authenticated ? `Your feed` : `What's new`
 
-$: isFeed = $page?.url?.pathname == `/`
+$: isIndexPost = $page.params.post && !$page.params.space
+
+$: isFeed = $page?.url?.pathname == `/` || isIndexPost
+    
 
 function sortSpaces() {
     menu.hide()

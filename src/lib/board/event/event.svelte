@@ -335,7 +335,7 @@ $: sender_id = $store.credentials?.matrix_user_id
 
 function justIMG(e) {
     const parser = new DOMParser();
-    const doc = parser.parseFromString(e?.content?.body, 'text/html');
+    const doc = parser.parseFromString(e?.content?.formatted_body, 'text/html');
     const imgTags = doc.getElementsByTagName('img');
     return imgTags.length === 1 && 
         doc.documentElement.textContent.trim() === '';
@@ -561,7 +561,6 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
 
             {/if}
         </div>
-
 
 
         <div class="body" class:nonin={!interactive}
@@ -1103,7 +1102,7 @@ div :global(.chp pre) {
     color: var(--text-light);
 }
 .just-emoji {
-    font-size: 1.8rem;
+    font-size: 2rem;
 }
 .dis {
     color: var(--text-light);

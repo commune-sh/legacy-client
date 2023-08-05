@@ -13,7 +13,7 @@ export let isChat = false;
 export let room_alias = null;
 
 $: space_emoji = $store.space_emoji?.find(x => x.alias == room_alias)?.emoji
-$: matchedCustom = space_emoji?.filter(x => x.name.includes(shortcode))
+$: matchedCustom = space_emoji?.filter(x => x.name.toLowerCase().includes(shortcode))
 
 $: bounds = target.getBoundingClientRect()
 $: top = bounds.top + bounds.height
@@ -26,7 +26,7 @@ $: matchedEmojis = window?.emoji?.filter(x => x.shortcode.includes(shortcode))
 
 $: matched = items[0]
 
-$: items = [...matchedCustom, ...matchedEmojis];
+$: items = matchedCustom ? [...matchedCustom, ...matchedEmojis] : matchedEmojis
 
 $: if(matched) {
     if(matched.url && matched.name) {

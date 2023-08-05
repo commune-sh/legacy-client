@@ -1,6 +1,7 @@
 <script>
 import {onMount} from 'svelte'
-import { PUBLIC_MEDIA_URL } from '$env/static/public';
+import { PUBLIC_MEDIA_URL, PUBLIC_API_URL } from '$env/static/public';
+import { APIRequest } from '$lib/utils/request.js'
 import { getPresignedURL, uploadAttachment } from '$lib/utils/request.js'
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
@@ -54,10 +55,29 @@ let build = async (e) => {
         event_type: 'room.settings',
         content: settings
     })
-    console.log(res)
+
+    if(res) {
+        fetchSpaceEmoji()
+    }
 
     uploading = false
 
+}
+
+async function fetchSpaceEmoji() {
+
+    let opt = {
+      url: `${PUBLIC_API_URL}/space/emoji`,
+      method: 'GET',
+    }
+
+    APIRequest(opt)
+    .then(resp => {
+        if(resp?.emoji) {
+                console.log(resp.emoji)
+            $store.space_emoji = resp.emoji
+        }
+    })
 }
 
 function select() {
