@@ -91,6 +91,26 @@ $: avatar = item?.avatar_url ?  `${PUBLIC_MEDIA_URL}/${item?.avatar_url}` : null
 
 $: thing = item?.type == `reply.reaction` ? `reply` : `post`
 
+$: isReaction = item?.type == `reaction` || item?.type == `reply.reaction`
+
+
+function buildBody(e) {
+    if(!isReaction) {
+        let b = e?.body?.substring(0, 20) + (e?.body?.length > 20 ? `...` : ``)
+        return ` - "${b}"`
+    } else {
+        if(e.body?.includes(`https`)) {
+            let b = `<img class="emoji" src="${e.body}" />`
+            return ` - ${b}`
+        } else {
+            return ` - ${e.body}`
+        }
+    }
+}
+
+
+$: body = buildBody(item)
+
 </script>
 
 
@@ -107,13 +127,13 @@ $: thing = item?.type == `reply.reaction` ? `reply` : `post`
                 {/if}
         </div>
         <div class="fl-co">
-            <div class="">
+            <div class="body">
                 {#if item?.type == `space.follow`}
                 <a href={sender}><span class="href">{from}</span></a> started
                     following you.
                 {:else}
                 <a href={sender}><span class="href">{from}</span></a> {action} to your
-                    {thing} "{item?.body?.substring(0, 20)}{item?.body?.length > 20 ? `...` : ``}"
+                    {thing} {@html body}
                 {/if}
             </div>
 
@@ -163,5 +183,12 @@ $: thing = item?.type == `reply.reaction` ? `reply` : `post`
 .ico-s {
     height: 16px;
     width: 16px;
+}
+
+div :global(.body .emoji){
+    height: 20px;
+    width: 20px;
+    object-fit: contain;
+    vertical-align: text-bottom;
 }
 </style>

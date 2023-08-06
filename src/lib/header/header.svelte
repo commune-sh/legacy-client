@@ -7,7 +7,6 @@ import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
 import { menu, addLine, hash} from '$lib/assets/icons.js'
-import SkeletonSpan from '$lib/skeleton/skeleton-span.svelte'
 import Search from '$lib/search/search.svelte'
 import BoardList from './board-list.svelte'
 import DefaultIndexList from './default-index-list.svelte'
@@ -288,7 +287,6 @@ selected?.name : selected?.alias ? selected?.alias : null
                 <span class="ml2"><a href={`https://${$page.params.domain}`}
                         target="_blank">{$page.params.domain}</a></span>
             {:else if (!ready && !isStaticRoute)}
-                    <SkeletonSpan />
             {:else}
 
                 {#if isStaticRoute && staticRoute}
