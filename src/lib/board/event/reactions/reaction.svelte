@@ -45,7 +45,16 @@ function reactToEvent() {
         return
     }
 
-    dispatch('react', reaction.key)
+    if(has_URL) {
+        dispatch('react', {
+            name: reaction.key,
+            url: reaction.url,
+        })
+    } else {
+        dispatch('react', reaction.key)
+    }
+
+
 }
 
 $: tagKey = reaction?.key?.split(':')[1]

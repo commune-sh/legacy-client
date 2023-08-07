@@ -133,6 +133,9 @@ $: isDomain = $page.params.domain !== undefined &&
     $page.params.domain !== 'undefined' && 
     $page.params.domain?.length > 0
 
+$: is_context = $page.url?.searchParams?.get('context') !== undefined 
+$: context_event_id = $page.url?.searchParams?.get('context')
+
 async function loadMessages() {
     ready = false;
     messages = null
@@ -146,9 +149,15 @@ async function loadMessages() {
     }
 
     let url = `${endpoint}/room/${roomID}/messages`
+    if(is_context && context_event_id) {
+        url = url + `?context=${context_event_id}`
+    }
 
     if($page.params.topic) {
         url = url + `?topic=${$page.params.topic}`
+        if(is_context && context_event_id) {
+            url = url + `&context=${context_event_id}`
+        }
     }
 
     let opt = {
@@ -506,6 +515,7 @@ async function newMessage(e) {
         },
         origin_server_ts: new Date().getTime(),
         event_id: `local-${Date.now()}`,
+        slug: `slug-${Date.now()}`,
         room_id: roomID,
         unsent: true,
         transaction_id: `co${Date.now()}`,

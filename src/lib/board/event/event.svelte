@@ -274,7 +274,7 @@ $: firstIsMedia = attachments?.[0]?.type?.startsWith('image') ||
 
 $: highlight = $page.params.post === event?.slug && !isPost && !isChat
 
-$: context = $page.url?.search == `?context=${event?.slug}`
+$: context = $page.url?.searchParams?.get('context') == event?.slug
 
 $: user = {
     avatar_url: event?.sender?.avatar_url,
@@ -857,7 +857,7 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
     background-color: var(--event-highlight);
 }
 .context {
-    border: 1px solid var(--primary);
+    background-color: var(--primary);
 }
 
 

@@ -115,7 +115,7 @@ $: positionLeft = position == 'left' || position == undefined
 $: bounding = target?.getBoundingClientRect()
 
 $: inside = bounding?.top + 550 < document.documentElement.clientHeight
-$: at = document.documentElement.clientHeight - 600
+$: at = document.documentElement.clientHeight - 500
 
 
 $: top = inside ? bounding?.top - 4 : at
@@ -307,7 +307,7 @@ function filterEmoji() {
 
                         <div id="em-{space.alias}" 
                             class:disable={space_alias != space.alias}
-                            class="fl fl-co mb3">
+                            class="fl fl-co mb2">
                             <div id="title-{space.alias}" 
                                 class="emoji-title fl">
                                 <div class="tt ml1 grd-c">
@@ -406,7 +406,7 @@ function filterEmoji() {
     position: absolute;
     pointer-events: auto;
     overflow: hidden;
-    height: 550px;
+    height: 450px;
     width: 410px;
     background: var(--emoji-picker);
     border-radius: 8px;
