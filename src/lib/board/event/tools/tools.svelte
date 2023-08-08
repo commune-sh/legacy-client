@@ -1,5 +1,5 @@
 <script>
-import { reply, external, edit, thread, quote } from '$lib/assets/icons.js'
+import { reply, external, edit, thread, quote, link } from '$lib/assets/icons.js'
 import React from './react.svelte'
 import Menu from './menu.svelte'
 import ShowFrequent from './frequent-reactions.svelte'
@@ -13,9 +13,19 @@ let rel;
 let thr;
 let ed;
 let ref;
+let lnk;
 
 onMount(() => {
 })
+
+$:if(lnk) {
+    tippy(lnk, {
+        content: 'Open Permalink',
+        arrow: true,
+        duration: 1,
+        theme: 'inline',
+    });
+}
 
 $:if(ref) {
     tippy(ref, {
@@ -179,6 +189,29 @@ function startThread() {
     })
 }
 
+function goToPermalink() {
+    let url = `/`
+
+    if($page.params?.space) {
+        url = `/${$page.params?.space}`
+    }
+    if($page.params?.room) {
+        url = `/${$page.params?.space}/${$page.params?.room}`
+    }
+
+    if($page.params.topic) {
+        url = url + `/topic/${$page.params?.topic}`
+    }
+
+
+    if($page.url.search.includes('?view=chat')) {
+        url = `${url}?view=chat&context=${event?.slug}`
+    } else {
+        url = `${url}?context=${event?.slug}`
+    }
+
+    window.open(url, '_blank')
+}
 function referenceEvent() {
     dispatch('reference', event)
     kill()
@@ -199,6 +232,15 @@ function referenceEvent() {
         on:active />
 
     {#if !isBoardPostInChat}
+
+        {#if isChat}
+            <div bind:this={lnk} class="link icon grd-c c-ico" 
+            on:mouseenter={resetHovered}
+            on:click|stopPropagation={goToPermalink}>
+            {@html link}
+        </div>
+        {/if}
+
 
         {#if !isReply && !isChat}
             <div bind:this={ref} class="ref icon grd-c c-ico" 
