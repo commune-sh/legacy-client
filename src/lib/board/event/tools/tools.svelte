@@ -231,15 +231,16 @@ function referenceEvent() {
         on:react
         on:active />
 
-    {#if !isBoardPostInChat}
+    {#if isChat}
+        <div bind:this={lnk} class="link icon grd-c c-ico" 
+        on:mouseenter={resetHovered}
+        on:click|stopPropagation={goToPermalink}>
+        {@html link}
+    </div>
+    {/if}
 
-        {#if isChat}
-            <div bind:this={lnk} class="link icon grd-c c-ico" 
-            on:mouseenter={resetHovered}
-            on:click|stopPropagation={goToPermalink}>
-            {@html link}
-        </div>
-        {/if}
+
+    {#if !isBoardPostInChat}
 
 
         {#if !isReply && !isChat}

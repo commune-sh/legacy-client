@@ -191,7 +191,7 @@ let fetching = false;
 let last_reached = false;
 
 async function fetchMore() {
-    fetching = true;
+    //fetching = true;
     if(messages?.length < 50) {
         return
     }
@@ -206,6 +206,7 @@ async function fetchMore() {
     }
     const resp = await loadPosts(opt)
     if(resp?.events?.length > 0) {
+        fetching = false;
         sp = zone.scrollHeight - zone.scrollTop
         messages = [...resp?.events.reverse(), ...messages]
         maintainScroll()
@@ -240,7 +241,6 @@ async function fetchForward() {
       method: 'GET',
     }
 
-    fetching = true;
     const resp = await loadPosts(opt)
     if(resp?.events?.length > 0) {
         messages = [...messages, ...resp?.events]
