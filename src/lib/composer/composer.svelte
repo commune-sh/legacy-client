@@ -36,6 +36,8 @@ export let isChat = false;
 export let thread_view = false;
 export let thread_view_event = null;
 
+export let reference = null;
+
 $: isthreadView = thread_view && thread_view_event
 
 $: stateKey = isthreadView ? thread_view_event : !reply ? roomID : roomID + threadEvent
@@ -53,6 +55,15 @@ function kill() {
         reset()
     }
 }
+
+function killReference() {
+    if(busy) {
+        return
+    }
+    dispatch('kill-reference')
+    focusBodyInput()
+}
+
 
 $: space_emoji = $store.space_emoji?.filter(x => x.alias ==
     room_alias)[0]?.emoji
@@ -375,6 +386,14 @@ async function createPost() {
                 body: bo,
                 formatted_body: md.render(replaceEmoji(bo, space_emoji)),
             },
+        }
+
+        if(reference) {
+            post.reference_event_id = reference.event_id
+            post.content['reference'] = {
+                event_id: reference.event_id,
+                'rel_type': 'reference',
+            }
         }
 
         if(title) {
@@ -881,6 +900,20 @@ function updateEditorContent(e) {
     {/if}
 
 
+    {#if reference}
+        <div class="ref fl-co mt3 mh3">
+            <div class="ref-header">
+                <div class="fw5 ph3 pv2 sm">
+                    Referencing
+                </div>
+                <div class="grd-c c-ico ph2 mr2" on:click={killReference}>
+                    {@html close}
+                </div>
+            </div>
+            <Event event={reference} interactive={false} />
+        </div>
+    {/if}
+
     <div class="tools fl" class:hide={isChat}>
         <Attach busy={busy} on:attached={attachFiles}/>
         <InsertEmoji room_alias={room_alias} reply={reply} busy={busy} on:selected={insertEmoji}/>
@@ -958,6 +991,15 @@ function updateEditorContent(e) {
     grid-template-columns: 1fr auto;
 }
 
+.ref {
+    border: 1px solid var(--border-1);
+}
+
+.ref-header {
+    border-bottom: 1px solid var(--border-1);
+    display: grid;
+    grid-template-columns: 1fr auto;
+}
 .sf {
     grid-template-rows: 1fr auto auto;
 }

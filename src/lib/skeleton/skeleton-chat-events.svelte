@@ -1,17 +1,14 @@
 <script>
 import { onMount } from 'svelte'
 export let num = 20;
-export let reply;
+export let reply = false;
+export let embed = false;
 
 function rp(m) {
     const min = 30;
     const max = m || 60;
     const randomPercentage = Math.floor(Math.random() * (max - min + 1)) + min;
     return randomPercentage;
-}
-
-function img(i) {
-    return Math.random() < 0.5;
 }
 
 function tp() {
@@ -25,7 +22,7 @@ onMount(() => {
 })
 </script>
 
-<section class="events">
+<section class="events" class:h={embed}>
     <div class="co" bind:this={el}>
     {#each Array(num) as _, i}
         <div class="event pa3">
@@ -40,7 +37,9 @@ onMount(() => {
         </div>
     {/each}
     </div>
-    <div class="fade"></div>
+    {#if !embed}
+        <div class="fade"></div>
+    {/if}
 </section>
 
 <style>
@@ -50,6 +49,10 @@ onMount(() => {
     overflow: hidden;
     pointer-events: none;
     position: relative;
+}
+
+.h {
+    height: 600px;
 }
 
 .co {

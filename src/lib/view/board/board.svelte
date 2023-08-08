@@ -594,6 +594,14 @@ function updatePostReactions(e) {
     }
 }
 
+
+let referenced_event = null;
+function referenceEvent(e) {
+    console.log("referencing event", e.detail)
+    referenced_event = e.detail
+    editing = true
+}
+
 </script>
 
 
@@ -630,6 +638,8 @@ function updatePostReactions(e) {
                     <Composer 
                         roomID={roomID}
                         room_alias={$page.params.space}
+                        reference={referenced_event}
+                        on:kill-reference={() => referenced_event = null}
                         topic={topic}
                         on:saved={postSaved} 
                         isChat={false}
@@ -641,6 +651,7 @@ function updatePostReactions(e) {
                         {#each events as event (event.event_id)}
                             {#if event.pinned}
                                 <Event event={event} 
+                                    on:reference={referenceEvent}
                                     on:update-reactions={updatePostReactions}
                                     on:redact={redactPost}
                                     on:pin={pinPost}
@@ -650,6 +661,7 @@ function updatePostReactions(e) {
                         {#each events as event (event.event_id)}
                             {#if !event.pinned}
                                 <Event event={event} 
+                                    on:reference={referenceEvent}
                                     on:update-reactions={updatePostReactions}
                                     on:redact={redactPost}
                                     on:pin={pinPost}
@@ -727,6 +739,7 @@ function updatePostReactions(e) {
         post={selectedPost}
         on:edited={postEdited}
         on:redact={redactPost}
+        on:reference={referenceEvent}
         on:reply-saved={updateReplyCount} />
     {/if}
 

@@ -133,7 +133,9 @@ $: isDomain = $page.params.domain !== undefined &&
     $page.params.domain !== 'undefined' && 
     $page.params.domain?.length > 0
 
-$: is_context = $page.url?.searchParams?.get('context') !== undefined 
+$: is_context = $page.url?.searchParams?.get('context') !== null &&
+    $page.url?.searchParams?.get('context') !== undefined &&
+    $page.url?.searchParams?.get('context') !== ''
 $: context_event_id = $page.url?.searchParams?.get('context')
 
 async function loadMessages() {
@@ -167,12 +169,16 @@ async function loadMessages() {
     const resp = await loadPosts(opt)
     if(resp?.events) {
         messages = resp?.events.reverse()
-        updateScroll()
+        if(!is_context) {
+            updateScroll()
+        }
     }
 
     ready = true;
     _page = $page
-    syncMessages()
+    if(!is_context) {
+        syncMessages()
+    }
     setTimeout(() => {
         reloadTrigger = true
     }, 1000)
@@ -181,7 +187,11 @@ async function loadMessages() {
 let sp;
 
 let fetching = false;
+
+let last_reached = false;
+
 async function fetchMore() {
+    fetching = true;
     if(messages?.length < 50) {
         return
     }
@@ -194,12 +204,14 @@ async function fetchMore() {
       url: url,
       method: 'GET',
     }
-    fetching = true;
     const resp = await loadPosts(opt)
     if(resp?.events?.length > 0) {
         sp = zone.scrollHeight - zone.scrollTop
         messages = [...resp?.events.reverse(), ...messages]
         maintainScroll()
+    } else {
+        fetching = false;
+        last_reached = true;
     }
 }
 
@@ -207,6 +219,37 @@ async function maintainScroll() {
     await tick();
     zone.scrollTop = zone.scrollHeight - sp;
     fetching = false;
+}
+
+let loading_new = false;
+
+let no_more = false;
+
+$: if(no_more) {
+    syncMessages()
+}
+
+async function fetchForward() {
+    loading_new = true;
+    let endpoint = PUBLIC_API_URL
+
+    let url = `${endpoint}/room/${roomID}/messages?after=${last}&order=ASC`
+
+    let opt = {
+      url: url,
+      method: 'GET',
+    }
+
+    fetching = true;
+    const resp = await loadPosts(opt)
+    if(resp?.events?.length > 0) {
+        messages = [...messages, ...resp?.events]
+        loading_new = false;
+    } else {
+        no_more = true
+        loading_new = false;
+    }
+
 }
 
 let socket;
@@ -420,6 +463,7 @@ async function isTyping() {
 let zone;
 
 let ob;
+let rob;
 
 $: if(ob && ready) {
     setTimeout(() => {
@@ -427,24 +471,59 @@ $: if(ob && ready) {
     }, 3000)
 }
 
+$: if(is_context && rob && ready) {
+    setTimeout(() => {
+        setupReverseObserver()
+    }, 3000)
+}
+
 let scrollHeight;
 function setupObserver() {
     scrollHeight = zone?.scrollHeight;
+
+    let sc = scrollHeight / 2
+
+    if(is_context) {
+        sc = 200
+    }
+
     let options = {
         root: zone,
-        rootMargin: `${scrollHeight/2}px`,
+        rootMargin: `${sc}px`,
     };
 
     let callback = (entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                fetchMore()
+                if(!last_reached) {
+                    fetchMore()
+                }
             }
         });
     };
 
     let observer = new IntersectionObserver(callback, options);
     observer.observe(ob);
+}
+
+function setupReverseObserver() {
+    let options = {
+        root: zone,
+        rootMargin: `200px`,
+    };
+
+    let callback = (entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                if(!no_more) {
+                    fetchForward()
+                }
+            }
+        });
+    };
+
+    let observer = new IntersectionObserver(callback, options);
+    observer.observe(rob);
 }
 
 let atBottom;
@@ -614,6 +693,10 @@ let container;
                 <div class="messages fl-co fl-o">
                     <div class="emp fl-o"></div>
 
+                {#if fetching}
+                    <SkeletonChatEvents embed={true} />
+                {/if}
+
                 {#if processed}
                     {#each processed as message, i}
                         {#if message?.type === 'm.room.message'}
@@ -650,8 +733,17 @@ let container;
                     {/each}
                 {/if}
 
+                {#if loading_new}
+                    <SkeletonChatEvents embed={true} />
+                {/if}
+
 
                 </div>
+            {/if}
+
+
+            {#if is_context}
+            <div class="rob" bind:this={rob}></div>
             {/if}
 
         </div>

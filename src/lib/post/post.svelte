@@ -408,6 +408,7 @@ export function updateReactions(e) {
                 isPost={true} 
                 isPostAuthor={isPostAuthor}
                 on:redact
+                on:reference
                 event={post} 
                 on:replyTo={replyToEvent}/>
         {:else}

@@ -1,5 +1,5 @@
 <script>
-import { reply, external, edit, thread } from '$lib/assets/icons.js'
+import { reply, external, edit, thread, quote } from '$lib/assets/icons.js'
 import React from './react.svelte'
 import Menu from './menu.svelte'
 import ShowFrequent from './frequent-reactions.svelte'
@@ -12,9 +12,19 @@ import tippy from 'tippy.js';
 let rel;
 let thr;
 let ed;
+let ref;
 
 onMount(() => {
 })
+
+$:if(ref) {
+    tippy(ref, {
+        content: 'Reference',
+        arrow: true,
+        duration: 1,
+        theme: 'inline',
+    });
+}
 
 $:if(rel) {
     tippy(rel, {
@@ -169,6 +179,11 @@ function startThread() {
     })
 }
 
+function referenceEvent() {
+    dispatch('reference', event)
+    kill()
+}
+
 </script>
 
 <div class="event-tools">
@@ -184,6 +199,14 @@ function startThread() {
         on:active />
 
     {#if !isBoardPostInChat}
+
+        {#if !isReply && !isChat}
+            <div bind:this={ref} class="ref icon grd-c c-ico" 
+            on:mouseenter={resetHovered}
+            on:click|stopPropagation={referenceEvent}>
+            {@html quote}
+        </div>
+        {/if}
 
         {#if isPost || isReply || isChat}
             <div bind:this={rel} class="reply icon grd-c c-ico" 

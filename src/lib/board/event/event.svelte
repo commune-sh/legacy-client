@@ -92,7 +92,13 @@ onMount(() => {
         save()
     }
 
-    if (event?.just_posted || context || isReplyEvent) {
+    if (context && isChat) {
+        if(el) {
+            el.scrollIntoView({ block: "center" });
+        }
+    }
+
+    if (event?.just_posted || (context && !isChat) || isReplyEvent) {
         if(el) {
             el.scrollIntoView({ behavior: "smooth" });
         }
@@ -274,7 +280,8 @@ $: firstIsMedia = attachments?.[0]?.type?.startsWith('image') ||
 
 $: highlight = $page.params.post === event?.slug && !isPost && !isChat
 
-$: context = $page.url?.searchParams?.get('context') == event?.slug
+$: context = $page.url?.searchParams?.get('context') == event?.slug ||
+    $page.url?.searchParams?.get('context') == event?.event_id
 
 $: user = {
     avatar_url: event?.sender?.avatar_url,
@@ -736,6 +743,7 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
                     on:toggle-pin={togglePin}
                     on:pin
                     on:redact
+                    on:reference
                     on:set-reply-thread
                     on:react={reactToKey}
                     on:add-tag={addTag}
@@ -774,6 +782,7 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
                 depth={depth + 1}
                 nested={true}
                 on:redact
+                on:reference
                 event={reply} 
                 on:set-reply-thread
                 isPostAuthor={isPostAuthor}
@@ -856,8 +865,9 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
 .highlight {
     background-color: var(--event-highlight);
 }
+
 .context {
-    background-color: var(--primary);
+    border: 1px solid var(--primary);
 }
 
 
