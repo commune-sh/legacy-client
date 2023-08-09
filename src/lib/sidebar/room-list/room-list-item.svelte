@@ -74,6 +74,7 @@ $: room_id = item?.room_id
 
 $: isSpaceRoom = room_id === space_room_id
 
+
 /*
 $: joinedRoom = () => {
     if(room_id == state?.room_id) {
@@ -147,7 +148,14 @@ $: isBoard = item?.type === 'board'
 
 $: isProfile = item?.type === 'profile'
 
+
+$: power = state?.space?.power_levels?.users?.[$store?.credentials?.matrix_user_id] || 0
+
+$: can_move = power >= 60
+
 function logItem(e) {
+    console.log(can_move)
+    return
     e.preventDefault()
     popup.activate()
     console.log(item)
@@ -288,6 +296,7 @@ function allowDrop(e) {
 }
 
 function drop(e) {
+    if(!can_move) return
     e.preventDefault();
     const plain = e.dataTransfer.getData('text/plain');
     const data = JSON.parse(plain)
@@ -317,6 +326,7 @@ function drop(e) {
 }
 
 function end() {
+    if(!can_move) return
     dragHover = false;
     dragHoverRoom = false;
     $store.draggable = null
@@ -328,6 +338,7 @@ let initialX;
 let initialY;
 
 function dragStart(e) {
+    if(!can_move) return
     initialX = e.clientX;
     initialY = e.clientY;
     $store.draggable = 'room'
@@ -338,12 +349,14 @@ function dragStart(e) {
 }
 
 function dragEnd() {
+    if(!can_move) return
     dragging = false;
     $store.draggable = null
     dispatch('set-order', true)
 }
 
 function drag(e) {
+    if(!can_move) return
     if(e.clientY - initialY >= 30) {
         initialY = e.clientY
         dispatch('move-down', item.index)
@@ -395,7 +408,7 @@ function moveTopicDown(e) {
     on:contextmenu={logItem}
     on:mouseover={() => hovered = true}
     on:mouseleave={() => hovered = false}
-    draggable="true">
+    draggable={can_move}>
 
     <div class="item" class:active={active}
             class:ih={$store.draggable == null}>

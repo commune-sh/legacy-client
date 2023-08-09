@@ -20,7 +20,7 @@ $: if($page?.params?.space !== lastSpace && $page?.params?.space && !down) {
 }
 
 $: if(authenticated){
-    fetchPowerLevels()
+    //fetchPowerLevels()
     fetchSpaceEmoji()
 }
 
@@ -88,7 +88,7 @@ async function fetchSpaceState() {
             lastSpace = $page?.params?.space
             store.stateReady()
             if(authenticated){
-                fetchPowerLevels()
+                //fetchPowerLevels()
             }
         } else {
             store.addSpaceState($page?.params?.space, resp)

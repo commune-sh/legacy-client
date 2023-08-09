@@ -41,6 +41,7 @@ function buildItems(state) {
             general: true,
             topics: state?.space?.topics,
             banned: state?.banned,
+            power_levels: state?.space?.power_levels,
         }
     ]
 
