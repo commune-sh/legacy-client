@@ -76,7 +76,19 @@ $: link = federated ? `https://${hs}/@${user?.username}` :
 <a class="user grd-c" data-user={`@${user?.username}`} href={link}>
     <div class="flc" bind:this={el}>
     {#if !hideAvatar}
-            <div class="grd-c avatar-base grd" class:ch={isChat}
+        {#if isChat}
+            <div class="ch">
+                <div class="grd-c avatar-base grd avc"
+                style="background-image: url({avatarIMG})">
+                    {#if !avatarExists}
+                        <div class="initials grd-c">
+                        {initial}
+                        </div>
+                    {/if}
+                </div>
+            </div>
+        {:else}
+            <div class="grd-c avatar-base grd"
             style="background-image: url({avatarIMG})">
                 {#if !avatarExists}
                     <div class="initials grd-c">
@@ -84,6 +96,7 @@ $: link = federated ? `https://${hs}/@${user?.username}` :
                     </div>
                 {/if}
             </div>
+        {/if}
     {/if}
     <div class="name grd-c" class:op={op}>
         {#if nameExists}
@@ -146,8 +159,15 @@ a:hover {
 
 .ch {
     width: 30px;
-    height: 30px;
     margin-right: 1rem;
+    position:relative;
+}
+
+.avc {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    z-index: 100;
 }
 
 @media screen and (max-width: 768px) {
@@ -155,7 +175,7 @@ a:hover {
         width: 12px;
         height: 12px;
     }
-    .ch {
+    .avc {
         width: 30px;
         height: 30px;
     }

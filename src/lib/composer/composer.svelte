@@ -480,8 +480,9 @@ async function createPost() {
             if(isChat) {
                 post.type = 'm.room.message'
                 post.content['m.relates_to'] = {
-                    event_id: replyTo.event_id,
-                    'rel_type': 'm.reference',
+                    'm.in_reply_to': {
+                        event_id: replyTo.event_id,
+                    }
                 }
             }
         }

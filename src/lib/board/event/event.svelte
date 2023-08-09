@@ -190,8 +190,15 @@ $: safari = isSafari()
 $: edited = event?.content?.['m.new_content']?.body !== undefined &&
         event?.content?.['m.new_content']?.title !== undefined
 
-$: body = event?.content?.formatted_body ? event?.content?.formatted_body :
-    event?.content?.body ? event?.content?.body : null
+const stripMX = /<mx-reply>.*?<\/mx-reply>/gs;
+
+
+$: repstr = event?.content?.formatted_body?.replace(stripMX, '')
+
+$: has_reply = event?.content?.['m.relates_to']?.['m.in_reply_to']?.event_id !== undefined
+$: fm = has_reply ? repstr : event?.content?.formatted_body
+
+$: body = fm ? fm : event?.content?.body ? event?.content?.body : null
 
 $: raw_content = hasFullBody && full_body ? full_body :
     hasFullBody && !full_body ? `${body}...` : body
@@ -284,6 +291,15 @@ $: context = $page.url?.searchParams?.get('context') == event?.slug ||
     $page.url?.searchParams?.get('context') == event?.event_id
 
 $: user = {
+    avatar_url: event?.sender?.avatar_url,
+    display_name: event?.sender?.display_name,
+    id: event?.sender?.id,
+    username: event?.sender?.username
+}
+
+$: reply_to = event?.reply_to
+
+$: rep_user = {
     avatar_url: event?.sender?.avatar_url,
     display_name: event?.sender?.display_name,
     id: event?.sender?.id,
@@ -475,7 +491,7 @@ $: diff = (isChat && messages) ?
 $: differentSender = isChat && messages && messages[index-1]?.sender?.id !== event?.sender?.id
 
 $: showSender = isChat && messages && messages[index-1]?.type == 'm.room.message' ?
-    (diff > 400 || differentSender): true
+    (diff > 400 || differentSender || has_reply): true
 
 
 $: isSocial = event?.room_alias?.startsWith('@')
@@ -538,9 +554,13 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
         </div>
     {/if}
 
-
     <div class="ev-c fl-co"
+    class:chm={isChat}
     class:ovy={!interactive}>
+
+    {#if has_reply && interactive}
+    {/if}
+
         <div class="sender ph3 fl" 
             class:snm={isChat && showSender}
             class:hide={isChat && !showSender}>
@@ -595,7 +615,7 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
                 {:else if isChat && !isBoardPostInChat}
                     <div class="chat-message">
                         <div class="chti">
-                            {#if !redacted}
+                            {#if !redacted && !showSender}
                             <Time date={event?.origin_server_ts} />
                             {/if}
                         </div>
@@ -834,7 +854,7 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
 }
 
 .shs {
-    padding-top: 0.5rem;
+    padding-top: 1rem;
 }
 
 .ev-c {
@@ -909,6 +929,10 @@ div :global(.post-body p img){
     width: 20px;
     object-fit: contain;
     vertical-align: text-bottom;
+}
+
+div :global(.post-body blockquote){
+    margin-bottom: 0.25rem;
 }
 
 .pba {
@@ -992,7 +1016,8 @@ div :global(.semj .emoji){
 }
 
 .snm {
-    margin-bottom: 0;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
 }
 
 .sn {
@@ -1071,9 +1096,11 @@ div :global(.semj .emoji){
     position: relative;
     display: grid;
     grid-template-columns: calc(30px + 2rem) 1fr;
+    padding-top: 0.1rem;
+    padding-bottom: 0.1rem;
 }
 
-.event:hover .chat-message {
+.event:hover .chm {
     background-color: var(--event-bg-hover);
 }
 
@@ -1116,5 +1143,18 @@ div :global(.chp pre) {
 }
 .dis {
     color: var(--text-light);
+}
+.rep-s {
+    display: grid;
+    grid-template-columns: calc(30px + 2rem) 1fr;
+}
+
+.spine {
+    margin-top: 0.5rem;
+    margin-left: calc(13px + 1rem);
+    border-left: 2px solid var(--shade-4);
+    border-top: 2px solid var(--shade-4);
+    border-radius: 7px 0 0 0;
+    height: 10px;
 }
 </style>

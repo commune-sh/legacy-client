@@ -304,7 +304,10 @@ function syncMessages() {
                 let events = event.reverse()
                 events?.forEach(e => {
                     let ind = messages.findIndex(m => m?.event_id === e?.event_id)
-                    if(ind == -1 && !e?.content?.['m.relates_to']) {
+
+                    let is_thread = e?.content?.['m.relates_to']?.['rel_type'] == 'm.thread'
+
+                    if(ind == -1 && !is_thread) {
                         messages = [...messages, e]
                     }
                 })
@@ -336,7 +339,10 @@ function syncMessages() {
 
                 let ind = messages.findIndex(m => m?.transaction_id ===
                     event?.transaction_id)
-                if(ind == -1 && !event?.content?.['m.relates_to']) {
+
+                let is_thread = e?.content?.['m.relates_to']?.['rel_type'] == 'm.thread'
+
+                if(ind == -1 && !is_thread) {
                     messages = [...messages, event]
                 }
 
@@ -581,6 +587,10 @@ async function join() {
 $: buttonText = busy ? "Joining..." : "Join to start chatting"
 
 async function newMessage(e) {
+    if(replying) {
+        replying = false
+        replyToEvent = null
+    }
 
     let message = e.detail
     let event = {
