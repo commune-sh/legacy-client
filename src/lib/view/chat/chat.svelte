@@ -697,7 +697,7 @@ $: showUsers = $store.showRoomUsers
     class:thread={isThread}>
 
     <div class="inner-area" 
-        class:ina={isThread || showUsers}>
+        class:ina={isThread}>
 
         <Header 
             on:toggle-view/>

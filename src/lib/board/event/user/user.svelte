@@ -211,8 +211,8 @@ a:hover {
 }
 
 .la {
-    width: 25px;
-    height: 25px;
+    width: 26px;
+    height: 26px;
     z-index: 100;
 }
 
@@ -224,6 +224,10 @@ a:hover {
     .avc {
         width: 30px;
         height: 30px;
+    }
+    .la {
+        width: 26px;
+        height: 26px;
     }
 }
 
