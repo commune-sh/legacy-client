@@ -10,6 +10,21 @@ export let room_id;
 
 $: members = $store.roomMembers[room_id];
 
+function processMembers(m) {
+    if(!m) return [];
+    return m?.sort((a, b) => {
+        if (b.power_level < a.power_level) {
+            return -1;
+        } else if (b.power_level > a.power_level) {
+            return 1;
+        } else {
+            return a.username?.localeCompare(b?.username);
+        }
+    });
+}
+
+$: processed = processMembers(members);
+
 </script>
 
 <div class="room-members">

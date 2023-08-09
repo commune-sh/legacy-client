@@ -179,6 +179,8 @@ async function loadMessages() {
     const resp = await loadPosts(opt)
     if(resp?.events) {
         messages = resp?.events.reverse()
+        $store.events[roomID] = messages
+        console.log($store.events[roomID].length)
         if(!is_context) {
             updateScroll()
         }
@@ -218,6 +220,7 @@ async function fetchMore() {
     if(resp?.events?.length > 0) {
         fetching = false;
         sp = zone.scrollHeight - zone.scrollTop
+        $store.events[roomID] = [...resp?.events.reverse(), ...messages]
         messages = [...resp?.events.reverse(), ...messages]
         maintainScroll()
     } else {
@@ -253,6 +256,7 @@ async function fetchForward() {
 
     const resp = await loadPosts(opt)
     if(resp?.events?.length > 0) {
+        $store.events[roomID] = [...messages, ...resp?.events]
         messages = [...messages, ...resp?.events]
         loading_new = false;
     } else {

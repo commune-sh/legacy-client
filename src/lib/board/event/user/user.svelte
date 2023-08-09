@@ -7,9 +7,9 @@ import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
 
 export let user;
-export let op;
+export let op = false;
 export let hideAvatar = false;
-export let isChat;
+export let isChat = false;
 export let list = false;
 
 $: avatarExists = user?.avatar_url !== undefined && 
