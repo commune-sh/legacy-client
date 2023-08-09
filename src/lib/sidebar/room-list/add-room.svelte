@@ -74,6 +74,10 @@ async function addRoom() {
     })
     console.log(res)
     if(res?.success && res?.room_id && res?.state) {
+        store.addSpaceRoomOrderItem($page.params.space, {
+            room_id: res.room_id,
+            alias: nameInput.value
+        })
         store.addRoomToSpaceState($page.params.space, res.state)
         store.addRoom(res.room_id)
         goto(`/${$page.params.space}/${nameInput.value}`)

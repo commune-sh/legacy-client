@@ -6,6 +6,7 @@ import RoomList from './room-list/room-list.svelte'
 import { store } from '$lib/store/store.js'
 import SkeletonSidebar from '$lib/skeleton/skeleton-sidebar.svelte'
 import IndexSidebar from '$lib/sidebar/index/index.svelte'
+import { createStateEvent } from '$lib/utils/request.js'
 
 $: state = $store?.states[$page?.params?.space]
 
@@ -53,37 +54,75 @@ function buildItems(state) {
             items.push(child)
         })
     }
+
+    const roomOrderIndexMap = new Map();
+
+    let room_order = state?.space?.settings?.room_order
+
+    if(room_order?.length == items.length) {
+        room_order.forEach((element, index) => {
+            roomOrderIndexMap.set(element.room_id, index);
+        });
+        items.sort((a, b) => {
+            const indexA = roomOrderIndexMap.get(a.room_id);
+            const indexB = roomOrderIndexMap.get(b.room_id);
+            return indexA - indexB;
+        })
+    }
+
+    if(!room_order) {
+        let order = []
+        items.forEach(item => {
+            order.push({
+                room_id: item.room_id,
+                alias: item.alias
+            })
+        })
+        store.updateSpaceRoomOrder($page.params.space, order)
+    }
+
     return items
 }
 
-let items = []
-
-let built = false
-
-$: if(state && !built) {
-    items = buildItems(state)
-    built = true
-}
-
-let order;
+$: items = buildItems(state)
 
 function moveUp(e) {
     const index = e.detail;
     if(index === 0) return
-    const temp = items[e.detail];
-    items[index] = items[index - 1];
-    items[index - 1] = temp;
+    let rooms = state?.space?.settings?.room_order
+    const temp = rooms[e.detail];
+    rooms[index] = rooms[index - 1];
+    rooms[index - 1] = temp;
+    items = buildItems(state)
 }
 
 function moveDown(e) {
     const index = e.detail;
     if(index == items.length -1) return
-    const temp = items[e.detail];
-    items[index] = items[index + 1];
-    items[index + 1] = temp;
+    let rooms = state?.space?.settings?.room_order
+    const temp = rooms[e.detail];
+    rooms[index] = rooms[index + 1];
+    rooms[index + 1] = temp;
+    items = buildItems(state)
 }
 
-function setOrder() {
+async function setOrder() {
+    let settings = state?.space?.settings
+    let order = []
+    items.forEach(item => {
+        order.push({
+            room_id: item.room_id,
+            alias: item.alias
+        })
+    })
+    settings.room_order = order
+
+    const res = await createStateEvent({
+        room_id: state?.room_id,
+        event_type: 'room.settings',
+        content: settings
+    })
+    console.log(res)
 }
 
 </script>

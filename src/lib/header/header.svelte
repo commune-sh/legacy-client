@@ -6,7 +6,7 @@ import { onMount, createEventDispatcher } from 'svelte'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
-import { menu, addLine, hash} from '$lib/assets/icons.js'
+import { menu, addLine, hash, users} from '$lib/assets/icons.js'
 import Search from '$lib/search/search.svelte'
 import BoardList from './board-list.svelte'
 import DefaultIndexList from './default-index-list.svelte'
@@ -246,6 +246,10 @@ $: newItems = $store?.notifications?.some(n => !n.read);
 $: description = selected?.topic ? selected?.topic : selected?.name ?
 selected?.name : selected?.alias ? selected?.alias : null
 
+function toggleUsers() {
+    $store.showRoomUsers = !$store.showRoomUsers
+}
+
 </script>
 
 <svelte:head>
@@ -318,11 +322,16 @@ selected?.name : selected?.alias ? selected?.alias : null
             </div>
 
 
-            {#if $store.verifiedSession}
-                <div class="grd-c">
+                <div class="tools grd-c fl">
+                    {#if isChat}
+                    <div class="ml3 users ico-s grd-c"
+                        class:active={$store.showRoomUsers}
+                        on:click={toggleUsers}>
+                            {@html users}
+                        </div>
+                    {/if}
                     <Search />
                 </div>
-            {/if}
 
                 {#if $store.verifiedSession && space && exists && isBoard}
                     {#if (joined && !isProfile) || ownProfile}
@@ -493,5 +502,16 @@ a, a:link, a:visited, a:active {
 }
 .ns {
     grid-template-columns: auto 1fr auto auto;
+}
+.users{
+    cursor: pointer;
+}
+.users:hover {
+    opacity: 0.8;
+    fill: var(--text-1);
+}
+.active {
+    opacity: 1;
+    fill: var(--text-1);
 }
 </style>

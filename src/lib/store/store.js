@@ -96,6 +96,8 @@ function createApp() {
     indexSort: null,
     redactedEvent: null,
     roomViews: [],
+    showRoomUsers: false,
+    roomMembers: [],
   }
 
   let theme = localStorage.getItem(`theme`) || "{}"
@@ -485,6 +487,24 @@ function createApp() {
         if(r) {
           r.topics = topics
         }
+      }
+      return p
+    })
+  }
+
+  let updateSpaceRoomOrder = (space, order) => {
+    update(p => {
+      if(p.states[space]) {
+        p.states[space].space.settings.room_order = order
+      }
+      return p
+    })
+  }
+
+  let addSpaceRoomOrderItem = (space, item) => {
+    update(p => {
+      if(p.states[space].space.settings.room_order) {
+        p.states[space].space.settings.room_order.push(item)
       }
       return p
     })
@@ -995,6 +1015,8 @@ function createApp() {
     updateSpaceEmoji,
     updateRoomView,
     addThreadEvent,
+    updateSpaceRoomOrder,
+    addSpaceRoomOrderItem,
   };
 }
 

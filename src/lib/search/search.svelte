@@ -156,7 +156,7 @@ input {
     font-weight: 500;
     color: var(--text-light);
     transition: 0.1s;
-    width: 180px;
+    width: 120px;
 }
 
 @media screen and (max-width: 768px) {
@@ -166,7 +166,7 @@ input {
 }
 
 .ex {
-    width: 200px;
+    width: 160px;
 }
 
 .results {

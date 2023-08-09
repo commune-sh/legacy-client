@@ -287,8 +287,9 @@ $: firstIsMedia = attachments?.[0]?.type?.startsWith('image') ||
 
 $: highlight = $page.params.post === event?.slug && !isPost && !isChat
 
-$: context = $page.url?.searchParams?.get('context') == event?.slug ||
-    $page.url?.searchParams?.get('context') == event?.event_id
+$: context = $page.url?.searchParams?.get('context')?.length > 0 &&
+    ($page.url?.searchParams?.get('context') == event?.slug ||
+    $page.url?.searchParams?.get('context') == event?.event_id)
 
 $: user = {
     avatar_url: event?.sender?.avatar_url,

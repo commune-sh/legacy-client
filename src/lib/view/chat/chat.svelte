@@ -12,6 +12,7 @@ import Memberships from '$lib/chat/event/membership/memberships.svelte'
 import Topic from '$lib/chat/event/topic/topic.svelte'
 import SkeletonChatEvents from '$lib/skeleton/skeleton-chat-events.svelte'
 import Thread from '$lib/thread/thread.svelte'
+import Members from '$lib/chat/members/members.svelte'
 
 $: authenticated = $store?.authenticated && 
     $store?.credentials != null
@@ -63,6 +64,9 @@ onMount(() => {
 async function fetchMembers() {
     const res = await getRoomMembers(roomID)
     console.log(res)
+    if(res?.members) {
+        $store.roomMembers[roomID] = res.members
+    }
 }
 
 function updateScroll() {
@@ -346,7 +350,7 @@ function syncMessages() {
                 let ind = messages.findIndex(m => m?.transaction_id ===
                     event?.transaction_id)
 
-                let is_thread = e?.content?.['m.relates_to']?.['rel_type'] == 'm.thread'
+                let is_thread = event?.content?.['m.relates_to']?.['rel_type'] == 'm.thread'
 
                 if(ind == -1 && !is_thread) {
                     messages = [...messages, event]
@@ -677,9 +681,12 @@ function cancelReply() {
 $: queryExists = $page.url.search.length > 0
 $: threadQuery = $page.url.searchParams.get('thread')
 
-$: isThread = threadQuery && threadQuery.length > 0
+$: isThread = threadQuery && threadQuery.length > 0 && !showUsers
 
 let container;
+
+$: showUsers = $store.showRoomUsers
+
 </script>
 
 
@@ -690,76 +697,84 @@ let container;
     class:thread={isThread}>
 
     <div class="inner-area" 
-        class:ina={isThread}>
+        class:ina={isThread || showUsers}>
 
         <Header 
             on:toggle-view/>
 
-        <div class="inner-content fl-co" 
-            class:pbr={ready}
-            on:scroll={trackScroll}
-            bind:this={zone}>
+        <div class="inner" class:users={showUsers}>
 
-            <div class="ob" bind:this={ob}></div>
+            <div class="inner-content fl-co" 
+                class:pbr={ready}
+                on:scroll={trackScroll}
+                bind:this={zone}>
 
-            {#if !ready}
-                <SkeletonChatEvents />
-            {:else}
+                <div class="ob" bind:this={ob}></div>
 
-                <div class="messages fl-co fl-o">
-                    <div class="emp fl-o"></div>
+                {#if !ready}
+                    <SkeletonChatEvents />
+                {:else}
 
-                {#if fetching}
-                    <SkeletonChatEvents embed={true} />
+                    <div class="messages fl-co fl-o">
+                        <div class="emp fl-o"></div>
+
+                    {#if fetching}
+                        <SkeletonChatEvents embed={true} />
+                    {/if}
+
+                    {#if processed}
+                        {#each processed as message, i}
+                            {#if message?.type === 'm.room.message'}
+                                <Event 
+                                    isChat={true}
+                                    index={i}
+                                    on:replyTo={reply}
+                                    on:reacted={reacted}
+                                    on:redact={redactPost}
+                                    messages={processed}
+                                    event={message} 
+                                    on:saved={saved}
+                                    sender={null} />
+                            {/if}
+                            {#if message?.type === 'm.room.members'}
+                                    <Memberships
+                                    memberships={message}/>
+                            {/if}
+                            {#if message?.type === 'm.room.topic'}
+                                <Topic event={message}/>
+                            {/if}
+                            {#if message?.type === 'space.board.post'}
+                                <Event 
+                                    isChat={true}
+                                    isBoardPostInChat={true}
+                                    on:replyTo={reply}
+                                    on:reacted={reacted}
+                                    on:redact={redactPost}
+                                    messages={processed}
+                                    event={message} 
+                                    on:saved={saved}
+                                    sender={null} />
+                            {/if}
+                        {/each}
+                    {/if}
+
+                    {#if loading_new}
+                        <SkeletonChatEvents embed={true} />
+                    {/if}
+
+
+                    </div>
                 {/if}
 
-                {#if processed}
-                    {#each processed as message, i}
-                        {#if message?.type === 'm.room.message'}
-                            <Event 
-                                isChat={true}
-                                index={i}
-                                on:replyTo={reply}
-                                on:reacted={reacted}
-                                on:redact={redactPost}
-                                messages={processed}
-                                event={message} 
-                                on:saved={saved}
-                                sender={null} />
-                        {/if}
-                        {#if message?.type === 'm.room.members'}
-                                <Memberships
-                                memberships={message}/>
-                        {/if}
-                        {#if message?.type === 'm.room.topic'}
-                            <Topic event={message}/>
-                        {/if}
-                        {#if message?.type === 'space.board.post'}
-                            <Event 
-                                isChat={true}
-                                isBoardPostInChat={true}
-                                on:replyTo={reply}
-                                on:reacted={reacted}
-                                on:redact={redactPost}
-                                messages={processed}
-                                event={message} 
-                                on:saved={saved}
-                                sender={null} />
-                        {/if}
-                    {/each}
+
+                {#if is_context}
+                <div class="rob" bind:this={rob}></div>
                 {/if}
 
-                {#if loading_new}
-                    <SkeletonChatEvents embed={true} />
-                {/if}
+            </div>
 
-
-                </div>
-            {/if}
-
-
-            {#if is_context}
-            <div class="rob" bind:this={rob}></div>
+            {#if showUsers}
+                <Members room_id={roomID}/>
             {/if}
 
         </div>
@@ -803,14 +818,16 @@ let container;
                 </div>
             {/if}
         {/if}
-        </div>
 
+
+        </div>
 
     </div>
 
     {#if isThread}
         <Thread />
     {/if}
+
 
 
 
@@ -841,6 +858,17 @@ let container;
 .ina {
     border-right: 1px solid var(--border-1);
 }
+
+.inner {
+    display: grid;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.users {
+    grid-template-columns: 1fr 250px;
+}
+
 
 .inner-content {
     overflow-y: auto;
