@@ -340,6 +340,7 @@ function dragStart(e) {
 function dragEnd() {
     dragging = false;
     $store.draggable = null
+    dispatch('set-order', true)
 }
 
 function drag(e) {

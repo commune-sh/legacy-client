@@ -56,7 +56,35 @@ function buildItems(state) {
     return items
 }
 
-$: items = buildItems(state)
+let items = []
+
+let built = false
+
+$: if(state && !built) {
+    items = buildItems(state)
+    built = true
+}
+
+let order;
+
+function moveUp(e) {
+    const index = e.detail;
+    if(index === 0) return
+    const temp = items[e.detail];
+    items[index] = items[index - 1];
+    items[index - 1] = temp;
+}
+
+function moveDown(e) {
+    const index = e.detail;
+    if(index == items.length -1) return
+    const temp = items[e.detail];
+    items[index] = items[index + 1];
+    items[index + 1] = temp;
+}
+
+function setOrder() {
+}
 
 </script>
 
@@ -74,9 +102,13 @@ $: items = buildItems(state)
 
         {:else if exists}
 
-            {#if isNotIndex}
+            {#if isNotIndex && items?.length > 0}
                 <div class="items">
-                    <RoomList items={items} />
+                    <RoomList 
+                        on:set-order={setOrder}
+                        on:move-up={moveUp}
+                        on:move-down={moveDown}
+                        items={items} />
                 </div>
             {/if}
 

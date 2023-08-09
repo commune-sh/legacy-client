@@ -559,6 +559,12 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
     class:ovy={!interactive}>
 
     {#if has_reply && interactive}
+        <div class="rep-s">
+            <div class="spine">
+            </div>
+            <div class="rep-e fl">
+            </div>
+        </div>
     {/if}
 
         <div class="sender ph3 fl" 

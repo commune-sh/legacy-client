@@ -114,21 +114,6 @@ function moveRoom(e) {
     console.log(shiftedArray)
 }
 
-function moveUp(e) {
-    if(e.detail === 0) return
-    const [removedItem] = items.splice(e.detail, 1);
-    items.splice(e.detail - 1, 0, removedItem);
-    items = items
-}
-
-function moveDown(e) {
-    if(e.detail == items.length -1) return
-    const [removedItem] = items.splice(e.detail, 1);
-    items.splice(e.detail + 1, 0, removedItem);
-    items = items
-
-}
-
 </script>
 
 {#if isSpaceSettings && authenticated && isOwner}
@@ -179,8 +164,9 @@ function moveDown(e) {
     {#each indexed as item, i(item.room_id)}
             <RoomListItem item={item} 
                 collapsed={collapsed} 
-                on:move-up={moveUp}
-                on:move-down={moveDown}
+                on:set-order
+                on:move-up
+                on:move-down
                 index={i}/>
     {/each}
 {/if}

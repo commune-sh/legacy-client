@@ -1,6 +1,6 @@
 <script>
 import { PUBLIC_API_URL, PUBLIC_API_URL_WS } from '$env/static/public';
-import { redactEvent, loadPosts } from '$lib/utils/request.js'
+import { redactEvent, loadPosts, getRoomMembers } from '$lib/utils/request.js'
 import { onMount, afterUpdate, createEventDispatcher, tick } from 'svelte'
 import { page } from '$app/stores';
 import { joinSpace, joinRoom } from '$lib/utils/request.js'
@@ -57,7 +57,13 @@ let signup = () => {
 
 onMount(() => {
     loadMessages()
+    fetchMembers()
 })
+
+async function fetchMembers() {
+    const res = await getRoomMembers(roomID)
+    console.log(res)
+}
 
 function updateScroll() {
     if(zone) {

@@ -481,3 +481,11 @@ export async function getEventThread(event_id) {
   return data
 }
 
+export async function getRoomMembers(room_id) {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/room/${room_id}/members`,
+    method: 'GET'
+  })
+  return data
+}
+
