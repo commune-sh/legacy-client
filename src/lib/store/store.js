@@ -109,6 +109,10 @@ function createApp() {
     app.settings.theme = 'black'
   }
 
+  let showUsers = localStorage.getItem(`show_users`)
+  if(showUsers == 'true') {
+    app.showRoomUsers = true
+  }
 
 
   let setDownState = (v) => {

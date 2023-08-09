@@ -10,6 +10,7 @@ export let user;
 export let op;
 export let hideAvatar = false;
 export let isChat;
+export let list = false;
 
 $: avatarExists = user?.avatar_url !== undefined && 
     user?.avatar_url !== null && 
@@ -72,6 +73,44 @@ $: link = federated ? `https://${hs}/@${user?.username}` :
 
 </script>
 
+{#if list}
+<div class="member grd-c ph2 pv1" data-user={`@${user?.username}`}>
+    <div class="fl" bind:this={el}>
+        <div class="me-i mr2">
+                <div class="grd-c avatar-base grd la"
+            style="background-image: url({avatarIMG})">
+                {#if !avatarExists}
+                    <div class="initials grd-c">
+                    {initial}
+                    </div>
+                {/if}
+            </div>
+        </div>
+    <div class="name grd-c" class:op={op}>
+        {#if nameExists}
+            {user.display_name}
+        {:else}
+            {user.username}
+        {/if}
+    </div>
+    {#if isOwner && isSpaceAdmin}
+        <div class="crown ico-s ml2 c1 grd-c" title="space owner">
+            {@html crown}
+        </div>
+    {:else if isOwner && !isSpaceAdmin}
+        <div class="crown ico-s ml2 c1 grd-c" title="space owner">
+            {@html crown}
+        </div>
+    {:else if !isOwner && isSpaceAdmin}
+        <div class="crown ico-s ml2 c2 grd-c" title="admin">
+            {@html crown}
+        </div>
+    {/if}
+        
+</div>
+</div>
+{:else}
+
 
 <a class="user grd-c" data-user={`@${user?.username}`} href={link}>
     <div class="flc" bind:this={el}>
@@ -121,6 +160,7 @@ $: link = federated ? `https://${hs}/@${user?.username}` :
         
 </div>
 </a>
+{/if}
 
 <style>
 .user {
@@ -167,6 +207,12 @@ a:hover {
     position: absolute;
     width: 30px;
     height: 30px;
+    z-index: 100;
+}
+
+.la {
+    width: 25px;
+    height: 25px;
     z-index: 100;
 }
 
