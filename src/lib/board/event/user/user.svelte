@@ -11,6 +11,7 @@ export let op = false;
 export let hideAvatar = false;
 export let isChat = false;
 export let list = false;
+export let reply = false;
 
 $: avatarExists = user?.avatar_url !== undefined && 
     user?.avatar_url !== null && 
@@ -73,11 +74,15 @@ $: link = federated ? `https://${hs}/@${user?.username}` :
 
 </script>
 
-{#if list}
-<div class="member grd-c ph2 pv1" data-user={`@${user?.username}`}>
+{#if list || reply}
+<div class="member grd-c" 
+    class:ph2={list}
+    class:pv1={list}
+    data-user={`@${user?.username}`}>
     <div class="fl" bind:this={el}>
-        <div class="me-i mr2">
-                <div class="grd-c avatar-base grd la"
+            <div class="me-i" class:mr2={list}>
+            <div class="grd-c avatar-base grd"
+            class:la={list}
             style="background-image: url({avatarIMG})">
                 {#if !avatarExists}
                     <div class="initials grd-c">
@@ -86,25 +91,27 @@ $: link = federated ? `https://${hs}/@${user?.username}` :
                 {/if}
             </div>
         </div>
-    <div class="name grd-c" class:op={op}>
+        <div class="name grd-c" class:rep={reply} class:op={op}>
         {#if nameExists}
             {user.display_name}
         {:else}
             {user.username}
         {/if}
     </div>
-    {#if isOwner && isSpaceAdmin}
-        <div class="crown ico-s ml2 c1 grd-c" title="space owner">
-            {@html crown}
-        </div>
-    {:else if isOwner && !isSpaceAdmin}
-        <div class="crown ico-s ml2 c1 grd-c" title="space owner">
-            {@html crown}
-        </div>
-    {:else if !isOwner && isSpaceAdmin}
-        <div class="crown ico-s ml2 c2 grd-c" title="admin">
-            {@html crown}
-        </div>
+    {#if !reply}
+        {#if isOwner && isSpaceAdmin}
+            <div class="crown ico-s ml2 c1 grd-c" title="space owner">
+                {@html crown}
+            </div>
+        {:else if isOwner && !isSpaceAdmin}
+            <div class="crown ico-s ml2 c1 grd-c" title="space owner">
+                {@html crown}
+            </div>
+        {:else if !isOwner && isSpaceAdmin}
+            <div class="crown ico-s ml2 c2 grd-c" title="admin">
+                {@html crown}
+            </div>
+        {/if}
     {/if}
         
 </div>
@@ -234,6 +241,10 @@ a:hover {
 .name {
     color: var(--text-light);
     line-height: 1;
+}
+.rep {
+    font-size: 12px;
+    font-weight: 500;
 }
 
 a:link, a:visited {

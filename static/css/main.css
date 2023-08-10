@@ -701,6 +701,7 @@ select {
 
 .tippy-box[data-theme~='inline'] {
     padding: 0.5rem 0.75rem;
+    line-height: 1.5;
 }
 
 .tippy-box[data-theme~='notifications'] {

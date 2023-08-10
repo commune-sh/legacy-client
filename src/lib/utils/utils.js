@@ -190,6 +190,7 @@ export function copyToClipboard(text) {
 }
 
 export function getHomeserver(room_id) {
+  if(!room_id) return null;
   const parts = room_id.split(":");
   const lastPart = parts[parts.length - 1];
   if (lastPart.includes(":")) {
@@ -216,4 +217,39 @@ export function replaceEmoji(inputString, emojiMapping) {
   });
 
   return replacedString;
+}
+
+export function trimBody(body, length) {
+  if(body.length <= length) return body
+  const lastSpaceIndex = body.lastIndexOf(' ', length);
+  if (lastSpaceIndex > 0) {
+      const trimmedText = body.substring(0, lastSpaceIndex);
+      return trimmedText + '...'
+  } else {
+      return bo.substring(0, length)
+  }
+}
+
+export function extractMatrixID(inputString) {
+    const regex = /@([^:\s]+):([^:\s]+)(?::(\d+))?/;
+    const match = inputString.match(regex);
+
+    if (match) {
+      return match[0]
+    /*
+        const userID = match[0];
+        const username = match[1];
+        const domain = match[2];
+        const port = match[3] || '';
+
+        return {
+            userID,
+            username,
+            domain,
+            port
+        };
+      */
+    } else {
+        return null;
+    }
 }

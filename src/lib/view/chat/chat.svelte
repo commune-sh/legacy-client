@@ -139,6 +139,13 @@ $: if(reloadTrigger && ($page.params?.topic != _page?.params?.topic)) {
     loadMessages()
 }
 
+$: if(reloadTrigger && ($page.url?.searchParams.get('context') != 
+    _page?.url?.searchParams.get('context'))) {
+    setTimeout(() => {
+        loadMessages()
+    }, 10)
+}
+
 $: isDomain = $page.params.domain !== undefined && 
     $page.params.domain !== 'undefined' && 
     $page.params.domain?.length > 0
@@ -165,6 +172,7 @@ async function loadMessages() {
         url = url + `?context=${context_event_id}`
     }
 
+
     if($page.params.topic) {
         url = url + `?topic=${$page.params.topic}`
         if(is_context && context_event_id) {
@@ -180,7 +188,6 @@ async function loadMessages() {
     if(resp?.events) {
         messages = resp?.events.reverse()
         $store.events[roomID] = messages
-        console.log($store.events[roomID].length)
         if(!is_context) {
             updateScroll()
         }
@@ -302,7 +309,6 @@ function syncMessages() {
     console.log("syncing messages")
 
     socket.onopen = function () {
-        console.log("Connected to sync messages server");
         socket.send(JSON.stringify({
             type: 'sync',
             last: last,
@@ -422,7 +428,6 @@ function addNewReaction(e) {
         if(event?.reactions) {
             // check if reaction key exists
             let i = event?.reactions?.findIndex(r => r.key === key);
-            console.log("does emoji exist?", i)
             // add sender if it does
             if (i !== -1) {
                 // check if sender exists 
@@ -691,6 +696,41 @@ let container;
 
 $: showUsers = $store.showRoomUsers
 
+
+$: hasScrolled = zone?.scrollHeight > zone?.clientHeight || zone?.scrollTop > 0
+
+$: addBorder = showUsers && !hasScrolled
+
+function focusReplyEvent(e) {
+    let event_id = e.detail
+
+    let index = messages.findIndex(i => i.event_id === event_id);
+    if(index !== -1) {
+        let el = document.getElementById(`event-${event_id}`)
+        if(el) {
+            el.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"})
+        }
+    } else {
+        let slug = event_id.slice(-11)
+        let url = `/`
+        if($page.params?.space) {
+            url = `/${$page.params?.space}`
+        }
+        if($page.params?.room) {
+            url = `/${$page.params?.space}/${$page.params?.room}`
+        }
+        if($page.params.topic) {
+            url = url + `/topic/${$page.params?.topic}`
+        }
+        if($page.url.search.includes('?view=chat')) {
+            url = `${url}?view=chat&context=${slug}`
+        } else {
+            url = `${url}?context=${slug}`
+        }
+        goto(url)
+    }
+}
+
 </script>
 
 
@@ -709,6 +749,7 @@ $: showUsers = $store.showRoomUsers
         <div class="inner" class:users={showUsers}>
 
             <div class="inner-content fl-co" 
+                class:adbo={addBorder}
                 class:pbr={ready}
                 on:scroll={trackScroll}
                 bind:this={zone}>
@@ -736,6 +777,7 @@ $: showUsers = $store.showRoomUsers
                                     on:reacted={reacted}
                                     on:redact={redactPost}
                                     messages={processed}
+                                    on:focus-reply={focusReplyEvent}
                                     event={message} 
                                     on:saved={saved}
                                     sender={null} />
@@ -939,6 +981,9 @@ $: showUsers = $store.showRoomUsers
     text-decoration: underline;
 }
 
+.adbo {
+    border-right: 1px solid var(--border-1);
+}
 </style>
 
 

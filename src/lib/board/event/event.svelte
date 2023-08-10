@@ -21,6 +21,7 @@ import Vote from '$lib/vote/vote.svelte'
 import Links from './links/links.svelte'
 import RoomAlias from '$lib/board/event/room-alias/room-alias.svelte'
 import MatrixMedia from '$lib/chat/event/media/media.svelte'
+import ReplySummary from './reply/reply-summary.svelte'
 
 import EventThreadSummary from '$lib/chat/event/thread/thread-summary.svelte'
 import BoardPost from '$lib/chat/event/board-post/board-post.svelte'
@@ -192,7 +193,6 @@ $: edited = event?.content?.['m.new_content']?.body !== undefined &&
 
 const stripMX = /<mx-reply>.*?<\/mx-reply>/gs;
 
-
 $: repstr = event?.content?.formatted_body?.replace(stripMX, '')
 
 $: has_reply = event?.content?.['m.relates_to']?.['m.in_reply_to']?.event_id !== undefined
@@ -292,15 +292,6 @@ $: context = $page.url?.searchParams?.get('context')?.length > 0 &&
     $page.url?.searchParams?.get('context') == event?.event_id)
 
 $: user = {
-    avatar_url: event?.sender?.avatar_url,
-    display_name: event?.sender?.display_name,
-    id: event?.sender?.id,
-    username: event?.sender?.username
-}
-
-$: reply_to = event?.reply_to
-
-$: rep_user = {
     avatar_url: event?.sender?.avatar_url,
     display_name: event?.sender?.display_name,
     id: event?.sender?.id,
@@ -541,6 +532,7 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
     class:fresh={event?.just_posted}
     class:isrep={isReplyEvent}
     class:context={context}
+    id={`event-${event.event_id}`}
     class:highlight={highlight || !interactive} role="button">
 
     {#if (dragging || moveActive) && (!isReply && !isPost)}
@@ -560,12 +552,7 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
     class:ovy={!interactive}>
 
     {#if has_reply && interactive}
-        <div class="rep-s">
-            <div class="spine">
-            </div>
-            <div class="rep-e fl">
-            </div>
-        </div>
+        <ReplySummary {event} on:focus-reply/>
     {/if}
 
         <div class="sender ph3 fl" 
@@ -1150,18 +1137,5 @@ div :global(.chp pre) {
 }
 .dis {
     color: var(--text-light);
-}
-.rep-s {
-    display: grid;
-    grid-template-columns: calc(30px + 2rem) 1fr;
-}
-
-.spine {
-    margin-top: 0.5rem;
-    margin-left: calc(13px + 1rem);
-    border-left: 2px solid var(--shade-4);
-    border-top: 2px solid var(--shade-4);
-    border-radius: 7px 0 0 0;
-    height: 10px;
 }
 </style>

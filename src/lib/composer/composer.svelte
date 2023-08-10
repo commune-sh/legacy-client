@@ -5,7 +5,7 @@ import { eye, send, close } from '$lib/assets/icons.js'
 import { page } from '$app/stores';
 import {getPresignedURL, uploadAttachment, savePost,
     getLinkMetadata } from '$lib/utils/request.js'
-import { replaceEmoji } from '$lib/utils/utils.js'
+import { replaceEmoji, trimBody } from '$lib/utils/utils.js'
 import { md } from './md/md.js'
 import autosize from '$lib/vendor/autosize/autosize'
 import { store } from '$lib/store/store.js'
@@ -467,6 +467,20 @@ async function createPost() {
             post.content['topic'] = topic
         }
 
+        let buildReplyBody = ()  => {
+            let body = b
+            let f = post.content.formatted_body
+            let rb = replyTo.content.body
+            let rf = replyTo.content.formatted_body
+            let rid = replyTo.sender.id
+
+            body = `<mx-reply><blockquote><a
+href=\"https://matrix.to/#/!pcWAREjsTZHgkbNqYv:localhost:8480/$Gux1itZL5do01-ADehuqfBNiAMzLDuhd17DgSdjtYNc?via=localhost%3A8480\">In
+reply to</a> <a href=\"https://matrix.to/#/${rid}\">@butter:localhost:8480</a><br>${rf}\n</blockquote></mx-reply> <${rid}> ${rb}\n\n${f}`
+
+            return body
+        }
+
         if(reply) {
             post.type = 'space.board.post.reply'
             post.in_thread = threadEvent
@@ -478,10 +492,15 @@ async function createPost() {
                 'rel_type': 'm.nested_reply',
             }
             if(isChat) {
+                //post.content.body = `> <${replyTo.sender.id}> ${replyTo.content.body}\n\n${post.content.body}`
+                //post.content.formatted_body = `> <${replyTo.sender.id}> ${replyTo.content.formatted_body}\n\n${post.content.formatted_body}`
+
                 post.type = 'm.room.message'
                 post.content['m.relates_to'] = {
                     'm.in_reply_to': {
                         event_id: replyTo.event_id,
+                        sender: replyTo.sender.id,
+                        formatted_body: trimBody(replyTo.content.formatted_body, 100),
                     }
                 }
             }

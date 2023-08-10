@@ -14,6 +14,7 @@ import IndexList from './index-list.svelte'
 import BoardInfo from './board-info.svelte'
 import { newMD } from '$lib/composer/md/md.js'
 import ToggleView from './toggle-view/toggle-view.svelte'
+import tippy from 'tippy.js';
 
 
 let md = newMD()
@@ -256,6 +257,25 @@ function toggleUsers() {
     $store.showRoomUsers = !$store.showRoomUsers
 }
 
+let top;
+
+let tset = false;
+
+$: if(top && selected?.topic && !tset) {
+    tippy(top, {
+        content: md.render(selected?.topic),
+        arrow: true,
+        duration: 1,
+        interactive: true,
+        allowHTML: true,
+        theme: 'inline',
+        trigger: 'click',
+        placement: 'bottom',
+        offset: [0, 20],
+    });
+    tset = true
+}
+
 </script>
 
 <svelte:head>
@@ -321,7 +341,8 @@ function toggleUsers() {
 
             </div>
 
-            <div class="topic grd-c sel">
+            <div class="topic grd-c sel" 
+                bind:this={top}>
                 {#if selected?.topic && !isPost}
                     {@html md.render(selected?.topic)}
                 {/if}
@@ -476,6 +497,7 @@ function toggleUsers() {
     max-width: 100%;
     justify-self: start;
     align-self: center;
+    cursor: pointer;
 }
 
 div :global(p) {
