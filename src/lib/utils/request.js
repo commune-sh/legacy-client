@@ -489,3 +489,11 @@ export async function getRoomMembers(room_id) {
   return data
 }
 
+export async function getProfile(username) {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/profile/${username}`,
+    method: 'GET'
+  })
+  return data
+}
+

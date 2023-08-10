@@ -228,7 +228,7 @@ async function fetchMore() {
         fetching = false;
         sp = zone.scrollHeight - zone.scrollTop
         $store.events[roomID] = [...resp?.events.reverse(), ...messages]
-        messages = [...resp?.events.reverse(), ...messages]
+        messages = [...resp?.events, ...messages]
         maintainScroll()
     } else {
         fetching = false;
