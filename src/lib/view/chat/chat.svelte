@@ -57,7 +57,11 @@ let signup = () => {
     store.startAuthenticating("signup")
 }
 
+let wrap;
+
 onMount(() => {
+    wrap.scrollTop = wrap.scrollHeight;
+
     loadMessages()
     fetchMembers()
 })
@@ -770,7 +774,14 @@ function jumpToLatest() {
 
         <div class="inner" class:users={showUsers}>
 
-            <div class="inner-wrap">
+            <div class="inner-wrap" bind:this={wrap}>
+
+                {#if !ready}
+                    <div class="mask-s">
+                        <SkeletonChatEvents />
+                    </div>
+                {/if}
+
 
                 <div class="inner-content fl-co" 
                     class:adbo={addBorder}
@@ -780,9 +791,6 @@ function jumpToLatest() {
 
                     <div class="ob" bind:this={ob}></div>
 
-                    {#if !ready}
-                        <SkeletonChatEvents />
-                    {:else}
 
                         <div class="messages fl-co fl-o">
                             <div class="emp fl-o"></div>
@@ -834,7 +842,7 @@ function jumpToLatest() {
 
 
                         </div>
-                    {/if}
+
 
 
                     {#if is_context}
@@ -963,6 +971,17 @@ function jumpToLatest() {
 .inner-content {
     overflow-y: auto;
     overflow-x: hidden;
+    position:relative;
+}
+
+.mask-s {
+    background: var(--bg);
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    z-index: 2000;
 }
 
 .go-down {
