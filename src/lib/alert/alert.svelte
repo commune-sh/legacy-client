@@ -45,7 +45,7 @@ $: if(active && $store.alert.autohide) {
 }
 
 .mes {
-    padding: 1rem;
+    padding: 0.5rem 1rem;
     background-color: var(--primary);
     color: white;
     border-radius: 7px;

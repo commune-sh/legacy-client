@@ -534,6 +534,12 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
     id={`event-${event.event_id}`}
     class:highlight={highlight || !interactive} role="button">
 
+    {#if isChat && context}
+        <div class="perma">
+            Permalink
+        </div>
+    {/if}
+
     {#if (dragging || moveActive) && (!isReply && !isPost)}
         <div class="drg">
             <div class="drgm">
@@ -613,7 +619,7 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
                             <Time date={event?.origin_server_ts} />
                             {/if}
                         </div>
-                        <div class="chp post-body pr3 pci"
+                        <div class="chp grd post-body pr3 pci"
                         class:just-emoji={isEmojiOnly}
                         class:unsent={event?.unsent}>
                             {#if redacted}
@@ -844,7 +850,7 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
 
 .chat {
     padding-top: 0;
-    padding-bottom: 0.125rem;
+    padding-bottom: 0;
 }
 
 .shs {
@@ -881,7 +887,9 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
 }
 
 .context {
-    border: 2px solid var(--primary);
+    border: 1px solid var(--primary);
+}
+.context:hover {
 }
 
 
@@ -1082,6 +1090,21 @@ div :global(.semj .emoji){
     font-weight: 500;
     border-radius: 0 0 0 7px;
 }
+
+.perma {
+    position: absolute;
+    top: -20px;
+    right: 0;
+    cursor: pointer;
+    z-index: 100;
+    font-weight: 500;
+    font-size: small;
+    color: var(--text-1);
+    background: var(--primary);
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px 3px 0 0;
+}
+
 .hide {
      display: none;
 }

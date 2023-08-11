@@ -70,10 +70,32 @@ function toggle() {
         })
         return
     }
+    if(chatView && defaultView === 'chat') {
+        let url = `/${$page.params.space}?view=board`
+        if($page.params.room) {
+            url = `/${$page.params.space}/${$page.params.room}?view=board`
+        }
+        $store.roomViews[roomID] = url
+        goto(url, {
+            noscroll: true,
+        })
+        return
+    }
     if(boardView && defaultView === 'chat') {
         let url = `/${$page.params.space}`
         if($page.params.room) {
             url = `/${$page.params.space}/${$page.params.room}`
+        }
+        $store.roomViews[roomID] = url
+        goto(url, {
+            noscroll: true,
+        })
+        return
+    }
+    if(boardView && defaultView === 'board') {
+        let url = `/${$page.params.space}?view=chat`
+        if($page.params.room) {
+            url = `/${$page.params.space}/${$page.params.room}?view=chat`
         }
         $store.roomViews[roomID] = url
         goto(url, {

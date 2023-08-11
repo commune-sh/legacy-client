@@ -63,8 +63,12 @@ $: post_slug = item?.relates_to_event_id?.slice(-11);
 $: reply_slug = item?.event_id?.slice(-11);
 $: thread_slug = item?.thread_event_id?.slice(-11);
 
+$: isChat = item?.event_type == `m.room.message`
+
 function go() {
     dispatch('go', item)
+
+    let view = isChat ? `chat` : `board`
 
     let url = `${PUBLIC_BASE_URL}/${item.room_alias}/post/${post_slug}?context=${reply_slug}`
 
@@ -74,6 +78,9 @@ function go() {
 
     if(item.type == `reaction`) {
         url = `${PUBLIC_BASE_URL}/${item.room_alias}/post/${post_slug}`
+        if(isChat) {
+            url = `${PUBLIC_BASE_URL}/${item.room_alias}?view=chat&context=${post_slug}`
+        }
     }
 
     if(item.type == `reply.reaction`) {
@@ -89,7 +96,7 @@ function go() {
 
 $: avatar = item?.avatar_url ?  `${PUBLIC_MEDIA_URL}/${item?.avatar_url}` : null
 
-$: thing = item?.type == `reply.reaction` ? `reply` : `post`
+$: thing = isChat ? `message` : item?.type == `reply.reaction` ? `reply` : `post`
 
 $: isReaction = item?.type == `reaction` || item?.type == `reply.reaction`
 

@@ -6,6 +6,7 @@ import { page } from '$app/stores';
 import { joinSpace, joinRoom } from '$lib/utils/request.js'
 import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
+import { down } from '$lib/assets/icons.js'
 import Event from '$lib/board/event/event.svelte'
 import Header from '$lib/header/header.svelte'
 import Memberships from '$lib/chat/event/membership/memberships.svelte'
@@ -144,7 +145,7 @@ $: if(reloadTrigger && ($page.url?.searchParams.get('context') !=
 
     console.log('context changed', context_event_id)
     setTimeout(() => {
-        //loadMessages()
+        loadMessages()
     }, 10)
 }
 
@@ -733,6 +734,25 @@ function focusReplyEvent(e) {
     }
 }
 
+function goDown() {
+    zone.scrollTop = zone.scrollHeight;
+}
+
+function jumpToLatest() {
+    let url = `/`
+    if($page.params?.space) {
+        url = `/${$page.params?.space}`
+    }
+    if($page.params?.room) {
+        url = `/${$page.params?.space}/${$page.params?.room}`
+    }
+
+    if($page.url.search.includes('?view=chat')) {
+        url = `${url}?view=chat`
+    }
+    goto(url)
+}
+
 </script>
 
 
@@ -750,74 +770,89 @@ function focusReplyEvent(e) {
 
         <div class="inner" class:users={showUsers}>
 
-            <div class="inner-content fl-co" 
-                class:adbo={addBorder}
-                class:pbr={ready}
-                on:scroll={trackScroll}
-                bind:this={zone}>
+            <div class="inner-wrap">
 
-                <div class="ob" bind:this={ob}></div>
+                <div class="inner-content fl-co" 
+                    class:adbo={addBorder}
+                    class:pbr={ready}
+                    on:scroll={trackScroll}
+                    bind:this={zone}>
 
-                {#if !ready}
-                    <SkeletonChatEvents />
-                {:else}
+                    <div class="ob" bind:this={ob}></div>
 
-                    <div class="messages fl-co fl-o">
-                        <div class="emp fl-o"></div>
+                    {#if !ready}
+                        <SkeletonChatEvents />
+                    {:else}
 
-                    {#if fetching}
-                        <SkeletonChatEvents embed={true} />
+                        <div class="messages fl-co fl-o">
+                            <div class="emp fl-o"></div>
+
+                        {#if fetching}
+                            <SkeletonChatEvents embed={true} />
+                        {/if}
+
+                        {#if processed}
+                            {#each processed as message, i}
+                                {#if message?.type === 'm.room.message'}
+                                    <Event 
+                                        isChat={true}
+                                        index={i}
+                                        on:replyTo={reply}
+                                        on:reacted={reacted}
+                                        on:redact={redactPost}
+                                        messages={processed}
+                                        on:focus-reply={focusReplyEvent}
+                                        event={message} 
+                                        on:saved={saved}
+                                        sender={null} />
+                                {/if}
+                                {#if message?.type === 'm.room.members'}
+                                        <Memberships
+                                        memberships={message}/>
+                                {/if}
+                                {#if message?.type === 'm.room.topic'}
+                                    <Topic event={message}/>
+                                {/if}
+                                {#if message?.type === 'space.board.post'}
+                                    <Event 
+                                        isChat={true}
+                                        isBoardPostInChat={true}
+                                        on:replyTo={reply}
+                                        on:reacted={reacted}
+                                        on:redact={redactPost}
+                                        messages={processed}
+                                        event={message} 
+                                        on:saved={saved}
+                                        sender={null} />
+                                {/if}
+                            {/each}
+                        {/if}
+
+                        {#if loading_new}
+                            <SkeletonChatEvents embed={true} />
+                        {/if}
+
+
+                        </div>
                     {/if}
 
-                    {#if processed}
-                        {#each processed as message, i}
-                            {#if message?.type === 'm.room.message'}
-                                <Event 
-                                    isChat={true}
-                                    index={i}
-                                    on:replyTo={reply}
-                                    on:reacted={reacted}
-                                    on:redact={redactPost}
-                                    messages={processed}
-                                    on:focus-reply={focusReplyEvent}
-                                    event={message} 
-                                    on:saved={saved}
-                                    sender={null} />
-                            {/if}
-                            {#if message?.type === 'm.room.members'}
-                                    <Memberships
-                                    memberships={message}/>
-                            {/if}
-                            {#if message?.type === 'm.room.topic'}
-                                <Topic event={message}/>
-                            {/if}
-                            {#if message?.type === 'space.board.post'}
-                                <Event 
-                                    isChat={true}
-                                    isBoardPostInChat={true}
-                                    on:replyTo={reply}
-                                    on:reacted={reacted}
-                                    on:redact={redactPost}
-                                    messages={processed}
-                                    event={message} 
-                                    on:saved={saved}
-                                    sender={null} />
-                            {/if}
-                        {/each}
+
+                    {#if is_context}
+                    <div class="rob" bind:this={rob}></div>
                     {/if}
 
-                    {#if loading_new}
-                        <SkeletonChatEvents embed={true} />
+                </div>
+
+                    {#if reloadTrigger && !atBottom && !is_context}
+                        <div class="c-ico go-down" on:click={goDown}>
+                            {@html down}
+                        </div>
                     {/if}
-
-
-                    </div>
-                {/if}
-
-
-                {#if is_context}
-                <div class="rob" bind:this={rob}></div>
-                {/if}
+                    {#if reloadTrigger && !atBottom && is_context}
+                        <div class="jump" on:click={jumpToLatest}>
+                            See newest messages
+                        </div>
+                    {/if}
 
             </div>
 
@@ -913,6 +948,13 @@ function focusReplyEvent(e) {
     overflow-x: hidden;
 }
 
+.inner-wrap {
+    display: grid;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+}
+
 .users {
     grid-template-columns: 1fr 250px;
 }
@@ -921,6 +963,33 @@ function focusReplyEvent(e) {
 .inner-content {
     overflow-y: auto;
     overflow-x: hidden;
+}
+
+.go-down {
+    opacity: 1;
+    position: absolute;
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 50%;
+    background: var(--primary);
+    fill: var(--text-1);
+    z-index: 1000;
+    bottom: 1rem;
+    right: 1rem;
+}
+
+.jump {
+    opacity: 1;
+    position: absolute;
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 6px;
+    background: var(--primary);
+    fill: var(--text-1);
+    z-index: 1000;
+    bottom: 1rem;
+    right: 1rem;
+    font-weight: 500;
 }
 
 .pbr {
