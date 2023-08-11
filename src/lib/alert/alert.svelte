@@ -11,6 +11,12 @@ function kill() {
     }
 }
 
+$: if(active && $store.alert.autohide) {
+    setTimeout(() => {
+        kill()
+    }, 3000)
+}
+
 </script>
 
 {#if active}

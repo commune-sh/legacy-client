@@ -524,7 +524,6 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
     class:h={!isReply && !isPost && !editing && !isChat}
     class:chat={isChat}
     class:nch={!isChat}
-    class:shs={isChat && showSender}
     class:ha={!isReply && !isPost && (hasAttachments || hasLinks)}
     class:ma={toolsActive && !isBoardPostInChat}
     class:bb={isPost || isReply}
@@ -548,6 +547,7 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
     {/if}
 
     <div class="ev-c fl-co"
+    class:shs={isChat && showSender}
     class:chm={isChat}
     class:ovy={!interactive}>
 
@@ -848,7 +848,7 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
 }
 
 .shs {
-    padding-top: 1rem;
+    padding-top: 0.5rem;
 }
 
 .ev-c {
@@ -881,7 +881,7 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
 }
 
 .context {
-    border: 1px solid var(--primary);
+    border: 2px solid var(--primary);
 }
 
 

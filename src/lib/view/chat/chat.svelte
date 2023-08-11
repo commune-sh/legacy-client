@@ -141,8 +141,10 @@ $: if(reloadTrigger && ($page.params?.topic != _page?.params?.topic)) {
 
 $: if(reloadTrigger && ($page.url?.searchParams.get('context') != 
     _page?.url?.searchParams.get('context'))) {
+
+    console.log('context changed', context_event_id)
     setTimeout(() => {
-        loadMessages()
+        //loadMessages()
     }, 10)
 }
 

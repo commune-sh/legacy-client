@@ -1,4 +1,5 @@
 <script>
+import { PUBLIC_BASE_URL } from '$env/static/public'
 import { reply, external, edit, thread, quote, link } from '$lib/assets/icons.js'
 import React from './react.svelte'
 import Menu from './menu.svelte'
@@ -7,6 +8,7 @@ import { onMount, createEventDispatcher } from 'svelte'
 import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';
+import { copyToClipboard } from '$lib/utils/utils.js'
 import tippy from 'tippy.js';
 
 let rel;
@@ -20,7 +22,7 @@ onMount(() => {
 
 $:if(lnk) {
     tippy(lnk, {
-        content: 'Open Permalink',
+        content: `Permalink`,
         arrow: true,
         duration: 1,
         theme: 'inline',
@@ -210,8 +212,17 @@ function goToPermalink() {
         url = `${url}?context=${event?.slug}`
     }
 
-    window.open(url, '_blank')
+    url = `${PUBLIC_BASE_URL}${url}`
+
+    copyToClipboard(url)
+
+    $store.alert = {
+        active: true,
+        message: 'Copied permalink to clipboard',
+        autohide: true,
+    }
 }
+
 function referenceEvent() {
     dispatch('reference', event)
     kill()
