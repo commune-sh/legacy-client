@@ -76,9 +76,16 @@ async function fetchMembers() {
 
 function updateScroll() {
     if(zone) {
+        zone.scrollTop = zone.scrollHeight;
+        setTimeout(() => {
+            zone.scrollTop = zone.scrollHeight;
+        }, 10)
         setTimeout(() => {
             zone.scrollTop = zone.scrollHeight;
         }, 40)
+        setTimeout(() => {
+            zone.scrollTop = zone.scrollHeight;
+        }, 100)
     }
 }
 
@@ -286,6 +293,9 @@ $: first = messages?.length > 0 ? messages[0]?.origin_server_ts : null
 
 $: last = messages?.length > 0 ? messages[messages.length - 1]?.origin_server_ts : null
 
+
+let typing = []
+
 function syncMessages() {
     let reconnectDelay = 1000; // Initial reconnect delay in milliseconds
     let maxReconnectDelay = 60000; // Maximum reconnect delay in milliseconds
@@ -326,6 +336,10 @@ function syncMessages() {
     socket.onmessage = function (e) {
         if(e?.data && e?.data != 'ping') {
             let event = JSON.parse(e.data)
+
+            if(event?.type == 'typing') {
+                typing = [...typing, event?.value]
+            }
 
             if (event && Array.isArray(event)) {
                 let events = event.reverse()
@@ -368,8 +382,9 @@ function syncMessages() {
                     event?.transaction_id)
 
                 let is_thread = event?.content?.['m.relates_to']?.['rel_type'] == 'm.thread'
+                let is_edit = event?.content?.['m.new_content']?.body
 
-                if(ind == -1 && !is_thread) {
+                if(ind == -1 && !is_thread && !is_edit) {
                     messages = [...messages, event]
                 }
 
@@ -482,14 +497,12 @@ function addNewReaction(e) {
 }
 
 async function isTyping() {
-    /*
     if (socket.readyState === WebSocket.OPEN) {
         socket.send(JSON.stringify({
             type: 'typing',
             value: $store?.credentials?.matrix_user_id
         }));
     }
-    */
 }
 
 let zone;
@@ -743,6 +756,11 @@ function goDown() {
 }
 
 function jumpToLatest() {
+    if(no_more) {
+        goDown()
+        return
+    }
+
     let url = `/`
     if($page.params?.space) {
         url = `/${$page.params?.space}`
@@ -776,11 +794,6 @@ function jumpToLatest() {
 
             <div class="inner-wrap" bind:this={wrap}>
 
-                {#if !ready}
-                    <div class="mask-s">
-                        <SkeletonChatEvents />
-                    </div>
-                {/if}
 
 
                 <div class="inner-content fl-co" 
@@ -788,6 +801,10 @@ function jumpToLatest() {
                     class:pbr={ready}
                     on:scroll={trackScroll}
                     bind:this={zone}>
+
+                {#if !ready}
+                    <SkeletonChatEvents />
+                {:else}
 
                     <div class="ob" bind:this={ob}></div>
 
@@ -848,6 +865,8 @@ function jumpToLatest() {
                     {#if is_context}
                     <div class="rob" bind:this={rob}></div>
                     {/if}
+                {/if}
+
 
                 </div>
 
@@ -856,7 +875,8 @@ function jumpToLatest() {
                             {@html down}
                         </div>
                     {/if}
-                    {#if reloadTrigger && !atBottom && is_context}
+
+                    {#if ready && !no_more && is_context}
                         <div class="jump" on:click={jumpToLatest}>
                             See newest messages
                         </div>
@@ -1000,15 +1020,20 @@ function jumpToLatest() {
 .jump {
     opacity: 1;
     position: absolute;
-    padding: 0.5rem;
+    padding: 0.5rem 0.75rem;
     cursor: pointer;
-    border-radius: 6px;
+    border-radius: 500px;
     background: var(--primary);
     fill: var(--text-1);
     z-index: 1000;
     bottom: 1rem;
     right: 1rem;
+
+    font-size: 12px;
     font-weight: 500;
+    text-transform: uppercase;
+    color: var(--text-2);
+    letter-spacing: 1px;
 }
 
 .pbr {

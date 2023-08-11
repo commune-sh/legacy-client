@@ -529,8 +529,6 @@ reply to</a> <a href=\"https://matrix.to/#/${rid}\">@butter:localhost:8480</a><b
             post.content.links = links
         }
 
-        console.log("trying to save", post)
-
         if(isChat && !editing) {
             dispatch('new-message', post)
             busy = false
@@ -540,7 +538,7 @@ reply to</a> <a href=\"https://matrix.to/#/${rid}\">@butter:localhost:8480</a><b
         }
 
         const res = await savePost(post);
-        console.log(res)
+
         if(res?.success && res?.event) {
             dispatch('saved', res.event)
             busy = false

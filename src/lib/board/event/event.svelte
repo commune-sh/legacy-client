@@ -77,7 +77,6 @@ let el;
 
 async function save() {
     const res = await savePost(event)
-    console.log("event was saved ",res)
     if(res?.success) {
         dispatch('saved', { event: res?.event, transaction_id: res?.txn_id })
         /*
@@ -393,7 +392,11 @@ function finishedEditing(e) {
     event.content.title = e.detail.content.title
     event.content.body = e.detail.content.body
     event.content.formatted_body = e.detail.content.formatted_body
+
+    event.edited_on = 1
+
     editing = false
+
     if(isPost) {
         dispatch('edited', event)
     }
@@ -623,9 +626,14 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
                         class:just-emoji={isEmojiOnly}
                         class:unsent={event?.unsent}>
                             {#if redacted}
-                                <span class="del">Message deleted</span>
+                                <span class="del lgh">Message deleted</span>
                             {:else}
+                                <span class="msgc">
                                 {@html content}
+                                {#if wasEdited}
+                                    <span class="edited lgh">(edited)</span>
+                                {/if}
+                                </span>
                             {/if}
                         </div>
                     </div>
@@ -1137,6 +1145,11 @@ div :global(.semj .emoji){
     margin-left: 3rem;
 }
 
+div :global(.msgc p) {
+    display: inline;
+}
+
+
 div :global(.chp img) {
     max-width: 400px;
 }
@@ -1152,13 +1165,17 @@ div :global(.chp pre) {
 .readmore {
     padding: 0.125rem 0.25rem;
 }
-.del {
+.lgh {
     color: var(--text-light);
 }
+
 .just-emoji {
     font-size: 2rem;
 }
 .dis {
     color: var(--text-light);
+}
+.edited {
+    font-size: 12px;
 }
 </style>
