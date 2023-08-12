@@ -2,6 +2,9 @@
 import { PUBLIC_MEDIA_URL, PUBLIC_MATRIX_URL } from '$env/static/public';
 import { store } from '$lib/store/store.js'
 import { prev, next, close } from '$lib/assets/icons.js';
+import { page } from '$app/stores';
+
+$: query = $page.url.searchParams.get('gallery')
 
 $: active = $store.gallery.active && $store.gallery.items?.length > 0
 
@@ -43,11 +46,11 @@ $: name = images[selected]?.name
 </script>
 
 {#if active}
-<div class="mask grd" 
+<div class="mask grd sel-no" 
     on:click|self|stopPropagation={kill}>
     <div class="mod grd-c" >
 
-        <div class="grd-c">
+        <div class="grd-c poin">
             <img src={src}
                 class="" 
                 on:click={open}>
@@ -87,7 +90,7 @@ $: name = images[selected]?.name
     grid-template-columns: auto;
     grid-template-rows: auto;
     background: transparent;
-    max-width: 50%;
+    max-width: 60%;
 }
 
 .prev {
@@ -123,5 +126,8 @@ $: name = images[selected]?.name
     .mod {
         max-width: 80%;
     }
+}
+.poin {
+    cursor: pointer;
 }
 </style>

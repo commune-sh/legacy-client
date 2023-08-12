@@ -1,6 +1,7 @@
 <script>
 import { PUBLIC_MATRIX_URL } from '$env/static/public';
 import { store } from '$lib/store/store.js'
+import { page } from '$app/stores';
 
 export let event;
 
@@ -17,7 +18,13 @@ $: imgSrc = isImage
     : null;
 
 function openImage() {
-    //window.open(imgSrc, '_blank')
+
+    let url = $page.url.href
+    if($page.url.search) {
+        url = `${url}&image=0`
+    } else {
+        url = `${url}?image=0`
+    }
     $store.gallery = {
         active: true,
         items: [{
@@ -26,7 +33,6 @@ function openImage() {
         mxc: true,
         index: 0,
     }
-    console.log($store.gallery)
 }
 
 </script>

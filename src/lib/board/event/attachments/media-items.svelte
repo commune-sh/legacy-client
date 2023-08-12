@@ -3,6 +3,7 @@ import { PUBLIC_MEDIA_URL } from '$env/static/public';
 import { prev, next, play } from '$lib/assets/icons.js'
 import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';
+import { goto } from '$app/navigation';
 
 $: isDomain = $page.params.domain !== undefined && 
     $page.params.domain !== 'undefined' && 
@@ -61,14 +62,28 @@ function goToNext() {
 }
 
 function openImage(index) {
-    /*
-    let url = getURL(selected)
-    window.open(url, '_blank')
-    */
+    let url = $page.url.href
+    if($page.url.search) {
+        url = `${url}&image=${index}`
+    } else {
+        url = `${url}?image=${index}`
+    }
+    $store.gallery = {
+        items: images,
+        index: index || 0
+    }
+}
+function openImageItem() {
+    let url = $page.url.href
+    if($page.url.search) {
+        url = `${url}&image=${images.indexOf(selected) || 0}`
+    } else {
+        url = `${url}?image=${images.indexOf(selected) || 0}`
+    }
     $store.gallery = {
         active: true,
         items: images,
-        index: index || 0
+        index: images.indexOf(selected) || 0
     }
 }
 
@@ -117,7 +132,7 @@ $: videos = media.filter(i => isItemVideo(i))
 
     {#if multiple}
 
-    <div class="items fl mr2 ml3 mt3">
+    <div class="thumbnails fl mr2 ml3 mt3">
         {#each media as item, i}
             <div class="item mr3"
             class:selected={selected.key === item.key}
@@ -141,10 +156,10 @@ $: videos = media.filter(i => isItemVideo(i))
 
         <div class="fl-o"></div>
         <div class="cycle">
-            <div class="c-ico prev grd-c" on:click={goToPrevious}>
+            <div class="c-ico prev grd-c pa1" on:click={goToPrevious}>
                 {@html prev}
             </div>
-            <div class="c-ico next grd-c" on:click={goToNext}>
+            <div class="c-ico next grd-c pa1" on:click={goToNext}>
                 {@html next}
             </div>
         </div>
@@ -154,7 +169,7 @@ $: videos = media.filter(i => isItemVideo(i))
         <div class="pa3 con grd" class:sch={isChat}> 
         {#if isImage}
             <img class="image" class:smg={isChat} 
-            on:click={openImage}
+            on:click={openImageItem}
             width={selected?.info?.w}
             height={selected?.info?.h}
             src={getURL(selected)} 
