@@ -75,6 +75,9 @@ $: indexText = isAll ? `All posts` : authenticated ? `Your feed` : `What's new`
 
 
 function sortItems(state) {
+    if(state?.exists == false) {
+        return []
+    }
     if(!state && !state?.room_id) {
         return []
     }

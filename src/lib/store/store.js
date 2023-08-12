@@ -498,7 +498,7 @@ function createApp() {
 
   let updateSpaceRoomOrder = (space, order) => {
     update(p => {
-      if(p.states[space]) {
+      if(p.states[space]?.space?.settings) {
         p.states[space].space.settings.room_order = order
       }
       return p

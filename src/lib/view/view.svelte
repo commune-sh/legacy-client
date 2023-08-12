@@ -8,6 +8,7 @@ import Board from './board/board.svelte'
 import Chat from './chat/chat.svelte'
 import SkeletonBoardEvents from '$lib/skeleton/skeleton-board-events.svelte'
 import Header from '$lib/header/header.svelte'
+import NotFound from '$lib/errors/not-found.svelte'
 
 $: isSpace = $page?.params?.space !== undefined && $page?.params?.space !== null && $page?.params?.space !== '' 
 $: isRoom = $page?.params?.room !== undefined && $page?.params?.room !== null && $page?.params?.room !== '' 
@@ -56,11 +57,9 @@ $: room_exists = isRoom &&
     {#if ready && space_exists}
 
         {#if isRoom && !room_exists}
-            <div class="grd">
-                <div class="grd-c">
-                    This board does not exist.
-                </div>
-            </div>
+
+            <NotFound />
+
         {:else if isProfile}
             <Board on:ready />
         {:else if showChatView}
@@ -69,11 +68,9 @@ $: room_exists = isRoom &&
             <Board on:ready />
         {/if}
     {:else if ready && !space_exists}
-        <div class="grd">
-            <div class="grd-c">
-                This space does not exist.
-            </div>
-        </div>
+
+        <NotFound />
+
     {:else}
         <div class="space-container">
             <div class="inner-area">
@@ -112,36 +109,6 @@ $: room_exists = isRoom &&
     grid-template-columns: auto;
     grid-template-rows: 48px auto;
     overflow: hidden;
-}
-
-.header {
-    border-bottom: 1px solid var(--border-1);
-}
-
-.post {
-    grid-template-columns: 50% 50%;
-}
-
-.events {
-    place-self: stretch;
-    width: 100%;
-    justify-self: center;
-    align-self: start;
-}
-
-.ina {
-    border-right: 1px solid var(--border-1);
-}
-
-
-
-@media screen and (max-width: 768px) {
-    .post {
-        grid-template-columns: auto;
-    }
-    .ina {
-        display: none;
-    }
 }
 
 </style>
