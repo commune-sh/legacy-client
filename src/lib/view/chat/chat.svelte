@@ -1034,6 +1034,12 @@ function jumpToLatest() {
     bottom:0;
     z-index: 2000;
     overflow-y: auto;
+    scrollbar-width: none; 
+    -ms-overflow-style: none; 
+}
+
+.mask-s::-webkit-scrollbar {
+    display: none; 
 }
 
 .go-down {
@@ -1052,7 +1058,7 @@ function jumpToLatest() {
 .jump {
     opacity: 1;
     position: absolute;
-    padding: 0.5rem 0.75rem;
+    padding: 0.75rem 1rem;
     cursor: pointer;
     border-radius: 500px;
     background: var(--primary);
@@ -1060,11 +1066,10 @@ function jumpToLatest() {
     z-index: 1000;
     bottom: 1rem;
     right: 1rem;
-
     font-size: 12px;
     font-weight: 500;
     text-transform: uppercase;
-    color: var(--text-2);
+    color: white;
     letter-spacing: 1px;
 }
 
