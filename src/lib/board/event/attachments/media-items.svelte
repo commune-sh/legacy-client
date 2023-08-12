@@ -69,6 +69,7 @@ function openImage(index) {
         url = `${url}?image=${index}`
     }
     $store.gallery = {
+        active: true,
         items: images,
         index: index || 0
     }

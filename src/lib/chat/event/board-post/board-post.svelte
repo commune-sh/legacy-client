@@ -31,6 +31,7 @@ function goToPost() {
     goto(url)
 }
 
+
 </script>
 
 <div class="board-post-container" on:click={goToPost}>
@@ -46,6 +47,7 @@ function goToPost() {
 
 <style>
 .board-post-container {
+    margin-top: 0.25rem;
     display: flex;
 }
 
@@ -54,7 +56,7 @@ function goToPost() {
     margin-bottom: 0.5rem;
     margin-right: 1.5rem;
     max-width: 500px;
-    background: var(--event-highlight);
+    background: var(--shade-3);
     border-radius: 7px;
     border: 1px solid transparent;
     padding: 0.5rem 0.75rem;

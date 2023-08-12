@@ -684,11 +684,11 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
 
             {/if}
 
-            {#if (isPost || isReply || isChat) && hasAttachments && media?.length > 0}
+            {#if !isBoardPostInChat && (isPost || isReply || isChat) && hasAttachments && media?.length > 0}
                 <MediaItems media={media} isChat={isChat} />
             {/if}
 
-            {#if (isPost || isReply || isChat) && hasAttachments && files?.length > 0}
+            {#if !isBoardPostInChat && (isPost || isReply || isChat) && hasAttachments && files?.length > 0}
                 <FileItems files={files} isChat={isChat} />
             {/if}
 

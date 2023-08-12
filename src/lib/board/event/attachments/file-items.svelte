@@ -15,7 +15,7 @@ function download(file) {
 
 </script>
 
-<div class="files mh3">
+<div class="files mh3" class:ch={isChat}>
     {#each files as file}
         <div class="file-item mb2 fl" on:click={download(file)}>
             <div class="fl-co mr3">
@@ -79,5 +79,8 @@ function download(file) {
     font-size: 11px;
     font-weight: 500;
     color: var(--text-light);
+}
+.ch {
+    margin-left: calc(30px + 2rem);
 }
 </style>
