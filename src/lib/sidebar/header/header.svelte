@@ -12,6 +12,8 @@ import tippy from 'tippy.js';
 $: state = $store?.states[$page?.params?.space]
 export let ready;
 
+$: stateExists = !state?.error && state?.exists != false
+
 $: name = state?.space?.name ? state?.space?.name : state?.space?.alias ?
     state?.space?.alias : null;
 
@@ -121,9 +123,11 @@ function kill() {
     menu.hide()
 }
 
+
 </script>
 
-{#if isSpace}
+
+{#if isSpace && stateExists}
 <div class="menu" bind:this={content}>
     <SpaceMenu on:kill={kill}/>
 </div>
@@ -134,7 +138,7 @@ function kill() {
     class:profile={isProfile && avatarExists}>
     <div class="con grd">
 
-    {#if isSpace}
+    {#if isSpace && stateExists}
 
             <div class="space fl"
                 class:sp={authenticated && !headerExists}

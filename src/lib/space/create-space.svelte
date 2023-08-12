@@ -123,6 +123,9 @@ let isPublic = true;
 
 function togglePublic() {
     isPublic = !isPublic
+    if(!isPublic) {
+        username = null
+    }
 }
 
 let avatar = null;

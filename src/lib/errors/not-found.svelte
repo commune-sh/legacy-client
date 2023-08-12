@@ -1,6 +1,7 @@
 <script>
 import Logo from '$lib/logo/logo.svelte'
 import { store } from '$lib/store/store.js'
+import { ghost } from '$lib/assets/icons.js'
 
 function discover() {
     $store.discoverSpacesOpen = true
@@ -16,7 +17,10 @@ function discover() {
 
         <div class="grd">
             <div class="grd-c fl-co">
-                <div class="grd-c">
+                <div class="grd-c ghost">
+                    {@html ghost}
+                </div>
+                <div class="grd-c mt4">
                     Could not find that page.
                 </div>
                 <div class="mt4 grd-c">
@@ -61,7 +65,18 @@ function discover() {
     }
 }
 
-.bl {
-    display: inline-block;
+.ghost {
+    fill: var(--text-1);
+    height: 80px;
+    width: 80px;
+    animation: float 2s ease-in-out infinite;
+}
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(0.5rem);
+    }
 }
 </style>
