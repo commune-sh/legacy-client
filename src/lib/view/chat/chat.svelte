@@ -226,7 +226,7 @@ async function loadMessages() {
     }, 1000)
 }
 
-$: if(ready) {
+$: if(ready && !is_context) {
     requestAnimationFrame(animate);
 }
 
