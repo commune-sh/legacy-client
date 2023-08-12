@@ -522,7 +522,7 @@ function addNewReaction(e) {
 }
 
 async function isTyping() {
-    if (socket.readyState === WebSocket.OPEN) {
+    if (socket?.readyState === WebSocket.OPEN) {
         socket.send(JSON.stringify({
             type: 'typing',
             value: $store?.credentials?.matrix_user_id

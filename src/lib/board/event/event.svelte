@@ -541,6 +541,8 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
     class:highlight={highlight || !interactive} role="button">
 
     {#if isChat && context}
+        <div class="pbar">
+        </div>
         <div class="perma">
             Permalink
         </div>
@@ -560,7 +562,6 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
 
     <div class="ev-c fl-co"
     class:shs={isChat && showSender}
-    class:chm={isChat}
     class:ovy={!interactive}>
 
     {#if has_reply && interactive}
@@ -598,7 +599,7 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
 
         <div class="body" class:nonin={!interactive}
             class:semj={isSingleCustomEmoji}
-            class:ch={isChat && !isBoardPostInChat && !redacted}>
+            class:ch={isChat && !isBoardPostInChat && !redacted && !context}>
 
             {#if editing && interactive}
 
@@ -905,9 +906,11 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
 }
 
 .context {
-    border: 1px solid var(--primary);
+    background-color: var(--event-context);
 }
+
 .context:hover {
+    background-color: var(--event-context);
 }
 
 
@@ -1109,18 +1112,25 @@ div :global(.semj .emoji){
     border-radius: 0 0 0 7px;
 }
 
+.pbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    border-left: 4px solid var(--primary);
+}
+
 .perma {
     position: absolute;
-    top: -20px;
     right: 0;
     cursor: pointer;
     z-index: 100;
     font-weight: 500;
     font-size: small;
-    color: var(--text-1);
+    color: white;
     background: var(--primary);
     padding: 0.25rem 0.5rem;
-    border-radius: 3px 3px 0 0;
+    border-radius: 4px;
 }
 
 .hide {
@@ -1133,10 +1143,6 @@ div :global(.semj .emoji){
     grid-template-columns: calc(30px + 2rem) 1fr;
     padding-top: 0.1rem;
     padding-bottom: 0.1rem;
-}
-
-.event:hover .chm {
-    background-color: var(--event-bg-hover);
 }
 
 .chti {
@@ -1153,6 +1159,10 @@ div :global(.semj .emoji){
 }
 .rch {
     margin-left: 3rem;
+}
+
+.msgc {
+    max-width: 95%;
 }
 
 div :global(.msgc p) {
