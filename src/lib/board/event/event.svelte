@@ -698,7 +698,10 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
 
 
 
-            <div class="rec-a fl ph3" class:rch={isChat}>
+            <div class="rec-a fl ph3" 
+                class:pb2={isChat && (event?.reply_count > 0 ||
+                    event.reactions?.length > 0)}
+                class:rch={isChat}>
 
                 {#if !isReply && interactive && !(isChat && !isBoardPostInChat)}
                     {#if isBoardPostInChat}

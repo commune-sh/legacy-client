@@ -112,8 +112,7 @@ $: videos = media.filter(i => isItemVideo(i))
                     <img class="image" class:smg={isChat} 
                             on:click={() => openImage(i)}
                     width={item?.info?.w > 500 ? 500 : item?.info?.w}
-                    src={getURL(item)} 
-                    loading="lazy"/>
+                    src={getURL(item)} />
                 </div>
             {/each}
 

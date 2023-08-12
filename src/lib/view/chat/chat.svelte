@@ -208,6 +208,7 @@ async function loadMessages() {
     }
 
     ready = true;
+
     _page = $page
     if(!is_context) {
         syncMessages()
@@ -215,6 +216,22 @@ async function loadMessages() {
     setTimeout(() => {
         reloadTrigger = true
     }, 1000)
+}
+
+$: if(ready) {
+    requestAnimationFrame(animate);
+}
+
+let st;
+function animate(ts) {
+    if (!st) {
+      st = ts;
+    }
+    const et = ts - st;
+    if (et < 1000) { 
+      updateScroll();
+      requestAnimationFrame(animate);
+    }
 }
 
 let sp;
@@ -792,8 +809,13 @@ function jumpToLatest() {
 
         <div class="inner" class:users={showUsers}>
 
-            <div class="inner-wrap" bind:this={wrap}>
+            <div class="inner-wrap" class:inw={ready} bind:this={wrap}>
 
+                {#if !ready}
+                <div class="mask-s">
+                    <SkeletonChatEvents />
+                </div>
+                {/if}
 
 
                 <div class="inner-content fl-co" 
@@ -802,9 +824,6 @@ function jumpToLatest() {
                     on:scroll={trackScroll}
                     bind:this={zone}>
 
-                {#if !ready}
-                    <SkeletonChatEvents />
-                {:else}
 
                     <div class="ob" bind:this={ob}></div>
 
@@ -865,7 +884,7 @@ function jumpToLatest() {
                     {#if is_context}
                     <div class="rob" bind:this={rob}></div>
                     {/if}
-                {/if}
+
 
 
                 </div>
@@ -978,9 +997,13 @@ function jumpToLatest() {
 
 .inner-wrap {
     display: grid;
+    position: relative;
+    overflow:hidden;
+}
+
+.inw {
     overflow-y: auto;
     overflow-x: hidden;
-    position: relative;
 }
 
 .users {
