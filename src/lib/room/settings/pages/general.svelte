@@ -268,6 +268,30 @@ async function updateIndex(e) {
     console.log(res)
 }
 
+let nsfwInput
+
+$: isNSFW = room?.settings?.nsfw
+
+async function updateNSFW(e) {
+
+    if(nsfwInput.checked == isNSFW) {
+        return
+    }
+
+    store.updateSpaceRoomNSFW($page.params.space, roomID, nsfwInput.checked)
+
+    let settings = room.settings
+    settings.nsfw = nsfwInput.checked
+
+    const res = await createStateEvent({
+        room_id: roomID,
+        event_type: 'room.settings',
+        content: settings
+    })
+    console.log(res)
+
+}
+
 </script>
 
 <div class="sco grd-c">
@@ -380,6 +404,27 @@ async function updateIndex(e) {
                 </div>
             </div>
         </div>
+
+        <div class="mt3 pb2">
+            <span class="label">nsfw</span>
+        </div>
+        <div class="mt1 pb2">
+            <div class="fl">
+                <div class="grd-c mr2 fl-o">
+                    <label for="ver">
+                        Mark this room as NSFW
+                    </label>
+                </div>
+                <div class="grd-c">
+                    <input id="ver" type="checkbox" 
+                        bind:this={nsfwInput}
+                        checked={isNSFW}
+                        on:change={updateNSFW}
+                        bind:value={isNSFW} />
+                </div>
+            </div>
+        </div>
+
 
 
         <div class="mt3 fl">

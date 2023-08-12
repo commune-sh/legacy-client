@@ -649,12 +649,29 @@ function createApp() {
     })
   }
 
+  let updateSpaceNSFW = (space, nsfw) => {
+    update(p => {
+      p.states[space].space.settings.nsfw = nsfw
+      return p
+    })
+  }
+
 
   let updateSpaceRoomDoNotIndex = (space, room_id, dni) => {
     update(p => {
       let ind = p.states[space]?.children?.findIndex(x => x.room_id == room_id)
       if(ind !== -1) {
         p.states[space].children[ind].do_not_index = dni
+      }
+      return p
+    })
+  }
+
+  let updateSpaceRoomNSFW = (space, room_id, nsfw) => {
+    update(p => {
+      let ind = p.states[space]?.children?.findIndex(x => x.room_id == room_id)
+      if(ind !== -1) {
+        p.states[space].children[ind].settings.nsfw = nsfw
       }
       return p
     })
@@ -1021,6 +1038,8 @@ function createApp() {
     addThreadEvent,
     updateSpaceRoomOrder,
     addSpaceRoomOrderItem,
+    updateSpaceNSFW,
+    updateSpaceRoomNSFW
   };
 }
 
