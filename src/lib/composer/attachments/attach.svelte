@@ -183,7 +183,6 @@ function upload() {
     {@html add}
     <input 
         type="file" 
-        accept="image/*, video/*"
         name="images"
         bind:this={fileInput} 
         on:change={build} 

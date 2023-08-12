@@ -10,6 +10,7 @@ import { goto } from '$app/navigation';
 import MediaThumbnail from './attachments/media-thumbnail.svelte'
 import LinkThumbnail from './links/link-thumbnail.svelte'
 import MediaItems from './attachments/media-items.svelte'
+import FileItems from './attachments/file-items.svelte'
 import Reactions from '$lib/board/event/reactions/reactions.svelte'
 import Replies from '$lib/board/event/replies/replies.svelte'
 import User from './user/user.svelte'
@@ -282,6 +283,8 @@ a?.type?.startsWith('video'))
 $: firstIsMedia = attachments?.[0]?.type?.startsWith('image') ||
     attachments?.[0]?.type?.startsWith('video')
 
+$: files = attachments?.filter(a => !a?.type?.startsWith('image') &&
+!a?.type?.startsWith('video'))
 
 
 $: highlight = $page.params.post === event?.slug && !isPost && !isChat
@@ -681,8 +684,12 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
 
             {/if}
 
-            {#if (isPost || isReply || isChat) && hasAttachments && media}
+            {#if (isPost || isReply || isChat) && hasAttachments && media?.length > 0}
                 <MediaItems media={media} isChat={isChat} />
+            {/if}
+
+            {#if (isPost || isReply || isChat) && hasAttachments && files?.length > 0}
+                <FileItems files={files} isChat={isChat} />
             {/if}
 
             {#if (isPost || isReply || isChat) && hasLinks}

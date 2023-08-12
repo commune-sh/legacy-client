@@ -3,6 +3,7 @@ import { tick, onMount, onDestroy, createEventDispatcher } from 'svelte'
 import { store } from '$lib/store/store.js'
 import ImageItem from './image-item.svelte'
 import VideoItem from './video-item.svelte'
+import FileItem from './file-item.svelte'
 
 export let roomID;
 export let uploading;
@@ -29,6 +30,12 @@ $: isVideo = (attachment) => {
             index={index} />
     {:else if isVideo(attachment)}
         <VideoItem 
+            item={attachment} 
+            roomID={roomID} 
+            uploading={uploading} 
+            index={index} />
+    {:else}
+        <FileItem
             item={attachment} 
             roomID={roomID} 
             uploading={uploading} 

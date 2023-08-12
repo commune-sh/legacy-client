@@ -773,7 +773,14 @@ function createApp() {
 
   let deleteAttachment = (room_id, index) => {
     update(p => {
-      p.editorStates[room_id]?.attachments.splice(index, 1)
+      p.editorStates[room_id].attachments.splice(index, 1)
+      return p
+    })
+  }
+
+  let updateAttachmentName = (room_id, index, name) => {
+    update(p => {
+      p.editorStates[room_id].attachments[index].newname = name
       return p
     })
   }
@@ -995,6 +1002,7 @@ function createApp() {
     deleteEditorState,
     addAttachment,
     deleteAttachment,
+    updateAttachmentName,
     addLink,
     deleteLink,
     toggleTheme,

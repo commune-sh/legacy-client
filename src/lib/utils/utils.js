@@ -253,3 +253,35 @@ export function extractMatrixID(inputString) {
         return null;
     }
 }
+
+export function formatFileSize(size) {
+    const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+    let i = 0;
+
+    while (size >= 1024 && i < units.length - 1) {
+        size /= 1024;
+        i++;
+    }
+    return size.toFixed(2) + ' ' + units[i];
+}
+
+export function downloadFile(url, filename) {
+    fetch(url)
+        .then(response => response.blob())
+        .then(blob => {
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename || getFileNameFromUrl(url);
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+        })
+        .catch(error => console.error('Error downloading file:', error));
+}
+
+function getFileNameFromUrl(url) {
+    const parts = url.split('/');
+    return parts[parts.length - 1];
+}
