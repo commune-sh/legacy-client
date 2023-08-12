@@ -154,7 +154,6 @@ $: if(reloadTrigger && ($page.params?.topic != _page?.params?.topic)) {
 $: if(reloadTrigger && ($page.url?.searchParams.get('context') != 
     _page?.url?.searchParams.get('context'))) {
 
-    console.log('context changed', context_event_id)
     setTimeout(() => {
         loadMessages()
     }, 10)
@@ -576,6 +575,7 @@ function setupObserver() {
     observer.observe(ob);
 }
 
+let revob;
 function setupReverseObserver() {
     let options = {
         root: zone,
@@ -592,8 +592,8 @@ function setupReverseObserver() {
         });
     };
 
-    let observer = new IntersectionObserver(callback, options);
-    observer.observe(rob);
+    revob = new IntersectionObserver(callback, options);
+    revob.observe(rob);
 }
 
 let atBottom;
@@ -780,24 +780,43 @@ function goDown() {
     zone.scrollTop = zone.scrollHeight;
 }
 
-function jumpToLatest() {
+let jumping = false;
+
+async function jumpToLatest() {
     if(no_more) {
         goDown()
         return
     }
+    jumping = true
 
-    let url = `/`
-    if($page.params?.space) {
-        url = `/${$page.params?.space}`
-    }
-    if($page.params?.room) {
-        url = `/${$page.params?.space}/${$page.params?.room}`
+    if(revob) {
+        revob.disconnect()
     }
 
-    if($page.url.search.includes('?view=chat')) {
-        url = `${url}?view=chat`
+
+    let endpoint = PUBLIC_API_URL
+
+    if(isDomain && $store.federated?.active && $store.federated.endpoint) {
+        endpoint = $store.federated?.endpoint
     }
-    goto(url)
+
+    let url = `${endpoint}/room/${roomID}/messages`
+
+    if($page.params.topic) {
+        url = url + `?topic=${$page.params.topic}`
+    }
+
+    let opt = {
+      url: url,
+      method: 'GET',
+    }
+    const resp = await loadPosts(opt)
+    if(resp?.events) {
+        jumping = false
+        requestAnimationFrame(animate);
+        messages = resp?.events.reverse()
+        $store.events[roomID] = messages
+    }
 }
 
 </script>
@@ -904,8 +923,15 @@ function jumpToLatest() {
                     {/if}
 
                     {#if ready && !no_more && is_context}
-                        <div class="jump" on:click={jumpToLatest}>
-                            See newest messages
+                        <div class="jump fl" on:click={jumpToLatest}>
+                            {#if jumping}
+                                <div class="sloader ma1">
+                                </div>
+                            {:else}
+                                <div class="grd-c">
+                                    See newest messages
+                                </div>
+                            {/if}
                         </div>
                     {/if}
 
@@ -1135,6 +1161,11 @@ function jumpToLatest() {
 
 .adbo {
     border-right: 1px solid var(--border-1);
+}
+.sloader {
+    border-top: 2px solid white;
+    border-right: 2px solid white;
+    border-bottom: 2px solid white;
 }
 </style>
 

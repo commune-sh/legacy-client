@@ -562,6 +562,7 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
 
     <div class="ev-c fl-co"
     class:shs={isChat && showSender}
+    class:chm={isChat}
     class:ovy={!interactive}>
 
     {#if has_reply && interactive}
@@ -906,11 +907,11 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
 }
 
 .context {
-    background-color: var(--event-context);
+    background-color: var(--event-highlight);
 }
 
 .context:hover {
-    background-color: var(--event-context);
+    background-color: var(--event-highlight);
 }
 
 
@@ -1122,7 +1123,8 @@ div :global(.semj .emoji){
 
 .perma {
     position: absolute;
-    right: 0;
+    top: -10px;
+    right: 0.25rem;
     cursor: pointer;
     z-index: 100;
     font-weight: 500;
@@ -1143,6 +1145,10 @@ div :global(.semj .emoji){
     grid-template-columns: calc(30px + 2rem) 1fr;
     padding-top: 0.1rem;
     padding-bottom: 0.1rem;
+}
+
+.event:hover .chm {
+    background-color: var(--event-bg-hover);
 }
 
 .chti {
