@@ -169,9 +169,17 @@ $: is_context = $page.url?.searchParams?.get('context') !== null &&
     $page.url?.searchParams?.get('context') !== ''
 $: context_event_id = $page.url?.searchParams?.get('context')
 
+let skeleton;
+
+$: if(skeleton) {
+    skeleton.scrollTop = skeleton.scrollHeight;
+}
+
 async function loadMessages() {
     ready = false;
+
     messages = null
+
     if(socket) {
         socket.close()
     }
@@ -812,7 +820,7 @@ function jumpToLatest() {
             <div class="inner-wrap" class:inw={ready} bind:this={wrap}>
 
                 {#if !ready}
-                <div class="mask-s">
+                    <div class="mask-s" bind:this={skeleton}>
                     <SkeletonChatEvents />
                 </div>
                 {/if}
@@ -1025,6 +1033,7 @@ function jumpToLatest() {
     right:0;
     bottom:0;
     z-index: 2000;
+    overflow-y: auto;
 }
 
 .go-down {
