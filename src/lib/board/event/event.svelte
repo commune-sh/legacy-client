@@ -103,7 +103,7 @@ onMount(() => {
             el.scrollIntoView({ behavior: "smooth" });
         }
     }
-    if(hasFullBody && isPost) {
+    if(hasFullBody && (isPost || isReply)) {
         loadFullBody()
     }
 })

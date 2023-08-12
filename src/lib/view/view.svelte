@@ -72,11 +72,8 @@ $: room_exists = isRoom &&
         <NotFound />
 
     {:else}
-        <div class="space-container">
-            <div class="inner-area">
-                <Header />
-                <SkeletonBoardEvents />
-            </div>
+        <div class="grd">
+            <div class="loader grd-c"></div>
         </div>
     {/if}
 {:else}
