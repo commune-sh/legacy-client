@@ -813,6 +813,7 @@ async function jumpToLatest() {
     const resp = await loadPosts(opt)
     if(resp?.events) {
         jumping = false
+        no_more = true
         requestAnimationFrame(animate);
         messages = resp?.events.reverse()
         $store.events[roomID] = messages
