@@ -875,6 +875,8 @@ function attachmentDeleted() {
     composer.focusBodyInput()
 }
 
+$: scrolled = zone ? zone?.scrollHeight > zone?.clientHeight : false
+
 </script>
 
 
@@ -972,7 +974,7 @@ function attachmentDeleted() {
 
                 </div>
 
-                    {#if reloadTrigger && !atBottom && !is_context}
+                    {#if reloadTrigger && !atBottom && !is_context && scrolled}
                         <div class="c-ico go-down" on:click={goDown}>
                             {@html down}
                         </div>
