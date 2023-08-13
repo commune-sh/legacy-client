@@ -697,6 +697,7 @@ async function newMessage(e) {
 
     await tick()
     updateScroll()
+    requestAnimationFrame(animate);
 }
 
 async function saved(e) {
@@ -865,6 +866,15 @@ function purgeContext() {
     goto(url)
 }
 
+function attached() {
+    updateScroll()
+    composer.focusBodyInput()
+}
+
+function attachmentDeleted() {
+    composer.focusBodyInput()
+}
+
 </script>
 
 
@@ -1009,6 +1019,8 @@ function purgeContext() {
             {#if Composer && joinedRoom}
                 <div class="chat-composer">
                     <Composer 
+                        on:attached={attached}
+                        on:deleted={attachmentDeleted}
                         bind:this={composer}
                         topic={$page.params.topic}
                         on:typing={isTyping}

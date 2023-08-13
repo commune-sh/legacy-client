@@ -43,7 +43,7 @@ $: mediaType = media?.[0]?.type
     {:else if isVideo}
         <div class="vbg at-img grd-c" >
 
-            <video width="85" height="85">
+            <video width="70" height="70">
               <source src={getURL(media[0])} type={mediaType} autoplay muted>
             </video>
 

@@ -3,6 +3,8 @@ import { tick, onMount, onDestroy, createEventDispatcher } from 'svelte'
 import { store } from '$lib/store/store.js'
 import { file, close } from '$lib/assets/icons.js'
 
+const dispatch = createEventDispatcher();
+
 export let item;
 export let roomID;
 export let index;
@@ -11,6 +13,7 @@ export let uploading;
 
 function deleteAttachment() {
     store.deleteAttachment(roomID, index)
+    dispatch('deleted', true)
 }
 
 let nameInput;
@@ -19,6 +22,8 @@ let name;
 onMount(() => {
     name = item.name
     nameInput.placeholder = item.name
+
+    dispatch('attached', true)
 })
 
 function updateName() {

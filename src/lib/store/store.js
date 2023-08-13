@@ -98,6 +98,7 @@ function createApp() {
     roomViews: [],
     showRoomUsers: false,
     roomMembers: [],
+    attachments: [],
   }
 
   let theme = localStorage.getItem(`theme`) || "{}"
@@ -778,6 +779,22 @@ function createApp() {
     })
   }
 
+  let updateAttachmentURL = (room_id, index, key) => {
+    update(p => {
+      p.editorStates[room_id].attachments[index].key = key
+      p.editorStates[room_id].attachments[index].uploaded = true
+      return p
+    })
+  }
+  let updateAttachmentThumbnail = (room_id, index, key) => {
+    update(p => {
+      p.editorStates[room_id].attachments[index].thumbnail = {
+        key: key,
+      }
+      return p
+    })
+  }
+
   let updateAttachmentName = (room_id, index, name) => {
     update(p => {
       p.editorStates[room_id].attachments[index].newname = name
@@ -1003,6 +1020,8 @@ function createApp() {
     addAttachment,
     deleteAttachment,
     updateAttachmentName,
+    updateAttachmentURL,
+    updateAttachmentThumbnail,
     addLink,
     deleteLink,
     toggleTheme,
@@ -1047,7 +1066,7 @@ function createApp() {
     updateSpaceRoomOrder,
     addSpaceRoomOrderItem,
     updateSpaceNSFW,
-    updateSpaceRoomNSFW
+    updateSpaceRoomNSFW,
   };
 }
 

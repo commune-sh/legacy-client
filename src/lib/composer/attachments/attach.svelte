@@ -16,6 +16,7 @@ onMount (() => {
 })
 
 export let busy;
+export let isChat;
 
 const dispatch = createEventDispatcher()
 
@@ -117,7 +118,7 @@ let build = async (e) => {
             });
         }
 
-        file.is = uuidv4()
+        file.id = uuidv4()
 
         files = [...files, file]
     }

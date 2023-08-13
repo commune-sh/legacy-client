@@ -227,7 +227,7 @@ $: safari = isSafari()
                 reaction={reaction} />
             {/if}
         {/each}
-    {#if !safari && hovered && !bannedFromSpace}
+        {#if !safari && processed?.length > 0 && !bannedFromSpace}
     <div class="grd re" class:ml2={ml}>
         <React 
             isReply={isReply} 

@@ -1,7 +1,10 @@
 <script>
+import {getPresignedURL, uploadAttachment, UploadWithProgress } from '$lib/utils/request.js'
 import { tick, onMount, onDestroy, createEventDispatcher } from 'svelte'
 import { store } from '$lib/store/store.js'
 import { close } from '$lib/assets/icons.js'
+
+const dispatch = createEventDispatcher();
 
 export let item;
 export let roomID;
@@ -12,6 +15,9 @@ let imageURL;
 
 let ready = false;
 
+
+let uploaded = false;
+
 onMount(() => {
     const reader = new FileReader();
 
@@ -21,10 +27,35 @@ onMount(() => {
     };
 
     reader.readAsDataURL(item);
+    dispatch('attached', true)
+
+    upload()
 })
+
+let percent = 0;
+
+async function upload() {
+    const extension = item.name.split('.').pop();
+    const presignedURL = await getPresignedURL(extension);
+    //await uploadAttachment(item, presignedURL.url);
+    await UploadWithProgress(presignedURL.url, item, (progress) => {
+        percent = progress
+    }, (error, res) => {
+        if (error) {
+            console.error('Upload failed:', error);
+        } else {
+            console.log('Upload completed:', res);
+            console.log(presignedURL)
+            store.updateAttachmentURL(roomID, index, presignedURL.key)
+            uploaded = true;
+            dispatch('uploaded', true)
+        }
+    })
+}
 
 function deleteAttachment() {
     store.deleteAttachment(roomID, index)
+    dispatch('deleted', true)
 }
 
 </script>
@@ -41,9 +72,14 @@ function deleteAttachment() {
     </div>
     {/if}
     {#if uploading}
-        <div class="mask grd">
+        <div class="mk grd">
             <div class="loader grd-c">
             </div>
+        </div>
+    {/if}
+    {#if !uploaded && percent < 100}
+        <div class="mk grd">
+            <progress id="file" value={percent} max="100"></progress>
         </div>
     {/if}
 </div>
@@ -52,14 +88,12 @@ function deleteAttachment() {
 {/if}
 
 <style>
-.mask {
+.mk {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--mask);
-    border-radius: 14px;
+    height: 4px;
+    left: 0.5rem;
+    right: 0.5rem;
+    bottom: 0.5rem;
 }
 .item {
     width: 170px;
@@ -77,6 +111,12 @@ function deleteAttachment() {
     background-size: cover;
     background-position: center;
     border-radius: 14px;
+}
+
+.up {
+    position: absolute;
+    bottom: 6px;
+    left: 6px;
 }
 
 .close {

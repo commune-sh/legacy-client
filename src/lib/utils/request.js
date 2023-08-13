@@ -93,6 +93,29 @@ export async function uploadAttachment(file, url) {
   return data;
 }
 
+export function UploadWithProgress(url, file, onProgress, onComplete) {
+  const xhr = new XMLHttpRequest();
+  xhr.open('PUT', url, true);
+
+  xhr.upload.onprogress = function(event) {
+    if (event.lengthComputable) {
+      const percentComplete = (event.loaded / event.total) * 100;
+      onProgress(percentComplete);
+    }
+  };
+
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        onComplete(null, xhr.responseText);
+      } else {
+        onComplete(new Error(`Upload failed with status ${xhr.status}`));
+      }
+    }
+  };
+  xhr.send(file);
+}
+
 export async function uploadImage(file, url) {
     let options = {
       method: "POST",

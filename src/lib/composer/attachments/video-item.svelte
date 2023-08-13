@@ -3,6 +3,8 @@ import { tick, onMount, onDestroy, createEventDispatcher } from 'svelte'
 import { store } from '$lib/store/store.js'
 import { close, video } from '$lib/assets/icons.js'
 
+const dispatch = createEventDispatcher();
+
 export let item;
 export let roomID;
 export let index;
@@ -15,10 +17,12 @@ let ready = false;
 onMount(() => {
     videoURL = URL.createObjectURL(item);
     ready = true
+    dispatch('attached', true)
 })
 
 function deleteAttachment() {
     store.deleteAttachment(roomID, index)
+    dispatch('deleted', true)
 }
 
 </script>

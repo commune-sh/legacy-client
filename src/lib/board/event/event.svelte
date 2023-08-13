@@ -76,22 +76,33 @@ $: isTopic = $page.params.topic !== undefined && $page.params.topic !== null &&
 
 let el;
 
+$: uploaded = event?.content?.attachments ?
+    event?.content?.attachments?.every(item => $store.attachments[item.id]?.key != null) : true
+
+$: total = event?.content?.attachments?.length * 100
+$: progress = (event.unsent && event?.content?.attachments) ?
+    event?.content?.attachments?.reduce((sum, item) => sum + $store.attachments[item.id].progress, 0) : 0
+
+$: percent = progress / total * 100
+
+$: if(event?.unsent && uploaded) {
+    save()
+}
+
 async function save() {
+    if(event.content.attachments) {
+        event.content.attachments.forEach(item => {
+            item.key = $store.attachments[item.id]?.key
+            delete item.id;
+        })
+    }
     const res = await savePost(event)
     if(res?.success) {
         dispatch('saved', { event: res?.event, transaction_id: res?.txn_id })
-        /*
-        event.unsent = false
-        event = res?.event
-        event = event
-        */
     }
 }
 
 onMount(() => {
-    if(event?.unsent) {
-        save()
-    }
 
     if (context && isChat) {
         if(el) {
@@ -614,7 +625,7 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
                     on:saved={finishedEditing}
                     on:kill={stopEditing}/>
 
-            {:else if isMatrixMedia}
+            {:else if isMatrixMedia && !attachments}
                 <MatrixMedia {event}/>
             {:else if !isIMG}
 
@@ -686,13 +697,31 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
 
             {/if}
 
-            {#if !isBoardPostInChat && (isPost || isReply || isChat) && hasAttachments && media?.length > 0}
-                <MediaItems media={media} isChat={isChat} />
+
+            {#if event?.unsent && !uploaded && isChat}
+                <div class="uploading fl-co pa2">
+                    <div class="">
+                        Uploading...
+                    </div>
+                    <div class="">
+                        <progress  value={percent} max="100"></progress>
+                    </div>
+                </div>
+
+            {:else}
+
+                {#if !isBoardPostInChat && (isPost || isReply || isChat) && hasAttachments && media?.length > 0}
+
+                    <MediaItems media={media} isChat={isChat} />
+                {/if}
+
+                {#if !isBoardPostInChat && (isPost || isReply || isChat) && hasAttachments && files?.length > 0}
+                    <FileItems files={files} isChat={isChat} />
+                {/if}
+
             {/if}
 
-            {#if !isBoardPostInChat && (isPost || isReply || isChat) && hasAttachments && files?.length > 0}
-                <FileItems files={files} isChat={isChat} />
-            {/if}
+
 
             {#if (isPost || isReply || isChat) && hasLinks}
                 <Links event={event} isChat={isChat} />
@@ -765,7 +794,7 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
 
 
         {#if !safari && displayTools && !editing && interactive &&
-            !bannedFromSpace && !dragging && !redacted}
+            !bannedFromSpace && !dragging && !redacted && !event?.unsent}
         <div class="tools" 
             class:chto={isChat && !showSender}
             class:asi={event?.pinned || replyPinned}>
@@ -1203,5 +1232,11 @@ div :global(.chp pre) {
 }
 .edited {
     font-size: 12px;
+}
+.uploading {
+    background-color: var(--shade-3);
+    margin-left: calc(30px + 2rem);
+    max-width: 400px;
+    border-radius: 5px;
 }
 </style>

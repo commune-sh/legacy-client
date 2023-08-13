@@ -5,7 +5,8 @@ import { eye, send, close } from '$lib/assets/icons.js'
 import { page } from '$app/stores';
 import {getPresignedURL, uploadAttachment, savePost,
     getLinkMetadata } from '$lib/utils/request.js'
-import { replaceEmoji, trimBody } from '$lib/utils/utils.js'
+import {UploadWithProgress } from '$lib/utils/request.js'
+import { replaceEmoji, trimBody, resizeImage } from '$lib/utils/utils.js'
 import { md } from './md/md.js'
 import autosize from '$lib/vendor/autosize/autosize'
 import { store } from '$lib/store/store.js'
@@ -266,6 +267,8 @@ let uploading = false;
 $: postText = uploading ? 'Uploading...' : busy ? 'Saving...' : 'Save'
 
 
+let processed = false;
+
 async function createPost() {
 
     let title;
@@ -323,33 +326,25 @@ async function createPost() {
         if(attachments) {
             uploading = true
             for (const file of attachments) {
-                const extension = file.name.split('.').pop();
-                const presignedURL = await getPresignedURL(extension);
-                await uploadAttachment(file, presignedURL.url);
                 let item = {
+                    id: file.id,
                     name: file?.newname ? file.newname : file.name,
                     size: file.size,
                     type: file.type,
                     info: file.info,
-                    key: presignedURL.key,
                 }
 
-                if(!isChat && file.type.startsWith('image')){
-                    const thumbnailURL = await getPresignedURL(extension);
-                    await uploadAttachment(file.thumbnail, thumbnailURL.url);
+                let key = $store.attachments[file.id]?.key
+
+                if(key) {
+                    item.key = key
+                }
+                if(file?.thumbnail?.key) {
                     item.thumbnail = {
-                        key: thumbnailURL.key,
+                        key: file.thumbnail.key,
                     }
                 }
-                /*
-                if(file.type.startsWith('video')){
-                    const previewURL = await getPresignedURL('jpeg');
-                    await uploadAttachment(file.preview, previewURL.url);
-                    item.preview = {
-                        key: previewURL.key,
-                    }
-                }
-                */
+
                 if(file.info) {
                     item.info = file.info
                 }
@@ -537,25 +532,35 @@ reply to</a> <a href=\"https://matrix.to/#/${rid}\">@butter:localhost:8480</a><b
             return
         }
 
-        const res = await savePost(post);
+        data = post
+        processed = true
 
-        if(res?.success && res?.event) {
-            dispatch('saved', res.event)
-            busy = false
-            kill()
-        }
 
     } catch (error) {
         console.error('Error:', error);
     }
+}
 
+let data;
 
-    /*
-    dispatch('create', {
-        title: titleInput.value,
-        body: bodyInput.value,
+$: uploaded = attachments ? attachments?.every(item => $store.attachments[item.id].key != null ) : true
+
+$: if(!isChat && processed && uploaded) {
+    save()
+}
+
+async function save() {
+    data.content.attachments.forEach(item => {
+        item.key = $store.attachments[item.id].key
+        delete item.id
     })
-    */
+    const res = await savePost(data);
+    if(res?.success && res?.event) {
+        dispatch('saved', res.event)
+        busy = false
+        kill()
+    }
+
 }
 
 function reset() {
@@ -644,14 +649,36 @@ function updateContent() {
     }
 }
 
+async function upload(item) {
+
+    $store.attachments[item.id] = {
+        progress: 10,
+    }
+
+    const extension = item.name.split('.').pop();
+    const presignedURL = await getPresignedURL(extension);
+
+    await UploadWithProgress(presignedURL.url, item, (progress) => {
+        $store.attachments[item.id].progress = progress
+    }, (error, res) => {
+        if (error) {
+            console.error('Upload failed:', error);
+        } else {
+            $store.attachments[item.id].key = presignedURL.key
+            console.log($store.attachments[item.id])
+        }
+    })
+}
 
 function attachFiles(e) {
     e.detail.forEach(file => {
+        upload(file)
         store.addAttachment({
             room_id: stateKey,
             attachment: file,
         })
     })
+    focusBodyInput()
 }
 
 function handleTitlePaste(event) {
@@ -749,6 +776,7 @@ function insertEmoji(e) {
 $: attachments = $store.editorStates[stateKey]?.attachments
 $: showAttachments = $store.editorStates[stateKey]?.attachments?.length > 0;
 
+
 $: links = $store.editorStates[stateKey]?.links
 $: showLinks = $store.editorStates[stateKey]?.links?.length > 0;
 
@@ -810,7 +838,12 @@ function updateEditorContent(e) {
     {/if}
 
     {#if showAttachments && isChat}
-        <Attachments uploading={uploading} roomID={stateKey}/>
+        <Attachments 
+            on:attached 
+            on:deleted
+            isChat={isChat}
+            uploading={uploading} 
+            roomID={stateKey}/>
     {/if}
 
     {#if showLinks && isChat}
@@ -845,7 +878,7 @@ function updateEditorContent(e) {
 
         {#if isChat && !editing}
             <div class="pl3 pt3">
-                <Attach busy={busy} on:attached={attachFiles}/>
+                <Attach isChat={isChat} busy={busy} on:attached={attachFiles}/>
             </div>
         {/if}
 
@@ -910,7 +943,12 @@ function updateEditorContent(e) {
     </div>
 
     {#if showAttachments && !isChat}
-        <Attachments uploading={uploading} roomID={stateKey}/>
+        <Attachments 
+            on:attached 
+            on:deleted 
+            isChat={isChat}
+            uploading={uploading} 
+            roomID={stateKey}/>
     {/if}
 
     {#if showLinks && !isChat}
@@ -933,7 +971,7 @@ function updateEditorContent(e) {
     {/if}
 
     <div class="tools fl" class:hide={isChat}>
-        <Attach busy={busy} on:attached={attachFiles}/>
+        <Attach isChat={isChat} busy={busy} on:attached={attachFiles}/>
         <InsertEmoji room_alias={room_alias} reply={reply} busy={busy} on:selected={insertEmoji}/>
         <div class="fl-o">
         </div>

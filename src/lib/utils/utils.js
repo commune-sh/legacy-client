@@ -285,3 +285,37 @@ function getFileNameFromUrl(url) {
     const parts = url.split('/');
     return parts[parts.length - 1];
 }
+
+export function resizeImage(file) {
+  let image = new Image();
+  image.src = URL.createObjectURL(file)
+  image.onload = async () => {
+      let width = image.width;
+      let height = image.height;
+
+      let scaleFactor = 1;
+
+      if (width > height) {
+          scaleFactor = 100 / height;
+          width *= scaleFactor;
+          height = 100;
+      } else {
+          scaleFactor = 100 / width;
+          height *= scaleFactor;
+          width = 100;
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = 100;
+      canvas.height = 100;
+
+      const offsetX = (width - 100) / 2;
+      const offsetY = (height - 100) / 2;
+
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(image, -offsetX, -offsetY, width, height);
+
+      const blob = await new Promise(resolve => canvas.toBlob(resolve));
+      return blob;
+  }
+}
