@@ -30,7 +30,7 @@ onMount(() => {
             <div class="ml3 fl-co">
                 <div class="title sklt" style="width:20%"></div>
                 {#each Array(tp()) as _, i}
-                    <div class="body mt2 sklt" style="width:{rp(100)}%"></div>
+                    <div class="body mt2 sklt" style="width:{rp(80)}%"></div>
                 {/each}
                 <div class="body mt2 sklt" style="width:{rp()}%"></div>
             </div>
@@ -117,8 +117,8 @@ onMount(() => {
         height: 8px;
     }
     .img {
-        height: 50px;
-        width: 50px;
+        height: 30px;
+        width: 30px;
     }
 }
 </style>

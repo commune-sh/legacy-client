@@ -907,11 +907,11 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
 }
 
 .context {
-    background-color: var(--event-highlight);
+    background-color: var(--shade-3);
 }
 
 .context:hover {
-    background-color: var(--event-highlight);
+    background-color: var(--shade-3);
 }
 
 

@@ -1,7 +1,7 @@
 <script>
 import { PUBLIC_API_URL, PUBLIC_API_URL_WS } from '$env/static/public';
 import { redactEvent, loadPosts, getRoomMembers } from '$lib/utils/request.js'
-import { onMount, afterUpdate, createEventDispatcher, tick } from 'svelte'
+import { onMount, onDestroy, afterUpdate, createEventDispatcher, tick } from 'svelte'
 import { page } from '$app/stores';
 import { joinSpace, joinRoom } from '$lib/utils/request.js'
 import { goto } from '$app/navigation';
@@ -64,6 +64,12 @@ onMount(() => {
 
     loadMessages()
     fetchMembers()
+})
+
+onDestroy(() => {
+    if(socket) {
+        socket.close()
+    }
 })
 
 async function fetchMembers() {
@@ -154,9 +160,19 @@ $: if(reloadTrigger && ($page.params?.topic != _page?.params?.topic)) {
 $: if(reloadTrigger && ($page.url?.searchParams.get('context') != 
     _page?.url?.searchParams.get('context'))) {
 
-    setTimeout(() => {
-        loadMessages()
-    }, 10)
+    let old = _page?.url?.searchParams.get('context')
+    let new_ = $page.url?.searchParams.get('context')
+    console.log("old", old)
+    console.log("new", new_)
+
+    if(!lockContext) {
+        setTimeout(() => {
+            loadMessages()
+        }, 10)
+    } else {
+        lockContext = false
+        _page = $page
+    }
 }
 
 $: isDomain = $page.params.domain !== undefined && 
@@ -283,6 +299,10 @@ async function maintainScroll() {
 let loading_new = false;
 
 let no_more = false;
+
+$: if(is_context) {
+    no_more = false
+}
 
 $: if(no_more) {
     syncMessages()
@@ -782,7 +802,10 @@ function goDown() {
 
 let jumping = false;
 
+let composer;
+
 async function jumpToLatest() {
+
     if(no_more) {
         goDown()
         return
@@ -817,7 +840,29 @@ async function jumpToLatest() {
         requestAnimationFrame(animate);
         messages = resp?.events.reverse()
         $store.events[roomID] = messages
+        composer.focusBodyInput()
+
+        purgeContext()
     }
+}
+
+let lockContext = false
+
+function purgeContext() {
+    lockContext = true
+    let url = `/`
+    if($page.params?.space) {
+        url = `/${$page.params?.space}`
+    }
+    if($page.params?.room) {
+        url = `/${$page.params?.space}/${$page.params?.room}`
+    }
+
+    if($page.url.search.includes('?view=chat')) {
+        url = `${url}?view=chat`
+    }
+
+    goto(url)
 }
 
 </script>
@@ -925,14 +970,29 @@ async function jumpToLatest() {
 
                     {#if ready && !no_more && is_context}
                         <div class="jump fl" on:click={jumpToLatest}>
-                            {#if jumping}
-                                <div class="sloader ma1">
-                                </div>
-                            {:else}
+
+                            <div class="grd-c fl-o">
                                 <div class="grd-c">
-                                    See newest messages
+                                You're viewing older messages
                                 </div>
-                            {/if}
+                            </div>
+
+
+                            <div class="grd-c fl">
+                                <div class="grd-c">
+                                    Jump to latest
+                                </div>
+                                {#if jumping}
+                                    <div class="sloader ml2 mr1">
+                                    </div>
+                                {:else}
+                                    <div class="ml1 ico-s grd-c">
+                                        {@html down}
+                                    </div>
+                                {/if}
+                            </div>
+
+
                         </div>
                     {/if}
 
@@ -949,6 +1009,7 @@ async function jumpToLatest() {
             {#if Composer && joinedRoom}
                 <div class="chat-composer">
                     <Composer 
+                        bind:this={composer}
                         topic={$page.params.topic}
                         on:typing={isTyping}
                         reply={replying}
@@ -1085,19 +1146,24 @@ async function jumpToLatest() {
 .jump {
     opacity: 1;
     position: absolute;
-    padding: 0.75rem 1rem;
+    padding: 0.3rem 0.75rem;
     cursor: pointer;
-    border-radius: 500px;
-    background: var(--primary);
+    border-radius: 7px 7px 0 0;
+    background: var(--shade-4);
     fill: var(--text-1);
     z-index: 1000;
-    bottom: 1rem;
-    right: 1rem;
+    bottom: 0;
+    right: 0;
+    left: 0;
     font-size: 12px;
     font-weight: 500;
-    text-transform: uppercase;
-    color: white;
+    color: vat(--text-1);
     letter-spacing: 1px;
+    min-height: 20px;
+}
+
+.jump:hover {
+    background: var(--shade-3);
 }
 
 .pbr {
@@ -1164,9 +1230,11 @@ async function jumpToLatest() {
     border-right: 1px solid var(--border-1);
 }
 .sloader {
-    border-top: 2px solid white;
-    border-right: 2px solid white;
-    border-bottom: 2px solid white;
+    border-top: 2px solid var(--text-1);
+    border-right: 2px solid var(--text-1);
+    border-bottom: 2px solid var(--text-1);
+    height: 8px;
+    width: 8px;
 }
 </style>
 
