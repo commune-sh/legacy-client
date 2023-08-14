@@ -465,7 +465,7 @@ $: replies = getReplyCount(event)
 $: hasTopic = event?.content?.topic !== undefined && event?.content?.topic !==
     null && event?.content?.topic !== ''
 
-$: showTopic = hasTopic && !isTopic
+$: showTopic = hasTopic && !isTopic && !isChat
 
 
 $: replyPinned = isReply && event?.reactions?.filter(r => r.key === 'pinned').length > 0
@@ -736,7 +736,7 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
 
 
 
-            {#if (isPost || isReply || isChat) && hasLinks}
+            {#if !isBoardPostInChat && (isPost || isReply || isChat) && hasLinks}
                 <Links event={event} isChat={isChat} />
             {/if}
 

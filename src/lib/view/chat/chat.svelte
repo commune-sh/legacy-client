@@ -31,6 +31,7 @@ $: state = $store?.states[$page?.params?.space]
 
 $: isSpace = $page?.params?.space !== undefined && $page?.params?.space !== null && $page?.params?.space !== '' 
 $: isRoom = $page?.params?.room !== undefined && $page?.params?.room !== null && $page?.params?.room !== '' 
+$: isTopic = $page?.params?.topic !== undefined && $page?.params?.topic !== null && $page?.params?.topic !== ''
 
 $: roomID = isRoom ? state?.children?.find(r => r?.alias ===
     $page?.params?.room)?.room_id : isSpace ? state?.room_id : null
@@ -205,15 +206,16 @@ async function loadMessages() {
     }
 
     let url = `${endpoint}/room/${roomID}/messages`
-    if(is_context && context_event_id) {
-        url = url + `?context=${context_event_id}`
-    }
-
 
     if($page.params.topic) {
         url = url + `?topic=${$page.params.topic}`
-        if(is_context && context_event_id) {
+    }
+
+    if(is_context && context_event_id) {
+        if($page.params.topic) {
             url = url + `&context=${context_event_id}`
+        } else {
+            url = url + `?context=${context_event_id}`
         }
     }
 
@@ -277,6 +279,10 @@ async function fetchMore() {
 
     let url = `${endpoint}/room/${roomID}/messages?last=${first}`
 
+    if(isTopic) {
+        url = url + `&topic=${$page.params.topic}`
+    }
+
     let opt = {
       url: url,
       method: 'GET',
@@ -317,6 +323,10 @@ async function fetchForward() {
     let endpoint = PUBLIC_API_URL
 
     let url = `${endpoint}/room/${roomID}/messages?after=${last}&order=ASC`
+
+    if(isTopic) {
+        url = url + `&topic=${$page.params.topic}`
+    }
 
     let opt = {
       url: url,
@@ -385,6 +395,7 @@ function syncMessages() {
         if(e?.data && e?.data != 'ping') {
             let event = JSON.parse(e.data)
 
+
             if(event?.type == 'typing') {
                 typing = [...typing, event?.value]
             }
@@ -395,8 +406,9 @@ function syncMessages() {
                     let ind = messages.findIndex(m => m?.event_id === e?.event_id)
 
                     let is_thread = e?.content?.['m.relates_to']?.['rel_type'] == 'm.thread'
+                    let is_topic = isTopic && e?.content?.topic?.length > 0
 
-                    if(ind == -1 && !is_thread) {
+                    if(ind == -1 && !is_thread && is_topic) {
                         messages = [...messages, e]
                     }
                 })
@@ -432,7 +444,9 @@ function syncMessages() {
                 let is_thread = event?.content?.['m.relates_to']?.['rel_type'] == 'm.thread'
                 let is_edit = event?.content?.['m.new_content']?.body
 
-                if(ind == -1 && !is_thread && !is_edit) {
+                let is_topic = isTopic && event?.content?.topic?.length > 0
+
+                if(ind == -1 && !is_thread && !is_edit && is_topic) {
                     messages = [...messages, event]
                 }
 
@@ -609,7 +623,7 @@ function setupReverseObserver() {
     let callback = (entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                if(!no_more) {
+                if(!no_more && messages.length >=100) {
                     fetchForward()
                 }
             }
