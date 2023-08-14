@@ -276,10 +276,13 @@ async function createPost() {
 
     // to start with, if links exist, we'll use the first link item's title and
     // body
-    if(!isChat && links) {
+    if(!isChat && !isSocial && links) {
         if(links[0]?.title?.length > 0) {
             title = links[0].title
         }
+    }
+
+    if(!isChat && links) {
         if(links[0]?.description?.length > 0) {
             body = links[0].description
         }
@@ -317,6 +320,7 @@ async function createPost() {
         focusBodyInput()
         return
     }
+
 
     busy = true
 
@@ -863,7 +867,7 @@ function updateEditorContent(e) {
                 <textarea 
                     class="post-title"
                     bind:this={titleInput}
-                    placeholder="Title"
+                    placeholder={isSocial ? 'Title (optional)' : 'Title'}
                     maxlength="340"
                     on:paste={handleTitlePaste}
                     on:keydown={handleEnter}

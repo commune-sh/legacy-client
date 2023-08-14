@@ -536,6 +536,11 @@ async function redactPost(e) {
         if(isRoom) {
             url = `/${$page.params.space}/${$page.params.room}`
         }
+
+        if(!isSpace) {
+            url = `/`
+        }
+
         goto(url, {
             noscroll: true,
         })
