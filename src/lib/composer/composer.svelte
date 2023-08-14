@@ -276,7 +276,7 @@ async function createPost() {
 
     // to start with, if links exist, we'll use the first link item's title and
     // body
-    if(!isChat && !isSocial && links) {
+    if(!isChat && links) {
         if(links[0]?.title?.length > 0) {
             title = links[0].title
         }
@@ -317,7 +317,6 @@ async function createPost() {
         focusBodyInput()
         return
     }
-
 
     busy = true
 
