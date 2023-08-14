@@ -2,6 +2,8 @@
 import { PUBLIC_MEDIA_URL } from '$env/static/public'
 import { formatFileSize, downloadFile } from '$lib/utils/utils.js'
 import { download as downloadicon } from '$lib/assets/icons.js'
+import AudioItem from './audio-item.svelte'
+
 export let files;
 export let isChat = false;
 
@@ -13,28 +15,39 @@ function download(file) {
     downloadFile(`${PUBLIC_MEDIA_URL}/${file.key}`, file.name)
 }
 
+let isAudio = (item) => {
+    return item?.type?.startsWith('audio')
+}
+
 </script>
 
 <div class="files mh3" class:ch={isChat}>
     {#each files as file}
-        <div class="file-item mb2 fl" on:click={download(file)}>
-            <div class="fl-co mr3">
-                <div class="name">
-                    {file.name}
+
+        {#if isAudio(file)}
+            <AudioItem item={file} />
+        {:else}
+
+            <div class="file-item mb2 fl" on:click={download(file)}>
+                <div class="fl-co mr3">
+                    <div class="name">
+                        {file.name}
+                    </div>
+                    <div class="fl">
+                        <div class="size grd-c">
+                            {file.type}
+                        </div>
+                        <div class="ml1 size grd-c">
+                            - {size(file)}
+                        </div>
+                    </div>
                 </div>
-                <div class="fl">
-                    <div class="size grd-c">
-                        {file.type}
-                    </div>
-                    <div class="ml1 size grd-c">
-                        - {size(file)}
-                    </div>
+                <div class="ico-s grd-c fic do">
+                    {@html downloadicon}
                 </div>
             </div>
-            <div class="ico-s grd-c fic do">
-                {@html downloadicon}
-            </div>
-        </div>
+
+        {/if}
     {/each}
 </div>
 

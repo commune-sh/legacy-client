@@ -38,7 +38,6 @@ let isItemImage = (item) => {
     return item?.type?.startsWith('image')
 }
 
-
 let isItemVideo = (item) => {
     return item?.type?.startsWith('video')
 }
