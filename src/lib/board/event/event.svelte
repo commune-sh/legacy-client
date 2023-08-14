@@ -102,11 +102,24 @@ async function save() {
     }
 }
 
+let st;
+function animate(ts) {
+    if (!st) {
+      st = ts;
+    }
+    const et = ts - st;
+    if (et < 1000) { 
+        el.scrollIntoView({ block: "center" });
+      requestAnimationFrame(animate);
+    }
+}
+
 onMount(() => {
 
     if (context && isChat) {
         if(el) {
             el.scrollIntoView({ block: "center" });
+            //requestAnimationFrame(animate);
         }
     }
 

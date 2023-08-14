@@ -257,6 +257,10 @@ function animate(ts) {
     }
 }
 
+function mounted() {
+  requestAnimationFrame(animate);
+}
+
 let sp;
 
 let fetching = false;
@@ -924,6 +928,7 @@ $: scrolled = zone ? zone?.scrollHeight > zone?.clientHeight : false
                             {#each processed as message, i}
                                 {#if message?.type === 'm.room.message'}
                                     <Event 
+                                        on:mounted={mounted}
                                         isChat={true}
                                         index={i}
                                         on:replyTo={reply}

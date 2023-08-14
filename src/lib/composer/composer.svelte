@@ -548,12 +548,17 @@ $: uploaded = attachments ? attachments?.every(item => $store.attachments[item.i
 $: if(!isChat && processed && uploaded) {
     save()
 }
+$: if(editing && processed) {
+    save()
+}
 
 async function save() {
-    data.content.attachments.forEach(item => {
-        item.key = $store.attachments[item.id].key
-        delete item.id
-    })
+    if(data?.content?.attachments) {
+        data.content.attachments.forEach(item => {
+            item.key = $store.attachments[item.id].key
+            delete item.id
+        })
+    }
     const res = await savePost(data);
     if(res?.success && res?.event) {
         dispatch('saved', res.event)

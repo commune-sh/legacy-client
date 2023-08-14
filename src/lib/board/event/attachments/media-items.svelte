@@ -93,6 +93,8 @@ $: nitems = `items-${media.length}`
 $: images = media.filter(i => isItemImage(i))
 $: videos = media.filter(i => isItemVideo(i))
 
+$: height = media?.length == 1 ? media[0]?.info?.h > 300 ? 300 : media[0]?.info?.h : 300
+
 </script>
 
 <div class="container">
@@ -104,27 +106,27 @@ $: videos = media.filter(i => isItemVideo(i))
 
 
     <div class="items fl-co mr3 ml3 mt1 mds">
-    <div class="nitems"
-    style="--columns:{media.length}">
+        <div class="nitems"
+        style="--columns:{media.length}">
 
             {#each images as item, i}
                 <div class="media-item mb1">
                     <img class="image" class:smg={isChat} 
                             on:click={() => openImage(i)}
-                    width={item?.info?.w > 500 ? 500 : item?.info?.w}
                     src={getURL(item)} />
                 </div>
             {/each}
 
+        </div>
+
             {#each videos as item, i}
                     <div class="video-item grd-c wch">
-                        <video width="500" class="" controls>
+                        <video class="" controls>
                           <source src={getURL(item)} type={item?.type}>
                         </video>
                     </div>
             {/each}
 
-        </div>
     </div>
 
 
@@ -278,6 +280,13 @@ video {
     margin-right: 1rem;
 }
 
+.media-item img {
+    max-height: 300px;
+}
+
+video {
+    max-height: 300px;
+}
 
 @media screen and (max-width: 768px) {
     .nitems {
