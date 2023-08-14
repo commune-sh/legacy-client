@@ -111,7 +111,8 @@ $: height = media?.length == 1 ? media[0]?.info?.h > 300 ? 300 : media[0]?.info?
             {#each images as item, i}
                 <div class="media-item mb1">
                     <img class="image" class:smg={isChat} 
-                            on:click={() => openImage(i)}
+                        height={item?.info?.h > 300 ? 300 : item?.info?.h}
+                        on:click={() => openImage(i)}
                     src={getURL(item)} />
                 </div>
             {/each}
@@ -280,7 +281,6 @@ video {
 }
 
 .media-item img {
-    max-height: 300px;
 }
 
 video {

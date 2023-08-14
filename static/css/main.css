@@ -856,11 +856,6 @@ pre::-webkit-scrollbar-thumb {
   background-color: var(--code-block-scroll);
 }
 
-img {
-    max-width: 100%;
-    height: auto;
-}
-
 .mask {
     position: fixed;
     z-index: 900000;

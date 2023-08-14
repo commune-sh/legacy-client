@@ -7,8 +7,6 @@ import { onMount, createEventDispatcher } from 'svelte'
 import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
-import MediaThumbnail from '$lib/board/event/attachments/media-thumbnail.svelte'
-import LinkThumbnail from '$lib/board/event/links/link-thumbnail.svelte'
 import MediaItems from '$lib/board/event/attachments/media-items.svelte'
 import FileItems from '$lib/board/event/attachments/file-items.svelte'
 import Reactions from '$lib/board/event/reactions/reactions.svelte'
@@ -18,7 +16,6 @@ import Date from '$lib/board/event/date/date.svelte'
 import Time from '$lib/board/event/date/time.svelte'
 import Edited from '$lib/board/event/edited/edited.svelte'
 import Tools from '$lib/board/event/tools/tools.svelte'
-import Vote from '$lib/vote/vote.svelte'
 import Links from '$lib/board/event/links/links.svelte'
 import RoomAlias from '$lib/board/event/room-alias/room-alias.svelte'
 import MatrixMedia from '$lib/chat/event/media/media.svelte'
@@ -140,66 +137,7 @@ $: isDomain = $page.params.domain !== undefined &&
     $page.params.domain !== 'undefined' && 
     $page.params.domain?.length > 0
 
-function buildLink(e, page) {
-    let url = `/post/${e?.slug}`
-    if(isSpace) {
-        url = `/${e?.room_alias}/post/${e?.slug}`
-    }
 
-    if(isTopic) {
-        url = `/${e?.room_alias}/topic/${topic}/post/${e?.slug}`
-    }
-
-    /*
-    if(isSpace && isRoom)  {
-        url = `/${e?.room_alias}/${page.params.room}/post/${e?.slug}`
-    }
-    */
-
-
-    //if post is opened, we close it and go to space or room
-    const pathname = page.url.pathname
-    if(url == pathname) {
-        url = '/'
-
-        if(isSpace) {
-            url = `/${page.params.space}`
-        }
-
-        if(isSpace && isRoom)  {
-            url = `/${page.params.space}/${page.params.room}`
-        }
-
-    }
-
-    if(isDomain) {
-        url = `/${page.params.domain}${url}`
-    }
-
-    if(page.url.search) {
-        url = `${url}${page.url.search}`
-    }
-
-    if(page.url.pathname.startsWith('/all')) {
-        url = `/all${url}`
-    }
-
-    return url
-}
-
-$: link = buildLink(event, $page)
-
-function goToEvent() {
-
-
-    if(isPost || isReply || toolsActive || editing || isChat) {
-        return
-    }
-
-    goto(link, {
-        noscroll: true,
-    })
-}
 
 function getFirstParagraphNode(content) {
   const tempDiv = document.createElement('div');
@@ -541,23 +479,15 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
 
 </script>
 
-<div class="event" 
+<div class="event chat" 
     bind:this={el}
-    draggable={!isReply && !isPost && !editing && interactive && !moveActive &&
-    !isChat}
     on:dragstart={dragStart}
     on:dragend={dragEnd}
     class:dragging={dragging}
     on:contextmenu={print}
     on:mouseover={showTools}
     on:mouseleave={hideTools}
-    class:h={!isReply && !isPost && !editing && !isChat}
-    class:chat={isChat}
-    class:nch={!isChat}
-    class:ha={!isReply && !isPost && (hasAttachments || hasLinks)}
     class:ma={toolsActive && !isBoardPostInChat}
-    class:bb={isPost || isReply}
-    on:click={goToEvent} 
     class:fresh={event?.just_posted}
     class:isrep={isReplyEvent}
     class:context={context}
@@ -572,21 +502,9 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
         </div>
     {/if}
 
-    {#if (dragging || moveActive) && (!isReply && !isPost)}
-        <div class="drg">
-            <div class="drgm">
-                {#if moveActive}
-                    Moving...
-                {:else}
-                    Move Post
-                {/if}
-            </div>
-        </div>
-    {/if}
 
-    <div class="ev-c fl-co"
+    <div class="ev-c fl-co chm"
     class:shs={isChat && showSender}
-    class:chm={isChat}
     class:ovy={!interactive}>
 
     {#if has_reply && interactive}
@@ -666,46 +584,6 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
                             {/if}
                         </div>
                     </div>
-                {:else if isSocial && !isPost && !isReply}
-                    {#if event?.content?.title}
-                    <div class="post-title ph3">
-                        {title}
-                    </div>
-                    {/if}
-                    <div class="post-body ph3 mb2 pci">
-                        {@html shortened}
-                    </div>
-                {:else if isSocial && (isPost || !isReply)}
-                    {#if event?.content?.title}
-                    <div class="post-title ph3 pb2">
-                        {title}
-                    </div>
-                    {/if}
-                    <div class="post-body ph3 mb2 pci">
-                        {@html content}
-                    </div>
-
-                {:else if isPost}
-                    {#if !isSingleReply}
-                    <div class="post-title ph3 pb2 pti">
-                        {title}
-                    </div>
-                    {/if}
-
-                    <div class="post-body ph3 mb2 pci">
-                        {@html content}
-                    </div>
-                {:else if isReply}
-                    <div class="post-body ph3">
-                        {@html content}
-                    </div>
-                {:else}
-                    <div class="post-title ph3">
-                        {title}
-                    </div>
-                    <div class="post-body pba clipped ph3 ">
-                        {@html clipped}
-                    </div>
                 {/if}
 
             {/if}
@@ -742,7 +620,7 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
 
 
 
-            <div class="rec-a fl ph3" 
+            <div class="rec-a fl ph3 pb1" 
                 class:pb2={isChat && (event?.reply_count > 0 ||
                     event.reactions?.length > 0)}
                 class:rch={isChat}>
@@ -756,11 +634,6 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
                         <Replies count={event?.reply_count} />
                     {/if}
                 {/if}
-
-                {#if isReply && interactive && !isChat}
-                    <Vote event={event} />
-                {/if}
-
 
 
                 {#if interactive}
@@ -777,16 +650,6 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
 
                 <div class="fl-o"></div>
 
-                {#if isReply && interactive && hasReplies && !isChat}
-                    <div class="mr2 grd-c mt2 expand" 
-                        on:click={toggleReplies}>
-                        {#if showingReplies}
-                            [-]
-                        {:else}
-                            [+{replies ? replies : null}]
-                        {/if}
-                    </div>
-                {/if}
             </div>
 
 
@@ -796,14 +659,6 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
 
 
     </div>
-
-    {#if showMediaThumbnail && !isChat}
-        <MediaThumbnail media={media} />
-    {/if}
-
-    {#if showLinkThumbnail && !showMediaThumbnail && !isChat}
-        <LinkThumbnail links={links} />
-    {/if}
 
 
         {#if !safari && displayTools && !editing && interactive &&
@@ -853,28 +708,6 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
 {/if}
 
 
-{#if hasReplies && showingReplies && interactive && !isChat}
-    <div class="replies">
-        <div class="gap"></div>
-        <div class="events">
-        {#each event.children as reply}
-            <svelte:self 
-                isReply={true} 
-                postEventID={postEventID}
-                depth={depth + 1}
-                nested={true}
-                on:redact
-                on:reference
-                event={reply} 
-                on:set-reply-thread
-                isPostAuthor={isPostAuthor}
-                sender={sender}
-                on:replyTo/>
-        {/each}
-        </div>
-    </div>
-{/if}
-
 <style>
 .event {
     display: grid;
@@ -885,25 +718,6 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
     position: relative;
     word-break: break-word;
     position: relative;
-}
-
-.bb {
-    border-bottom: 1px solid var(--ev-bb);
-}
-
-.replies {
-    display: grid;
-    grid-template-columns: 3px 1fr;
-    grid-column-gap: 3px;
-}
-.gap {
-    margin-left: 3px;
-    width: 1px;
-    background-color: var(--reply-gap);
-}
-
-.ha {
-    grid-template-columns: 1fr auto;
 }
 
 .event:hover .tools {
@@ -1001,21 +815,6 @@ div :global(.post-body blockquote){
     margin-bottom: 0.25rem;
 }
 
-.pba {
-    color: var(--text-light);
-}
-
-
-.clipped {
-    font-weight: normal;
-    height: 22px;
-    line-height: 22px!important;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    word-break: break-word;
-    margin-bottom: 0.5rem;
-}
 
 div :global(.body .emoji){
     height: 20px;
@@ -1029,15 +828,6 @@ div :global(.semj .emoji){
     width: 30px;
     object-fit: contain;
     vertical-align: text-bottom;
-}
-
-
-
-.clipped p {
-    margin-block-start: 0;
-    margin-block-end: 0;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
 }
 
 .fresh {
@@ -1130,30 +920,6 @@ div :global(.semj .emoji){
 .dragging {
     cursor: grabbing;
 }
-.drg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    cursor: grabbing;
-    z-index: 100;
-    border: 2px solid var(--primary);
-    border-radius: 7px;
-    transition: 0.1s;
-}
-
-.drgm {
-    position: absolute;
-    right: 0;
-    top: 0;
-    background: var(--primary);
-    padding: 0.25rem 0.5rem;
-    color: white;
-    font-size: small;
-    font-weight: 500;
-    border-radius: 0 0 0 7px;
-}
 
 .pbar {
     position: absolute;
@@ -1217,10 +983,6 @@ div :global(.msgc p) {
     display: inline;
 }
 
-div :global(.body img) {
-    max-width: 100%;
-    height: auto;
-}
 
 div :global(.chp img) {
     max-width: 400px;
@@ -1233,9 +995,6 @@ div :global(.chp pre) {
     max-height: 500px;
     overflow-x: auto;
     overflow-y: auto;
-}
-.readmore {
-    padding: 0.125rem 0.25rem;
 }
 .lgh {
     color: var(--text-light);

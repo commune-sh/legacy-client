@@ -28,7 +28,7 @@ let isAudio = (item) => {
             <AudioItem item={file} />
         {:else}
 
-            <div class="file-item mb2 fl" on:click={download(file)}>
+            <div class="file-item mt2 mb2 fl" on:click={download(file)}>
                 <div class="fl-co mr3">
                     <div class="name">
                         {file.name}
@@ -42,7 +42,7 @@ let isAudio = (item) => {
                         </div>
                     </div>
                 </div>
-                <div class="ico-s grd-c fic do">
+                <div class="ico-s grd-c fic do mr2">
                     {@html downloadicon}
                 </div>
             </div>
@@ -62,16 +62,19 @@ let isAudio = (item) => {
     border-radius: 5px;
     padding: 0.25rem 0.5rem;
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: 1fr auto;
     cursor: pointer;
+    min-width: 300px;
+}
+.file-item:hover {
+    background-color: var(--shade-4);
 }
 
+
 .file-item:hover .do {
-    fill: white;
 }
 
 .file-item:hover .name {
-    color: var(--primary);
 }
 
 .fic {

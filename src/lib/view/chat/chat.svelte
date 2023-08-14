@@ -7,7 +7,7 @@ import { joinSpace, joinRoom } from '$lib/utils/request.js'
 import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
 import { down } from '$lib/assets/icons.js'
-import Event from '$lib/board/event/event.svelte'
+import Event from '$lib/chat/event/event.svelte'
 import Header from '$lib/header/header.svelte'
 import Memberships from '$lib/chat/event/membership/memberships.svelte'
 import Topic from '$lib/chat/event/topic/topic.svelte'
@@ -190,6 +190,26 @@ $: if(skeleton) {
 }
 
 async function loadMessages() {
+
+    /*
+    let existing = $store.events[roomID]
+    if(existing) {
+        messages = existing
+        if(!is_context) {
+            updateScroll()
+        }
+        ready = true;
+        _page = $page
+        if(!is_context) {
+            syncMessages()
+        }
+        setTimeout(() => {
+            reloadTrigger = true
+        }, 1000)
+        return
+    }
+    */
+
     ready = false;
 
     messages = null
