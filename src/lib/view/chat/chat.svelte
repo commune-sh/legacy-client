@@ -163,8 +163,6 @@ $: if(reloadTrigger && ($page.url?.searchParams.get('context') !=
 
     let old = _page?.url?.searchParams.get('context')
     let new_ = $page.url?.searchParams.get('context')
-    console.log("old", old)
-    console.log("new", new_)
 
     if(!lockContext) {
         setTimeout(() => {
@@ -610,7 +608,9 @@ function setupObserver() {
     };
 
     let observer = new IntersectionObserver(callback, options);
-    observer.observe(ob);
+    if(ob) {
+        observer.observe(ob);
+    }
 }
 
 let revob;
@@ -631,7 +631,9 @@ function setupReverseObserver() {
     };
 
     revob = new IntersectionObserver(callback, options);
-    revob.observe(rob);
+    if(rob) {
+        revob.observe(rob);
+    }
 }
 
 let atBottom;
@@ -877,11 +879,18 @@ function purgeContext() {
         url = `/${$page.params?.space}/${$page.params?.room}`
     }
 
+    if($page.params?.topic) {
+        url = `/${$page.params?.space}/${$page.params?.room}/topic/${$page.params?.topic}`
+    }
+
     if($page.url.search.includes('?view=chat')) {
         url = `${url}?view=chat`
     }
 
     goto(url)
+    setTimeout(() => {
+        composer.focusBodyInput()
+    }, 10)
 }
 
 function attached() {
