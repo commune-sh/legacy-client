@@ -174,7 +174,6 @@ async function loadEvents(init) {
     const resp = await loadPosts(opt)
     if(resp) {
         data = resp
-        store.addRoomEvents(roomID, resp.events)
 
         if($page?.url?.pathname != lastPath) {
             lastPath = $page?.url?.pathname
@@ -190,6 +189,11 @@ async function loadEvents(init) {
         setTimeout(() => {
             reloadTrigger = true
         }, 1000)
+
+        if(!$store.events[roomID]) {
+            $store.events[roomID] = {chat: [], board: []}
+        }
+        $store.events[roomID].board = resp.events
     }
 
     if(!resp) {
@@ -262,6 +266,7 @@ $: if(!isDomain && domainPinged) {
 
 let loadEditor = false;
 onMount(() => {
+    dispatch('mounted')
     if(isDomain) {
         return
     }
@@ -328,7 +333,7 @@ function handleScrollRev() {
         entries.forEach(entry => {
             if (entry.isIntersecting && startedFetching) {
                 //fetchMore()
-                let lastEventInStore = $store.events[roomID]?.[0]?.event_id
+                let lastEventInStore = $store.events[roomID].board?.[0]?.event_id
                 let x = data?.events[0]?.event_id
                 if(lastEventInStore != x) {
                     console.log("repopulating events")

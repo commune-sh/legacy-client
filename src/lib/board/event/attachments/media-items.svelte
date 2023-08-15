@@ -94,6 +94,13 @@ $: videos = media.filter(i => isItemVideo(i))
 
 $: height = media?.length == 1 ? media[0]?.info?.h > 300 ? 300 : media[0]?.info?.h : 300
 
+$: smallest = images.reduce((smallest, current) => current?.info?.h < (smallest ?
+    smallest?.info?.h : Infinity) ? current : smallest, null)?.info?.h
+
+$: cap = images?.length > 1 ? 200 : 300
+
+$: mh = smallest > cap ? cap : smallest
+
 </script>
 
 <div class="container">
@@ -109,9 +116,9 @@ $: height = media?.length == 1 ? media[0]?.info?.h > 300 ? 300 : media[0]?.info?
         style="--columns:{media.length}">
 
             {#each images as item, i}
-                <div class="media-item mb1">
+                <div class="media-item mb1" class:mr2={images?.length > 1}>
                     <img class="image" class:smg={isChat} 
-                        height={item?.info?.h > 300 ? 300 : item?.info?.h}
+                        height={mh}
                         on:click={() => openImage(i)}
                     src={getURL(item)} />
                 </div>
@@ -272,12 +279,9 @@ video {
 }
 
 .nitems {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, auto));
-    grid-auto-rows: auto;
-    grid-gap: 1rem;
+    display: flex;
+    flex-wrap: wrap;
     max-width: 500px;
-    margin-right: 1rem;
 }
 
 .media-item img {
@@ -288,11 +292,6 @@ video {
 }
 
 @media screen and (max-width: 768px) {
-    .nitems {
-        grid-template-columns: repeat(auto-fit, minmax(60px, auto));
-        grid-gap: 0.5rem;
-        max-width: 300px;
-    }
 }
 
 </style>

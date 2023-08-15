@@ -99,6 +99,7 @@ function createApp() {
     showRoomUsers: false,
     roomMembers: [],
     attachments: [],
+    scrollPositions: [],
   }
 
   let theme = localStorage.getItem(`theme`) || "{}"
@@ -976,6 +977,26 @@ function createApp() {
     })
   }
 
+  let addChatEvents = (roomID, event) => {
+    update(p => {
+      p.events[roomID].chat.push(event)
+      return p
+    })
+  }
+
+  let unshiftChatEvents = (roomID, events) => {
+    update(p => {
+      p.events[roomID].chat.unshift(...events)
+      return p
+    })
+  }
+
+  let addBoardEvent = (roomID, event) => {
+    update(p => {
+      p.events[roomID].board.push(event)
+      return p
+    })
+  }
 
   const { subscribe, set, update } = writable(app);
 
@@ -1067,6 +1088,9 @@ function createApp() {
     addSpaceRoomOrderItem,
     updateSpaceNSFW,
     updateSpaceRoomNSFW,
+    addChatEvents,
+    unshiftChatEvents,
+    addBoardEvent,
   };
 }
 

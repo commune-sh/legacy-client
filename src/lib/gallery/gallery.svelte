@@ -48,6 +48,7 @@ $: name = images[selected]?.name
 {#if active}
 <div class="mask grd sel-no" 
     on:click|self|stopPropagation={kill}>
+
     <div class="mod grd-c" >
 
         <div class="grd-c poin">
@@ -85,12 +86,16 @@ $: name = images[selected]?.name
 {/if}
 
 <style>
+
 .mod {
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: auto;
     background: transparent;
-    max-width: 60%;
+}
+.mod img {
+    max-width: 80dvw;
+    max-height: 80dvh;
 }
 
 .prev {

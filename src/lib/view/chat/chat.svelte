@@ -7,8 +7,9 @@ import { joinSpace, joinRoom } from '$lib/utils/request.js'
 import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
 import { down } from '$lib/assets/icons.js'
-import Event from '$lib/chat/event/event.svelte'
+import EventProcessor from '$lib/chat/event/processor.svelte'
 import Header from '$lib/header/header.svelte'
+import VirtualList from '$lib/components/virtual-list/virtual-list.svelte'
 import Memberships from '$lib/chat/event/membership/memberships.svelte'
 import Topic from '$lib/chat/event/topic/topic.svelte'
 import SkeletonChatEvents from '$lib/skeleton/skeleton-chat-events.svelte'
@@ -190,27 +191,8 @@ $: if(skeleton) {
 }
 
 async function loadMessages() {
-
-    /*
-    let existing = $store.events[roomID]
-    if(existing) {
-        messages = existing
-        if(!is_context) {
-            updateScroll()
-        }
-        ready = true;
-        _page = $page
-        if(!is_context) {
-            syncMessages()
-        }
-        setTimeout(() => {
-            reloadTrigger = true
-        }, 1000)
-        return
-    }
-    */
-
     ready = false;
+    last_reached = false;
 
     messages = null
 
@@ -464,7 +446,7 @@ function syncMessages() {
 
                 let is_topic = isTopic && event?.content?.topic?.length > 0
 
-                if(ind == -1 && !is_thread && !is_edit && is_topic) {
+                if(ind == -1 && !is_thread && !is_edit) {
                     messages = [...messages, event]
                 }
 
@@ -924,6 +906,8 @@ function attachmentDeleted() {
 
 $: scrolled = zone ? zone?.scrollHeight > zone?.clientHeight : false
 
+$: items = messages
+
 </script>
 
 
@@ -969,10 +953,8 @@ $: scrolled = zone ? zone?.scrollHeight > zone?.clientHeight : false
 
                         {#if processed}
                             {#each processed as message, i}
-                                {#if message?.type === 'm.room.message'}
-                                    <Event 
+                                    <EventProcessor
                                         on:mounted={mounted}
-                                        isChat={true}
                                         index={i}
                                         on:replyTo={reply}
                                         on:reacted={reacted}
@@ -982,28 +964,9 @@ $: scrolled = zone ? zone?.scrollHeight > zone?.clientHeight : false
                                         event={message} 
                                         on:saved={saved}
                                         sender={null} />
-                                {/if}
-                                {#if message?.type === 'm.room.members'}
-                                        <Memberships
-                                        memberships={message}/>
-                                {/if}
-                                {#if message?.type === 'm.room.topic'}
-                                    <Topic event={message}/>
-                                {/if}
-                                {#if message?.type === 'space.board.post'}
-                                    <Event 
-                                        isChat={true}
-                                        isBoardPostInChat={true}
-                                        on:replyTo={reply}
-                                        on:reacted={reacted}
-                                        on:redact={redactPost}
-                                        messages={processed}
-                                        event={message} 
-                                        on:saved={saved}
-                                        sender={null} />
-                                {/if}
                             {/each}
                         {/if}
+
 
                         {#if loading_new}
                             <SkeletonChatEvents embed={true} />
