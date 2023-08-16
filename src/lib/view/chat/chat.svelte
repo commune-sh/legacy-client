@@ -211,7 +211,6 @@ $: if(skeleton) {
 }
 
 async function loadMessages() {
-    ready = false;
     last_reached = false;
 
 
@@ -221,7 +220,7 @@ async function loadMessages() {
             updateScroll()
         }
         setTimeout(() => {
-            ready = true;
+            //ready = true;
         }, 50)
 
         _page = $page
@@ -231,6 +230,8 @@ async function loadMessages() {
         setTimeout(() => {
             reloadTrigger = true
         }, 1000)
+    } else {
+        ready = false;
     }
 
 
@@ -270,6 +271,10 @@ async function loadMessages() {
         $store.events[roomID].chat = resp.events.reverse()
         if(!is_context) {
             updateScroll()
+            forceScroll()
+            if(composer) {
+                composer.focusBodyInput()
+            }
         }
     }
 
