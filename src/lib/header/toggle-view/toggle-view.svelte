@@ -39,8 +39,14 @@ function saveRoomView() {
 function toggle() {
     if(!viewQuery && defaultView === 'board') {
         let url = `/${$page.params?.space}?view=chat`
+        if($page.params.topic) {
+            url = `/${$page.params?.space}/topic/${$page.params?.topic}?view=chat`
+        }
         if($page.params.room) {
             url = `/${$page.params?.space}/${$page.params?.room}?view=chat`
+            if($page.params.topic) {
+                url = `/${$page.params?.space}/${$page.params?.room}/topic/${$page.params?.topic}?view=chat`
+            }
         }
         $store.roomViews[roomID] = url
         goto(url, {
@@ -50,8 +56,14 @@ function toggle() {
     }
     if(!viewQuery && defaultView === 'chat') {
         let url = `/${$page.params?.space}?view=board`
+        if($page.params.topic) {
+            url = `/${$page.params?.space}/topic/${$page.params?.topic}?view=board`
+        }
         if($page.params.room) {
             url = `/${$page.params?.space}/${$page.params?.room}?view=board`
+            if($page.params.topic) {
+                url = `/${$page.params?.space}/${$page.params?.room}/topic/${$page.params?.topic}?view=board`
+            }
         }
         $store.roomViews[roomID] = url
         goto(url, {
@@ -61,8 +73,14 @@ function toggle() {
     }
     if(chatView && defaultView === 'board') {
         let url = `/${$page.params.space}`
+        if($page.params.topic) {
+            url = `/${$page.params.space}/topic/${$page.params.topic}`
+        }
         if($page.params.room) {
             url = `/${$page.params.space}/${$page.params.room}`
+            if($page.params.topic) {
+                url = `/${$page.params.space}/${$page.params.room}/topic/${$page.params.topic}`
+            }
         }
         $store.roomViews[roomID] = url
         goto(url, {
@@ -72,8 +90,14 @@ function toggle() {
     }
     if(chatView && defaultView === 'chat') {
         let url = `/${$page.params.space}?view=board`
+        if($page.params.topic) {
+            url = `/${$page.params.space}/topic/${$page.params.topic}?view=board`
+        }
         if($page.params.room) {
             url = `/${$page.params.space}/${$page.params.room}?view=board`
+            if($page.params.topic) {
+                url = `/${$page.params.space}/${$page.params.room}/topic/${$page.params.topic}?view=board`
+            }
         }
         $store.roomViews[roomID] = url
         goto(url, {
@@ -83,8 +107,14 @@ function toggle() {
     }
     if(boardView && defaultView === 'chat') {
         let url = `/${$page.params.space}`
+        if($page.params.topic) {
+            url = `/${$page.params.space}/topic/${$page.params.topic}`
+        }
         if($page.params.room) {
             url = `/${$page.params.space}/${$page.params.room}`
+            if($page.params.topic) {
+                url = `/${$page.params.space}/${$page.params.room}/topic/${$page.params.topic}`
+            }
         }
         $store.roomViews[roomID] = url
         goto(url, {
@@ -94,8 +124,14 @@ function toggle() {
     }
     if(boardView && defaultView === 'board') {
         let url = `/${$page.params.space}?view=chat`
+        if($page.params.topic) {
+            url = `/${$page.params.space}/topic/${$page.params.topic}?view=chat`
+        }
         if($page.params.room) {
             url = `/${$page.params.space}/${$page.params.room}?view=chat`
+            if($page.params.topic) {
+                url = `/${$page.params.space}/${$page.params.room}/topic/${$page.params.topic}?view=chat`
+            }
         }
         $store.roomViews[roomID] = url
         goto(url, {

@@ -30,7 +30,7 @@ $: stateReady = $store.stateReady
 
 
 $: roomID = isRoom ? state?.children?.find(r => r?.alias ===
-    $page?.params?.room)?.room_id : isSpace ? state?.room_id : null
+    $page?.params?.room)?.room_id : isSpace ? state?.room_id : 'index'
 
 
 $: pinned = isRoom ? state?.children?.find(r => r?.alias ===
@@ -41,18 +41,12 @@ $: pinnedEvents = pinned ? JSON.parse(pinned) : null
 const dispatch = createEventDispatcher()
 
 
+export let showBoardView = false;
+
 let ready = false;
 
 let reloading = false;
 
-let lastPath = null;
-let lastSpace = null;
-let lastRoom = null;
-let lastTopic = null;
-
-let lastAuthState = null;
-
-let lastPageType = null;
 
 $: isSpace = $page?.params?.space !== undefined 
 $: isRoom = $page?.params?.room !== undefined 
@@ -76,7 +70,7 @@ let loaded = false;
 
 
 //$: events = $store?.events?.[roomID]
-$: events = data?.events
+$: events = $store.events[roomID]?.board
 //$: sorted = events?.sort((a, b) => b.origin_server_ts - a.origin_server_ts);
 
 
@@ -124,6 +118,18 @@ async function loadEvents(init) {
 
     if(init) {
     }
+
+    let existing = $store.events[roomID]?.board?.length > 0
+    if(existing) {
+        //let events = $store.events[roomID]?.board
+        reloading = false
+        loaded = true
+        _page = $page
+        setTimeout(() => {
+            reloadTrigger = true
+        }, 1000)
+    }
+
 
     const token = localStorage.getItem('access_token')
 
@@ -175,14 +181,6 @@ async function loadEvents(init) {
     if(resp) {
         data = resp
 
-        if($page?.url?.pathname != lastPath) {
-            lastPath = $page?.url?.pathname
-        }
-
-        lastSpace = $page?.params?.space
-        lastRoom = $page?.params?.room
-        lastTopic = $page?.params?.topic
-        lastAuthState = authenticated
         reloading = false
         loaded = true
         _page = $page
@@ -218,21 +216,6 @@ $: if(data) {
     dispatch('ready', true)
 }
 
-function toggleTheme() {
-    const theme = localStorage.getItem('theme')
-    if(theme === 'light') {
-        localStorage.removeItem('theme')
-        document.documentElement.setAttribute('class', 'dark')
-    } else {
-        localStorage.setItem('theme', 'light')
-        document.documentElement.setAttribute('class', 'light')
-    }
-}
-
-
-function link(space) {
-        return `/${$page.params.space}/p/${space}`
-}
 
 
 let scrollHeight;
@@ -395,20 +378,12 @@ let fetchMore = () => {
     }).then((res) => {
         if(res && res?.events?.length > 0) {
             for (const event of res?.events) {
-              const exists = data.events.some(e => e.event_id === event.event_id);
+              const exists = $store.events[roomID].board.some(e => e.event_id === event.event_id);
 
               if (!exists) {
-                data.events = [...data.events, event];
+                store.addBoardEvent(roomID, event)
               }
             }
-            if(data?.events?.length > 100) {
-                //delete first 30 
-                data.events = data.events.slice(30)
-                data.events = data.events
-
-            }
-
-            store.addToRoomEvents(roomID, res.events)
             startedFetching = true;
 
                 /*
@@ -463,12 +438,7 @@ function stopEditing() {
 function postSaved(e) {
     stopEditing()
 
-    if(!data.events) {
-        data.events = []
-    }
-
-    data.events = [e.detail, ...data.events]
-    store.addNewPostToRoom(roomID, e.detail)
+    store.unshiftBoardEvent(roomID, e.detail)
 
     let url = `/${e.detail?.room_alias}/post/${e.detail?.slug}`
     if(isTopic) {
@@ -491,10 +461,10 @@ $: holder = isTopic ? 'topic' : isRoom ? 'board' : isSpace ? 'space' : null
 
 
 function updateReactions(e) {
-    let index = data.events.findIndex((event) => event.event_id == e.detail.event_id)
+    let index = $store.events[roomID].board.findIndex((event) => event.event_id == e.detail.event_id)
     if(index > -1) {
         console.log("updating reactions", e.detail)
-        data.events[index].reactions = e.detail.reactions
+        $store.events[roomID].board[index].reactions = e.detail.reactions
     }
 }
 
@@ -502,10 +472,10 @@ function updateReplyCount(e) {
         console.log("updating reply count", e.detail)
     const event_id = e.detail.event_id
     const reply_count = e.detail.reply_count
-    let index = data.events.findIndex((event) => event.event_id == event_id)
+    let index = $store.events[roomID].board.findIndex((event) => event.event_id == event_id)
     if(index > -1) {
         console.log("updating reply count", e.detail)
-        data.events[index].reply_count = reply_count
+        $store.events[roomID].board[index].reply_count = reply_count
     }
 }
 
@@ -517,11 +487,11 @@ $: noEvents = events?.length == 0 || events == null
 $: selectedPost = isReply ? null : events?.find(e => e?.slug == $page.params.post)
 
 function postEdited(e) {
-    let index = data.events.findIndex((event) => event.event_id == e.detail.event_id)
+    let index = $store.events[roomID].board.findIndex((event) => event.event_id == e.detail.event_id)
     if(index > -1) {
         console.log("updating edited content")
-        data.events[index].content.title = e.detail.content.title
-        data.events[index].content.body = e.detail.content.body
+        $store.events[roomID].board[index].content.title = e.detail.content.title
+        $store.events[roomID].board[index].content.body = e.detail.content.body
     }
 }
 
@@ -531,10 +501,9 @@ $: roomExists = isRoom && state?.children?.find((child) => child.alias ==
 
 async function redactPost(e) {
     const event = e.detail
-    const index = data.events.findIndex(i => i.event_id === event.event_id);
+    const index = $store.events[roomID].board.findIndex(i => i.event_id === event.event_id);
     if(index !== -1) {
-        data.events.splice(index, 1);
-        data = data
+        $store.events[roomID].board.splice(index, 1);
     }
     if(isPost && event.slug == $page.params.post) {
         let url = `/${$page.params.space}`
@@ -562,16 +531,24 @@ async function redactPost(e) {
 
 async function pinPost(e) {
     const event = e.detail
-    const index = data.events.findIndex(i => i.event_id === event.event_id);
+    const index = $store.events[roomID].board.findIndex(i => i.event_id === event.event_id);
     if(index !== -1) {
-        let ps = data?.events[index].pinned
-        data.events[index].pinned = !ps
+        let ps = $store.events[roomID].board[index].pinned
+        $store.events[roomID].board[index].pinned = !ps
 
-        let pinned_events = JSON.parse(state?.space?.pinned_events)
+
+        let pinned = state?.space?.pinned_events
+        if(isRoom) {
+            pinned = state?.children.find(i => i.room_id == roomID)?.pinned_events
+        }
+
+        let pinned_events = JSON.parse(pinned)
+
         if(!pinned_events) {
             pinned_events = []
         }
         let ind = pinned_events.findIndex(i => i === event.event_id);
+
         if(ind !== -1) {
             pinned_events.splice(ind, 1);
         } else {
@@ -579,7 +556,6 @@ async function pinPost(e) {
         }
         store.updateSpacePinnedEvents($page.params.space, JSON.stringify(pinned_events))
 
-        console.log(pinned_events)
 
         const res = await createStateEvent({
             room_id: e.detail.room_id,

@@ -640,6 +640,17 @@ function createApp() {
     })
   }
 
+  let updateSpaceRoomRestrictions = (space, room_id, restrictions) => {
+    update(p => {
+      p.states[space].space['restrictions'] = restrictions
+      let ind = p.states[space]?.children?.findIndex(x => x.room_id == room_id)
+      if(ind !== -1) {
+        p.states[space].children[ind].restrictions = restrictions
+      }
+      return p
+    })
+  }
+
   let updateSpaceDoNotIndex = (space, dni) => {
     update(p => {
       let s = p.spaces.find(x => x.alias == space)
@@ -977,9 +988,16 @@ function createApp() {
     })
   }
 
-  let addChatEvents = (roomID, event) => {
+  let addChatEvent = (roomID, event) => {
     update(p => {
       p.events[roomID].chat.push(event)
+      return p
+    })
+  }
+
+  let addChatEvents = (roomID, events) => {
+    update(p => {
+      p.events[roomID].chat.push(...events)
       return p
     })
   }
@@ -997,6 +1015,23 @@ function createApp() {
       return p
     })
   }
+
+  let addBoardEvents = (roomID, events) => {
+    update(p => {
+      p.events[roomID].board.push(...event)
+      return p
+    })
+  }
+  let unshiftBoardEvent = (roomID, event) => {
+    update(p => {
+      if(!p.events[roomID].board) {
+        p.events[roomID].board = []
+      }
+      p.events[roomID].board.unshift(event)
+      return p
+    })
+  }
+
 
   const { subscribe, set, update } = writable(app);
 
@@ -1067,6 +1102,7 @@ function createApp() {
     updateSpaceRoomInfo,
     updateSpaceRoomAvatar,
     updateSpaceRoomHeader,
+    updateSpaceRoomRestrictions,
     updateSpaceDoNotIndex,
     updateSpaceRoomDoNotIndex,
     updateSpaceType,
@@ -1088,9 +1124,12 @@ function createApp() {
     addSpaceRoomOrderItem,
     updateSpaceNSFW,
     updateSpaceRoomNSFW,
+    addChatEvent,
     addChatEvents,
     unshiftChatEvents,
     addBoardEvent,
+    addBoardEvents,
+    unshiftBoardEvent,
   };
 }
 

@@ -16,6 +16,8 @@ import SkeletonChatEvents from '$lib/skeleton/skeleton-chat-events.svelte'
 import Thread from '$lib/thread/thread.svelte'
 import Members from '$lib/chat/members/members.svelte'
 
+$: session = $store.verifiedSession
+
 $: authenticated = $store?.authenticated && 
     $store?.credentials != null
     $store?.credentials?.access_token?.length > 0
@@ -49,6 +51,13 @@ $: joinedRoom = authenticated &&
 const dispatch = createEventDispatcher()
 
 
+export let loaded = false;
+export let showChatView = false;
+
+$: if(loaded) {
+    forceScroll()
+}
+
 let ready = false;
 
 let login = () => {
@@ -64,7 +73,13 @@ let wrap;
 onMount(() => {
     wrap.scrollTop = wrap.scrollHeight;
 
-    loadMessages()
+    if(showChatView) {
+        loadMessages()
+    } else {
+        setTimeout(() => {
+            loadMessages()
+        }, 2000)
+    }
     fetchMembers()
 })
 
@@ -82,18 +97,18 @@ async function fetchMembers() {
     }
 }
 
+export function forceScroll() {
+    updateScroll()
+}
+export function scrollToBottom() {
+    if(atBottom) {
+        updateScroll()
+    }
+}
+
 function updateScroll() {
     if(zone) {
         zone.scrollTop = zone.scrollHeight;
-        setTimeout(() => {
-            zone.scrollTop = zone.scrollHeight;
-        }, 10)
-        setTimeout(() => {
-            zone.scrollTop = zone.scrollHeight;
-        }, 40)
-        setTimeout(() => {
-            zone.scrollTop = zone.scrollHeight;
-        }, 100)
     }
 }
 
@@ -105,7 +120,6 @@ afterUpdate(() =>{
 let _page = null;
 let reloadTrigger;
 
-let messages;
 
 function process(m) {
     if(!m) return []
@@ -149,7 +163,13 @@ function process(m) {
     return processedEvents
 }
 
-$: processed = process(messages)
+
+$: topicEvents = $store.events[roomID]?.chat.filter(e => e.content?.topic != null && e.content?.topic == $page.params.topic)
+$: nonTopicEvents = $store.events[roomID]?.chat.filter(e => !e.content?.topic)
+
+$: filtered = isTopic ? topicEvents : nonTopicEvents
+
+$: processed = process(filtered)
 
 $: if(reloadTrigger && ($page.params?.room != _page?.params?.room)) {
     loadMessages()
@@ -194,7 +214,26 @@ async function loadMessages() {
     ready = false;
     last_reached = false;
 
-    messages = null
+
+    let existing = $store.events[roomID]?.chat?.length > 0
+    if(existing) {
+        if(!is_context) {
+            updateScroll()
+        }
+        setTimeout(() => {
+            ready = true;
+        }, 50)
+
+        _page = $page
+        if(!is_context) {
+            syncMessages()
+        }
+        setTimeout(() => {
+            reloadTrigger = true
+        }, 1000)
+    }
+
+
 
     if(socket) {
         socket.close()
@@ -225,8 +264,10 @@ async function loadMessages() {
     }
     const resp = await loadPosts(opt)
     if(resp?.events) {
-        messages = resp?.events.reverse()
-        $store.events[roomID] = messages
+        if(!$store.events[roomID]) {
+            $store.events[roomID] = {chat: [], board: []}
+        }
+        $store.events[roomID].chat = resp.events.reverse()
         if(!is_context) {
             updateScroll()
         }
@@ -271,7 +312,7 @@ let last_reached = false;
 
 async function fetchMore() {
     //fetching = true;
-    if(messages?.length < 50) {
+    if($store.events[roomID]?.chat?.length < 50) {
         return
     }
 
@@ -291,8 +332,9 @@ async function fetchMore() {
     if(resp?.events?.length > 0) {
         fetching = false;
         sp = zone.scrollHeight - zone.scrollTop
-        $store.events[roomID] = [...resp?.events.reverse(), ...messages]
-        messages = [...resp?.events, ...messages]
+
+        store.unshiftChatEvents(roomID, resp?.events.reverse())
+
         maintainScroll()
     } else {
         fetching = false;
@@ -335,8 +377,9 @@ async function fetchForward() {
 
     const resp = await loadPosts(opt)
     if(resp?.events?.length > 0) {
-        $store.events[roomID] = [...messages, ...resp?.events]
-        messages = [...messages, ...resp?.events]
+
+        store.addChatEvents(roomID, resp?.events)
+
         loading_new = false;
     } else {
         no_more = true
@@ -347,215 +390,16 @@ async function fetchForward() {
 
 let socket;
 
-$: first = messages?.length > 0 ? messages[0]?.origin_server_ts : null
 
-$: last = messages?.length > 0 ? messages[messages.length - 1]?.origin_server_ts : null
-
+$: first = $store.events[roomID]?.chat?.length > 0 ?
+    $store.events[roomID]?.chat[0]?.origin_server_ts : null
+$: last = $store.events[roomID]?.chat?.length > 0 ?
+    $store.events[roomID]?.chat[$store.events[roomID].chat.length - 1]?.origin_server_ts : null
 
 let typing = []
 
 function syncMessages() {
-    let reconnectDelay = 1000; // Initial reconnect delay in milliseconds
-    let maxReconnectDelay = 60000; // Maximum reconnect delay in milliseconds
-    let reconnectTimer; // Timer for the reconnect delay
-
-    function scheduleReconnect() {
-        if (reconnectTimer) {
-            clearTimeout(reconnectTimer);
-        }
-        reconnectTimer = setTimeout(function () {
-            console.log("Reconnecting to WebSocket server...");
-            syncMessages();
-        }, reconnectDelay);
-
-        reconnectDelay = Math.min(reconnectDelay * 2, maxReconnectDelay);
-    }
-
-    let url = `${PUBLIC_API_URL_WS}/room/${roomID}/sync`
-
-    /*
-    if(last) {
-        url = `${url}?after=${last}`
-    }
-    */
-
-    socket = new WebSocket(url);
-
-    console.log("syncing messages")
-
-    socket.onopen = function () {
-        socket.send(JSON.stringify({
-            type: 'sync',
-            last: last,
-        }))
-        reconnectDelay = 1000; 
-    };
-
-    socket.onmessage = function (e) {
-        if(e?.data && e?.data != 'ping') {
-            let event = JSON.parse(e.data)
-
-
-            if(event?.type == 'typing') {
-                typing = [...typing, event?.value]
-            }
-
-            if (event && Array.isArray(event)) {
-                let events = event.reverse()
-                events?.forEach(e => {
-                    let ind = messages.findIndex(m => m?.event_id === e?.event_id)
-
-                    let is_thread = e?.content?.['m.relates_to']?.['rel_type'] == 'm.thread'
-                    let is_topic = isTopic && e?.content?.topic?.length > 0
-
-                    if(ind == -1 && !is_thread && is_topic) {
-                        messages = [...messages, e]
-                    }
-                })
-            } else if (event && typeof event === 'object') {
-                if(event.type == 'm.room.redaction') {
-                    $store.redactedEvent = event
-                    let ind = messages.findIndex(m => m?.event_id ===
-                        event?.content?.redacts)
-                    if(ind != -1) {
-                        messages[ind].content = {
-                            redacted: true,
-                        }
-                        messages = messages
-                    }
-                }
-
-                if(event.type == 'm.room.member' || 
-                event.type == 'm.room.name' || 
-                event.type == 'space.board.post' || 
-                event.type == 'm.room.topic') {
-                    messages = [...messages, event]
-                    messages = messages
-                }
-
-                if(event.type == 'm.reaction') {
-                    addNewReaction(event)
-                }
-
-
-                let ind = messages.findIndex(m => m?.transaction_id ===
-                    event?.transaction_id)
-
-                let is_thread = event?.content?.['m.relates_to']?.['rel_type'] == 'm.thread'
-                let is_edit = event?.content?.['m.new_content']?.body
-
-                let is_topic = isTopic && event?.content?.topic?.length > 0
-
-                if(ind == -1 && !is_thread && !is_edit) {
-                    messages = [...messages, event]
-                }
-
-                let isMR = event?.content?.['m.relates_to']?.rel_type == 'm.thread'
-
-                if(ind == -1 && isMR) {
-                    let event_id = event?.content?.['m.relates_to']?.event_id
-                    const slug = event_id.substr(-11)
-
-                    let pi = $store.thread_events.findIndex(m => m?.transaction_id === event.transaction_id)
-                    if(pi == -1) {
-                        store.addThreadEvent(slug, event)
-                    }
-
-                    let index = messages.findIndex(m => m?.event_id === event_id)
-                    if(index != -1) {
-                        if(!messages[index].thread_reply_count) {
-                            messages[index].thread_reply_count = 0
-                        }
-                        messages[index].thread_reply_count += 1
-                        event.content = JSON.stringify(event?.content)
-                        messages[index].last_thread_reply = event
-                        //messages = messages
-                    }
-                }
-            }
-            if(atBottom) {
-                updateScroll()
-            }
-        }
-    };
-
-    socket.onclose = function (event) {
-        console.log("WebSocket connection closed:", event.reason);
-        scheduleReconnect();
-    };
-
-    socket.onerror = function (error) {
-        console.log("WebSocket error:", error);
-        scheduleReconnect();
-    };
-
-    setInterval(() => {
-        if (socket.readyState === WebSocket.OPEN) {
-            socket.send(JSON.stringify({
-                type: 'sync',
-                last: last,
-            }))
-        }
-    }, 30000);
-}
-
-function addNewReaction(e) {
-    let txn_id = e?.transaction_id
-    let mev = e?.content?.['m.relates_to']?.event_id
-    let key = e?.content?.['m.relates_to']?.key
-    let url = e?.content?.['m.relates_to']?.url
-    let ind = messages.findIndex(m => m?.event_id === mev)
-    if(ind != -1) {
-        let event = messages[ind]
-        let sender = e?.sender?.id
-
-        if(event?.reactions) {
-            // check if reaction key exists
-            let i = event?.reactions?.findIndex(r => r.key === key);
-            // add sender if it does
-            if (i !== -1) {
-                // check if sender exists 
-                let j = event?.reactions[i].senders.findIndex(s => s?.transaction_id === txn_id);
-                if(j === -1) {
-                    // if it doesn't, add sender
-                    event?.reactions[i].senders.push({
-                        sender: sender,
-                        event_id: e.event_id
-                    });
-                }
-
-                // if there are no senders, remove reaction
-                if(event?.reactions[i].senders.length === 0) {
-                    event?.reactions.splice(i, 1);
-                }
-            // if not, add new reaction with sender
-            } else {
-                let newReaction = {
-                    key: key,
-                    senders: [{
-                        sender: sender,
-                        event_id: e.event_id
-                    }]
-                };
-                if(url) newReaction.url = url
-
-                event.reactions.push(newReaction);
-            }
-        } else {
-            let newReaction = {
-                key: key,
-                senders: [{
-                    sender: sender,
-                    event_id: e.event_id
-                }]
-            };
-            if(url) newReaction.url = url
-
-            event.reactions = [newReaction];
-        } 
-        event.reactions = event.reactions
-        messages = messages
-    }
+    dispatch('sync', true)
 }
 
 async function isTyping() {
@@ -625,7 +469,7 @@ function setupReverseObserver() {
     let callback = (entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                if(!no_more && messages.length >=100) {
+                if(!no_more) {
                     fetchForward()
                 }
             }
@@ -715,7 +559,7 @@ async function newMessage(e) {
         unsent: true,
         transaction_id: `co${Date.now()}`,
     }
-    messages = [...messages, event]
+    store.addChatEvent(roomID, event)
 
     await tick()
     updateScroll()
@@ -726,22 +570,20 @@ async function saved(e) {
     let event = e.detail.event
     event.transaction_id = e.detail.transaction_id
     let transaction_id = e.detail.transaction_id
-    const index = messages.findIndex(i => i.transaction_id === transaction_id);
+    const index = $store.events[roomID]?.chat.findIndex(i => i.transaction_id === transaction_id);
     if(index !== -1) {
-        messages[index] = event
-        messages = messages
+        $store.events[roomID].chat[index] = event
     }
-    last =  event.origin_server_ts
+    //last =  event.origin_server_ts
 }
 
 async function redactPost(e) {
     const event = e.detail
-    const index = messages.findIndex(i => i.event_id === event.event_id);
+    const index = $store.events[roomID].chat.findIndex(i => i.event_id === event.event_id);
     if(index !== -1) {
-        messages[index].content = {
+        $store.events[roomID].chat[index].content = {
             redacted: true,
         }
-        messages = messages
     }
 
     let redaction = {
@@ -754,9 +596,7 @@ async function redactPost(e) {
 }
 
 async function reacted(e) {
-    if(atBottom) {
         updateScroll()
-    }
 }
 
 let replying = false;
@@ -792,7 +632,7 @@ $: addBorder = showUsers && !hasScrolled
 function focusReplyEvent(e) {
     let event_id = e.detail
 
-    let index = messages.findIndex(i => i.event_id === event_id);
+    let index = $store.events[roomID].chat.findIndex(i => i.event_id === event_id);
     if(index !== -1) {
         let el = document.getElementById(`event-${event_id}`)
         if(el) {
@@ -861,8 +701,9 @@ async function jumpToLatest() {
         jumping = false
         no_more = true
         requestAnimationFrame(animate);
-        messages = resp?.events.reverse()
-        $store.events[roomID] = messages
+
+        $store.events[roomID].chat = resp.events.reverse()
+
         composer.focusBodyInput()
 
         purgeContext()
@@ -904,9 +745,16 @@ function attachmentDeleted() {
     composer.focusBodyInput()
 }
 
-$: scrolled = zone ? zone?.scrollHeight > zone?.clientHeight : false
+export async function focusComposer() {
+    await tick()
+    setTimeout(() => {
+        if(composer) {
+            composer.focusBodyInput()
+        }
+    }, 10)
+}
 
-$: items = messages
+$: scrolled = zone ? zone?.scrollHeight > zone?.clientHeight : false
 
 </script>
 
@@ -929,8 +777,8 @@ $: items = messages
 
                 {#if !ready}
                     <div class="mask-s" bind:this={skeleton}>
-                    <SkeletonChatEvents />
-                </div>
+                        <SkeletonChatEvents />
+                    </div>
                 {/if}
 
 
@@ -962,8 +810,7 @@ $: items = messages
                                         messages={processed}
                                         on:focus-reply={focusReplyEvent}
                                         event={message} 
-                                        on:saved={saved}
-                                        sender={null} />
+                                        on:saved={saved} />
                             {/each}
                         {/if}
 
@@ -1045,7 +892,7 @@ $: items = messages
                         on:kill={cancelReply}
                         isChat={true} />
                 </div>
-            {:else if authenticated && !joinedRoom}
+            {:else if session && authenticated && !joinedRoom}
                     <div class="grd">
                         <div class="grd-c rel">
                             <button class="but ph4" 
@@ -1060,7 +907,7 @@ $: items = messages
                             {/if}
                         </div>
                     </div>
-            {:else if !authenticated}
+            {:else if session && !authenticated}
                 <div class="grd">
                     <div class="comm">
                             <span class="sp" on:click={login}>Login</span> or <span

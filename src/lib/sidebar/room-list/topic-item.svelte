@@ -44,12 +44,19 @@ $: spaceRoomPath = $store?.spacePaths[space]?.rooms[item?.alias]
 
 $: menuToggled = $store?.menuToggled
 
+$: viewQuery = $page.url.searchParams.get('view')
+$: chatView = viewQuery === 'chat'
+$: boardView = viewQuery === 'board'
 
 function goToRoom() {
 
     let url = `/${space}/${alias}/topic/${item}`
     if(isGeneral) {
         url = `/${space}/topic/${item}`
+    }
+
+    if(viewQuery) {
+        url = url + `?view=${viewQuery}`
     }
 
     if($page.params.domain) {

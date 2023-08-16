@@ -209,7 +209,7 @@ async function updateRestrictions(e) {
         age: ageInput.value,
     }
 
-    store.updateSpaceRestrictions($page.params.space, restrictions)
+    store.updateSpaceRoomRestrictions($page.params.space, roomID, restrictions)
     const res = await createStateEvent({
         room_id: roomID,
         event_type: 'm.restrict_events_to',
