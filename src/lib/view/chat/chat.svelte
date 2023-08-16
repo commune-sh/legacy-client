@@ -211,17 +211,17 @@ $: if(skeleton) {
 }
 
 async function loadMessages() {
+    ready = false;
     last_reached = false;
 
 
     let existing = $store.events[roomID]?.chat?.length > 0
     if(existing) {
         if(!is_context) {
-            updateScroll()
+            requestAnimationFrame(() => {
+                updateScroll()
+            })
         }
-        setTimeout(() => {
-            //ready = true;
-        }, 50)
 
         _page = $page
         if(!is_context) {
@@ -230,8 +230,6 @@ async function loadMessages() {
         setTimeout(() => {
             reloadTrigger = true
         }, 1000)
-    } else {
-        ready = false;
     }
 
 
@@ -881,7 +879,7 @@ $: scrolled = zone ? zone?.scrollHeight > zone?.clientHeight : false
 
         <div class="com grd">
         {#if ready}
-            {#if Composer && joinedRoom}
+            {#if Composer && authenticated && joinedRoom}
                 <div class="chat-composer">
                     <Composer 
                         on:attached={attached}
@@ -897,7 +895,7 @@ $: scrolled = zone ? zone?.scrollHeight > zone?.clientHeight : false
                         on:kill={cancelReply}
                         isChat={true} />
                 </div>
-            {:else if session && authenticated && !joinedRoom}
+            {:else if authenticated && !joinedRoom}
                     <div class="grd">
                         <div class="grd-c rel">
                             <button class="but ph4" 
