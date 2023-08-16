@@ -78,9 +78,9 @@ $: uploaded = event?.content?.attachments ?
 
 $: total = event?.content?.attachments?.length * 100
 $: progress = (event.unsent && event?.content?.attachments) ?
-    event?.content?.attachments?.reduce((sum, item) => sum + $store.attachments[item.id].progress, 0) : 0
+    event?.content?.attachments?.reduce((sum, item) => sum + $store.attachments[item.id]?.progress, 0) : 0
 
-$: percent = progress / total * 100
+$: percent = progress ? (progress / total * 100) : 0
 
 $: if(event?.unsent && uploaded) {
     save()
