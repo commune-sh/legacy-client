@@ -862,14 +862,17 @@ function createApp() {
         p.settings.theme = 'dark'
         localStorage.setItem('theme', 'dark')
         document.documentElement.setAttribute('class', 'dark')
+        document.cookie = `theme=dark; max-age=9999; path=/`;
       } else if(p.settings.theme == 'dark'){
         p.settings.theme = 'black'
         localStorage.setItem('theme', 'black')
         document.documentElement.setAttribute('class', 'black')
+        document.cookie = `theme=dark; max-age=9999; path=/`;
       } else {
         p.settings.theme = 'light'
         localStorage.setItem('theme', 'light')
         document.documentElement.setAttribute('class', 'light')
+        document.cookie = `theme=light; max-age=9999; path=/`;
       }
       return p
     })
