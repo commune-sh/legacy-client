@@ -3,9 +3,8 @@ import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 import { hash, down } from '$lib/assets/icons.js'
 import { store } from '$lib/store/store.js'
-import Popup from '$lib/popup/popup.svelte'
 import TopicTools from './topic-tools.svelte'
-import { createEventDispatcher } from 'svelte'
+import { onMount, createEventDispatcher } from 'svelte';
 
 const dispatch = createEventDispatcher();
 
@@ -14,6 +13,13 @@ export let item;
 export let index;
 export let isGeneral;
 export let alias;
+
+let Popup;
+onMount(() => {
+    import('$lib/popup/popup.svelte').then((m) => {
+        Popup = m.default
+    })
+})
 
 $: space = $page.params?.space
 $: room = $page.params?.room
@@ -164,6 +170,7 @@ function drag(e) {
         </div>
     </div>
 
+        {#if Popup}
             <div class="tools grd">
                 <Popup
                 bind:this={popup}
@@ -194,6 +201,7 @@ function drag(e) {
                 </Popup>
 
             </div>
+        {/if}
 
 </div>
 

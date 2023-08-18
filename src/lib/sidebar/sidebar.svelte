@@ -10,7 +10,7 @@ import { createStateEvent } from '$lib/utils/request.js'
 
 $: state = $store?.states[$page?.params?.space]
 
-$: ready = state != undefined
+$: ready = state != undefined && $store.stateReady
 
 $: children = state?.children
 
@@ -30,8 +30,7 @@ function buildItems(state) {
     let items = [
         {
             alias: state?.space?.is_profile ? `${$page.params.space}`:`general`,
-            title: state?.space?.topic ? state?.space?.topic :
-                state?.space?.name? state?.space?.name : state?.space?.alias,
+            title: state?.space?.name ? state?.space?.name : state?.space?.alias,
             avatar: state?.space?.avatar,
             header: state?.space?.header,
             name: state?.space?.name,
@@ -47,11 +46,11 @@ function buildItems(state) {
 
     if(children?.length > 0) {
         children.forEach(child => {
-            let title = child?.topic
-            if(!child.topic) {
-                title = `${$page.params.space}/${child.alias}`
+            let title = `${$page.params.space}/${child.alias}`
+            if(child.topic) {
+                title = `${title} - ${child.topic}`
             }
-            child.title = title
+            child.title = `${title}`
             items.push(child)
         })
     }

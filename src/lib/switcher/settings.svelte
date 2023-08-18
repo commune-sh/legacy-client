@@ -14,7 +14,7 @@ let menu;
 
 onMount(() => {
     menu = tippy(el, {
-        content: content,
+        content: `Settings`,
         placement: 'right',
         arrow: true,
         duration: 1,
@@ -44,10 +44,6 @@ $: if(active) {
 }
 
 </script>
-
-<div class="" bind:this={content}>
-    Settings
-</div>
 
 <div class="i-c grd">
     <div class="item grd-c" 

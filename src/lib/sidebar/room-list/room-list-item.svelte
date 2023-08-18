@@ -1,6 +1,7 @@
 <script>
 import { PUBLIC_APP_NAME, PUBLIC_MEDIA_URL } from '$env/static/public';
-import { createEventDispatcher } from 'svelte';
+import { onMount, createEventDispatcher } from 'svelte';
+import { browser } from '$app/environment';
 import { joinSpace, joinRoom } from '$lib/utils/request.js'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
@@ -10,7 +11,6 @@ import { createStateEvent } from '$lib/utils/request.js'
 import { store } from '$lib/store/store.js'
 import TopicItem from './topic-item.svelte'
 import AddTopic from './add-topic.svelte'
-import Popup from '$lib/popup/popup.svelte'
 import RoomTools from './room-tools.svelte'
 
 export let item;
@@ -18,6 +18,13 @@ export let index;
 export let collapsed;
 
 const dispatch = createEventDispatcher()
+
+let Popup;
+onMount(() => {
+    import('$lib/popup/popup.svelte').then((m) => {
+        Popup = m.default
+    })
+})
 
 $: state = $store?.states[$page?.params?.space]
 $: sender_id = $store.credentials?.matrix_user_id
@@ -38,7 +45,7 @@ $: active = (isGeneral && !room && !topic) ||
 $: selected = (isGeneral && !room) || 
     (room === item?.alias)
 
-$: if(selected && !post) {
+$: if(browser && selected && !post) {
     document.title = `${item.title} - ${PUBLIC_APP_NAME}`
 }
 
@@ -382,9 +389,18 @@ function moveTopicDown(e) {
 
 }
 
+$: title = `${item.title} - ${PUBLIC_APP_NAME}`
+$: description = item?.topic ? item?.topic : item?.name ?
+item?.name : item?.alias ? item?.alias : null
+
 </script>
 
 <svelte:head>
+{#if selected && !post}
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    <meta property="og:image" content={avatar} />
+{/if}
 {#if active}
     {#if avatar}
         <meta property="og:image" content={avatar} />
@@ -450,7 +466,9 @@ function moveTopicDown(e) {
         {/if}
 
 
+        {#if Popup}
             <div class="tools grd">
+
                 <Popup
                 bind:this={popup}
                 trigger={"click"}
@@ -476,6 +494,7 @@ function moveTopicDown(e) {
                 </Popup>
 
             </div>
+        {/if}
 
 
     </div>

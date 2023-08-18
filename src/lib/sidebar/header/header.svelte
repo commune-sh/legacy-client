@@ -6,7 +6,6 @@ import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
 import SkeletonSpan from '$lib/skeleton/skeleton-span.svelte'
 import Popup from '$lib/popup/popup.svelte'
-import SpaceMenu from './space-menu.svelte'
 import tippy from 'tippy.js';
 
 $: state = $store?.states[$page?.params?.space]
@@ -123,11 +122,17 @@ function kill() {
     menu.hide()
 }
 
+let SpaceMenu;
+onMount(() => {
+    import('./space-menu.svelte').then(m => {
+        SpaceMenu = m.default
+    })
+})
 
 </script>
 
 
-{#if isSpace && stateExists}
+{#if isSpace && stateExists && SpaceMenu}
 <div class="menu" bind:this={content}>
     <SpaceMenu on:kill={kill}/>
 </div>

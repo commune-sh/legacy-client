@@ -3,7 +3,7 @@ import '/static/css/main.css'
 import Authentication from '$lib/auth/authentication.svelte'
 import Switcher from '$lib/switcher/switcher.svelte'
 import Sidebar from '$lib/sidebar/sidebar.svelte'
-import { PUBLIC_API_URL, PUBLIC_APP_NAME, PUBLIC_INDEX, PUBLIC_META_DESCRIPTION } from '$env/static/public';
+import { PUBLIC_MEDIA_URL, PUBLIC_FAVICON, PUBLIC_APP_NAME, PUBLIC_INDEX, PUBLIC_META_DESCRIPTION } from '$env/static/public';
 import { APIRequest } from '$lib/utils/request.js'
 import { onMount, tick } from 'svelte'
 import { page } from '$app/stores';
@@ -19,11 +19,16 @@ import About from '$lib/about/about.svelte'
 import DiscoverSpaces from '$lib/discover/discover.svelte'
 import Gallery from '$lib/gallery/gallery.svelte'
 
-$: isIndex = $page?.url.pathname === '/'
+export let data;
 
-$: if(isIndex) {
-    document.title = `${PUBLIC_APP_NAME}`
+$: if(data?.state?.space) {
+    store.addSpaceState($page.params?.space, data.state)
+    store.stateReady()
 }
+
+$: isIndex = $page?.url.pathname === '/'
+$: isSpace = $page?.params?.space !== undefined 
+$: isPost = $page?.params?.post !== undefined
 
 let showIndex = PUBLIC_INDEX === 'true'
 
@@ -102,17 +107,11 @@ $: if(authenticated) {
     })
 }
 
-$: isMobile = window.innerWidth <= 768
 
 onMount(() => {
-    if(isMobile) {
-        //setupSwipeGestures()
-    }
 })
 
 function setupSwipeGestures() {
-    window.addEventListener("touchstart", startTouch, false);
-    window.addEventListener("touchmove", moveTouch, false);
 }
 
 let initialX = null;
@@ -154,12 +153,50 @@ function moveTouch(e) {
     e.preventDefault();
 };
 
+$: spaceTitle = `${data?.space?.alias} - ${PUBLIC_APP_NAME}`
+
+$: fb = data?.event?.content?.body ? `${data?.event?.content?.body.slice(0, 1000)}...` : ''
+
+$: pb = data?.event?.content?.body?.length > 50 ? `${data?.event?.content?.body.slice(0, 50)}...` : ''
+
+$: pt = data?.event?.content?.title ? data?.event?.content?.title :
+    pb ? pb : ''
+
+$: postTitle = pt ? `${pt} - ${PUBLIC_APP_NAME}` : PUBLIC_APP_NAME
+
+$: title = isIndex ? PUBLIC_APP_NAME : isPost ? postTitle : isSpace ? spaceTitle : PUBLIC_APP_NAME
+
+$: hasImage = data?.event?.content?.attachments?.length > 0 &&
+    data?.event?.content?.attachments[0]?.type?.startsWith('image')
+
+$: imageKey = hasImage ? data?.event?.content?.attachments[0]?.key : ''
+
+$: imageSRC = `${PUBLIC_MEDIA_URL}/${imageKey}`
+
+$: sender = data?.event?.sender?.display_name ?
+data?.event?.sender?.display_name : data?.event?.sender?.username
+
 </script>
+
 <svelte:head>
-{#if isIndex}
-    <meta name="description" content={PUBLIC_META_DESCRIPTION}>
-{/if}
+    <title>{title}</title>
+    {#if isPost && hasImage && imageSRC}
+        <meta property="og:image" content={imageSRC} />
+    {/if}
+    {#if isPost && sender}
+        <meta name="author" content={sender} />
+    {/if}
+    {#if !isSpace}
+        <meta property="og:image" content={PUBLIC_FAVICON} />
+    {/if}
+    {#if isPost && data?.event}
+        <meta name="description" content={fb}>
+    {/if}
+    {#if isIndex}
+        <meta name="description" content={PUBLIC_META_DESCRIPTION}>
+    {/if}
 </svelte:head>
+
 
 {#if authenticated && EmojiPicker}
     <EmojiPicker />

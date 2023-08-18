@@ -22,7 +22,9 @@ $: if(!active) {
     }, 100)
 }
 
+let mounted = false;
 onMount(() => {
+    mounted = true;
     menu = tippy(el, {
         content: content,
         allowHTML: true,
@@ -110,7 +112,7 @@ $: room_alias = `#${$page.params.space}:${stripHTTPS(PUBLIC_BASE_URL)}`
     </div>
 </div>
 
-<div class="menu" bind:this={content}>
+<div class="menu" class:show={mounted} bind:this={content}>
     <div class="content pa2 fl-co">
 
         <div class="rid pa2">
@@ -203,8 +205,12 @@ $: room_alias = `#${$page.params.space}:${stripHTTPS(PUBLIC_BASE_URL)}`
     z-index: 901;
     border-radius: 9px;
     background-color: var(--context-menu-bg);
-    display: grid;
     overflow: hidden;
+    display: none;
+}
+
+.show {
+    display: grid;
 }
 
 .item {

@@ -137,13 +137,7 @@ $: if(authenticating) {
 }
 
 $: if(active) {
-    document.addEventListener('keydown', escape)
-    //document.body.style.overflowY = 'hidden'
-    //document.body.style.marginRight = '10px'
 } else {
-    document.removeEventListener('keydown', escape)
-    //document.body.style.overflowY = 'scroll'
-    //document.body.style.marginRight = '0px'
     store.stopAuthenticating()
     mode = "login"
 }

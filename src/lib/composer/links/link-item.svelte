@@ -16,7 +16,7 @@ function deleteLink() {
 
 <div class="link-item ma2 pa2 fl">
     {#if item.image}
-        <div class="image mr2 grd-c" 
+        <div class="image mr3 grd-c" 
             style="background-image: url({item.image})">
         </div>
     {/if}

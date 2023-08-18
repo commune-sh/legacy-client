@@ -24,7 +24,10 @@ $: if(!active) {
     }, 100)
 }
 
+let mounted = false;
+
 onMount(() => {
+    mounted = true
     menu = tippy(el, {
         content: content,
         allowHTML: true,
@@ -47,7 +50,7 @@ onMount(() => {
     });
 })
 
-$: isMobile = window.innerWidth <= 768
+$: isMobile = false
 
 function kill() {
     menu.hide()
@@ -86,6 +89,7 @@ function topicSelected(t) {
     return topic == t
 }
 
+$: viewQuery = $page.url.searchParams.get('view')
 
 function goToItem(item) {
     menu.hide()
@@ -99,6 +103,10 @@ function goToItem(item) {
 
     if(isDomain) {
         url = `/${$page.params.domain}/${space}${alias}`
+    }
+
+    if(viewQuery) {
+        url = url + `?view=${viewQuery}`
     }
 
     goto(url, {
@@ -162,7 +170,7 @@ function sortTopics (topics) {
     </div>
 </div>
 
-<div class="menu" bind:this={content}>
+<div class="menu" class:show={mounted} bind:this={content}>
     <div class="content pa1 fl-co">
 
         {#each items as item}
@@ -222,7 +230,6 @@ function sortTopics (topics) {
 
 <style>
 .board-list {
-    display: grid;
     grid-template-columns: 1fr auto;
     border-radius: 5px;
     background: var(--shade-3);
@@ -230,6 +237,9 @@ function sortTopics (topics) {
     overflow: hidden;
     font-weight: 500;
     color: var(--text-light);
+    display: grid;
+}
+.sb {
 }
 
 .name {
@@ -245,8 +255,12 @@ function sortTopics (topics) {
     z-index: 901;
     border-radius: 9px;
     background-color: var(--context-menu-bg);
-    display: grid;
     overflow: hidden;
+    display: none;
+}
+
+.show {
+    display: grid;
 }
 
 .item {

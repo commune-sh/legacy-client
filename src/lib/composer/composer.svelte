@@ -116,7 +116,7 @@ onMount(() => {
         if(state.focus == 'body') {
             bodyInput.selectionStart = state.cursor;
             bodyInput.selectionEnd = state.cursor;
-            focusBodyInput()
+            //focusBodyInput()
             if(state.scroll) {
                 bodyInput.scrollTop = state.scroll
             }
@@ -126,6 +126,7 @@ onMount(() => {
             titleInput.selectionEnd = state.cursor;
             focusTitleInput()
         }
+            focusTitleInput()
     }
 
     if(!state && !editing) {

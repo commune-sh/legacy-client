@@ -75,6 +75,9 @@ $: indexText = isAll ? `All posts` : authenticated ? `Your feed` : `What's new`
 
 
 function sortItems(state) {
+    if(!state) {
+        return []
+    }
     if(state?.exists == false) {
         return []
     }
@@ -90,7 +93,7 @@ function sortItems(state) {
             fullpath: `/${$page.params.space}`,
             room_id: state?.room_id,
             topic: state?.space?.topic,
-            topics: JSON.parse(state?.space?.topics),
+            topics: state?.space?.topics ? JSON.parse(state?.space?.topics) : null,
             restrictions: state?.space?.restrictions,
             avatar: state?.space?.avatar,
             is_profile: state?.space?.is_profile,
@@ -108,7 +111,7 @@ function sortItems(state) {
                 fullpath: `/${$page.params.space}/${child?.alias}`,
                 room_id: child?.room_id,
                 topic: child?.topic,
-                topics: JSON.parse(child?.topics),
+                topics: child?.topics ? JSON.parse(child?.topics) : null,
                 avatar: child?.avatar,
                 is_profile: state?.space?.is_profile,
                 type: child?.type,
@@ -121,7 +124,7 @@ function sortItems(state) {
     return items
 }
 
-$: items = sortItems(state)
+$: items = state ? sortItems(state) : []
 
 $: selected = items?.filter(x => x?.path === $page?.params?.room)[0]
 
@@ -214,7 +217,6 @@ async function join() {
 $: isStaticRoute = $store.staticRoutes.some(r => r.path === $page?.url?.pathname);
 $: staticRoute = $store.staticRoutes.find(r => r.path === $page?.url?.pathname);
 
-$: isMobile = window.innerWidth <= 768
 $: isSpace = $page?.params?.space != undefined
 $: isPost = $page?.params?.post != undefined
 $: isRoom = $page?.params?.room != undefined
@@ -281,11 +283,6 @@ $: if(top && selected?.topic && !tset) {
 
 </script>
 
-<svelte:head>
-    {#if description}
-    <meta name="description" content={description}>
-    {/if}
-</svelte:head>
 
 <div class="header">
     <div class="container fl">

@@ -13,7 +13,7 @@ let menu;
 
 onMount(() => {
     menu = tippy(el, {
-        content: content,
+        content: `Create Space`,
         placement: 'right',
         arrow: true,
         duration: 1,
@@ -72,10 +72,6 @@ function createSpace() {
 }
 
 </script>
-
-<div class="" bind:this={content}>
-    Create Space
-</div>
 
 <div class="i-c grd">
     <div class="item grd-c"

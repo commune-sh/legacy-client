@@ -11,9 +11,11 @@ let content;
 
 let menu;
 
+$: tip =`${isLight ? 'Dark' : isDark? 'Black' : 'Light'} mode`
+
 onMount(() => {
     menu = tippy(el, {
-        content: content,
+        content: tip,
         placement: 'right',
         arrow: true,
         duration: 1,
@@ -46,10 +48,6 @@ function toggle() {
 }
 
 </script>
-
-<div class="" bind:this={content}>
-    {isLight ? 'Dark' : isDark? 'Black' : 'Light'} mode
-</div>
 
 <div class="i-c grd">
     <div class="item grd-c" 

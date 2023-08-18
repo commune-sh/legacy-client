@@ -5,6 +5,9 @@ import tippy from 'tippy.js';
 import { v4 as uuidv4 } from 'uuid';
 import { store } from '$lib/store/store.js'
 
+$: res_size = $store.features?.restrictions?.media?.max_size || 2
+$: max_size = (res_size > 10 ? 10 : res_size) * 1024 * 1024
+
 onMount (() => {
     tippy('.attach', {
         content: 'Attach Media',
@@ -39,7 +42,17 @@ let build = async (e) => {
 
         const file = e.target.files[i]
 
-        if (file.size > 8388608) {
+        if (file.size > max_size) {
+
+            let name = file.name
+            if(name.length > 20) {
+                name = name.substring(0, 20) + '...'
+            }
+
+            $store.alert = {
+                active: true,
+                message: `${name} is too large. Max size is ${res_size}MB.`
+            }
             files = []
             files = files
             tooLarge = true

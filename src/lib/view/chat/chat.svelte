@@ -214,7 +214,6 @@ async function loadMessages() {
     ready = false;
     last_reached = false;
 
-
     let existing = $store.events[roomID]?.chat?.length > 0
     if(existing) {
         if(!is_context) {
@@ -230,6 +229,8 @@ async function loadMessages() {
         setTimeout(() => {
             reloadTrigger = true
         }, 1000)
+        ready = true
+        return
     }
 
 
@@ -268,15 +269,15 @@ async function loadMessages() {
         }
         $store.events[roomID].chat = resp.events.reverse()
         if(!is_context) {
-            updateScroll()
+            requestAnimationFrame(animate)
             forceScroll()
             if(composer) {
                 composer.focusBodyInput()
             }
         }
     }
+    ready = true
 
-    ready = true;
 
     _page = $page
     if(!is_context) {
@@ -315,9 +316,6 @@ let last_reached = false;
 
 async function fetchMore() {
     //fetching = true;
-    if($store.events[roomID]?.chat?.length < 50) {
-        return
-    }
 
     let endpoint = PUBLIC_API_URL
 
@@ -485,13 +483,14 @@ function setupReverseObserver() {
     }
 }
 
-let atBottom;
+
+let atBottom = false;
 
 function trackScroll(e) {
     if(fetching) {
         e.preventDefault()
     }
-    atBottom = zone.scrollTop + zone.clientHeight >= zone.scrollHeight - 100;
+    atBottom = zone?.scrollTop + zone?.clientHeight >= zone?.scrollHeight - 100;
 }
 
 let busy = false;
@@ -878,7 +877,6 @@ $: scrolled = zone ? zone?.scrollHeight > zone?.clientHeight : false
         </div>
 
         <div class="com grd">
-        {#if ready}
             {#if Composer && authenticated && joinedRoom}
                 <div class="chat-composer">
                     <Composer 
@@ -918,7 +916,6 @@ $: scrolled = zone ? zone?.scrollHeight > zone?.clientHeight : false
                     </div>
                 </div>
             {/if}
-        {/if}
 
 
         </div>

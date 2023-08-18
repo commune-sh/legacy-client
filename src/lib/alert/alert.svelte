@@ -23,7 +23,7 @@ $: if(active && $store.alert.autohide) {
 <div class="alert">
     <div class="mes grd-c fl">
         <div class="fl-o grd-c">
-            {$store.alert?.message}
+            {@html $store.alert?.message}
         </div>
         <div class="ico-s" on:click={kill}>
             {@html close}

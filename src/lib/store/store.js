@@ -1,4 +1,5 @@
 import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
+import { browser } from '$app/environment';
 import { generateInitials } from '$lib/utils/utils.js'
 import { writable } from 'svelte/store';
 
@@ -102,18 +103,20 @@ function createApp() {
     scrollPositions: [],
   }
 
-  let theme = localStorage.getItem(`theme`) || "{}"
-  if(theme == 'light') {
-    app.settings.theme = 'light'
-  } else if(theme == 'dark') {
-    app.settings.theme = 'dark'
-  } else {
-    app.settings.theme = 'black'
-  }
+  if(browser) {
+    let theme = localStorage.getItem(`theme`) || "{}"
+    if(theme == 'light') {
+      app.settings.theme = 'light'
+    } else if(theme == 'dark') {
+      app.settings.theme = 'dark'
+    } else {
+      app.settings.theme = 'black'
+    }
 
-  let showUsers = localStorage.getItem(`show_users`)
-  if(showUsers == 'true') {
-    app.showRoomUsers = true
+    let showUsers = localStorage.getItem(`show_users`)
+    if(showUsers == 'true') {
+      app.showRoomUsers = true
+    }
   }
 
 
@@ -179,6 +182,7 @@ function createApp() {
   let stateReady = () => {
     update(p => {
       p.stateReady = true
+      console.log("is sstate ready?", p.stateReady)
       return p
     })
   }
@@ -468,6 +472,7 @@ function createApp() {
   let addSpaceState = (space, state) => {
     update(p => {
       p.states[space] = state
+      console.log("added soace state", p.states[space])
       return p
     })
   }

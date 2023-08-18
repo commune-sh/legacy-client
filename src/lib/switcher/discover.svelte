@@ -14,7 +14,7 @@ let menu;
 
 onMount(() => {
     menu = tippy(el, {
-        content: content,
+        content: `Discover Spaces`,
         placement: 'right',
         arrow: true,
         duration: 1,
@@ -45,10 +45,6 @@ $: if(active) {
 
 
 </script>
-
-<div class="" bind:this={content}>
-    Discover Spaces
-</div>
 
 <div class="i-c grd">
     <div class="item grd-c" 

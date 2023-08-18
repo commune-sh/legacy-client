@@ -37,9 +37,6 @@ onMount(() => {
         </div>
     {/each}
     </div>
-    {#if !embed}
-        <div class="fade"></div>
-    {/if}
 </section>
 
 <style>
