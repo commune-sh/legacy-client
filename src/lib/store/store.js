@@ -867,7 +867,7 @@ function createApp() {
         p.settings.theme = 'black'
         localStorage.setItem('theme', 'black')
         document.documentElement.setAttribute('class', 'black')
-        document.cookie = `theme=dark; max-age=9999; path=/`;
+        document.cookie = `theme=black; max-age=9999; path=/`;
       } else {
         p.settings.theme = 'light'
         localStorage.setItem('theme', 'light')
