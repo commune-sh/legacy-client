@@ -12,7 +12,7 @@
     </script>
     <script>
         let theme = localStorage.getItem(`theme`)
-        let pdt = `%sveltekit.env.PUBLIC_DEFAULT_THEME%` 
+        let pdt = `%sveltekit.env.PUBLIC_DEFAULT_THEME%`  || `black`
         if(pdt != `dark` && pdt != `light` && pdt != `black`) pdt = `black`
         if(!theme) {
             document.getElementsByTagName(`html`)[0].setAttribute(`class`, pdt)
