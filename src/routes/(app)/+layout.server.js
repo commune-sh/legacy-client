@@ -27,6 +27,15 @@ export async function load( { params } ) {
 
       return resp;
 
+    } else if(params?.post) {
+          let url = `${PUBLIC_API_URL}/event/${params.post}`;
+          const res = await fetch( url );
+          const resp = await res.json();
+
+          return {
+            event: resp.event
+          }
+
     } else {
       return null
     }

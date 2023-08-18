@@ -176,30 +176,13 @@ $: imageSRC = `${PUBLIC_MEDIA_URL}/${imageKey}`
 $: sender = data?.event?.sender?.display_name ?
 data?.event?.sender?.display_name : data?.event?.sender?.username
 
+$: if(data) {
+    console.log("params", data)
+}
+
 </script>
 
 <svelte:head>
-    <script>
-        let theme = localStorage.getItem(`theme`)
-        let pdt = `black`
-        if(pdt != `dark` && pdt != `light` && pdt != `black`) pdt = `black`
-        if(!theme) {
-            document.getElementsByTagName(`html`)[0].setAttribute(`class`, pdt)
-            localStorage.setItem(`theme`, pdt)
-        }
-        switch (theme) {
-            case `light`:
-                document.getElementsByTagName(`html`)[0].setAttribute(`class`,`light`)
-                break;
-            case `dark`:
-                document.getElementsByTagName(`html`)[0].setAttribute(`class`,`dark`)
-                break;
-            case `black`:
-                document.getElementsByTagName(`html`)[0].setAttribute(`class`,`black`)
-                break;
-        }
-    </script>
-
 
     <title>{title}</title>
     {#if isPost && hasImage && imageSRC}
