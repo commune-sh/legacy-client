@@ -3,7 +3,7 @@ import '/static/css/main.css'
 import Authentication from '$lib/auth/authentication.svelte'
 import Switcher from '$lib/switcher/switcher.svelte'
 import Sidebar from '$lib/sidebar/sidebar.svelte'
-import { PUBLIC_MEDIA_URL, PUBLIC_FAVICON, PUBLIC_APP_NAME, PUBLIC_INDEX, PUBLIC_META_DESCRIPTION } from '$env/static/public';
+import { PUBLIC_META_TITLE, PUBLIC_MEDIA_URL, PUBLIC_FAVICON, PUBLIC_META_IMAGE, PUBLIC_INDEX, PUBLIC_META_DESCRIPTION } from '$env/static/public';
 import { APIRequest } from '$lib/utils/request.js'
 import { onMount, tick } from 'svelte'
 import { page } from '$app/stores';
@@ -153,7 +153,7 @@ function moveTouch(e) {
     e.preventDefault();
 };
 
-$: spaceTitle = `${data?.space?.alias} - ${PUBLIC_APP_NAME}`
+$: spaceTitle = `${data?.space?.alias} - ${PUBLIC_META_TITLE}`
 
 $: fb = data?.event?.content?.body ? `${data?.event?.content?.body.slice(0, 1000)}...` : ''
 
@@ -162,9 +162,10 @@ $: pb = data?.event?.content?.body?.length > 50 ? `${data?.event?.content?.body.
 $: pt = data?.event?.content?.title ? data?.event?.content?.title :
     pb ? pb : ''
 
-$: postTitle = pt ? `${pt} - ${PUBLIC_APP_NAME}` : PUBLIC_APP_NAME
+$: postTitle = pt ? `${pt} - ${PUBLIC_META_TITLE}` : PUBLIC_META_TITLE
 
-$: title = isIndex ? PUBLIC_APP_NAME : isPost ? postTitle : isSpace ? spaceTitle : PUBLIC_APP_NAME
+$: title = isIndex ? PUBLIC_META_TITLE : isPost ? postTitle : isSpace ?
+    spaceTitle : PUBLIC_META_TITLE
 
 $: hasImage = data?.event?.content?.attachments?.length > 0 &&
     data?.event?.content?.attachments[0]?.type?.startsWith('image')
@@ -176,9 +177,6 @@ $: imageSRC = `${PUBLIC_MEDIA_URL}/${imageKey}`
 $: sender = data?.event?.sender?.display_name ?
 data?.event?.sender?.display_name : data?.event?.sender?.username
 
-$: if(data) {
-    console.log("params", data)
-}
 
 </script>
 
@@ -192,7 +190,7 @@ $: if(data) {
         <meta name="author" content={sender} />
     {/if}
     {#if !isSpace}
-        <meta property="og:image" content={PUBLIC_FAVICON} />
+        <meta property="og:image" content={PUBLIC_META_IMAGE || PUBLIC_FAVICON} />
     {/if}
     {#if isPost && data?.event}
         <meta name="description" content={fb}>

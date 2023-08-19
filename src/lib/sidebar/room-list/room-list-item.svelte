@@ -161,11 +161,10 @@ $: power = state?.space?.power_levels?.users?.[$store?.credentials?.matrix_user_
 $: can_move = power >= 60
 
 function logItem(e) {
-    console.log(can_move)
+    console.log(item)
     return
     e.preventDefault()
     popup.activate()
-    console.log(item)
 }
 
 $: topicItems = item?.topics != undefined ? JSON.parse(item?.topics) : null
@@ -390,8 +389,13 @@ function moveTopicDown(e) {
 }
 
 $: title = `${item.title} - ${PUBLIC_APP_NAME}`
+
 $: description = item?.topic ? item?.topic : item?.name ?
 item?.name : item?.alias ? item?.alias : null
+
+$: is_profile = state?.space?.is_profile
+
+$: image = is_profile ? avatar : header ? header : avatar ? avatar : null
 
 </script>
 
@@ -399,14 +403,10 @@ item?.name : item?.alias ? item?.alias : null
 {#if selected && !post}
     <title>{title}</title>
     <meta name="description" content={description}>
-    <meta property="og:image" content={avatar} />
+    <meta property="og:image" content={image} />
 {/if}
 {#if active}
-    {#if avatar}
-        <meta property="og:image" content={avatar} />
-    {:else if header}
-        <meta property="og:image" content={header} />
-    {/if}
+    <meta property="og:image" content={image} />
 {/if}
 </svelte:head>
 

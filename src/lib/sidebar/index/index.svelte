@@ -1,6 +1,6 @@
 <script>
 import { APIRequest } from '$lib/utils/request.js'
-import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public'
+import { PUBLIC_API_URL, PUBLIC_SIDEBAR_DESCRIPTION } from '$env/static/public'
 import { onMount } from 'svelte'
 import { addLine, github } from '$lib/assets/icons.js'
 import { page } from '$app/stores';
@@ -77,8 +77,7 @@ function createSpace() {
     <div class="con fl-co">
         <div class="mt3">
             <div class="">
-                Welcome to {PUBLIC_APP_NAME}'s Matrix-powered 
-                communities. 
+                {PUBLIC_SIDEBAR_DESCRIPTION}
             </div>
             <div class="mt2 fl">
                 <div class="fl-o grd">

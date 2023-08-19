@@ -182,7 +182,6 @@ function createApp() {
   let stateReady = () => {
     update(p => {
       p.stateReady = true
-      console.log("is sstate ready?", p.stateReady)
       return p
     })
   }
@@ -461,9 +460,7 @@ function createApp() {
 
   let removeRoom = (x) => {
     update(p => {
-      console.log(p.rooms.length)
       p.rooms = p.rooms.filter(s => s != x)
-      console.log("removed",p.rooms.length)
       return p
     })
   }
@@ -472,7 +469,6 @@ function createApp() {
   let addSpaceState = (space, state) => {
     update(p => {
       p.states[space] = state
-      console.log("added soace state", p.states[space])
       return p
     })
   }
@@ -527,7 +523,6 @@ function createApp() {
       if(s) {
         s.avatar = avatar
       }
-      console.log(space)
       if(p.states[space]) {
         p.states[space].space['avatar'] = avatar
       }

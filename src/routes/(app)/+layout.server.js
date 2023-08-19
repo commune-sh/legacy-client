@@ -1,5 +1,7 @@
+//export const prerender = true
+
 import { PUBLIC_API_URL } from '$env/static/public';
-import { store } from '$lib/store/store.js'
+
 /** @type {import('./$types').LayoutLoad} */
 export async function load( { params } ) {
 

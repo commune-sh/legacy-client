@@ -16,7 +16,7 @@ $: active = $store.verifiedSession
 let lastSpace = null
 
 $: if($page?.params?.space !== lastSpace && $page?.params?.space && !down) {
-    fetchSpaceState()
+    //fetchSpaceState()
 }
 
 $: if(authenticated){
@@ -51,7 +51,7 @@ function fetchDefaultSpaces() {
         if(resp) {
             store.saveSpaces(resp.spaces)
             store.saveDefaultSpaces(resp.spaces)
-            //store.stateReady()
+            store.stateReady()
             store.spacesFetched()
             defaultSpacesFetched = true
         }
