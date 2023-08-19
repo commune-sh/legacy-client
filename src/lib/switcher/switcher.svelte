@@ -32,7 +32,8 @@ $: spacesFetched = $store.spacesFetched
 <div class="switcher">
     <div class="switcher-container fl-co sel-no">
 
-        test
+
+    </div>
 
 </div>
 
