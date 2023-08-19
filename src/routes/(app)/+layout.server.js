@@ -1,9 +1,9 @@
-export const ssr = false
+//export const prerender = true
 
 import { PUBLIC_API_URL } from '$env/static/public';
 
 /** @type {import('./$types').LayoutLoad} */
-export async function load( { params } ) {
+export async function load( { fetch, params } ) {
 
     if(params?.space) {
 
