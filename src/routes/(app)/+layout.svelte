@@ -183,6 +183,7 @@ data?.event?.sender?.display_name : data?.event?.sender?.username
     <div class="container">
 
         <div class="inner-container grd" class:show={menuToggled}>
+            <Sidebar />
         </div>
 
         <div class="content" class:slide-in={menuToggled}>
