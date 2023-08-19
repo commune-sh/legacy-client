@@ -1,4 +1,4 @@
-//export const prerender = true
+export const ssr = false
 
 import { PUBLIC_API_URL } from '$env/static/public';
 
