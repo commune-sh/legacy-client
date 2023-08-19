@@ -32,29 +32,7 @@ $: spacesFetched = $store.spacesFetched
 <div class="switcher">
     <div class="switcher-container fl-co sel-no">
 
-        <div class="mt"></div>
-
-        <Logo large={true} />
-
-        <div class="sepc grd">
-            <div class="sp"></div>
-            <div class="sep grd-c"></div>
-        </div>
-
-
-
-
-        <div class="sepc grd">
-            <div class="sep grd-c"></div>
-            <div class="sp"></div>
-        </div>
-
-
-
-        <div class="fl-o">
-        </div>
-
-    </div>
+        test
 
 </div>
 
