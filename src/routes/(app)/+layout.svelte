@@ -8,7 +8,6 @@ import { APIRequest } from '$lib/utils/request.js'
 import { onMount, tick } from 'svelte'
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
-import View from '$lib/view/view.svelte'
 import Sync from '$lib/sync/sync.svelte'
 import Health from '$lib/sync/health.svelte'
 import Down from '$lib/errors/down.svelte'
@@ -259,7 +258,6 @@ data?.event?.sender?.display_name : data?.event?.sender?.username
             {#if isStaticRoute}
                 <slot></slot>
             {:else}
-                <View on:ready={viewReady} />
             {/if}
         </div>
 
