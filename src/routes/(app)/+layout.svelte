@@ -21,6 +21,10 @@ import Gallery from '$lib/gallery/gallery.svelte'
 
 export let data;
 
+$: if(data?.state?.space) {
+    store.addSpaceState($page.params?.space, data.state)
+    store.stateReady()
+}
 
 $: isIndex = $page?.url.pathname === '/'
 $: isSpace = $page?.params?.space !== undefined 
@@ -149,10 +153,52 @@ function moveTouch(e) {
     e.preventDefault();
 };
 
+$: spaceTitle = `${data?.space?.alias} - ${PUBLIC_META_TITLE}`
+
+$: fb = data?.event?.content?.body ? `${data?.event?.content?.body.slice(0, 1000)}...` : ''
+
+$: pb = data?.event?.content?.body?.length > 50 ? `${data?.event?.content?.body.slice(0, 50)}...` : ''
+
+$: pt = data?.event?.content?.title ? data?.event?.content?.title :
+    pb ? pb : ''
+
+$: postTitle = pt ? `${pt} - ${PUBLIC_META_TITLE}` : PUBLIC_META_TITLE
+
+$: title = isIndex ? PUBLIC_META_TITLE : isPost ? postTitle : isSpace ?
+    spaceTitle : PUBLIC_META_TITLE
+
+$: hasImage = data?.event?.content?.attachments?.length > 0 &&
+    data?.event?.content?.attachments[0]?.type?.startsWith('image')
+
+$: imageKey = hasImage ? data?.event?.content?.attachments[0]?.key : ''
+
+$: imageSRC = `${PUBLIC_MEDIA_URL}/${imageKey}`
+
+$: sender = data?.event?.sender?.display_name ?
+data?.event?.sender?.display_name : data?.event?.sender?.username
 
 
 </script>
 
+<svelte:head>
+
+    <title>{title}</title>
+    {#if isPost && hasImage && imageSRC}
+        <meta property="og:image" content={imageSRC} />
+    {/if}
+    {#if isPost && sender}
+        <meta name="author" content={sender} />
+    {/if}
+    {#if !isSpace}
+        <meta property="og:image" content={PUBLIC_META_IMAGE || PUBLIC_FAVICON} />
+    {/if}
+    {#if isPost && data?.event}
+        <meta name="description" content={fb}>
+    {/if}
+    {#if isIndex}
+        <meta name="description" content={PUBLIC_META_DESCRIPTION}>
+    {/if}
+</svelte:head>
 
 
 {#if authenticated && EmojiPicker}

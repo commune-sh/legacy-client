@@ -268,7 +268,9 @@ function createApp() {
       p.rooms = []
       p.notifications = []
       p.power_levels = []
-      localStorage.removeItem('access_token')
+      if(browser) {
+        localStorage.removeItem('access_token')
+      }
 
 
       return p
@@ -855,17 +857,23 @@ function createApp() {
     update(p => {
       if(p.settings.theme == 'light') {
         p.settings.theme = 'dark'
-        localStorage.setItem('theme', 'dark')
+        if(browser) {
+          localStorage.setItem('theme', 'dark')
+        }
         document.documentElement.setAttribute('class', 'dark')
         document.cookie = `theme=dark; max-age=9999; path=/`;
       } else if(p.settings.theme == 'dark'){
         p.settings.theme = 'black'
-        localStorage.setItem('theme', 'black')
+        if(browser) {
+          localStorage.setItem('theme', 'black')
+        }
         document.documentElement.setAttribute('class', 'black')
         document.cookie = `theme=black; max-age=9999; path=/`;
       } else {
         p.settings.theme = 'light'
-        localStorage.setItem('theme', 'light')
+        if(browser) {
+          localStorage.setItem('theme', 'light')
+        }
         document.documentElement.setAttribute('class', 'light')
         document.cookie = `theme=light; max-age=9999; path=/`;
       }
