@@ -1,6 +1,7 @@
 <script>
 import '/static/css/main.css'
 import Authentication from '$lib/auth/authentication.svelte'
+import Switcher from '$lib/switcher/switcher.svelte'
 import Sidebar from '$lib/sidebar/sidebar.svelte'
 import { PUBLIC_META_TITLE, PUBLIC_MEDIA_URL, PUBLIC_FAVICON, PUBLIC_META_IMAGE, PUBLIC_INDEX, PUBLIC_META_DESCRIPTION } from '$env/static/public';
 import { onMount, tick } from 'svelte'
@@ -249,6 +250,7 @@ data?.event?.sender?.display_name : data?.event?.sender?.username
     <div class="container">
 
         <div class="inner-container grd" class:show={menuToggled}>
+            <Switcher />
             <Sidebar />
         </div>
 

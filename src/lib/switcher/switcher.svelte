@@ -21,24 +21,6 @@ $: if(isIndex) {
     //toggleFavicon()
 }
 
-function toggleFavicon() {
-
-    var newFavicon = document.createElement('link');
-    newFavicon.rel = 'icon';
-    newFavicon.type = 'image/png';
-    newFavicon.href = 'path/to/new-favicon.png';
-
-    if(isIndex) {
-        newFavicon.href = '/favicon-alt.png'
-    } else {
-        newFavicon.href = '/favicon.png'
-    }
-
-    var existingFavicon = document.querySelector('link[rel="icon"]') || document.createElement('link');
-
-    document.head.replaceChild(newFavicon, existingFavicon);
-
-}
 
 $: spaces = $store?.spaces
 
@@ -60,15 +42,6 @@ $: spacesFetched = $store.spacesFetched
         </div>
 
 
-        {#if spacesFetched}
-        <div class="items">
-            <div class="tf"></div>
-            <SpaceItems spaces={spaces}/>
-            <div class="bf"></div>
-        </div>
-        {:else}
-            <SkeletonSpaceItems />
-        {/if}
 
 
         <div class="sepc grd">
@@ -77,16 +50,10 @@ $: spacesFetched = $store.spacesFetched
         </div>
 
 
-        <CreateSpace />
-        <Discover />
 
         <div class="fl-o">
         </div>
 
-        <div class="">
-            <Theme />
-            <Settings />
-        </div>
     </div>
 
 </div>
