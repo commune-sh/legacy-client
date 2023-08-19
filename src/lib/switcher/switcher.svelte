@@ -34,6 +34,7 @@ $: spacesFetched = $store.spacesFetched
 
         <div class="mt"></div>
 
+        <Logo large={true} />
 
         <div class="sepc grd">
             <div class="sp"></div>

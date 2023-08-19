@@ -1,5 +1,6 @@
 <script>
 import { PUBLIC_APP_NAME } from '$env/static/public';
+import { browser } from '$app/environment';
 import { store } from '$lib/store/store.js'
 import { logo } from '$lib/assets/logo.js'
 
@@ -19,7 +20,7 @@ $: isDefault = PUBLIC_APP_NAME?.charAt(0)?.toLowerCase() === 's';
 
 let ready = false;
 
-$: if(!isDefault) {
+$: if(!isDefault && browser) {
     document.fonts.ready.then(() => {
         const font = new FontFace('Silkscreen', 'url(/fonts/Silkscreen-Regular.ttf)');
         font.load().then(() => {
