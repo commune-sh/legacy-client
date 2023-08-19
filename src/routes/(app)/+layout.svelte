@@ -180,7 +180,21 @@ data?.event?.sender?.display_name : data?.event?.sender?.username
 
 <div class="root" bind:this={root}>
 
-Test
+    <div class="container">
+
+        <div class="inner-container grd" class:show={menuToggled}>
+            <Switcher />
+            <Sidebar />
+        </div>
+
+        <div class="content" class:slide-in={menuToggled}>
+            {#if isStaticRoute}
+                <slot></slot>
+            {:else}
+            {/if}
+        </div>
+
+    </div>
 
 
 </div>
