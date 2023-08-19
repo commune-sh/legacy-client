@@ -32,7 +32,42 @@ $: spacesFetched = $store.spacesFetched
 <div class="switcher">
     <div class="switcher-container fl-co sel-no">
 
+        <div class="mt"></div>
 
+
+        <div class="sepc grd">
+            <div class="sp"></div>
+            <div class="sep grd-c"></div>
+        </div>
+
+
+        {#if spacesFetched}
+        <div class="items">
+            <div class="tf"></div>
+            <SpaceItems spaces={spaces}/>
+            <div class="bf"></div>
+        </div>
+        {:else}
+            <SkeletonSpaceItems />
+        {/if}
+
+
+        <div class="sepc grd">
+            <div class="sep grd-c"></div>
+            <div class="sp"></div>
+        </div>
+
+
+        <CreateSpace />
+        <Discover />
+
+        <div class="fl-o">
+        </div>
+
+        <div class="">
+            <Theme />
+            <Settings />
+        </div>
     </div>
 
 </div>
