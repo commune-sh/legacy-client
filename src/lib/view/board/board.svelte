@@ -131,8 +131,6 @@ async function loadEvents(init) {
     }
 
 
-    const token = localStorage.getItem('access_token')
-
     let endpoint = PUBLIC_API_URL
 
     if(isDomain && $store.federated?.active && $store.federated.endpoint) {

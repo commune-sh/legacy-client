@@ -1,5 +1,6 @@
 <script>
 import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
+import { browser } from '$app/environment';
 import { joinSpace, joinRoom } from '$lib/utils/request.js'
 import { validAge } from '$lib/utils/time.js'
 import { onMount, createEventDispatcher } from 'svelte'
@@ -253,11 +254,13 @@ $: description = selected?.topic ? selected?.topic : selected?.name ?
 selected?.name : selected?.alias ? selected?.alias : null
 
 function toggleUsers() {
-    let su = localStorage.getItem('show_users')
-    if(su) {
-        localStorage.removeItem('show_users')
-    } else {
-        localStorage.setItem('show_users', 'true')
+    if(browser) {
+        let su = localStorage.getItem('show_users')
+        if(su) {
+            localStorage.removeItem('show_users')
+        } else {
+            localStorage.setItem('show_users', 'true')
+        }
     }
     $store.showRoomUsers = !$store.showRoomUsers
 }
