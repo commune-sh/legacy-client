@@ -1,12 +1,12 @@
 <script>
 import '/static/css/main.css'
 import Authentication from '$lib/auth/authentication.svelte'
-import Switcher from '$lib/switcher/switcher.svelte'
 import Sidebar from '$lib/sidebar/sidebar.svelte'
 import { PUBLIC_META_TITLE, PUBLIC_MEDIA_URL, PUBLIC_FAVICON, PUBLIC_META_IMAGE, PUBLIC_INDEX, PUBLIC_META_DESCRIPTION } from '$env/static/public';
 import { onMount, tick } from 'svelte'
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
+import View from '$lib/view/view.svelte'
 import Sync from '$lib/sync/sync.svelte'
 import Health from '$lib/sync/health.svelte'
 import Down from '$lib/errors/down.svelte'
@@ -61,6 +61,48 @@ $: if(isStaticRoute) {
 
 function switchToIndex() {
     showIndex = true
+}
+
+$: authenticated = $store?.authenticated && 
+    $store?.credentials != null
+    $store?.credentials?.access_token?.length > 0
+
+let EmojiPicker;
+let SpaceSettings;
+let RoomSettings;
+let VerificationAlert;
+let Verification;
+let UserSettings;
+
+/*
+$: if(authenticated && $store.loadEmojiPicker) {
+    import('$lib/emoji/emoji-picker.svelte').then(m => {
+        EmojiPicker = m.default
+    })
+}
+*/
+
+$: if(authenticated) {
+
+    import('$lib/emoji/emoji-picker.svelte').then(m => {
+        EmojiPicker = m.default
+    })
+
+    import('$lib/space/settings/settings.svelte').then(m => {
+        SpaceSettings = m.default
+    })
+    import('$lib/room/settings/settings.svelte').then(m => {
+        RoomSettings = m.default
+    })
+    import('$lib/verification/alert.svelte').then(m => {
+        VerificationAlert = m.default
+    })
+    import('$lib/verification/verification.svelte').then(m => {
+        Verification = m.default
+    })
+    import('$lib/user/settings/settings.svelte').then(m => {
+        UserSettings = m.default
+    })
 }
 
 
@@ -157,6 +199,30 @@ data?.event?.sender?.display_name : data?.event?.sender?.username
 </svelte:head>
 
 
+{#if authenticated && EmojiPicker}
+    <EmojiPicker />
+{/if}
+
+{#if authenticated && SpaceSettings}
+    <SpaceSettings />
+{/if}
+
+{#if authenticated && RoomSettings}
+    <RoomSettings />
+{/if}
+
+{#if authenticated && VerificationAlert}
+    <VerificationAlert />
+{/if}
+
+{#if authenticated && UserSettings}
+    <UserSettings />
+{/if}
+
+
+{#if authenticated && Verification}
+    <Verification />
+{/if}
 
 
 
@@ -190,6 +256,7 @@ data?.event?.sender?.display_name : data?.event?.sender?.username
             {#if isStaticRoute}
                 <slot></slot>
             {:else}
+                <View on:ready={viewReady} />
             {/if}
         </div>
 
