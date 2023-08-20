@@ -16,6 +16,7 @@ import Modal from '$lib/modal/modal.svelte'
 import Alert from '$lib/alert/alert.svelte'
 import About from '$lib/about/about.svelte'
 import DiscoverSpaces from '$lib/discover/discover.svelte'
+import NotFound from '$lib/errors/not-found.svelte'
 import Gallery from '$lib/gallery/gallery.svelte'
 
 export let data;
@@ -29,6 +30,8 @@ $: isIndex = $page?.url.pathname === '/'
 $: isSpace = $page?.params?.space !== undefined 
 $: isPost = $page?.params?.post !== undefined 
 $: isContext = $page.url?.searchParams?.get('context') !== null
+
+$: spaceExists = data?.state?.space !== undefined
 
 let showIndex = PUBLIC_INDEX === 'true'
 
@@ -153,7 +156,8 @@ function moveTouch(e) {
     e.preventDefault();
 };
 
-$: spaceTitle = `${data?.space?.alias} - ${PUBLIC_META_TITLE}`
+$: spaceTitle = data?.space?.alias ? `${data?.space?.alias} -
+${PUBLIC_META_TITLE}` : PUBLIC_META_TITLE
 
 $: fb = data?.event?.content?.body ? `${data?.event?.content?.body.slice(0, 1000)}...` : ''
 
@@ -264,6 +268,8 @@ data?.event?.sender?.display_name : data?.event?.sender?.username
         <div class="content" class:slide-in={menuToggled}>
             {#if isStaticRoute}
                 <slot></slot>
+            {:else if isSpace && !spaceExists}
+                <NotFound />
             {:else}
                 <View on:ready={viewReady} />
             {/if}
