@@ -2,7 +2,11 @@
 import { PUBLIC_API_URL } from '$env/static/public';
 
 /** @type {import('./$types').LayoutLoad} */
-export async function load( { fetch, params } ) {
+export async function load( { fetch, params, url } ) {
+
+    const post = params.post
+    const context = url?.searchParams?.get('context');
+    const event = post || context;
 
     if(params?.space) {
 
@@ -12,8 +16,8 @@ export async function load( { fetch, params } ) {
       const resp = await res.json();
 
 
-      if(params.post) {
-          let url = `${PUBLIC_API_URL}/event/${params.post}`;
+      if(event) {
+          let url = `${PUBLIC_API_URL}/event/${event}`;
           const re = await fetch( url );
           const ree = await re.json();
 
@@ -28,8 +32,8 @@ export async function load( { fetch, params } ) {
 
       return resp;
 
-    } else if(params?.post) {
-          let url = `${PUBLIC_API_URL}/event/${params.post}`;
+    } else if(event) {
+          let url = `${PUBLIC_API_URL}/event/${event}`;
           const res = await fetch( url );
           const resp = await res.json();
 

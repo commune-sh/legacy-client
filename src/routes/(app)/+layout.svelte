@@ -27,7 +27,8 @@ $: if(data?.state?.space) {
 
 $: isIndex = $page?.url.pathname === '/'
 $: isSpace = $page?.params?.space !== undefined 
-$: isPost = $page?.params?.post !== undefined
+$: isPost = $page?.params?.post !== undefined 
+$: isContext = $page.url?.searchParams?.get('context') !== null
 
 let showIndex = PUBLIC_INDEX === 'true'
 
@@ -156,14 +157,19 @@ $: spaceTitle = `${data?.space?.alias} - ${PUBLIC_META_TITLE}`
 
 $: fb = data?.event?.content?.body ? `${data?.event?.content?.body.slice(0, 1000)}...` : ''
 
-$: pb = data?.event?.content?.body?.length > 50 ? `${data?.event?.content?.body.slice(0, 50)}...` : ''
+$: pb = data?.event?.content?.body?.length > 50 ?
+    `${data?.event?.content?.body.slice(0, 50)}...` :  
+    data?.event?.content?.body 
 
 $: pt = data?.event?.content?.title ? data?.event?.content?.title :
     pb ? pb : ''
 
-$: postTitle = pt ? `${pt} - ${PUBLIC_META_TITLE}` : PUBLIC_META_TITLE
+$: ct = data?.event?.type == 'm.room.message' ?
+    `${sender}: "${pt}"` : pt
 
-$: title = isIndex ? PUBLIC_META_TITLE : isPost ? postTitle : isSpace ?
+$: postTitle = pt ? `${ct} - ${PUBLIC_META_TITLE}` : PUBLIC_META_TITLE
+
+$: title = isIndex ? PUBLIC_META_TITLE : (isPost || isContext) ? postTitle : isSpace ?
     spaceTitle : PUBLIC_META_TITLE
 
 $: hasImage = data?.event?.content?.attachments?.length > 0 &&
@@ -179,19 +185,20 @@ data?.event?.sender?.display_name : data?.event?.sender?.username
 
 </script>
 
+
 <svelte:head>
 
     <title>{title}</title>
     {#if isPost && hasImage && imageSRC}
         <meta property="og:image" content={imageSRC} />
     {/if}
-    {#if isPost && sender}
+    {#if (isPost || isContext) && sender}
         <meta name="author" content={sender} />
     {/if}
     {#if !isSpace}
         <meta property="og:image" content={PUBLIC_META_IMAGE || PUBLIC_FAVICON} />
     {/if}
-    {#if isPost && data?.event}
+    {#if (isPost || isContext) && data?.event}
         <meta name="description" content={fb}>
     {/if}
     {#if isIndex}

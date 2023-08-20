@@ -397,10 +397,12 @@ $: is_profile = state?.space?.is_profile
 
 $: image = is_profile ? avatar : header ? header : avatar ? avatar : null
 
+$: context = $page.url?.searchParams?.get('context')
+
 </script>
 
 <svelte:head>
-{#if selected && !post}
+{#if selected && !post && !context}
     <title>{title}</title>
     <meta name="description" content={description}>
     <meta property="og:image" content={image} />
