@@ -199,13 +199,13 @@ data?.event?.sender?.display_name : data?.event?.sender?.username
     {#if (isPost || isContext) && sender}
         <meta name="author" content={sender} />
     {/if}
-    {#if !isSpace}
+    {#if !isSpace || (isSpace && !spaceExists)}
         <meta property="og:image" content={PUBLIC_META_IMAGE || PUBLIC_FAVICON} />
     {/if}
     {#if (isPost || isContext) && data?.event}
         <meta name="description" content={fb}>
     {/if}
-    {#if isIndex}
+    {#if isIndex || (isSpace && !spaceExists)}
         <meta name="description" content={PUBLIC_META_DESCRIPTION}>
     {/if}
 </svelte:head>
