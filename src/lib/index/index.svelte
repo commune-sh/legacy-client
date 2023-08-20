@@ -22,7 +22,8 @@ function switchToIndex() {
         <div class="">
             <ul class="nav-links">
                 <li class="nav-link">
-                    <a href="https://github.com/commune-os/commune-server" target="_blank">Github</a>
+                    <a href="https://github.com/commune-os/commune-server"
+                        target="_blank">Code</a>
                 </li>
             </ul>
         </div>
@@ -59,7 +60,7 @@ function switchToIndex() {
     font-weight: 700;
 }
 .copy {
-    margin-top: 8rem;
+    height: calc(100vh - 4rem);
     display: grid;
     justify-self: center;
     align-self: center;
@@ -105,10 +106,9 @@ function switchToIndex() {
 .open {
     cursor: pointer;
     color: var(--text-1);
-    border: 2px solid var(--primary);
-    padding: 0.5rem 2rem;
+    padding: 0.75rem 2rem;
     border-radius: 500px;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
 }
 
 .biggus {
@@ -151,6 +151,13 @@ function switchToIndex() {
     .smallus {
         max-width: 100%;
         font-size: 1.3rem;
+    }
+    .open {
+        cursor: pointer;
+        color: var(--text-1);
+        padding: 0.6rem 1.4rem;
+        border-radius: 500px;
+        font-size: 1.4rem;
     }
 }
 

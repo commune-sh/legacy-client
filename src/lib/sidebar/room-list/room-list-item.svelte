@@ -1,5 +1,5 @@
 <script>
-import { PUBLIC_APP_NAME, PUBLIC_MEDIA_URL } from '$env/static/public';
+import { PUBLIC_APP_NAME, PUBLIC_MEDIA_URL, PUBLIC_META_IMAGE } from '$env/static/public';
 import { onMount, createEventDispatcher } from 'svelte';
 import { browser } from '$app/environment';
 import { joinSpace, joinRoom } from '$lib/utils/request.js'
@@ -395,7 +395,8 @@ item?.name : item?.alias ? item?.alias : null
 
 $: is_profile = state?.space?.is_profile
 
-$: image = is_profile ? avatar : header ? header : avatar ? avatar : null
+$: image = is_profile ? avatar : header ? header : avatar ? avatar :
+    PUBLIC_META_IMAGE
 
 $: context = $page.url?.searchParams?.get('context')
 
