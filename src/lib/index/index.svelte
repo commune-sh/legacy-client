@@ -60,7 +60,7 @@ function switchToIndex() {
     font-weight: 700;
 }
 .copy {
-    height: calc(100vh - 4rem);
+    height: calc(100vh - 8rem);
     display: grid;
     justify-self: center;
     align-self: center;
