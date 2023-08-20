@@ -182,10 +182,9 @@ function syncMessages() {
                     }
                 }
             }
-            chat.scrollToBottom()
-            //if(atBottom) {
-                //updateScroll()
-            //}
+            if(showChatView && chat) {
+                chat.scrollToBottom()
+            }
         }
     };
 
@@ -265,6 +264,9 @@ function addNewReaction(e) {
         } 
         event.reactions = event.reactions
         //messages = messages
+    }
+    if(showChatView && chat) {
+        chat.focusComposer()
     }
 }
 

@@ -54,6 +54,10 @@ const dispatch = createEventDispatcher()
 export let loaded = false;
 export let showChatView = false;
 
+$: if(showChatView) {
+    focusComposer()
+}
+
 $: if(loaded) {
     forceScroll()
 }
@@ -420,13 +424,13 @@ let rob;
 $: if(ob && ready) {
     setTimeout(() => {
         setupObserver()
-    }, 3000)
+    }, 1000)
 }
 
 $: if(is_context && rob && ready) {
     setTimeout(() => {
         setupReverseObserver()
-    }, 3000)
+    }, 1000)
 }
 
 let scrollHeight;
@@ -706,10 +710,12 @@ async function jumpToLatest() {
 
         $store.events[roomID].chat = resp.events.reverse()
 
-        composer.focusBodyInput()
 
-        purgeContext()
     }
+    purgeContext()
+    setTimeout(() => {
+        focusComposer()
+    }, 1000)
 }
 
 let lockContext = false
@@ -733,9 +739,6 @@ function purgeContext() {
     }
 
     goto(url)
-    setTimeout(() => {
-        composer.focusBodyInput()
-    }, 10)
 }
 
 function attached() {
