@@ -1,4 +1,3 @@
-//export const prerender = true
 import { PUBLIC_API_URL } from '$env/static/public';
 
 /** @type {import('./$types').LayoutLoad} */

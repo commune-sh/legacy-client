@@ -18,6 +18,7 @@ import About from '$lib/about/about.svelte'
 import DiscoverSpaces from '$lib/discover/discover.svelte'
 import NotFound from '$lib/errors/not-found.svelte'
 import Gallery from '$lib/gallery/gallery.svelte'
+import Index from '$lib/index/index.svelte'
 
 export let data;
 
@@ -110,8 +111,10 @@ $: if(authenticated) {
     })
 }
 
+let loaded = false;
 
 onMount(() => {
+    loaded = true;
 })
 
 function setupSwipeGestures() {
@@ -212,28 +215,28 @@ data?.event?.sender?.display_name : data?.event?.sender?.username
 
 
 {#if authenticated && EmojiPicker}
-    <EmojiPicker />
+    <svelte:component this={EmojiPicker} />
 {/if}
 
 {#if authenticated && SpaceSettings}
-    <SpaceSettings />
+    <svelte:component this={SpaceSettings} />
 {/if}
 
 {#if authenticated && RoomSettings}
-    <RoomSettings />
+    <svelte:component this={RoomSettings} />
 {/if}
 
 {#if authenticated && VerificationAlert}
-    <VerificationAlert />
+    <svelte:component this={VerificationAlert} />
 {/if}
 
 {#if authenticated && UserSettings}
-    <UserSettings />
+    <svelte:component this={UserSettings} />
 {/if}
 
 
 {#if authenticated && Verification}
-    <Verification />
+    <svelte:component this={Verification} />
 {/if}
 
 
@@ -305,8 +308,9 @@ data?.event?.sender?.display_name : data?.event?.sender?.username
     <Down />
 {/if}
 
+
 {#if isIndex && !showIndex}
-    <button on:click={switchToIndex}>Show Index</button>
+    <Index on:show-index={switchToIndex} />
 {/if}
 
 
