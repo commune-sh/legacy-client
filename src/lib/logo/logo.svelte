@@ -6,6 +6,7 @@ import { logo } from '$lib/assets/logo.js'
 
 export let large = false;
 export let loader = false;
+export let hovered = false;
 
 function goHome() {
     if($store.menuToggled) {
@@ -35,15 +36,15 @@ $: if(!isDefault && browser) {
 <div class="logo">
     <a on:click={goHome} class="" href="/">
         <div class="l-c grd" class:lg={large} class:ldr={loader}>
-            <div class="l-c-i grd-c" class:lgr={loader}>
+            <div class="l-c-i grd-c" class:hov={hovered} class:lgr={loader}>
                 {#if isDefault}
                     {@html logo}
                 {:else if ready}
                     <div class="logo-initials">
-                        <div class="init">
+                        <div class="init" class:hov={hovered}>
                             {initials}
                         </div>
-                        <div class="overlay">
+                        <div class="overlay" class:hov={hovered}>
                             {initials}
                         </div>
                     </div>
@@ -80,6 +81,11 @@ $: if(!isDefault && browser) {
 }
 
 .l-c:hover .l-c-i {
+    animation: rainbow 1.5s linear;
+    animation-iteration-count: infinite;
+}
+
+.hov {
     animation: rainbow 1.5s linear;
     animation-iteration-count: infinite;
 }

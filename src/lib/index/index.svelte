@@ -7,12 +7,15 @@ const dispatch = createEventDispatcher()
 function switchToIndex() {
     dispatch('show-index')
 }
+let hovered = false;
 </script>
 
 <div class="root">
     <nav class="nav ">
-        <a class="lnk fl" href="/">
-            <Logo large={true} />
+        <a class="lnk fl" href="/" 
+            on:mouseleave={() => hovered = false}
+            on:mouseover={() => hovered = true}>
+            <Logo large={true} hovered={hovered}/>
             <div class="name ml3 grd-c">
                 <a href="/">{PUBLIC_APP_NAME}</a>
             </div>
@@ -105,7 +108,7 @@ function switchToIndex() {
 
 .open {
     cursor: pointer;
-    color: var(--text-1);
+    color: white;
     padding: 0.75rem 2rem;
     border-radius: 500px;
     font-size: 1.4rem;
