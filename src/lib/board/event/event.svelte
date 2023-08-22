@@ -129,11 +129,15 @@ onMount(() => {
             el.scrollIntoView({ behavior: "smooth" });
         }
     }
-    if(hasFullBody && (isPost || isReply)) {
-        loadFullBody()
-    }
 })
 
+$: if(hasFullBody && (isPost || isReply) && fullBodyURL) {
+    loadFullBody()
+}
+
+$: if(!hasFullBody && isPost){
+    full_body = null
+}
 
 $: topic = $page.params.topic
 
@@ -287,6 +291,10 @@ let fetchingMore = false;
 $: remaining = event?.content?.full_body?.words
 
 function loadFullBody() {
+    if(event?.content?.full_body?.rendered)  {
+        full_body = event?.content?.full_body?.rendered
+        return
+    }
     fetchingMore = true;
     fetch(fullBodyURL)
         .then(response => response.text())
