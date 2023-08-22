@@ -7,6 +7,7 @@ import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
 
 export let embed = false;
+export let post = null;
 
 const dispatch = createEventDispatcher()
 
@@ -52,6 +53,13 @@ function goFull() {
     })
 }
 
+function goToSpace() {
+    let url = `/${post.room_alias}`
+    goto(url, {
+        noscroll: true,
+    })
+}
+
 $: menuToggled = $store?.menuToggled
 function toggleMenu() {
     let el = document.querySelector('.space-container')
@@ -71,6 +79,10 @@ $: isTopic= $page?.params?.topic !== undefined &&
     $page?.params?.topic !== ''
 
 $: newItems = $store?.notifications?.some(n => !n.read);
+
+
+$: alias = post?.room_alias ? post?.room_alias : null
+
 </script>
 
 
@@ -91,16 +103,30 @@ $: newItems = $store?.notifications?.some(n => !n.read);
 
         <div class="fl">
 
-            <div class="pd grd-c" class:ppd={!embed}>
-                {#if isReply}
-                    <span class="n">Reply Thread</span>
-                    <span class="ml3 sfd" on:click={goFull}>See Full Discussion</span>
-                {:else}
-                    <span class="n">Discussion</span>
-                {/if}
-            </div>
+            {#if embed && alias}
 
-            <div class="fl-o"></div>
+                <a class="alias grd-c fl" href={`/${alias}`}>
+                    <div class="grd-c ico-s">
+                        {@html arrowLeftSmall}
+                    </div>
+                    <div class="grd-c ml2">
+                        <span class="n">  {alias}</span>
+                    </div>
+                </a>
+
+            {:else}
+                <div class="pd grd-c" class:ppd={!embed}>
+                    {#if isReply}
+                        <span class="n">Reply Thread</span>
+                        <span class="ml3 sfd" on:click={goFull}>See Full Discussion</span>
+                    {:else}
+                        <span class="n">Discussion</span>
+                    {/if}
+                </div>
+
+            {/if}
+
+                <div class="fl-o"></div>
 
         {#if !embed}
             <div class="close c-ico pd grd-c" on:click={kill}>
@@ -187,5 +213,12 @@ $: newItems = $store?.notifications?.some(n => !n.read);
 .dot {
     right: 8px;
     top: 8px;
+}
+.alias {
+    color: var(--text-light);
+    font-size: small;
+}
+.alias:hover {
+    color: var(--text-1);
 }
 </style>

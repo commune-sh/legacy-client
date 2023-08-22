@@ -7,6 +7,7 @@ import { onMount, createEventDispatcher } from 'svelte'
 import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
+import { browser } from '$app/environment';
 import MediaThumbnail from '$lib/board/event/attachments/media-thumbnail.svelte'
 import LinkThumbnail from '$lib/board/event/links/link-thumbnail.svelte'
 import MediaItems from '$lib/board/event/attachments/media-items.svelte'
@@ -202,10 +203,14 @@ function goToEvent() {
 }
 
 function getFirstParagraphNode(content) {
-  const tempDiv = document.createElement('div');
-  tempDiv.innerHTML = content;
-  const firstParagraphNode = tempDiv.querySelector('p');
-  return firstParagraphNode?.innerHTML || null;
+    if(browser) {
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = content;
+        const firstParagraphNode = tempDiv.querySelector('p');
+        return firstParagraphNode?.innerHTML || null;
+    } else {
+        return null
+    }
 }
 
 
@@ -375,11 +380,15 @@ $: isSingleReply = $page.params.reply !== undefined && $page.params.reply !== nu
 $: sender_id = $store.credentials?.matrix_user_id
 
 function justIMG(e) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(e?.content?.formatted_body, 'text/html');
-    const imgTags = doc.getElementsByTagName('img');
-    return imgTags.length === 1 && 
-        doc.documentElement.textContent.trim() === '';
+    if(browser) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(e?.content?.formatted_body, 'text/html');
+        const imgTags = doc.getElementsByTagName('img');
+        return imgTags.length === 1 && 
+            doc.documentElement.textContent.trim() === '';
+    } else {
+        return false
+    }
 }
 
 $: isSingleCustomEmoji = justIMG(event)

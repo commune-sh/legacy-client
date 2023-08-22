@@ -1,4 +1,5 @@
 import { PUBLIC_API_URL, PUBLIC_BASE_URL, PUBLIC_APP_NAME } from '$env/static/public';
+import { browser } from '$app/environment';
 import { encode } from "blurhash";
 
 export const debounce = function () {
@@ -127,7 +128,11 @@ export function generateInitials(items) {
 }
 
 export function isSafari() {
+  if(browser) {
     return (navigator.userAgent.match(/iPad|iPhone|iPod/) && !window.MSStream) || /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  } else {
+    return false;
+  }
 }
 
 export function escapeXML(unsafe) {

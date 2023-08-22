@@ -5,6 +5,7 @@ import Event from '$lib/board/event/event.svelte'
 import Header from '$lib/header/post-header.svelte'
 import { savePost, redactReaction } from '$lib/utils/request.js'
 import { onMount, createEventDispatcher } from 'svelte';
+import { browser } from '$app/environment';
 import { store } from '$lib/store/store.js'
 import { redactEvent, loadPostWithReplies } from '$lib/utils/request.js'
 import { deleteEvent } from '$lib/utils/events.js'
@@ -32,7 +33,7 @@ export let post;
 export let embed = false;
 
 
-$: if(post?.content?.title) {
+$: if(post?.content?.title && browser) {
     document.title = `${post?.content?.title} - @${post?.sender?.username} /
 ${PUBLIC_APP_NAME}`
 }
@@ -58,13 +59,13 @@ $: routeChanged = route !== $page.route
 $: if((routeChanged && !post) && r && !isDomain) {
     console.log(post?.event_id)
     post = null
-    if(data?.replies) {
+    if(data?.replies && !embed) {
         data.replies = null
     }
     ready = false
     fetchPost()
 } else if(routeChanged && post && r && !isDomain) {
-    if(data?.replies) {
+    if(data?.replies && !embed) {
         data.replies = null
     }
     if(isDomain) {
@@ -97,7 +98,22 @@ $: isDomain = $page.params.domain !== undefined &&
     $page.params.domain !== 'undefined' && 
     $page.params.domain?.length > 0
 
+
+$: if(embed && post?.event) {
+    if(post?.replies) {
+        data = {
+            replies: post.replies
+        }
+    }
+    post = post.event
+    ready = true
+}
+
 async function fetchPost() {
+
+    if(embed && post?.event) {
+        return
+    }
 
     let endpoint = PUBLIC_API_URL
 
@@ -397,7 +413,7 @@ export function updateReactions(e) {
 </script>
 
 <section class="content" class:def={!embed} class:rep={replying}>
-    <Header embed={embed}/>
+    <Header embed={embed} post={post}/>
 
     <section class="events" class:ovf={!embed}>
 

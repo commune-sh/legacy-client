@@ -1,5 +1,6 @@
 <script>
 import { onMount, createEventDispatcher } from 'svelte'
+import { browser } from '$app/environment';
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
 import tippy from 'tippy.js';
@@ -64,7 +65,10 @@ let content;
 
 let menu;
 
-$: if(reaction && el) {
+let ready = false;
+
+$: if(reaction && el && browser) {
+    ready = true
     menu = tippy(el, {
         content: content,
         placement: 'top',
@@ -84,7 +88,7 @@ $: has_URL = reaction?.url != null && reaction?.url != undefined
 
 {#if !isTag}
 
-<div class="tip fl-co" bind:this={content}>
+    <div class="tip fl-co" class:show={ready} bind:this={content}>
     {#each reaction.senders as sender, i}
         <div class="sen" class:mb2={i != (reaction?.senders?.length - 1)}>
             @{localpart(sender?.sender)}
@@ -137,6 +141,14 @@ $: has_URL = reaction?.url != null && reaction?.url != undefined
     padding-bottom: 0;
     height: 20px;
     cursor: pointer;
+}
+
+.tip {
+    display: none;
+}
+
+.show {
+    display: block;
 }
 
 .tag{
