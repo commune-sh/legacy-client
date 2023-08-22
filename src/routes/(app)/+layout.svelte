@@ -18,7 +18,6 @@ import About from '$lib/about/about.svelte'
 import DiscoverSpaces from '$lib/discover/discover.svelte'
 import NotFound from '$lib/errors/not-found.svelte'
 import Gallery from '$lib/gallery/gallery.svelte'
-import Index from '$lib/index/index.svelte'
 
 export let data;
 
@@ -251,7 +250,7 @@ data?.event?.sender?.display_name : data?.event?.sender?.username
 <About />
 <DiscoverSpaces />
 
-{#if (!down && isIndex && showIndex) || (!down && !isIndex)}
+{#if !down}
 
 
 {#if menuToggled}
@@ -309,9 +308,6 @@ data?.event?.sender?.display_name : data?.event?.sender?.username
 {/if}
 
 
-{#if isIndex && !showIndex}
-    <Index on:show-index={switchToIndex} />
-{/if}
 
 
 <style>
