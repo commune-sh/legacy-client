@@ -460,6 +460,9 @@ async function createPost() {
                 rendered_key: presignedURL_r.key,
                 words: remaining_words,
             }
+            if(editing) {
+                post.content.full_body['rendered'] = rendered
+            }
         }
 
         if(topic) {
@@ -518,6 +521,7 @@ reply to</a> <a href=\"https://matrix.to/#/${rid}\">@butter:localhost:8480</a><b
                 event_id: editingEvent.event_id,
                 'rel_type': 'm.replace',
             }
+            post.edited_on = Date.now()
         }
 
         if(attachments && items.length > 0) {
@@ -549,7 +553,7 @@ let data;
 
 $: uploaded = attachments ? attachments?.every(item => $store.attachments[item.id].key != null ) : true
 
-$: if(!isChat && processed && uploaded) {
+$: if(!isChat && processed && uploaded && !editing) {
     save()
 }
 $: if(editing && processed) {
@@ -565,6 +569,7 @@ async function save() {
     }
     const res = await savePost(data);
     if(res?.success && res?.event) {
+        res.event.edited_on = data.edited_on
         dispatch('saved', res.event)
         busy = false
         kill()
@@ -575,7 +580,9 @@ async function save() {
 function reset() {
     busy = false
     uploading = false
-    bodyInput.value = ''
+    if(bodyInput) {
+        bodyInput.value = ''
+    }
     attachments = []
     links = []
     autosize.update(bodyInput)

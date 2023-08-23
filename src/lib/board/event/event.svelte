@@ -433,11 +433,17 @@ function stopEditing() {
     }, 10)
 }
 function finishedEditing(e) {
+    console.log("saving edited", e.detail)
     event.content.title = e.detail.content.title
     event.content.body = e.detail.content.body
     event.content.formatted_body = e.detail.content.formatted_body
+    if(e.detail?.content?.full_body) {
+        event.content.full_body = e.detail.content.full_body
+        full_body = e.detail.content.full_body?.rendered
+        full_body = full_body
+    }
 
-    event.edited_on = 1
+    event.edited_on = e.detail.edited_on
 
     editing = false
 
