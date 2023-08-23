@@ -13,6 +13,8 @@ export let event;
 export let isReply;
 export let hovered;
 
+export let embed;
+
 export let postEventID = null;
 
 $: authenticated = $store?.authenticated && 
@@ -227,7 +229,8 @@ $: safari = isSafari()
                 reaction={reaction} />
             {/if}
         {/each}
-        {#if !safari && processed?.length > 0 && !bannedFromSpace}
+
+    {#if !safari && processed?.length > 0 && !bannedFromSpace && !embed}
     <div class="grd re" class:ml2={ml}>
         <React 
             isReply={isReply} 

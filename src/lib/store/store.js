@@ -101,6 +101,10 @@ function createApp() {
     roomMembers: [],
     attachments: [],
     scrollPositions: [],
+    embedPost: {
+      active: false,
+      event: null,
+    }
   }
 
   if(browser) {

@@ -47,6 +47,7 @@ export let isReply = false;
 export let showAlias = true;
 export let interactive = true;
 export let search = false;
+export let embed = false;
 
 export let isBoardPostInChat = false;
 
@@ -579,7 +580,8 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
     class:nch={!isChat}
     class:ha={!isReply && !isPost && (hasAttachments || hasLinks)}
     class:ma={toolsActive && !isBoardPostInChat}
-    class:bb={isPost || isReply}
+    class:bb={(isPost || isReply) && !embed}
+    class:mv2={embed}
     on:click={goToEvent} 
     class:fresh={event?.just_posted}
     class:isrep={isReplyEvent}
@@ -794,6 +796,7 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
                         on:react={reactToKey}
                         event={event} 
                         isReply={isReply}
+                        embed={embed}
                         on:active={activateTools} 
                     hovered={displayTools}/>
                 {/if}
@@ -829,7 +832,7 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
     {/if}
 
 
-        {#if !safari && displayTools && !editing && interactive &&
+        {#if !safari && displayTools && !editing && interactive && !embed &&
             !bannedFromSpace && !dragging && !redacted && !event?.unsent}
         <div class="tools" 
             class:chto={isChat && !showSender}

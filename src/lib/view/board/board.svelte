@@ -10,6 +10,7 @@ import Event from '$lib/board/event/event.svelte'
 import Header from '$lib/header/header.svelte'
 import Post from '$lib/post/post.svelte'
 import SkeletonBoardEvents from '$lib/skeleton/skeleton-board-events.svelte'
+import Embed from '$lib/embed/embed.svelte'
 
 
 $: authenticated = $store?.authenticated && 
@@ -730,6 +731,7 @@ function referenceEvent(e) {
 </section>
 
 
+<Embed />
 
 <style>
 

@@ -2,8 +2,7 @@
 import { onMount, createEventDispatcher, tick } from 'svelte'
 import { store } from '$lib/store/store.js'
 import { suspendUser, pinToIndex, unpinFromIndex } from '$lib/utils/request.js'
-import { more, code, trash, pin, tag as tagIcon, suspend as suspendIcon } from '$lib/assets/icons.js'
-import ViewSource from './source.svelte'
+import { more, code, embed, trash, pin, tag as tagIcon, suspend as suspendIcon } from '$lib/assets/icons.js'
 import tippy from 'tippy.js';
 import { page } from '$app/stores';
 
@@ -170,6 +169,15 @@ async function pinToFrontPage() {
     }
 }
 
+function embedPost() {
+    menu.hide()
+
+    $store.embedPost = {
+        active: true,
+        event: event
+    }
+}
+
 </script>
 
 
@@ -224,6 +232,15 @@ async function pinToFrontPage() {
         </div>
     </div>
     {/if}
+
+    <div class="m-item fl" on:click|stopPropagation={embedPost}>
+        <div class="grd-c mr2 fl-o">
+            Embed
+        </div>
+        <div class="mic grd-c ico-s" >
+            {@html embed}
+        </div>
+    </div>
 
     <div class="m-item fl" on:click|stopPropagation={viewSource}>
         <div class="grd-c mr2 fl-o">
