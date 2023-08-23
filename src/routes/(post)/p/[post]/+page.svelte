@@ -21,6 +21,7 @@ import Authentication from '$lib/auth/authentication.svelte'
 import Sync from '$lib/sync/sync.svelte'
 import Health from '$lib/sync/health.svelte'
 import Down from '$lib/errors/down.svelte'
+import Embed from '$lib/embed/embed.svelte'
 
 export let data;
 
@@ -157,6 +158,8 @@ $: imageSRC = imageKey ? `${PUBLIC_MEDIA_URL}/${imageKey}` : ''
 {#if down}
     <Down />
 {/if}
+
+<Embed />
 
 <style>
 
