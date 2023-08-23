@@ -25,6 +25,12 @@ import Down from '$lib/errors/down.svelte'
 export let data;
 
 
+$: if(data) {
+    console.log(data)
+    console.log(data)
+    console.log(data)
+}
+
 
 $: slug = $page.params?.post
 

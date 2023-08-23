@@ -269,7 +269,9 @@ function createApp() {
       p.notifications = []
       p.power_levels = []
       if(browser) {
-        localStorage.removeItem('access_token')
+          localStorage.removeItem('access_token')
+          //remove cookie 
+          document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
       }
 
 

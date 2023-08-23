@@ -109,7 +109,7 @@ $: alias = post?.room_alias ? post?.room_alias : null
                     <div class="grd-c ico-s ">
                         {@html arrowLeftSmall}
                     </div>
-                    <div class="grd-c ml2 mr3">
+                    <div class="grd-c mr3">
                         <span class="n">  {alias}</span>
                     </div>
                 </a>

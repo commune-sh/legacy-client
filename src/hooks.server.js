@@ -1,3 +1,4 @@
+import { PUBLIC_API_URL } from '$env/static/public';
 import { redirect } from "@sveltejs/kit";
 
 /** @type {import('@sveltejs/kit').Handle} */
@@ -16,3 +17,14 @@ export const handle = async ({ event, resolve }) => {
 
   return response;
 };
+
+/** @type {import('@sveltejs/kit').HandleFetch} */
+export async function handleFetch({ request, fetch, event: { cookies } }) {
+  if (request.url.startsWith(PUBLIC_API_URL)) {
+    // clone the original request, but change the URL
+    request.headers.set('Authorization', `Bearer ${cookies.get('token')}`);
+
+  }
+ 
+  return fetch(request);
+}
