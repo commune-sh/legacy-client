@@ -86,7 +86,7 @@ $: alias = post?.room_alias ? post?.room_alias : null
 </script>
 
 
-<div class="header">
+<div class="header" class:sticky={embed}>
     <div class="container fl">
 
         {#if !embed}
@@ -106,10 +106,10 @@ $: alias = post?.room_alias ? post?.room_alias : null
             {#if embed && alias}
 
                 <a class="alias grd-c fl" href={`/${alias}`}>
-                    <div class="grd-c ico-s">
+                    <div class="grd-c ico-s ">
                         {@html arrowLeftSmall}
                     </div>
-                    <div class="grd-c ml2">
+                    <div class="grd-c ml2 mr3">
                         <span class="n">  {alias}</span>
                     </div>
                 </a>
@@ -149,6 +149,12 @@ $: alias = post?.room_alias ? post?.room_alias : null
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: auto;
+}
+
+.sticky {
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 .container {
@@ -217,8 +223,16 @@ $: alias = post?.room_alias ? post?.room_alias : null
 .alias {
     color: var(--text-light);
     font-size: small;
+    cursor: pointer;
+    border-radius: 500px;
+    margin-left: 0.75rem;
+    background-color: var(--shade-3);
+    padding-top: 0.125rem;
+    padding-bottom: 0.125rem;
 }
+
 .alias:hover {
     color: var(--text-1);
+    background-color: var(--shade-4);
 }
 </style>

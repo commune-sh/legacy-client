@@ -1,5 +1,6 @@
 <script>
 import '/static/css/main.css'
+import '/static/css/body-overflow-y.css'
 import Event from '$lib/board/event/event.svelte'
 import Header from '$lib/header/post-header.svelte'
 import { onMount, createEventDispatcher } from 'svelte';
@@ -23,19 +24,7 @@ import Down from '$lib/errors/down.svelte'
 
 export let data;
 
-$: if(data) {
-    console.log(data)
-    console.log(data)
-    console.log(data)
-    console.log(data)
-}
 
-$: if(browser) {
-    document.documentElement.style.overflowY = 'auto';
-    document.documentElement.style.overflowX = 'hidden';
-    document.body.style.overflowY = 'auto';
-    document.body.style.overflowX = 'hidden';
-}
 
 $: slug = $page.params?.post
 

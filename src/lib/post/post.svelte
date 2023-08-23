@@ -412,7 +412,9 @@ export function updateReactions(e) {
 
 </script>
 
-<section class="content" class:def={!embed} class:rep={replying}>
+<section class="content" 
+    class:ov-auto={embed}
+    class:def={!embed} class:rep={replying}>
     <Header embed={embed} post={post}/>
 
     <section class="events" class:ovf={!embed}>
@@ -504,6 +506,10 @@ export function updateReactions(e) {
     grid-template-rows: 48px auto;
     overflow-y: hidden;
     background-color: var(--bg);
+}
+
+.ov-auto {
+    overflow-y: inherit;
 }
 
 .rep {
