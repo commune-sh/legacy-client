@@ -516,6 +516,7 @@ reply to</a> <a href=\"https://matrix.to/#/${rid}\">@butter:localhost:8480</a><b
                 title: titleInput.value,
                 body: post.content.body,
                 formatted_body: post.content.formatted_body,
+                full_body: post.content.full_body,
             }
             post.content['m.relates_to'] = {
                 event_id: editingEvent.event_id,
