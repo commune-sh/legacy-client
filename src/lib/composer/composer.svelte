@@ -461,7 +461,7 @@ async function createPost() {
                 words: remaining_words,
             }
             if(editing) {
-                post.content.full_body['rendered'] = rendered
+                rendered_data = rendered
             }
         }
 
@@ -550,6 +550,7 @@ reply to</a> <a href=\"https://matrix.to/#/${rid}\">@butter:localhost:8480</a><b
 }
 
 let data;
+let rendered_data;
 
 $: uploaded = attachments ? attachments?.every(item => $store.attachments[item.id].key != null ) : true
 
@@ -570,6 +571,9 @@ async function save() {
     const res = await savePost(data);
     if(res?.success && res?.event) {
         res.event.edited_on = data.edited_on
+        if(rendered_data) {
+            res.event.content['full_body'].rendered = rendered_data
+        }
         dispatch('saved', res.event)
         busy = false
         kill()
@@ -580,6 +584,8 @@ async function save() {
 function reset() {
     busy = false
     uploading = false
+    rendered_data = null
+    data = null
     if(bodyInput) {
         bodyInput.value = ''
     }
