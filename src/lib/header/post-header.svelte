@@ -5,6 +5,7 @@ import { close, arrowLeftSmall } from '$lib/assets/icons.js'
 import { page } from '$app/stores';
 import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
+import Logo from '$lib/logo/logo.svelte'
 
 export let embed = false;
 export let post = null;
@@ -83,6 +84,12 @@ $: newItems = $store?.notifications?.some(n => !n.read);
 
 $: alias = post?.room_alias ? post?.room_alias : null
 
+$: isDirect = post?.content?.['m.relates_to']?.thread_event_id !== undefined && 
+    post?.content?.['m.relates_to']?.thread_event_id !== null &&
+    post?.content?.['m.relates_to']?.thread_event_id !== ''
+
+$: threadSlug = post?.content?.['m.relates_to']?.thread_event_id?.substr(-11)
+
 </script>
 
 
@@ -99,6 +106,10 @@ $: alias = post?.room_alias ? post?.room_alias : null
                 </div>
             {/if}
         </div>
+        {:else}
+        <div class="logo">
+            <Logo />
+        </div>
         {/if}
 
         <div class="fl">
@@ -109,7 +120,7 @@ $: alias = post?.room_alias ? post?.room_alias : null
                     <div class="grd-c ico-s ">
                         {@html arrowLeftSmall}
                     </div>
-                    <div class="grd-c mr3">
+                    <div class="grd-c mr2">
                         <span class="n">  {alias}</span>
                     </div>
                 </a>
@@ -127,6 +138,13 @@ $: alias = post?.room_alias ? post?.room_alias : null
             {/if}
 
                 <div class="fl-o"></div>
+
+            {#if embed && isDirect && threadSlug}
+                <div class="pd grd-c">
+                    <div class="ml3 sfd sff" on:click={goFull}>See Full
+        Discussion</div>
+                </div>
+            {/if}
 
         {#if !embed}
             <div class="close c-ico pd grd-c" on:click={kill}>
@@ -184,10 +202,19 @@ $: alias = post?.room_alias ? post?.room_alias : null
     position: relative;
 }
 
-@media screen and (max-width: 768px) {
+.logo {
+    display: none;
+}
+
+@media screen and (max-width: 785px) {
     .container {
         grid-template-columns: 48px 1fr;
     }
+    .logo {
+        display: grid;
+    }
+}
+@media screen and (max-width: 768px) {
     .menu {
         display: grid;
     }
@@ -213,9 +240,15 @@ $: alias = post?.room_alias ? post?.room_alias : null
     border-radius: 500px;
     padding: 0.125rem 0.5rem;
 }
+
 .sfd:hover {
     opacity: 0.9;
 }
+
+.sff {
+    padding: 0.25rem 0.75rem;
+}
+
 .dot {
     right: 8px;
     top: 8px;

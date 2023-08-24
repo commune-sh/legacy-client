@@ -16,6 +16,7 @@ let thr;
 let ed;
 let ref;
 let lnk;
+let ext;
 
 onMount(() => {
 })
@@ -23,6 +24,15 @@ onMount(() => {
 $:if(lnk) {
     tippy(lnk, {
         content: `Permalink`,
+        arrow: true,
+        duration: 1,
+        theme: 'inline',
+    });
+}
+
+$:if(ext) {
+    tippy(ext, {
+        content: `Direct Link`,
         arrow: true,
         duration: 1,
         theme: 'inline',
@@ -228,6 +238,12 @@ function referenceEvent() {
     kill()
 }
 
+function openExternal() {
+    kill()
+    let url = `${PUBLIC_BASE_URL}/p/${event?.slug}`
+    window.open(url, '_blank')
+}
+
 </script>
 
 <div class="event-tools">
@@ -278,13 +294,6 @@ function referenceEvent() {
         </div>
         {/if}
 
-        {#if isReply}
-            <div class="icon grd-c c-ico" 
-            on:mouseenter={resetHovered}
-                on:click|stopPropagation={goToEvent}>
-                {@html external}
-            </div>
-        {/if}
 
         {#if isAuthor}
             <div bind:this={ed} class="edit icon grd-c c-ico" 
@@ -294,6 +303,13 @@ function referenceEvent() {
             </div>
         {/if}
 
+        {#if !isChat && !isPost}
+            <div bind:this={ext} class="ext icon grd-c c-ico" 
+            on:mouseenter={resetHovered}
+                on:click|stopPropagation={openExternal}>
+                {@html external}
+            </div>
+        {/if}
 
         <Menu 
             on:active ={menuIsActive}
