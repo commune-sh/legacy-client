@@ -103,7 +103,7 @@ $: has_URL = reaction?.url != null && reaction?.url != undefined
     class:reacted={reacted}>
 
     {#if has_URL}
-        <img class="custom" src={reaction?.url}>
+        <img class="custom grd-c" src={reaction?.url}>
     {:else}
         <div class="emo">
             {reaction.key}
@@ -173,10 +173,9 @@ $: has_URL = reaction?.url != null && reaction?.url != undefined
     border: 1px solid var(--primary);
 }
 
-.custom {
+.reaction img {
     height: 16px;
     width: 16px;
-    margin-top: 2px;
 }
 
 .bg {

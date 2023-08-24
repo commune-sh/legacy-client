@@ -151,7 +151,7 @@ onMount(() => {
                 on:click|stopPropagation bind:this={me}
                 class:acc={active && !headerExists}>
 
-                <div class="name in fl-o" class:sh={headerExists}>
+                <div class="name ml2 in fl-o" class:sh={headerExists}>
                     {#if !ready}
                         <div class="grd-c ml2">
                             <SkeletonSpan />
@@ -286,7 +286,7 @@ onMount(() => {
     text-shadow: 1px 1px var(--bg);
 }
 .nm {
-    padding: 0.25rem 0.5rem;
+    padding: 0.125rem 0.5rem;
     margin-left: 0.25rem;
     background: transparent;
     display: inline-block;
