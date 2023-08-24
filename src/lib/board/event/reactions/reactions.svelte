@@ -13,7 +13,7 @@ export let event;
 export let isReply;
 export let hovered;
 
-export let embed;
+export let embed = false;
 
 export let postEventID = null;
 

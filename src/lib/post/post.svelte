@@ -53,7 +53,7 @@ $: r = $page.params.reply ? $page.params.reply : $page.params.post
 let route = null;
 
 //$: routeChanged = route !== $page.route && route !== null
-$: routeChanged = route !== $page.route
+$: routeChanged = !embed && route !== $page.route
 
 //$: if((routeChanged || post == null) && r) {
 $: if((routeChanged && !post) && r && !isDomain) {
@@ -452,11 +452,9 @@ export function updateReactions(e) {
             <div class="fl-o">
             </div>
 
-            {#if post && authenticated && joined}
-                <div class="">
-                    <button class="sbut" on:click={replyToPost}>Reply</button>
-                </div>
-            {/if}
+            <div class="">
+                <button class="sbut" on:click={replyToPost}>Reply</button>
+            </div>
         </div>
 
         {#if ready}

@@ -1,20 +1,12 @@
 <script>
 import '/static/css/main.css'
 import '/static/css/body-overflow-y.css'
-import Event from '$lib/board/event/event.svelte'
-import Header from '$lib/header/post-header.svelte'
-import { onMount, createEventDispatcher } from 'svelte';
 import { browser } from '$app/environment';
 import { store } from '$lib/store/store.js'
-import { redactEvent, loadPostWithReplies } from '$lib/utils/request.js'
-import { deleteEvent } from '$lib/utils/events.js'
-import { PUBLIC_MEDIA_URL, PUBLIC_API_URL, PUBLIC_META_TITLE, PUBLIC_FAVICON,
+import { PUBLIC_MEDIA_URL, PUBLIC_META_TITLE, PUBLIC_FAVICON,
     PUBLIC_META_IMAGE } from '$env/static/public';
 import { page } from '$app/stores';
 import Switcher from '$lib/switcher/switcher.svelte'
-import SkeletonBoardEvents from '$lib/skeleton/skeleton-board-events.svelte'
-import SkeletonBoardEvent from '$lib/skeleton/skeleton-board-event.svelte'
-import SkeletonSpan from '$lib/skeleton/skeleton-span.svelte'
 import Post from '$lib/post/post.svelte'
 
 import Authentication from '$lib/auth/authentication.svelte'
@@ -25,53 +17,7 @@ import Embed from '$lib/embed/embed.svelte'
 
 export let data;
 
-
-$: if(data) {
-    console.log(data)
-    console.log(data)
-    console.log(data)
-}
-
-
-$: slug = $page.params?.post
-
-onMount(() => {
-    //fetchPost()
-})
-
 $: down = $store.down || data?.error
-
-let ready = false
-
-let event;
-let replies;
-
-async function fetchPost() {
-
-    let endpoint = PUBLIC_API_URL
-
-    let url = `${endpoint}/event/${slug}?replies=true`
-
-    let opt = {
-      url: url,
-      method: 'GET',
-    }
-
-    const resp = await loadPostWithReplies(opt)
-
-    if(resp?.event) {
-        event = resp.event
-    }
-
-    if(resp?.replies) {
-        replies = resp.replies
-    }
-    ready = true
-
-    if(!resp) {
-    }
-
-}
 
 $: authenticated = $store?.authenticated && 
     $store?.credentials != null

@@ -309,7 +309,7 @@ function loadFullBody() {
 }
 
 
-$: title = event?.content?.title ? event?.content?.title : `Untitled`
+$: title = event?.content?.title ? event?.content?.title : ``
 
 $: attachments = event?.content?.attachments
 $: hasAttachments = event?.content?.attachments?.length > 0
@@ -443,6 +443,8 @@ function finishedEditing(e) {
         full_body = e.detail.content.full_body?.rendered
         full_body = full_body
     }
+
+
 
     event.edited_on = e.detail.edited_on
 
@@ -1017,10 +1019,6 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
 }
 
 div :global(.post-body p img){
-    height: 20px;
-    width: 20px;
-    object-fit: contain;
-    vertical-align: text-bottom;
 }
 
 div :global(.post-body blockquote){

@@ -121,6 +121,7 @@ function createApp() {
     if(showUsers == 'true') {
       app.showRoomUsers = true
     }
+    window.app = app
   }
 
 

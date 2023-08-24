@@ -468,7 +468,6 @@ function updateReactions(e) {
 }
 
 function updateReplyCount(e) {
-        console.log("updating reply count", e.detail)
     const event_id = e.detail.event_id
     const reply_count = e.detail.reply_count
     let index = $store.events[roomID].board.findIndex((event) => event.event_id == event_id)
