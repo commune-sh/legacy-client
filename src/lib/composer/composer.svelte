@@ -12,13 +12,13 @@ import autosize from '$lib/vendor/autosize/autosize'
 import { store } from '$lib/store/store.js'
 import Attach from './attachments/attach.svelte'
 import InsertEmoji from './insert-emoji.svelte'
+import InsertGIF from '$lib/gif/gif.svelte'
 import Attachments from './attachments/attachments.svelte'
 import Links from './links/links.svelte'
 import EmojiList from './emoji-list.svelte'
 import Event from '$lib/board/event/event.svelte'
 import tippy from 'tippy.js';
 
-import { v4 as uuidv4 } from 'uuid';
 
 export let roomID = null;
 export let room_alias = null;
@@ -44,6 +44,11 @@ $: isthreadView = thread_view && thread_view_event
 $: stateKey = isthreadView ? thread_view_event : !reply ? roomID : roomID + threadEvent
 
 $: state = $store.editorStates[stateKey]
+
+
+$: gif_enabled = $store.features?.gif?.enabled &&
+    $store.features?.gif?.service == 'tenor' &&
+    $store.features?.gif?.key != null
 
 const dispatch = createEventDispatcher()
 
@@ -951,7 +956,16 @@ function updateEditorContent(e) {
                 position={"left"} 
                 reply={reply} 
                 busy={busy} 
+                isChat={isChat}
                 on:selected={insertEmoji}/>
+
+            {#if gif_enabled}
+                <InsertGIF 
+                    on:gif-selected
+                    isChat={isChat}
+                    room_alias={room_alias} />
+            {/if}
+
         {/if}
 
         {#if isChat && !editing}
@@ -1089,7 +1103,7 @@ function updateEditorContent(e) {
     overflow-y: hidden;
 }
 .each {
-    grid-template-columns: auto 1fr auto auto;
+    grid-template-columns: auto 1fr auto auto auto;
     grid-template-rows: 1fr;
 }
 

@@ -761,6 +761,11 @@ export async function focusComposer() {
 
 $: scrolled = zone ? zone?.scrollHeight > zone?.clientHeight : false
 
+function insertGIF(e) {
+    console.log("inserting", e.detail)
+    $store.selectedGIF = null
+}
+
 </script>
 
 
@@ -890,6 +895,7 @@ $: scrolled = zone ? zone?.scrollHeight > zone?.clientHeight : false
                         on:typing={isTyping}
                         reply={replying}
                         replyTo={replyToEvent}
+                        on:gif-selected={insertGIF}
                         on:new-message={newMessage}
                         roomID={roomID} 
                         room_alias={$page.params.space}

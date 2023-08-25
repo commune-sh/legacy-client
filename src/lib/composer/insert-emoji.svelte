@@ -14,6 +14,8 @@ export let reply;
 export let position = 'right';
 export let center = true;
 
+export let isChat = false;
+
 export let room_alias = null;
 
 let reactEl;
@@ -30,6 +32,7 @@ function insertEmoji() {
         position: position || 'right',
         target: reactEl,
         space_alias: ra,
+        isChat: isChat,
     }
 
     store.activateEmojiPicker(e)
@@ -55,9 +58,15 @@ onMount(() => {
         theme: 'inline',
     });
 })
+
+$: active = $store.emojiPicker.active &&
+    $store.emojiPicker.isChat &&
+    !$store.emojiPicker.isGIF
+
 </script>
 
 <div class="insert-emoji ml2 c-ico"
+    class:active={active}
     class:grd-c={center}
     class:ptop={!center}
     on:click={insertEmoji}
@@ -68,11 +77,18 @@ onMount(() => {
 <style>
 .insert-emoji {
 }
+
 .c-ico {
     height: 20px;
     width: 20px;
     filter: grayscale(1);
 }
+
+.active {
+    filter: none;
+    opacity: 1;
+}
+
 .ptop {
     margin-top: 10px;
     padding: 0.5rem;

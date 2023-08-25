@@ -50,6 +50,9 @@ function checkHealth(init) {
         }
         if(resp?.features) {
             store.setFeatures(resp.features)
+            if(resp?.gif) {
+                    $store.features['gif'] = resp.gif
+            }
         }
         if(resp?.restrictions) {
             store.setRestrictions(resp.restrictions)

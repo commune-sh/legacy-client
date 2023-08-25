@@ -104,7 +104,9 @@ function createApp() {
     embedPost: {
       active: false,
       event: null,
-    }
+    },
+    gif: null,
+    selectedGIF: null,
   }
 
   if(browser) {
@@ -909,6 +911,8 @@ function createApp() {
       p.emojiPicker.position = v.position
       p.emojiPicker.is_reply = v.is_reply
       p.emojiPicker.space_alias = v.space_alias
+      p.emojiPicker.isChat = v.isChat
+      p.emojiPicker.isGIF = v.isGIF
       p.emojiPicker.active = true
       return p
     })

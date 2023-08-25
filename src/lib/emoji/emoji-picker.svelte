@@ -2,6 +2,7 @@
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
 import { onMount, onDestroy, tick } from 'svelte'
+import GIFPicker from './gif-picker.svelte'
 import { em1, em2, em3, em4, em5, em6, em7, em8, em0 } from '$lib/assets/icons.js'
 import EMOJIBASE from 'emojibase-data/en/compact.json';
 import SHORTCODES from 'emojibase-data/en/shortcodes/joypixels.json';
@@ -94,13 +95,19 @@ $: space_alias = $store.emojiPicker?.space_alias
 
 $: active = $store.emojiPicker.active &&
     $store.emojiPicker.target != null &&
-    $store.emojiPicker.reacting_to != undefined
+    ($store.emojiPicker.reacting_to != undefined ||
+    $store.emojiPicker.isGIF)
 
 
+
+$: isChat = $store.emojiPicker.isChat == true
+$: isGIF = $store.emojiPicker.isGIF == true
 
 function kill() {
     store.killEmojiPicker()
-    searchInput.value = null
+    if(searchInput) {
+        searchInput.value = null
+    }
     query = ''
 }
 
@@ -114,8 +121,8 @@ $: positionLeft = position == 'left' || position == undefined
 
 $: bounding = target?.getBoundingClientRect()
 
-$: inside = bounding?.top + 550 < document.documentElement.clientHeight
-$: at = document.documentElement.clientHeight - 500
+$: inside = bounding?.top + 600 < document.documentElement.clientHeight
+$: at = document.documentElement.clientHeight - 550
 
 
 $: top = inside ? bounding?.top - 4 : at
@@ -186,7 +193,6 @@ $: if(query == '') {
 }
 
 onMount(() => {
-    focusSearchInput()
   const contentSections = document.querySelectorAll('.emoji-title')
 
   const observer = new IntersectionObserver(
@@ -201,10 +207,14 @@ onMount(() => {
     { threshold: 0.5 } // Adjust threshold as needed
   );
 
-  contentSections.forEach((section) => {
-    observer.observe(section);
-  });
+    contentSections.forEach((section) => {
+        observer.observe(section);
+    });
 })
+
+$: if (searchInput) {
+    searchInput.focus()
+}
 
 let searchInput;
 let query;
@@ -216,7 +226,7 @@ $: if(filtering) {
 }
 
 async function focusSearchInput() {
-    await tick;
+    await tick()
     searchInput.focus()
 }
 
@@ -239,6 +249,16 @@ function filterEmoji() {
     }
 }
 
+
+function switchToGIF() {
+    $store.emojiPicker.isGIF = true
+}
+
+function switchToEmoji() {
+    $store.emojiPicker.isGIF = false
+    focusSearchInput()
+}
+
 </script>
 
 <div class="em-root" 
@@ -246,13 +266,37 @@ function filterEmoji() {
     bind:this={root} on:click|self={kill}>
 
     <div class="emoji-picker"
+        class:chat={isChat}
         class:right={positionRight}
         class:left={positionLeft}
         bind:this={picker}
         style="--top:{top}px;--right:{right}px;--left:{left}px">
 
+
+        {#if isChat}
+            <div class="tab-nav fl">
+                <div class="tn-item" 
+                    on:click={switchToEmoji}
+                    class:tn-a={!isGIF}>
+                    Emoji
+                </div>
+                <div class="tn-item ml2" 
+                    on:click={switchToGIF}
+                    class:tn-a={isGIF}>
+                    GIF
+                </div>
+            </div>
+        {/if}
+
+        {#if isGIF}
+            <GIFPicker />
+        {/if}
+
+
+
+        {#if !isGIF}
         <div class="header">
-            <div class="search pa3">
+            <div class="search pt3 ph3 pb2">
                 <input bind:this={searchInput} 
                     bind:value={query}
                     on:keydown={filterEmoji}
@@ -382,6 +426,8 @@ function filterEmoji() {
             </div>
 
         </div>
+        {/if}
+
 
     </div>
 </div>
@@ -406,13 +452,17 @@ function filterEmoji() {
     position: absolute;
     pointer-events: auto;
     overflow: hidden;
-    height: 450px;
+    height: 500px;
     width: 410px;
     background: var(--emoji-picker);
     border-radius: 8px;
     display: grid;
     grid-template-rows: auto 1fr;
     box-shadow: 0px 1px 20px -5px rgba(0,0,0,0.1);
+}
+
+.chat {
+    grid-template-rows: auto auto 1fr;
 }
 
 .left {
@@ -550,11 +600,9 @@ function filterEmoji() {
 }
 
 
-
 input {
     width: 100%;
-    height: 100%;
-    padding: 0.25rem;
+    padding: 0.5rem;
     font-size: 14px;
 }
 
@@ -581,6 +629,28 @@ input {
 .hov-s {
     font-weight: 500;
     font-size: 1rem;
+}
+
+.tab-nav {
+    margin-top: 1rem;
+    margin-left: 1rem;
+}
+
+.tn-item{
+    padding: 0.4rem 0.6rem;
+    background: var(--shade-3);
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: small;
+}
+
+.tn-item:hover {
+    background: var(--shade-4);
+}
+
+.tn-a {
+    background: var(--shade-4);
 }
 
 @media (max-width: 768px) {
