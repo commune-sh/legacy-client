@@ -1,4 +1,5 @@
 <script>
+import { PUBLIC_BASE_URL } from '$env/static/public';
 import { createEventDispatcher } from 'svelte'
 import {menu} from '$lib/assets/icons.js'
 import { close, arrowLeftSmall } from '$lib/assets/icons.js'
@@ -49,6 +50,13 @@ function goFull() {
     if($page.params?.domain) {
         url = `/${$page.params?.domain}${url}`
     }
+    goto(url, {
+        noscroll: true,
+    })
+}
+
+function openThread() {
+    let url = `${PUBLIC_BASE_URL}/p/${threadSlug}`
     goto(url, {
         noscroll: true,
     })
@@ -141,7 +149,7 @@ $: threadSlug = post?.content?.['m.relates_to']?.thread_event_id?.substr(-11)
 
             {#if embed && isDirect && threadSlug}
                 <div class="pd grd-c">
-                    <div class="ml3 sfd sff" on:click={goFull}>See Full
+                    <div class="ml3 sfd sff" on:click={openThread}>See Full
         Discussion</div>
                 </div>
             {/if}
