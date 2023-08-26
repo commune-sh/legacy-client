@@ -42,7 +42,6 @@ let loaded = false;
 
 async function fetchTenorCategories() {
     const res = await getGIFs()
-    console.log(res)
     if(res?.tags) {
         $store.gif = {
             categories: res.tags,
@@ -55,7 +54,6 @@ async function fetchTenorCategories() {
 let categoryMode = false;
 
 function loadCategory(item) {
-    console.log(item)
     loaded = false
     categoryMode = true;
 
@@ -70,7 +68,6 @@ let next;
 
 async function fetchTenorGIFs() {
     const res = await searchGIFs(query)
-    console.log(res)
     if(res?.results) {
         gifs = [...res.results]
         if(res.next) {

@@ -21,6 +21,7 @@ import MatrixMedia from '$lib/chat/event/media/media.svelte'
 import ReplySummary from '$lib/board/event/reply/reply-summary.svelte'
 import EventThreadSummary from '$lib/chat/event/thread/thread-summary.svelte'
 import BoardPost from '$lib/chat/event/board-post/board-post.svelte'
+import GIFEvent from '$lib/chat/event/gif/gif.svelte'
 
 import emojiRegex from 'emoji-regex';
 
@@ -478,6 +479,11 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
     event?.content?.msgtype == 'm.images'
 
 $: formattedTS = formatTS(event?.origin_server_ts)
+
+
+$: isGIF = event?.content?.msgtype == 'gif' &&
+    event?.content?.gif != undefined
+
 </script>
 
 {#if isNewDay}
@@ -571,6 +577,8 @@ $: formattedTS = formatTS(event?.origin_server_ts)
 
             {:else if isMatrixMedia && !attachments}
                 <MatrixMedia {event}/>
+            {:else if isGIF}
+                <GIFEvent {event}/>
             {:else if !isIMG}
 
                 {#if isChat && isBoardPostInChat}

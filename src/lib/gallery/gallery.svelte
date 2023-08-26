@@ -20,6 +20,8 @@ $: selected = $store.gallery?.index
 
 $: isMXC = $store.gallery?.mxc
 
+$: isGIF = $store.gallery?.gif
+
 $: src = active ? isMXC ? images[0]?.key : `${PUBLIC_MEDIA_URL}/${images[selected]?.key}` : null
 
 $: noPrev = selected === 0
@@ -52,10 +54,19 @@ $: name = images[selected]?.name
     <div class="mod grd-c" >
 
         <div class="grd-c poin">
+        {#if isGIF}
+            <video autoplay loop muted playsinline >
+                <source src={images[0]?.key} type="video/mp4" />
+            </video>
+
+        {:else}
+
             <img src={src}
                 class="" 
                 on:click={open}>
+        {/if}
         </div>
+
     </div>
 
     {#if multiple}

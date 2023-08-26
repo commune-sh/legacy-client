@@ -6,6 +6,7 @@ import Topic from '$lib/chat/event/topic/topic.svelte'
 export let event;
 export let messages;
 export let index;
+
 </script>
 
 {#if event?.type === 'm.room.message'}
@@ -22,6 +23,7 @@ export let index;
         on:saved
         sender={null} />
 {/if}
+
 {#if event?.type === 'm.room.members'}
         <Memberships
         memberships={event}/>

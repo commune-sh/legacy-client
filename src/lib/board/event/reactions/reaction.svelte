@@ -218,10 +218,10 @@ $: has_URL = reaction?.url != null && reaction?.url != undefined
     .t {
         font-size: 10px;
     }
-    .custom {
+    .reaction img {
         height: 12px;
         width: 12px;
-        margin-top: 2px;
     }
+
 }
 </style>

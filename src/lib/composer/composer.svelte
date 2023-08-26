@@ -47,8 +47,7 @@ $: state = $store.editorStates[stateKey]
 
 
 $: gif_enabled = $store.features?.gif?.enabled &&
-    $store.features?.gif?.service == 'tenor' &&
-    $store.features?.gif?.key != null
+    $store.features?.gif?.service == 'tenor' 
 
 const dispatch = createEventDispatcher()
 

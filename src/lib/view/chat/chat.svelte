@@ -765,9 +765,46 @@ export async function focusComposer() {
 
 $: scrolled = zone ? zone?.scrollHeight > zone?.clientHeight : false
 
-function insertGIF(e) {
-    console.log("inserting", e.detail)
+async function insertGIF(e) {
     $store.selectedGIF = null
+    let mp4 = e.detail?.media_formats['mp4']
+    let content = {
+        msgtype: "gif",
+        service: $store.features?.gif?.service,
+        body: "gif",
+        gif: {
+            description: e.detail?.description,
+            url: e.detail?.url,
+            src: {
+                dims: mp4?.dims,
+                size: mp4?.size,
+                url: mp4?.url,
+            }
+        }
+    }
+
+    let event = {
+        content: content,
+        type: 'm.room.message',
+        sender: {
+            id: $store.credentials.matrix_user_id,
+            display_name: $store.credentials.display_name,
+            avatar_url: $store.credentials.avatar_url,
+            username: $store.credentials.username,
+        },
+        origin_server_ts: new Date().getTime(),
+        event_id: `local-${Date.now()}`,
+        slug: `slug-${Date.now()}`,
+        room_id: roomID,
+        unsent: true,
+        transaction_id: `co${Date.now()}`,
+    }
+    store.addChatEvent(roomID, event)
+
+    await tick()
+    updateScroll()
+    requestAnimationFrame(animate);
+    focusComposer()
 }
 
 </script>
