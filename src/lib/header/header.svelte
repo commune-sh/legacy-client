@@ -346,7 +346,7 @@ $: if(top && selected?.topic && !tset) {
 
             <div class="topic grd-c sel" 
                 bind:this={top}>
-                {#if selected?.topic && !isPost}
+                {#if isSpace && selected?.topic && !isPost}
                     {@html md.render(selected?.topic)}
                 {/if}
             </div>

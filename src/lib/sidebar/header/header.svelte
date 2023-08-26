@@ -84,7 +84,7 @@ $: avatarExists = avatar != null && avatar != undefined
 
 let el;
 
-$: if(headerExists && header && el) {
+$: if(isSpace && headerExists && header && el) {
     el.style.backgroundImage = `url(${header})`
 } else if(el) {
     el.style.backgroundImage = `none`
@@ -139,8 +139,8 @@ onMount(() => {
 {/if}
 
 <div bind:this={el} class="sidebar-header" 
-    class:header={headerExists}
-    class:profile={isProfile && avatarExists}>
+    class:header={isSpace && headerExists}
+    class:profile={isSpace && isProfile && avatarExists}>
     <div class="con grd">
 
     {#if isSpace && stateExists}
@@ -194,7 +194,7 @@ onMount(() => {
 
     </div>
 
-    {#if isProfile && avatar}
+    {#if isSpace && isProfile && avatar}
         <div class="profile-avatar"
             style="background-image: url({avatar})">
         </div>
