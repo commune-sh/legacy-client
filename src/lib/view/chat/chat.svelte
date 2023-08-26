@@ -231,6 +231,11 @@ async function loadMessages() {
             syncMessages()
         }
         setTimeout(() => {
+            if(composer) {
+                composer.focusBodyInput()
+            }
+        }, 100)
+        setTimeout(() => {
             reloadTrigger = true
         }, 1000)
         ready = true
@@ -281,7 +286,6 @@ async function loadMessages() {
         }
     }
     ready = true
-
 
     _page = $page
     if(!is_context) {

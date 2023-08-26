@@ -1,12 +1,11 @@
 <script>
 import { PUBLIC_BASE_URL, PUBLIC_MEDIA_URL, PUBLIC_MATRIX_SERVER_NAME } from '$env/static/public';
-import { getHomeserver } from '$lib/utils/utils.js'
-import { getAPIEndpoint } from '$lib/utils/request.js'
-import { savePost } from '$lib/utils/request.js'
+import { getHomeserver, isSafari, getReplyCount } from '$lib/utils/utils.js'
+import { getAPIEndpoint, savePost } from '$lib/utils/request.js'
+import { dayOfMonth, formatTS } from '$lib/utils/time.js'
 import { onMount, createEventDispatcher } from 'svelte'
 import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';
-import { goto } from '$app/navigation';
 import MediaItems from '$lib/board/event/attachments/media-items.svelte'
 import FileItems from '$lib/board/event/attachments/file-items.svelte'
 import Reactions from '$lib/board/event/reactions/reactions.svelte'
@@ -20,16 +19,12 @@ import Links from '$lib/board/event/links/links.svelte'
 import RoomAlias from '$lib/board/event/room-alias/room-alias.svelte'
 import MatrixMedia from '$lib/chat/event/media/media.svelte'
 import ReplySummary from '$lib/board/event/reply/reply-summary.svelte'
-
 import EventThreadSummary from '$lib/chat/event/thread/thread-summary.svelte'
 import BoardPost from '$lib/chat/event/board-post/board-post.svelte'
 
 import emojiRegex from 'emoji-regex';
 
 import { pin, hash } from '$lib/assets/icons.js'
-import { isSafari } from '$lib/utils/utils.js'
-
-import { getReplyCount } from '$lib/utils/utils.js'
 
 import Composer from '$lib/composer/composer.svelte'
 
@@ -446,6 +441,11 @@ function togglePin() {
 $: diff = (isChat && messages) ?
     (event.origin_server_ts - messages[index -1]?.origin_server_ts) / 1000: 0
 
+$: previousDay = messages && messages[index-1]?.origin_server_ts
+    ? dayOfMonth(messages[index-1]?.origin_server_ts): 0
+
+$: isNewDay = dayOfMonth(event?.origin_server_ts) > previousDay
+
 //$: showSender = diff > 400
 
 $: differentSender = isChat && messages && messages[index-1]?.sender?.id !== event?.sender?.id
@@ -477,7 +477,21 @@ $: urls = findURLs(event?.content?.body)
 $: isIMG = event?.content?.msgtype == 'm.image' ||
     event?.content?.msgtype == 'm.images'
 
+$: formattedTS = formatTS(event?.origin_server_ts)
 </script>
+
+{#if isNewDay}
+<div class="new-day mv1 mv3">
+    <div class="rule">
+    </div>
+    <div class="day">
+        {formattedTS}
+    </div>
+    <div class="rule">
+    </div>
+</div>
+{/if}
+
 
 <div class="event chat" 
     bind:this={el}
@@ -501,7 +515,6 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
             Permalink
         </div>
     {/if}
-
 
     <div class="ev-c fl-co chm"
     class:shs={isChat && showSender}
@@ -689,7 +702,6 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
                     event={event} />
             </div>
         {/if}
-
 
 
     {#if event.pinned || replyPinned}
@@ -1014,5 +1026,23 @@ div :global(.chp pre) {
     margin-left: calc(30px + 2rem);
     max-width: 400px;
     border-radius: 5px;
+}
+.new-day {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+}
+
+.day {
+    font-size: small;
+    font-weight: 500;
+    color: var(--text-light);
+}
+.rule {
+    height: 1px;
+    background-color: var(--shade-4);
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
 }
 </style>
