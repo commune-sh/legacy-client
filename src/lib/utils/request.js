@@ -520,3 +520,18 @@ export async function getProfile(username) {
   return data
 }
 
+export async function getGIFs() {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/gifs`,
+    method: 'GET'
+  })
+  return data
+}
+
+export async function searchGIFs(query) {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/gifs/search?q=${query}&limit=50`,
+    method: 'GET'
+  })
+  return data
+}

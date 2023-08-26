@@ -3,8 +3,7 @@ import { store } from '$lib/store/store.js'
 import { back } from '$lib/assets/icons.js'
 import { onMount, onDestroy, tick } from 'svelte'
 import { debounce } from '$lib/utils/utils.js'
-
-$: service = $store.features?.gif?.service
+import { getGIFs, searchGIFs } from '$lib/utils/request.js'
 
 $: placeholder = `Search Tenor GIFs`
 
@@ -41,17 +40,16 @@ onMount(() => {
 
 let loaded = false;
 
-function fetchTenorCategories() {
-    fetch(`https://tenor.googleapis.com/v2/categories?key=${$store.features.gif.key}`)
-    .then(res => res.json())
-    .then(json => {
-        console.log(json)
+async function fetchTenorCategories() {
+    const res = await getGIFs()
+    console.log(res)
+    if(res?.tags) {
         $store.gif = {
-            categories: json.tags,
+            categories: res.tags,
             gifs: [],
         }
         loaded = true;
-    })
+    }
 }
 
 let categoryMode = false;
@@ -70,17 +68,16 @@ let gifs = [];
 
 let next;
 
-function fetchTenorGIFs() {
-    fetch(`https://tenor.googleapis.com/v2/search?key=${$store.features.gif.key}&q=${query}&limit=50`)
-    .then(res => res.json())
-    .then(json => {
-        console.log(json)
-        gifs = [...json.results]
-        if(json.next) {
-            next = json.next
+async function fetchTenorGIFs() {
+    const res = await searchGIFs(query)
+    console.log(res)
+    if(res?.results) {
+        gifs = [...res.results]
+        if(res.next) {
+            next = res.next
         }
         loaded = true;
-    })
+    }
 }
 
 function killFilter() {
@@ -181,7 +178,7 @@ function chooseItem(item) {
 }
 
 .cimg {
-    opacity: 0.6;
+    opacity: 0.8;
     width: 100%;
     height: 100%;
     transition: 0.1s;
