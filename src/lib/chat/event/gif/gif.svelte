@@ -23,7 +23,7 @@ function openImage(index) {
 }
 </script>
 
-<div class="gif-event" on:click={openImage}>
+<div class="gif-event mv1" on:click={openImage}>
     {#if src}
         <video autoplay loop muted playsinline width={width} height={height}>
             <source src={src} type="video/mp4" />
@@ -38,6 +38,7 @@ function openImage(index) {
 <style>
 .gif-event {
     margin-left: calc(30px + 2rem);
+    margin-right: 1.5rem;
     max-width: 400px;
     position: relative;
     cursor: pointer;
@@ -61,5 +62,12 @@ function openImage(index) {
 
 video {
     border-radius: 4px;
+}
+
+@media screen and (max-width: 768px) {
+    video {
+        max-width: 100%;
+        height: auto;
+    }
 }
 </style>
