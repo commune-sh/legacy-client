@@ -44,6 +44,12 @@ function open() {
     window.open(url, '_blank')
 }
 
+function openGIF() {
+    let url = $store.gallery?.url
+    if(!url) return
+    window.open(url, '_blank')
+}
+
 $: name = images[selected]?.name
 </script>
 
@@ -55,7 +61,7 @@ $: name = images[selected]?.name
 
         <div class="grd-c poin">
         {#if isGIF}
-            <video autoplay loop muted playsinline >
+            <video autoplay loop muted playsinline on:click={openGIF} >
                 <source src={images[0]?.key} type="video/mp4" />
             </video>
 

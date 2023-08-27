@@ -3,7 +3,8 @@ import '/static/css/main.css'
 import Authentication from '$lib/auth/authentication.svelte'
 import Switcher from '$lib/switcher/switcher.svelte'
 import Sidebar from '$lib/sidebar/sidebar.svelte'
-import { PUBLIC_META_TITLE, PUBLIC_MEDIA_URL, PUBLIC_FAVICON, PUBLIC_META_IMAGE, PUBLIC_INDEX, PUBLIC_META_DESCRIPTION } from '$env/static/public';
+import { browser } from '$app/environment';
+import { PUBLIC_BASE_URL, PUBLIC_META_TITLE, PUBLIC_MEDIA_URL, PUBLIC_FAVICON, PUBLIC_META_IMAGE, PUBLIC_INDEX, PUBLIC_META_DESCRIPTION } from '$env/static/public';
 import { onMount, tick } from 'svelte'
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
@@ -21,13 +22,11 @@ import Gallery from '$lib/gallery/gallery.svelte'
 
 export let data;
 
-$: if(data) {
-    console.log(data)
-}
 $: if(data?.state?.space) {
     store.addSpaceState($page.params?.space, data.state)
     store.stateReady()
 }
+
 $: if(data?.events) {
     let roomID = data.state?.room_id
     if(isIndex) {
@@ -38,6 +37,7 @@ $: if(data?.events) {
     }
     $store.events[roomID].board = data.events
 }
+
 $: if(data?.event) {
     $store.post = data.event
 }
@@ -204,6 +204,9 @@ $: imageSRC = `${PUBLIC_MEDIA_URL}/${imageKey}`
 $: sender = data?.event?.sender?.display_name ?
 data?.event?.sender?.display_name : data?.event?.sender?.username
 
+$: if(isIndex && browser) {
+    document.title = PUBLIC_META_TITLE
+}
 
 </script>
 
@@ -211,6 +214,10 @@ data?.event?.sender?.display_name : data?.event?.sender?.username
 <svelte:head>
 
     <title>{title}</title>
+    <meta property="og:title" content={title} />
+
+<link rel="canonical" href={PUBLIC_BASE_URL} />
+
     {#if isPost && hasImage && imageSRC}
         <meta property="og:image" content={imageSRC} />
     {/if}
@@ -222,9 +229,11 @@ data?.event?.sender?.display_name : data?.event?.sender?.username
     {/if}
     {#if (isPost || isContext) && data?.event}
         <meta name="description" content={fb}>
+        <meta property="og:description" content={fb}>
     {/if}
     {#if isIndex || (isSpace && !spaceExists)}
         <meta name="description" content={PUBLIC_META_DESCRIPTION}>
+        <meta property="og:description" content={PUBLIC_META_DESCRIPTION}>
     {/if}
 </svelte:head>
 

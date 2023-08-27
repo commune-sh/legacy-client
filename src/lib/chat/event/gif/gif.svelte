@@ -19,6 +19,7 @@ function openImage(index) {
         }],
         index: 0,
         gif: true,
+        url: event?.content?.gif?.url
     }
 }
 </script>
