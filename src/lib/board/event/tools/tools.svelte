@@ -303,7 +303,7 @@ function openExternal() {
             </div>
         {/if}
 
-        {#if !isChat && !isPost}
+        {#if !isChat}
             <div bind:this={ext} class="ext icon grd-c c-ico" 
             on:mouseenter={resetHovered}
                 on:click|stopPropagation={openExternal}>

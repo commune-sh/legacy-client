@@ -21,9 +21,22 @@ import Gallery from '$lib/gallery/gallery.svelte'
 
 export let data;
 
+$: if(data) {
+    console.log(data)
+}
 $: if(data?.state?.space) {
     store.addSpaceState($page.params?.space, data.state)
     store.stateReady()
+}
+$: if(data?.state?.space && data?.events) {
+    const roomID = data.state?.room_id
+    if(!$store.events[roomID]) {
+        $store.events[roomID] = {chat: [], board: []}
+    }
+    $store.events[roomID].board = data.events
+}
+$: if(data?.event) {
+    $store.post = data.event
 }
 
 $: isIndex = $page?.url.pathname === '/'

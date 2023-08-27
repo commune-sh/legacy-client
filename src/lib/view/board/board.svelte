@@ -121,6 +121,7 @@ async function loadEvents(init) {
     }
 
     let existing = $store.events[roomID]?.board?.length > 0
+    console.log("exists???", existing)
     if(existing) {
         //let events = $store.events[roomID]?.board
         reloading = false

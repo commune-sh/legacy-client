@@ -111,6 +111,10 @@ $: if(embed && post?.event) {
 
 async function fetchPost() {
 
+    if($store.post) {
+        post = $store.post
+    }
+
     if(embed && post?.event) {
         return
     }
@@ -132,7 +136,9 @@ async function fetchPost() {
     console.log(resp)
 
     if(resp) {
-        post = resp.event
+        if(!post) {
+            post = resp.event
+        }
         data = resp
         if(resp?.replies) {
             let r = isReply ? $page.params.reply : $page.params.post

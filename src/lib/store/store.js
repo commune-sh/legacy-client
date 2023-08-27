@@ -36,6 +36,7 @@ function createApp() {
     spacePaths: [],
     stateReady: false,
     pageState: [],
+    post: null,
     events: [],
     events_cache: [],
     thread_events: [],
