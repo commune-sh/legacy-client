@@ -28,8 +28,11 @@ $: if(data?.state?.space) {
     store.addSpaceState($page.params?.space, data.state)
     store.stateReady()
 }
-$: if(data?.state?.space && data?.events) {
-    const roomID = data.state?.room_id
+$: if(data?.events) {
+    let roomID = data.state?.room_id
+    if(isIndex) {
+        roomID = "index"
+    }
     if(!$store.events[roomID]) {
         $store.events[roomID] = {chat: [], board: []}
     }

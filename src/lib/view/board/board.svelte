@@ -120,7 +120,11 @@ async function loadEvents(init) {
     if(init) {
     }
 
-    let existing = $store.events[roomID]?.board?.length > 0
+    let rid = roomID
+    if(isIndex) {
+        rid == "index"
+    }
+    let existing = $store.events[rid]?.board?.length > 0
     console.log("exists???", existing)
     if(existing) {
         //let events = $store.events[roomID]?.board
@@ -188,10 +192,10 @@ async function loadEvents(init) {
             reloadTrigger = true
         }, 1000)
 
-        if(!$store.events[roomID]) {
-            $store.events[roomID] = {chat: [], board: []}
+        if(!$store.events[rid]) {
+            $store.events[rid] = {chat: [], board: []}
         }
-        $store.events[roomID].board = resp.events
+        $store.events[rid].board = resp.events
     }
 
     if(!resp) {
