@@ -43,6 +43,14 @@ export async function load( { fetch, params, url, cookies, request } ) {
     data.events = resp.events;
   }
 
+  if(isIndex && authenticated) {
+    let url = `${PUBLIC_API_URL}/feed`;
+    const res = await fetch( url );
+    const resp = await res.json();
+
+    data.events = resp.events;
+  }
+
   if(params?.space) {
 
     let url = `${PUBLIC_API_URL}/${params.space}/state`;
