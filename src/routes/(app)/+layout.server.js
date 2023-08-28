@@ -12,7 +12,6 @@ export async function load( { fetch, params, url, cookies, request } ) {
   let agent = request.headers.get('user-agent')
 
   const browsers = /(Mozilla|Chrome|Safari|Firefox|Edge)/i;
-
   const isBrowser = browsers.test(agent);
 
   let view = url?.searchParams?.get('view');

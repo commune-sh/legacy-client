@@ -17,6 +17,14 @@ import Embed from '$lib/embed/embed.svelte'
 
 export let data;
 
+$: if(data.health) {
+    $store.health = data.health
+}
+
+$: if(data) {
+    console.log(data)
+}
+
 $: down = $store.down || data?.error
 
 $: authenticated = $store?.authenticated && 
