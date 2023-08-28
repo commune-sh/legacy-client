@@ -5,8 +5,25 @@ import { onMount, tick } from 'svelte'
 import { store } from '$lib/store/store.js'
 import { page } from '$app/stores';
 
+$: health = $store.health
 onMount(() => {
-    checkHealth(true)
+    //checkHealth(true)
+    if(health == undefined) {
+        store.setDownState(true)
+        store.setHealth(false)
+    } else if(health?.healthy == true) {
+        store.setHealth(true)
+        store.setDownState(false)
+    }
+    if(health?.features) {
+        store.setFeatures(health.features)
+        if(health?.gif) {
+            $store.features['gif'] = health.gif
+        }
+    }
+    if(health?.restrictions) {
+        store.setRestrictions(health.restrictions)
+    }
 })
 
 $: isDomain = $page?.params?.domain != null && 
@@ -51,7 +68,7 @@ function checkHealth(init) {
         if(resp?.features) {
             store.setFeatures(resp.features)
             if(resp?.gif) {
-                    $store.features['gif'] = resp.gif
+                $store.features['gif'] = resp.gif
             }
         }
         if(resp?.restrictions) {

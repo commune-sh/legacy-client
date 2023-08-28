@@ -76,12 +76,13 @@ onMount(() => {
 
     if(showChatView) {
         loadMessages()
+        fetchMembers()
     } else {
         setTimeout(() => {
             loadMessages()
+            fetchMembers()
         }, 2000)
     }
-    fetchMembers()
 })
 
 onDestroy(() => {

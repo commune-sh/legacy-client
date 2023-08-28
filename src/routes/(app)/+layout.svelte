@@ -22,6 +22,10 @@ import Gallery from '$lib/gallery/gallery.svelte'
 
 export let data;
 
+$: if(data.health) {
+    $store.health = data.health
+}
+
 $: if(data?.state?.space) {
     store.addSpaceState($page.params?.space, data.state)
     store.stateReady()

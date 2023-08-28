@@ -16,7 +16,7 @@ $: active = $store.verifiedSession
 let lastSpace = null
 
 $: if($page?.params?.space !== lastSpace && $page?.params?.space && !down) {
-    fetchSpaceState()
+    //fetchSpaceState()
 }
 
 $: if(authenticated){

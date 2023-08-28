@@ -7,6 +7,7 @@ function createApp() {
 
   let app = {
     down: false,
+    health: null,
     healthy: true,
     active: false,
     ready: false,
