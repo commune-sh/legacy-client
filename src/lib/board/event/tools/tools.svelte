@@ -244,6 +244,9 @@ function openExternal() {
     window.open(url, '_blank')
 }
 
+$: isGIF = event?.content?.msgtype == 'gif' &&
+    event?.content?.gif != undefined
+
 </script>
 
 <div class="event-tools">
@@ -295,7 +298,7 @@ function openExternal() {
         {/if}
 
 
-        {#if isAuthor}
+        {#if isAuthor && !isGIF}
             <div bind:this={ed} class="edit icon grd-c c-ico" 
                 on:mouseenter={resetHovered}
                 on:click|stopPropagation={editEvent}>

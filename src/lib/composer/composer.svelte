@@ -274,6 +274,41 @@ $: postText = uploading ? 'Uploading...' : busy ? 'Saving...' : 'Save'
 
 let processed = false;
 
+$: if(isChat && $store.selectedGIF) {
+    let gif = $store.selectedGIF
+    let mp4 = gif?.media_formats['mp4']
+    let content = {
+        msgtype: "gif",
+        service: $store.features?.gif?.service,
+        body: "gif",
+        gif: {
+            url: gif?.url,
+            src: {
+                dims: mp4?.dims,
+                size: mp4?.size,
+                url: mp4?.url,
+            }
+        }
+    }
+    if(gif?.description) {
+        content.gif['description'] = gif.description
+    }
+
+    let post = {
+        content: content,
+    }
+
+    console.log(post)
+
+    dispatch('new-message', post)
+    focusBodyInput()
+
+    $store.selectedGIF = null
+}
+
+$: if(!isChat && $store.selectedGIF && reply) {
+}
+
 async function createPost() {
 
     let title;
@@ -960,7 +995,6 @@ function updateEditorContent(e) {
 
             {#if gif_enabled}
                 <InsertGIF 
-                    on:gif-selected
                     isChat={isChat}
                     room_alias={room_alias} />
             {/if}

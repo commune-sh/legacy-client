@@ -5,7 +5,11 @@ import { onMount, onDestroy, tick } from 'svelte'
 import { debounce } from '$lib/utils/utils.js'
 import { getGIFs, searchGIFs } from '$lib/utils/request.js'
 
-$: placeholder = `Search Tenor GIFs`
+$: service = $store.features?.gif?.service
+
+$: name = `${service.charAt(0).toUpperCase()}${service.slice(1)}`
+
+$: placeholder = `Search ${name} GIFs`
 
 let searchInput;
 let query;
@@ -20,7 +24,7 @@ function startSearch() {
     if(queryExists) {
         loaded = false
         categoryMode = true;
-        fetchTenorGIFs()
+        fetchGIFs()
     }
 }
 
@@ -32,7 +36,7 @@ $: categories = $store.gif?.categories
 onMount(() => {
     searchInput.focus()
     if(noGIFs) {
-        fetchTenorCategories()
+        fetchCategories()
     } else {
         loaded = true;
     }
@@ -40,7 +44,7 @@ onMount(() => {
 
 let loaded = false;
 
-async function fetchTenorCategories() {
+async function fetchCategories() {
     const res = await getGIFs()
     if(res?.tags) {
         $store.gif = {
@@ -59,14 +63,14 @@ function loadCategory(item) {
 
     query = item.searchterm
 
-    fetchTenorGIFs()
+    fetchGIFs()
 }
 
 let gifs = [];
 
 let next;
 
-async function fetchTenorGIFs() {
+async function fetchGIFs() {
     const res = await searchGIFs(query)
     if(res?.results) {
         gifs = [...res.results]

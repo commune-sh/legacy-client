@@ -210,6 +210,10 @@ export function getLocalpart(user_id) {
 }
 
 export function replaceEmoji(inputString, emojiMapping) {
+  if(!emojiMapping) {
+    return inputString;
+  }
+
   const emojiRegex = /:(\S+):/g;
 
   const replacedString = inputString.replace(emojiRegex, (match, emojiText) => {

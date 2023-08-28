@@ -934,7 +934,6 @@ async function insertGIF(e) {
                         on:typing={isTyping}
                         reply={replying}
                         replyTo={replyToEvent}
-                        on:gif-selected={insertGIF}
                         on:new-message={newMessage}
                         roomID={roomID} 
                         room_alias={$page.params.space}
