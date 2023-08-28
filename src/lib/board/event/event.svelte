@@ -24,6 +24,7 @@ import Links from '$lib/board/event/links/links.svelte'
 import RoomAlias from '$lib/board/event/room-alias/room-alias.svelte'
 import MatrixMedia from '$lib/chat/event/media/media.svelte'
 import ReplySummary from '$lib/board/event/reply/reply-summary.svelte'
+import GIFEvent from '$lib/chat/event/gif/gif.svelte'
 
 import EventThreadSummary from '$lib/chat/event/thread/thread-summary.svelte'
 import BoardPost from '$lib/chat/event/board-post/board-post.svelte'
@@ -115,6 +116,9 @@ function animate(ts) {
       requestAnimationFrame(animate);
     }
 }
+
+$: isGIF = event?.content?.msgtype == 'gif' &&
+    event?.content?.gif != undefined
 
 onMount(() => {
 
@@ -667,6 +671,8 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
 
             {:else if isMatrixMedia && !attachments}
                 <MatrixMedia {event}/>
+            {:else if isGIF}
+                <GIFEvent {event} board={true}/>
             {:else if !isIMG}
 
                 {#if isChat && isBoardPostInChat}

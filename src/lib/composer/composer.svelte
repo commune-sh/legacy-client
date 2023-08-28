@@ -274,8 +274,19 @@ $: postText = uploading ? 'Uploading...' : busy ? 'Saving...' : 'Save'
 
 let processed = false;
 
-$: if(isChat && $store.selectedGIF) {
+$: if(isChat && $store.selectedGIF?.view == 'chat') {
+    saveChatGIF()
+}
+
+$: if(!isChat && reply && $store.selectedGIF?.view == 'board') {
+    saveGIFPost()
+}
+
+
+
+function saveChatGIF() {
     let gif = $store.selectedGIF
+    $store.selectedGIF = null
     let mp4 = gif?.media_formats['mp4']
     let content = {
         msgtype: "gif",
@@ -303,10 +314,43 @@ $: if(isChat && $store.selectedGIF) {
     dispatch('new-message', post)
     focusBodyInput()
 
-    $store.selectedGIF = null
 }
 
-$: if(!isChat && $store.selectedGIF && reply) {
+async function saveGIFPost() {
+    let gif = $store.selectedGIF
+    $store.selectedGIF = null
+    let mp4 = gif?.media_formats['mp4']
+    let post = {
+        transaction_id: `co${Date.now()}`,
+        room_id: roomID,
+        type: 'space.board.post.reply',
+        content: {
+            msgtype: "gif",
+            service: $store.features?.gif?.service,
+            body: "gif",
+            gif: {
+                url: gif?.url,
+                src: {
+                    dims: mp4?.dims,
+                    size: mp4?.size,
+                    url: mp4?.url,
+                }
+            }
+        },
+    }
+    post.in_thread = threadEvent
+    post.is_reply = true
+    post.replying_to = replyTo.event_id
+    post.content['m.relates_to'] = {
+        event_id: replyTo.event_id,
+        thread_event_id: threadEvent,
+        'rel_type': 'm.nested_reply',
+    }
+
+    const res = await savePost(post);
+    if(res?.success && res?.event) {
+        dispatch('saved', res.event)
+    }
 }
 
 async function createPost() {
@@ -995,6 +1039,7 @@ function updateEditorContent(e) {
 
             {#if gif_enabled}
                 <InsertGIF 
+                    center={false}
                     isChat={isChat}
                     room_alias={room_alias} />
             {/if}
@@ -1043,6 +1088,11 @@ function updateEditorContent(e) {
     <div class="tools fl" class:hide={isChat}>
         <Attach isChat={isChat} busy={busy} on:attached={attachFiles}/>
         <InsertEmoji room_alias={room_alias} reply={reply} busy={busy} on:selected={insertEmoji}/>
+        {#if gif_enabled}
+            <InsertGIF 
+                isChat={false}
+                room_alias={room_alias} />
+        {/if}
         <div class="fl-o">
         </div>
         <div class="grd mr3">

@@ -58,7 +58,10 @@ $: active = $store.emojiPicker.active &&
 
 
 <div class="gif grd"
+    class:mtop={!center}
+    class:mle={center}
     on:click={insertGIF}
+    class:grd-c={center}
     bind:this={el}>
     <div class="c-ico" class:active={active}>
         {@html gif}
@@ -66,8 +69,11 @@ $: active = $store.emojiPicker.active &&
 </div>
 
 <style>
-.gif {
+.mtop {
     margin-top: 16px;
+}
+.mle {
+    margin-left: 11px;
 }
 .c-ico {
     width: 24px;

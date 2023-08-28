@@ -48,7 +48,7 @@ export async function load( { fetch, params, url, cookies, request } ) {
 
     data.state = resp.state;
 
-    {
+  if(isBrowser){
       let url = `${PUBLIC_API_URL}/${params.space}/events`;
       const res = await fetch( url );
       const resp = await res.json();

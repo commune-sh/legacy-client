@@ -3,6 +3,8 @@ import { store } from '$lib/store/store.js'
 
 export let event;
 
+export let board = false;
+
 $: src = event?.content?.gif?.src?.url
 
 $: w = event?.content?.gif?.src?.dims[0]
@@ -24,7 +26,9 @@ function openImage(index) {
 }
 </script>
 
-<div class="gif-event mv1" on:click={openImage}>
+<div class="gif-event mv1" 
+    class:ml={!board}
+    on:click={openImage}>
     {#if src}
         <video autoplay loop muted playsinline width={width} height={height}>
             <source src={src} type="video/mp4" />
@@ -38,12 +42,17 @@ function openImage(index) {
 
 <style>
 .gif-event {
-    margin-left: calc(30px + 2rem);
     margin-right: 1.5rem;
+    margin-left: 1rem;
     max-width: 400px;
     position: relative;
     cursor: pointer;
 }
+
+.ml {
+    margin-left: calc(30px + 2rem);
+}
+
 .gifl {
     position: absolute;
     top: 0.25rem;

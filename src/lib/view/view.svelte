@@ -6,8 +6,6 @@ import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
 import Board from './board/board.svelte'
 import Chat from './chat/chat.svelte'
-import SkeletonBoardEvents from '$lib/skeleton/skeleton-board-events.svelte'
-import Header from '$lib/header/header.svelte'
 import NotFound from '$lib/errors/not-found.svelte'
 
 $: isSpace = $page?.params?.space !== undefined && $page?.params?.space !== null && $page?.params?.space !== '' 

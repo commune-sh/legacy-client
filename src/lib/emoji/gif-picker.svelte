@@ -90,6 +90,7 @@ function killFilter() {
 }
 
 function chooseItem(item) {
+    item.view = $store.emojiPicker.isChat ? 'chat' : 'board'
     store.killEmojiPicker()
     killFilter()
     $store.selectedGIF = item
