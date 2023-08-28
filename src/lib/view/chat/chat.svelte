@@ -75,6 +75,7 @@ onMount(() => {
     wrap.scrollTop = wrap.scrollHeight;
 
     if(showChatView) {
+
         loadMessages()
         fetchMembers()
     } else {
@@ -212,7 +213,10 @@ $: if(skeleton) {
     skeleton.scrollTop = skeleton.scrollHeight;
 }
 
+//existing preloaded messages
+
 async function loadMessages() {
+    console.log("reloading")
     ready = false;
     last_reached = false;
 

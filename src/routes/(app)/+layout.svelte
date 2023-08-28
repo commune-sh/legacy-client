@@ -22,6 +22,11 @@ import Gallery from '$lib/gallery/gallery.svelte'
 
 export let data;
 
+$: if(data) {
+    console.log(data)
+}
+
+
 $: if(data.health) {
     $store.health = data.health
 }
@@ -32,14 +37,25 @@ $: if(data?.state?.space) {
 }
 
 $: if(data?.events) {
-    let roomID = data.state?.room_id
+    let roomID = data.events[0]?.room_id
     if(isIndex) {
         roomID = "index"
+    }
+    if(isAll) {
+        roomID = "all"
     }
     if(!$store.events[roomID]) {
         $store.events[roomID] = {chat: [], board: []}
     }
     $store.events[roomID].board = data.events
+}
+
+$: if(data?.messages) {
+    let roomID = data.messages[0]?.room_id
+    if(!$store.events[roomID]) {
+        $store.events[roomID] = {chat: [], board: []}
+    }
+    $store.events[roomID].chat = data.messages
 }
 
 $: if(data?.event) {
@@ -50,6 +66,7 @@ $: isIndex = $page?.url.pathname === '/'
 $: isSpace = $page?.params?.space !== undefined 
 $: isPost = $page?.params?.post !== undefined 
 $: isContext = $page.url?.searchParams?.get('context') !== null
+$: isAll = $page.url?.pathname === '/all';
 
 $: spaceExists = data?.state?.space !== undefined
 

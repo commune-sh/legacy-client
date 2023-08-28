@@ -15,6 +15,10 @@ export async function load( { fetch, params, url, cookies, request } ) {
 
   const isBrowser = browsers.test(agent);
 
+  let view = url?.searchParams?.get('view');
+  const chat_view = view === 'chat';
+  const board_view = view === 'board';
+
   let data = {browser: isBrowser}
 
   if(isBrowser) {
@@ -30,8 +34,9 @@ export async function load( { fetch, params, url, cookies, request } ) {
   const event = post || context;
 
   let isIndex = url?.pathname === '/';
+  let isAll = url?.pathname === '/all';
 
-  if(isIndex && !authenticated) {
+  if((isIndex && !authenticated) || isAll) {
     let url = `${PUBLIC_API_URL}/events`;
     const res = await fetch( url );
     const resp = await res.json();
@@ -48,11 +53,44 @@ export async function load( { fetch, params, url, cookies, request } ) {
 
     data.state = resp.state;
 
-  if(isBrowser){
+    let space_type = resp.state?.space?.type;
+
+    let messages = false;
+
+    if(isBrowser){
       let url = `${PUBLIC_API_URL}/${params.space}/events`;
+
+      /*
+      if((space_type == "chat" && !board_view) || chat_view) {
+        url = `${PUBLIC_API_URL}/room/${data.state.room_id}/messages`;
+        messages = true;
+      }
+      */
+
+      if(params?.room) {
+        url = `${PUBLIC_API_URL}/${params.space}/${params.room}/events`;
+
+        let room = data.state?.children?.find(child => child.alias === params.room );
+
+        let room_type = room?.type;
+        /*
+        if((room_type == "chat" && !board_view) || chat_view) {
+          url = `${PUBLIC_API_URL}/room/${room.room_id}/messages`;
+          messages = true;
+        }
+        */
+
+      }
+
       const res = await fetch( url );
       const resp = await res.json();
-      data.events = resp.events;
+
+      if(messages) {
+        data.messages = resp.events.reverse();
+      } else {
+        data.events = resp.events;
+      }
+
     }
 
   } 

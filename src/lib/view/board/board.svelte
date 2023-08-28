@@ -1,6 +1,7 @@
 <script>
 import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { APIRequest, loadPosts, redactEvent } from '$lib/utils/request.js'
+import { browser } from '$app/environment'
 import { createStateEvent } from '$lib/utils/request.js'
 import { onMount, tick, createEventDispatcher } from 'svelte'
 import { page } from '$app/stores';
@@ -71,7 +72,7 @@ let loaded = false;
 
 
 //$: events = $store?.events?.[roomID]
-$: events = $store.events[roomID]?.board
+$: events = $store.events[rid]?.board
 //$: sorted = events?.sort((a, b) => b.origin_server_ts - a.origin_server_ts);
 
 
@@ -113,27 +114,18 @@ $: if(reloadTrigger &&
 }
 
 
+$: rid = isAll ? 'all' : isIndex ? 'index' : roomID
+$: existing = $store.events[rid]?.board?.length > 0
+
+$: if(existing) {
+    loaded = true
+}
+
 async function loadEvents(init) {
     reloading = true
     editing = false
 
     if(init) {
-    }
-
-    let rid = roomID
-    if(isIndex) {
-        rid == "index"
-    }
-    let existing = $store.events[rid]?.board?.length > 0
-    console.log("exists???", existing)
-    if(existing) {
-        //let events = $store.events[roomID]?.board
-        reloading = false
-        loaded = true
-        _page = $page
-        setTimeout(() => {
-            reloadTrigger = true
-        }, 1000)
     }
 
 
@@ -205,6 +197,7 @@ async function loadEvents(init) {
 }
 
 $: isIndex = $page.url?.pathname === '/'
+$: isAll = $page.url?.pathname === '/all'
 
 
 let down = false;
@@ -228,7 +221,7 @@ let obs;
 let ob;
 
 
-$: if(obs && loaded && ready) {
+$: if(browser && obs) {
     setupObserver()
 }
 $: if(ob && loaded && ready) {
@@ -279,7 +272,18 @@ function initLoad(){
     if(isDomain) {
         return
     }
-    loadEvents(true)
+
+    if(existing) {
+        ready = true
+        reloading = false
+        _page = $page
+        setTimeout(() => {
+            reloadTrigger = true
+        }, 1000)
+        return
+    } else {
+        loadEvents(true)
+    }
 }
 
 function setupObserver() {
@@ -382,10 +386,10 @@ let fetchMore = () => {
     }).then((res) => {
         if(res && res?.events?.length > 0) {
             for (const event of res?.events) {
-              const exists = $store.events[roomID].board.some(e => e.event_id === event.event_id);
+              const exists = $store.events[rid].board.some(e => e.event_id === event.event_id);
 
               if (!exists) {
-                store.addBoardEvent(roomID, event)
+                store.addBoardEvent(rid, event)
               }
             }
             startedFetching = true;
@@ -623,6 +627,7 @@ function referenceEvent(e) {
                 <SkeletonBoardEvents reply={false}/>
 
             {:else if (stateReady || !isSpace)}
+
                 {#if authenticated && editing && loadEditor}
                     <Composer 
                         roomID={roomID}

@@ -1,6 +1,7 @@
 <script>
 import { PUBLIC_BASE_URL, PUBLIC_MEDIA_URL, PUBLIC_MATRIX_SERVER_NAME } from '$env/static/public';
 import { getHomeserver, isSafari, getReplyCount } from '$lib/utils/utils.js'
+import { browser } from '$app/environment';
 import { getAPIEndpoint, savePost } from '$lib/utils/request.js'
 import { dayOfMonth, formatTS } from '$lib/utils/time.js'
 import { onMount, createEventDispatcher } from 'svelte'
@@ -136,10 +137,14 @@ $: isDomain = $page.params.domain !== undefined &&
 
 
 function getFirstParagraphNode(content) {
-  const tempDiv = document.createElement('div');
-  tempDiv.innerHTML = content;
-  const firstParagraphNode = tempDiv.querySelector('p');
-  return firstParagraphNode?.innerHTML || null;
+    if(browser) {
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = content;
+        const firstParagraphNode = tempDiv.querySelector('p');
+        return firstParagraphNode?.innerHTML || null;
+    } else {
+        return null
+    }
 }
 
 
@@ -309,11 +314,15 @@ $: isSingleReply = $page.params.reply !== undefined && $page.params.reply !== nu
 $: sender_id = $store.credentials?.matrix_user_id
 
 function justIMG(e) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(e?.content?.formatted_body, 'text/html');
-    const imgTags = doc.getElementsByTagName('img');
-    return imgTags.length === 1 && 
-        doc.documentElement.textContent.trim() === '';
+    if(browser) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(e?.content?.formatted_body, 'text/html');
+        const imgTags = doc.getElementsByTagName('img');
+        return imgTags.length === 1 && 
+            doc.documentElement.textContent.trim() === '';
+    } else {
+        return false
+    }
 }
 
 $: isSingleCustomEmoji = justIMG(event)
