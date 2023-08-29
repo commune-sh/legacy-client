@@ -3,10 +3,10 @@ import { PUBLIC_API_URL } from '$env/static/public';
 /** @type {import('./$types').LayoutLoad} */
 export async function load( { fetch, params, url, cookies, request } ) {
 
-  let authenticated = false;
+  let hasToken = false;
   let token = cookies.get('token');
   if(token) {
-    authenticated = true;
+    hasToken = true;
   }
 
   let agent = request.headers.get('user-agent')
@@ -35,7 +35,7 @@ export async function load( { fetch, params, url, cookies, request } ) {
   let isIndex = url?.pathname === '/';
   let isAll = url?.pathname === '/all';
 
-  if((isIndex && !authenticated) || isAll) {
+  if((isIndex && !hasToken) || isAll) {
     let url = `${PUBLIC_API_URL}/events`;
     const res = await fetch( url );
     const resp = await res.json();
@@ -43,7 +43,7 @@ export async function load( { fetch, params, url, cookies, request } ) {
     data.events = resp.events;
   }
 
-  if(isIndex && authenticated) {
+  if(isIndex && hasToken) {
     let url = `${PUBLIC_API_URL}/feed`;
     const res = await fetch( url );
     const resp = await res.json();

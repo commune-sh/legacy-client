@@ -737,7 +737,7 @@ $: isIMG = event?.content?.msgtype == 'm.image' ||
                         {title}
                     </div>
                     <div class="post-body pba clipped ph3 ">
-                        {@html clipped}
+                        {@html content}
                     </div>
                 {/if}
 
@@ -1036,7 +1036,7 @@ div :global(.post-body blockquote){
 }
 
 
-.clipped {
+div :global(.clipped){
     font-weight: normal;
     height: 22px;
     line-height: 22px!important;
@@ -1046,6 +1046,18 @@ div :global(.post-body blockquote){
     word-break: break-word;
     margin-bottom: 0.5rem;
 }
+
+div :global(.clipped p:first-of-type){
+    font-weight: normal;
+    height: 22px;
+    line-height: 22px!important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-break: break-word;
+    margin-bottom: 0.5rem;
+}
+
 
 div :global(.body .emoji){
     height: 20px;
