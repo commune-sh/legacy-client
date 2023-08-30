@@ -9,6 +9,7 @@ import IndexSidebar from '$lib/sidebar/index/index.svelte'
 import { createStateEvent } from '$lib/utils/request.js'
 
 $: state = $store?.states[$page?.params?.space]
+$: space_exists = $store?.states[$page?.params?.space]?.exists != false
 
 $: ready = state != undefined && $store.stateReady
 
@@ -134,10 +135,11 @@ async function setOrder() {
         {#if isNotSpace}
             <IndexSidebar />
 
+        {:else if !exists}
+
         {:else if !ready}
             <SkeletonSidebar />
 
-        {:else if !exists}
 
         {:else if exists}
 

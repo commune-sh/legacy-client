@@ -71,6 +71,8 @@
     --popup-bg: #090909;
 
     --space-title: #000000b3;
+
+    --ghost: white;
 }
 
 :root.light {
@@ -143,6 +145,8 @@
 
     --popup-bg: white;
     --space-title: #ffffffc4;
+
+    --ghost: #3e3e3e;
 }
 
 :root.black {
@@ -215,6 +219,8 @@
 
     --popup-bg: #181818;
     --space-title: #000000b3;
+
+    --ghost: white;
 }
 
 

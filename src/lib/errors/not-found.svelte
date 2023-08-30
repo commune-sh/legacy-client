@@ -66,11 +66,12 @@ function discover() {
 }
 
 .ghost {
-    fill: var(--text-1);
+    fill: var(--ghost);
     height: 80px;
     width: 80px;
     animation: float 2s ease-in-out infinite;
 }
+
 @keyframes float {
     0%, 100% {
         transform: translateY(0);

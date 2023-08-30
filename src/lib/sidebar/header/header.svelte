@@ -11,7 +11,8 @@ import tippy from 'tippy.js';
 $: state = $store?.states[$page?.params?.space]
 export let ready;
 
-$: stateExists = !state?.error && state?.exists != false
+$: stateExists = !state?.error && state?.exists != false && state?.space !=
+    undefined
 
 $: name = state?.space?.name ? state?.space?.name : state?.space?.alias ?
     state?.space?.alias : null;
