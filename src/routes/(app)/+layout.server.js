@@ -30,6 +30,7 @@ export async function load( { fetch, params, url, cookies, request } ) {
   const post = params.post
   const room = params.room
   const context = url?.searchParams?.get('context');
+  const filter = url?.searchParams?.get('filter');
   const event = post || context;
 
   let isIndex = url?.pathname === '/';
@@ -37,6 +38,11 @@ export async function load( { fetch, params, url, cookies, request } ) {
 
   if((isIndex && !hasToken) || isAll) {
     let url = `${PUBLIC_API_URL}/events`;
+
+    if(filter == 'social' || filter == 'spaces') {
+        url = `${url}?filter=${filter}`
+    }
+
     const res = await fetch( url );
     const resp = await res.json();
 
@@ -45,6 +51,10 @@ export async function load( { fetch, params, url, cookies, request } ) {
 
   if(isIndex && hasToken) {
     let url = `${PUBLIC_API_URL}/feed`;
+    if(filter == 'social' || filter == 'spaces') {
+        url = `${url}?filter=${filter}`
+    }
+
     const res = await fetch( url );
     const resp = await res.json();
 
