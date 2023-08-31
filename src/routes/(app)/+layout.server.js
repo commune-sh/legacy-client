@@ -89,6 +89,10 @@ export async function load( { fetch, params, url, cookies, request } ) {
 
       }
 
+      if(params.topic) {
+        url = url + `?topic=${params.topic}`
+      }
+
       const res = await fetch( url );
       const resp = await res.json();
 
