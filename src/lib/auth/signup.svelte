@@ -7,7 +7,7 @@ import { eye, eyeoff } from '$lib/assets/icons.js'
 import { APIRequest, validateEmail } from '$lib/utils/request.js'
 import { sendCode, verifyEmail } from '$lib/utils/request.js'
 import { v4 as uuidv4 } from 'uuid';
-//import jwtDecode from 'jwt-decode';
+import jwtDecode from 'jwt-decode';
 
 import validator from 'validator';
 
@@ -33,12 +33,12 @@ onMount(() => {
         focusUsernameInput()
     }
 
-    /*
     const script = document.createElement('script');
     script.src = "https://accounts.google.com/gsi/client"
+    //script.async = true;
+    //script.defer = true;
     document.body.appendChild(script);
     gloaded = true
-    */
 });
 
 async function focusUsernameInput() {
@@ -509,6 +509,7 @@ window.handleGauth = (e) => {
             <div class="mt3">
                 <span class="href sm" on:click={login}>Already have an account?</span>
             </div>
+
         </div>
 
     </div>
@@ -604,5 +605,9 @@ input {
 
 .hide {
     visibility: none;
+}
+
+.discord {
+    background: #5865f2;
 }
 </style>

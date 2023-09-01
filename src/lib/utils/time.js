@@ -23,7 +23,7 @@ export function dayOfMonth(ts) {
 }
 
 export function formatTS(ts) {
-  const date = new Date(ts * 1000); 
+  const date = new Date(ts); 
   const dayOfWeek = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(date);
   const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(date);
   const dayOfMonth = date.getDate();

@@ -8,6 +8,12 @@ import { goto } from '$app/navigation';
 import { store } from '$lib/store/store.js'
 import Health from '$lib/sync/health.svelte'
 
+export let data;
+
+$: if(data?.health) {
+    $store.health = data.health
+}
+
 $: down = $store.down
 
 function signup() {

@@ -1,11 +1,14 @@
 <script>
 import { onMount, createEventDispatcher, tick } from 'svelte'
-import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
+import { PUBLIC_API_URL, PUBLIC_BASE_URL } from '$env/static/public';
 import { store } from '$lib/store/store.js'
-import { eye, eyeoff } from '$lib/assets/icons.js'
+import { eye, eyeoff, discord as discordIcon } from '$lib/assets/icons.js'
 import { APIRequest } from '$lib/utils/request.js'
+import { goto } from '$app/navigation';
 
 $: down = $store.down
+
+$: discord_enabled = $store.health?.oauth?.discord?.client_id != null
 
 const dispatch = createEventDispatcher()
 
@@ -161,6 +164,16 @@ function togglePass() {
     passwordInput.focus()
 }
 
+$: discord_client_id = $store.health?.oauth?.discord?.client_id
+
+function startDiscordAuth() {
+    const redir = encodeURIComponent(`${PUBLIC_BASE_URL}/oauth/discord`);
+
+    let url = `https://discord.com/api/oauth2/authorize?client_id=${discord_client_id}&redirect_uri=${redir}&response_type=code&scope=identify`
+
+    goto(url)
+}
+
 </script>
 
 
@@ -227,6 +240,7 @@ function togglePass() {
                 <span class="href sm" on:click={signup}>Need an account? Sign
                     up!</span>
             </div>
+
         </div>
 
     </div>
@@ -322,4 +336,14 @@ input {
     }
 }
 
+.discord {
+    background: var(--shade-3);
+    border-radius: 15px;
+    fill: white;
+}
+
+.discord:hover {
+    fill: #5865f2;
+    opacity: 1;
+}
 </style>

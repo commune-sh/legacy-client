@@ -6,6 +6,12 @@ import Health from '$lib/sync/health.svelte'
 import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
 import { store } from '$lib/store/store.js'
 
+export let data;
+
+$: if(data?.health) {
+    $store.health = data.health
+}
+
 $: down = $store.down
 
 function login() {
