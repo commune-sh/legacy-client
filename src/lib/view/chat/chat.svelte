@@ -220,6 +220,7 @@ async function loadMessages() {
     ready = false;
     last_reached = false;
 
+    /*
     let existing = $store.events[roomID]?.chat?.length > 0
     if(existing) {
         if(!is_context) {
@@ -243,6 +244,7 @@ async function loadMessages() {
         ready = true
         return
     }
+    */
 
 
 
