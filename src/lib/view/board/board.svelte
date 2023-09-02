@@ -122,6 +122,7 @@ $: if(existing) {
 }
 
 async function loadEvents(init) {
+
     reloading = true
     editing = false
 
@@ -163,7 +164,6 @@ async function loadEvents(init) {
         opt.url = `${PUBLIC_API_URL}/feed`
     }
 
-
     let filter = $page.url.searchParams.get('filter')
     if(filter) {
         opt.url = `${opt.url}?filter=${filter}`
@@ -187,7 +187,11 @@ async function loadEvents(init) {
         if(!$store.events[rid]) {
             $store.events[rid] = {chat: [], board: []}
         }
-        $store.events[rid].board = resp.events
+
+        if(resp?.events?.length > 0) {
+            $store.events[rid].board = resp.events
+            //store.addBoardEvents(rid, resp.events)
+        }
     }
 
     if(!resp) {
@@ -405,7 +409,10 @@ let fetchMore = () => {
 
 
 $: if(reloadTrigger && $store.reloadFeed) {
-    loadEvents()
+    console.log("reloading because of login or logout")
+    setTimeout(() => {
+        loadEvents()
+    }, 200)
     $store.reloadFeed = false 
     $store.accountCreated = false
 }
@@ -639,6 +646,7 @@ function referenceEvent(e) {
                         isChat={false}
                         on:kill={stopEditing}/>
                 {/if}
+
 
                 {#if events?.length > 0}
                     <section class="events">

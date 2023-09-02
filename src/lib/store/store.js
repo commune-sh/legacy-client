@@ -1042,7 +1042,8 @@ function createApp() {
 
   let addBoardEvents = (roomID, events) => {
     update(p => {
-      p.events[roomID].board.push(...event)
+      console.log("room", roomID, events)
+      p.events[roomID].board.push(...events)
       return p
     })
   }

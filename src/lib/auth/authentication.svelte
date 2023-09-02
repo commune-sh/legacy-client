@@ -2,6 +2,7 @@
 import { onMount, onDestroy } from 'svelte'
 import { APIRequest, getNotifications } from '$lib/utils/request.js'
 import { PUBLIC_API_URL, PUBLIC_API_URL_WS } from '$env/static/public';
+import { browser } from '$app/environment';
 import Login from './login.svelte'
 import { close } from '$lib/assets/icons.js'
 import { page } from '$app/stores';
@@ -15,10 +16,18 @@ let active = false;
 onMount(() => {
 
     const token = localStorage.getItem('access_token')
+    const cookies = document.cookie
+    const t = cookies.split('token=')[1]?.split(';')[0]
     if(token) {
         syncCreds(token)
+    } else if(t) {
+        syncCreds(t)
     } else {
         store.verifiedSession(true)
+    }
+
+    if(t && !token) {
+        localStorage.setItem('access_token', t)
     }
 
 });

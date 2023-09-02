@@ -1,4 +1,5 @@
 import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
+import { browser } from '$app/environment';
 
 export async function APIRequest(r) {
   try {
@@ -15,6 +16,15 @@ export async function APIRequest(r) {
     if(r.token) {
       headers['Authorization'] = `Bearer ${r.token}`
     }
+
+    if(browser) {
+      const cookies = document.cookie
+      const t = cookies.split('token=')[1]?.split(';')[0]
+      if(t) {
+        headers['Authorization'] = `Bearer ${t}`
+      }
+    }
+
     let options = {
       method: 'POST',
       headers: headers,

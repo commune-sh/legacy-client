@@ -1,5 +1,4 @@
-import { PUBLIC_API_URL, PUBLIC_BASE_URL } from '$env/static/public';
-import { redirect } from '@sveltejs/kit';
+import { PUBLIC_API_URL } from '$env/static/public';
 
 /** @type {import('./$types').LayoutLoad} */
 export async function load( { fetch, params, url, cookies, request } ) {
@@ -47,7 +46,7 @@ export async function load( { fetch, params, url, cookies, request } ) {
   }
   */
   try {
-    const response = await fetch(`${PUBLIC_API_URL}/account/oauth/discord/validate?code=${code}`, {
+    const response = await fetch(`${PUBLIC_API_URL}/account/oauth/github/validate?code=${code}`, {
       method: 'POST',
     });
 
@@ -59,22 +58,11 @@ export async function load( { fetch, params, url, cookies, request } ) {
 
     data.data = d;
 
-    if(d?.access_token && d?.authenticated) {
-      cookies.set('token', d.access_token, {
-        path: '/',
-        httpOnly: false,
-        maxAge: 60 * 60 * 24 * 7 * 365,
-      });
-    }
-
-
-
   } catch (error) {
     console.error('Error exchanging code for access token:', error);
   }
 
 
-  throw redirect(307, `${PUBLIC_BASE_URL}`);
   return data;
 }
 

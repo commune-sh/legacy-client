@@ -2,13 +2,15 @@
 import { onMount, createEventDispatcher, tick } from 'svelte'
 import { PUBLIC_API_URL, PUBLIC_BASE_URL } from '$env/static/public';
 import { store } from '$lib/store/store.js'
-import { eye, eyeoff, discord as discordIcon } from '$lib/assets/icons.js'
+import { eye, eyeoff, discord as discordIcon, github as githubIcon } from '$lib/assets/icons.js'
 import { APIRequest } from '$lib/utils/request.js'
 import { goto } from '$app/navigation';
 
 $: down = $store.down
 
 $: discord_enabled = $store.health?.oauth?.discord?.client_id != null
+
+$: github_enabled = $store.health?.oauth?.github?.client_id != null
 
 const dispatch = createEventDispatcher()
 
@@ -170,6 +172,15 @@ function startDiscordAuth() {
     const redir = encodeURIComponent(`${PUBLIC_BASE_URL}/oauth/discord`);
 
     let url = `https://discord.com/api/oauth2/authorize?client_id=${discord_client_id}&redirect_uri=${redir}&response_type=code&scope=identify`
+
+    goto(url)
+}
+
+$: github_client_id = $store.health?.oauth?.github?.client_id
+
+function startGithubAuth() {
+    let url =
+        `https://github.com/login/oauth/authorize?client_id=${github_client_id}&scope=read:user`
 
     goto(url)
 }
@@ -336,14 +347,15 @@ input {
     }
 }
 
-.discord {
+.ic {
     background: var(--shade-3);
     border-radius: 15px;
     fill: white;
+    opacity: 0.7;
 }
 
-.discord:hover {
-    fill: #5865f2;
+.ic:hover {
+    fill: var(--primary);
     opacity: 1;
 }
 </style>
