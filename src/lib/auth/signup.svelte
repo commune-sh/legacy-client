@@ -1,6 +1,6 @@
 <script>
 import { onMount, createEventDispatcher, tick } from 'svelte'
-import { PUBLIC_API_URL, PUBLIC_APP_NAME } from '$env/static/public';
+import { PUBLIC_API_URL, PUBLIC_BASE_URL } from '$env/static/public';
 import { store } from '$lib/store/store.js'
 import { debounce } from '$lib/utils/utils.js'
 import { eye, eyeoff } from '$lib/assets/icons.js'
@@ -244,7 +244,10 @@ async function create() {
 
         if(resp?.created === true) {
             localStorage.setItem('access_token', resp.access_token)
-            const cookieValue = `${encodeURIComponent(resp.access_token)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
+            const hostname = PUBLIC_BASE_URL.includes('http') ? 
+                PUBLIC_BASE_URL.replace('http://', '') : 
+                PUBLIC_BASE_URL.replace('https://', '')
+            const cookieValue = `${encodeURIComponent(resp?.credentials?.access_token)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/; domain=.${hostname}`;
             document.cookie = `token=${cookieValue}`;
             store.saveCredentials(resp.credentials)
             store.saveRooms(resp.rooms)

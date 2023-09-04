@@ -93,7 +93,10 @@ function login() {
             }
 
 
-            const cookieValue = `${encodeURIComponent(resp.access_token)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
+            const hostname = PUBLIC_BASE_URL.includes('http') ? 
+                PUBLIC_BASE_URL.replace('http://', '') : 
+                PUBLIC_BASE_URL.replace('https://', '')
+            const cookieValue = `${encodeURIComponent(resp?.credentials?.access_token)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/; domain=.${hostname}`;
             document.cookie = `token=${cookieValue}`;
             store.saveCredentials(resp.credentials)
             store.saveRooms(resp.rooms)
@@ -252,8 +255,6 @@ function startGithubAuth() {
                     up!</span>
             </div>
 
-            <div class="fl">
-            </div>
         </div>
 
     </div>
