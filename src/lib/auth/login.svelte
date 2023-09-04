@@ -92,8 +92,11 @@ function login() {
                 localStorage.setItem('accounts', JSON.stringify(accounts))
             }
 
+            const hostname = PUBLIC_BASE_URL.includes('http') ? 
+                PUBLIC_BASE_URL.replace('http://', '') : 
+                PUBLIC_BASE_URL.replace('https://', '')
 
-            const cookieValue = `${encodeURIComponent(resp.access_token)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
+            const cookieValue = `${encodeURIComponent(resp.access_token)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/; domain=.${hostname}`;
             document.cookie = `token=${cookieValue}`;
             store.saveCredentials(resp.credentials)
             store.saveRooms(resp.rooms)
@@ -252,6 +255,22 @@ function startGithubAuth() {
                     up!</span>
             </div>
 
+            <div class="fl">
+            {#if discord_enabled}
+                <div class="mt4">
+                    <div class="ic c-ico" on:click={startDiscordAuth}>
+                        {@html discordIcon}
+                    </div>
+                </div>
+            {/if}
+            {#if github_enabled}
+                    <div class="mt4" class:ml3={discord_enabled}>
+                    <div class="ic c-ico" on:click={startGithubAuth}>
+                        {@html githubIcon}
+                    </div>
+                </div>
+            {/if}
+            </div>
         </div>
 
     </div>
