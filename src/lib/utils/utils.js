@@ -356,3 +356,15 @@ export function setCookie(name, value, options) {
 
   document.cookie = updatedCookie;
 }
+
+export function getHostname(url) {
+  const domainRegex = /^(?:https?:\/\/)?(?:[^@/\n]+@)?(?:www\.)?([^:/\n]+)/i;
+  const matches = url.match(domainRegex);
+  if (matches && matches.length >= 2) {
+    return matches[1];
+  } else {
+    return null; 
+  }
+}
+
+export const hostname = getHostname(PUBLIC_BASE_URL);

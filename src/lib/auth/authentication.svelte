@@ -2,6 +2,7 @@
 import { onMount, onDestroy } from 'svelte'
 import { APIRequest, getNotifications } from '$lib/utils/request.js'
 import { PUBLIC_API_URL, PUBLIC_API_URL_WS, PUBLIC_BASE_URL } from '$env/static/public';
+import { hostname } from '$lib/utils/utils.js'
 import { browser } from '$app/environment';
 import Login from './login.svelte'
 import { close } from '$lib/assets/icons.js'
@@ -45,11 +46,8 @@ let syncCreds = (token) => {
 
             console.log('Response:', resp);
             if(resp?.valid && resp?.credentials) {
-                const hostname = PUBLIC_BASE_URL.includes('http') ? 
-                    PUBLIC_BASE_URL.replace('http://', '') : 
-                    PUBLIC_BASE_URL.replace('https://', '')
                 const cookieValue = `${encodeURIComponent(resp?.credentials?.access_token)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/; domain=.${hostname}`;
-                    console.log(cookieValue)
+                console.log(cookieValue)
                 document.cookie = `token=${cookieValue}`;
                 store.saveCredentials(resp.credentials)
                 store.saveRooms(resp.rooms)

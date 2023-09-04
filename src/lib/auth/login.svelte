@@ -3,6 +3,7 @@ import { onMount, createEventDispatcher, tick } from 'svelte'
 import { PUBLIC_API_URL, PUBLIC_BASE_URL } from '$env/static/public';
 import { store } from '$lib/store/store.js'
 import { eye, eyeoff, discord as discordIcon, github as githubIcon } from '$lib/assets/icons.js'
+import { hostname } from '$lib/utils/utils.js'
 import { APIRequest } from '$lib/utils/request.js'
 import { goto } from '$app/navigation';
 
@@ -93,9 +94,6 @@ function login() {
             }
 
 
-            const hostname = PUBLIC_BASE_URL.includes('http') ? 
-                PUBLIC_BASE_URL.replace('http://', '') : 
-                PUBLIC_BASE_URL.replace('https://', '')
             const cookieValue = `${encodeURIComponent(resp?.credentials?.access_token)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/; domain=.${hostname}`;
             document.cookie = `token=${cookieValue}`;
             store.saveCredentials(resp.credentials)
@@ -255,6 +253,22 @@ function startGithubAuth() {
                     up!</span>
             </div>
 
+            <div class="fl">
+            {#if discord_enabled}
+                <div class="mt4">
+                    <div class="ic c-ico" on:click={startDiscordAuth}>
+                        {@html discordIcon}
+                    </div>
+                </div>
+            {/if}
+            {#if github_enabled}
+                    <div class="mt4" class:ml3={discord_enabled}>
+                    <div class="ic c-ico" on:click={startGithubAuth}>
+                        {@html githubIcon}
+                    </div>
+                </div>
+            {/if}
+            </div>
         </div>
 
     </div>
