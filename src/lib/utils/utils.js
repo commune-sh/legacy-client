@@ -358,12 +358,20 @@ export function setCookie(name, value, options) {
 }
 
 export function getHostname(url) {
-  const domainRegex = /^(?:https?:\/\/)?(?:[^@/\n]+@)?(?:www\.)?([^:/\n]+)/i;
-  const matches = url.match(domainRegex);
-  if (matches && matches.length >= 2) {
-    return matches[1];
+  if (url.startsWith("http://")) {
+    url = url.slice(7);
+  } else if (url.startsWith("https://")) {
+    url = url.slice(8);
+  }
+
+  const parts = url.split("/");
+  const domain = parts[0];
+
+  const domainParts = domain.split(".");
+  if (domainParts.length >= 2) {
+    return domainParts.slice(-2).join(".");
   } else {
-    return null; 
+    return domain;
   }
 }
 
