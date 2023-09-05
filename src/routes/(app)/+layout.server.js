@@ -36,6 +36,7 @@ export async function load( { fetch, params, url, cookies, request } ) {
   let isIndex = url?.pathname === '/';
   let isAll = url?.pathname === '/all';
 
+  /*
   if((isIndex && !hasToken) || isAll) {
     let url = `${PUBLIC_API_URL}/events`;
 
@@ -60,6 +61,7 @@ export async function load( { fetch, params, url, cookies, request } ) {
 
     data.events = resp.events;
   }
+  */
 
   if(params?.space) {
 
@@ -74,15 +76,14 @@ export async function load( { fetch, params, url, cookies, request } ) {
 
     let messages = false;
 
+    /*
     if(isBrowser){
       let url = `${PUBLIC_API_URL}/${params.space}/events`;
 
-      /*
       if((space_type == "chat" && !board_view) || chat_view) {
         url = `${PUBLIC_API_URL}/room/${data.state.room_id}/messages`;
         messages = true;
       }
-      */
 
       if(params?.room) {
         url = `${PUBLIC_API_URL}/${params.space}/${params.room}/events`;
@@ -90,12 +91,10 @@ export async function load( { fetch, params, url, cookies, request } ) {
         let room = data.state?.children?.find(child => child.alias === params.room );
 
         let room_type = room?.type;
-        /*
         if((room_type == "chat" && !board_view) || chat_view) {
           url = `${PUBLIC_API_URL}/room/${room.room_id}/messages`;
           messages = true;
         }
-        */
 
       }
 
@@ -113,6 +112,7 @@ export async function load( { fetch, params, url, cookies, request } ) {
       }
 
     }
+  */
 
   } 
 
