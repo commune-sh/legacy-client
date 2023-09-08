@@ -59,12 +59,6 @@ function createApp() {
         component: 'discover.svelte',
       },
       {
-        path: '/settings',
-        name: 'Settings',
-        route: 'settings',
-        component: 'settings.svelte',
-      },
-      {
         path: '/about',
         name: 'About',
         route: 'about',

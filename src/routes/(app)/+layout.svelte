@@ -19,6 +19,7 @@ import About from '$lib/about/about.svelte'
 import DiscoverSpaces from '$lib/discover/discover.svelte'
 import NotFound from '$lib/errors/not-found.svelte'
 import Gallery from '$lib/gallery/gallery.svelte'
+import Settings from '$lib/settings/settings.svelte'
 
 export let data;
 
@@ -295,6 +296,8 @@ $: if(isIndex && browser) {
 <Alert />
 <About />
 <DiscoverSpaces />
+
+<Settings />
 
 {#if !down}
 

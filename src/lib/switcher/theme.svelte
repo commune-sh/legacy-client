@@ -1,5 +1,6 @@
 <script>
 import { onMount, createEventDispatcher } from 'svelte'
+import { browser } from '$app/environment';
 import { store } from '$lib/store/store.js'
 import { moon, sun } from '$lib/assets/icons.js'
 import { goto } from '$app/navigation';
@@ -13,7 +14,7 @@ let menu;
 
 $: tip =`${isLight ? 'Dark' : isDark? 'Black' : 'Light'} mode`
 
-onMount(() => {
+$: if(browser && tip && el) {
     menu = tippy(el, {
         content: tip,
         placement: 'right',
@@ -22,7 +23,7 @@ onMount(() => {
         offset: [0, 26],
         theme: 'inline',
     });
-})
+}
 
 export let space;
 
@@ -44,7 +45,7 @@ $: isDark = $store.settings?.theme === 'dark'
 
 function toggle() {
     store.toggleTheme()
-    menu.hide()
+    menu.show()
 }
 
 </script>

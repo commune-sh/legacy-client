@@ -9,6 +9,8 @@ import { goto } from '$app/navigation';
 import { page } from '$app/stores';
 import tippy from 'tippy.js';
 
+const dispatch = createEventDispatcher()
+
 export let container;
 export let scrolling;
 
@@ -108,6 +110,46 @@ $: isProfile = space?.is_profile && space?.room_id ===
 
 $: name = space?.name?.length > 0 ? space?.name : space?.alias
 
+let dragging = false;
+
+let initialX;
+let initialY;
+
+function dragStart(e) {
+    initialX = e.clientX;
+    initialY = e.clientY;
+    dragging = true;
+    e.dataTransfer.setData('text/plain', JSON.stringify(space));
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setDragImage(new Image(), 0, 0);
+}
+
+function dragEnd() {
+    dragging = false;
+}
+function allowDrop(e) {
+    e.preventDefault();
+}
+function drag(e) {
+    if(e.clientY - initialY >= 30) {
+        initialY = e.clientY
+        dispatch('move-down', space.index)
+    }
+    if(initialY - e.clientY >= 30) {
+        initialY = e.clientY
+        dispatch('move-up', space.index)
+    }
+}
+
+function drop(e) {
+    e.preventDefault();
+    const plain = e.dataTransfer.getData('text/plain');
+    const data = JSON.parse(plain)
+
+    console.log(data)
+}
+
+
 </script>
 
 <div class="tip fl-co pa1" bind:this={content}>
@@ -121,9 +163,16 @@ $: name = space?.name?.length > 0 ? space?.name : space?.alias
     {/if}
 </div>
 
-<div class="i-c grd">
-    <div class="item grd-c"
+<div class="i-c grd"
     draggable="true"
+    on:dragstart={dragStart}
+    on:dragend={dragEnd}
+    on:dragover={allowDrop}
+    on:drag={drag}
+    class:dhov={dragging}
+    on:drop={drop}
+>
+    <div class="item grd-c"
     class:active={active}
     class:acf={active && !avatar}
     class:profile={isProfile}
