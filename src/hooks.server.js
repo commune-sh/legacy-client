@@ -1,4 +1,4 @@
-import { PUBLIC_API_URL } from '$env/static/public';
+import { PUBLIC_API_URL, PUBLIC_DEFAULT_THEME } from '$env/static/public';
 import { redirect } from "@sveltejs/kit";
 
 /** @type {import('@sveltejs/kit').Handle} */
@@ -8,6 +8,9 @@ export const handle = async ({ event, resolve }) => {
 
   if(!theme) {
     theme = "black";
+  }
+  if(PUBLIC_DEFAULT_THEME != theme) {
+    theme = PUBLIC_DEFAULT_THEME;
   }
 
   const response = await resolve(event, {
