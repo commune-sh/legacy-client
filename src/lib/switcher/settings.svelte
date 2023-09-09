@@ -26,6 +26,9 @@ export let space;
 
 function goToSpace() {
     $store.settings.active = true
+    if($store.menuToggled) {
+        $store.menuToggled = false
+    }
 }
 
 </script>
