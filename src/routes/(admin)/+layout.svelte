@@ -1,1 +1,1 @@
-admin
+<slot></slot>

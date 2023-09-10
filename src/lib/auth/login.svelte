@@ -253,22 +253,6 @@ function startGithubAuth() {
                     up!</span>
             </div>
 
-            <div class="fl">
-            {#if discord_enabled}
-                <div class="mt4">
-                    <div class="ic c-ico" on:click={startDiscordAuth}>
-                        {@html discordIcon}
-                    </div>
-                </div>
-            {/if}
-            {#if github_enabled}
-                    <div class="mt4" class:ml3={discord_enabled}>
-                    <div class="ic c-ico" on:click={startGithubAuth}>
-                        {@html githubIcon}
-                    </div>
-                </div>
-            {/if}
-            </div>
         </div>
 
     </div>

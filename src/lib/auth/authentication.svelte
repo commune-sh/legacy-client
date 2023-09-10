@@ -41,6 +41,7 @@ let syncCreds = (token) => {
 
         APIRequest({
             url: `${PUBLIC_API_URL}/account/session`,
+            method: 'GET',
         })
           .then(resp => {
 

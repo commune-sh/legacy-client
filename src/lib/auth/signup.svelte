@@ -8,7 +8,6 @@ import { eye, eyeoff } from '$lib/assets/icons.js'
 import { APIRequest, validateEmail } from '$lib/utils/request.js'
 import { sendCode, verifyEmail } from '$lib/utils/request.js'
 import { v4 as uuidv4 } from 'uuid';
-import jwtDecode from 'jwt-decode';
 
 import validator from 'validator';
 
@@ -344,14 +343,6 @@ function togglePass() {
         passwordInput.type = 'password'
     }
     passwordInput.focus()
-}
-
-window.handleGauth = (e) => {
-    console.log(e)
-    if(e?.credential) {
-        const decoded = jwtDecode(e.credential);
-        console.log(decoded)
-    }
 }
 
 </script>

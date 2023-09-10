@@ -1,4 +1,5 @@
 <script>
+import { PUBLIC_META_TITLE } from '$env/static/public';
 import '/static/css/main.css'
 import { onMount } from 'svelte'
 import Login from '$lib/auth/login.svelte'
@@ -63,6 +64,10 @@ let validateToken = () => {
 }
 
 </script>
+
+<svelte:head>
+    <title>{PUBLIC_META_TITLE} - Login</title>
+</svelte:head>
 
 <Health />
 
