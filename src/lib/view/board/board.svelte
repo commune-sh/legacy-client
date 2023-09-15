@@ -189,8 +189,8 @@ async function loadEvents(init) {
         }
 
         if(resp?.events?.length > 0) {
-            $store.events[rid].board = resp.events
-            //store.addBoardEvents(rid, resp.events)
+            //$store.events[rid].board = resp.events
+            store.addBoardEvents(rid, resp.events)
         }
     }
 
