@@ -1036,8 +1036,12 @@ function createApp() {
 
   let addBoardEvents = (roomID, events) => {
     update(p => {
-      console.log("room", roomID, events)
-      p.events[roomID].board.push(...events)
+      events.forEach(item => {
+        let i = p.events[roomID].board.findIndex(e => e.event_id == item.event_id)
+        if(i == -1) {
+          p.events[roomID].board.push(item)
+        }
+      })
       return p
     })
   }

@@ -31,7 +31,7 @@ export let index;
 {#if event?.type === 'm.room.topic'}
     <Topic event={event}/>
 {/if}
-{#if event?.type === 'space.board.post'}
+{#if event?.type === 'space.board.post' && !event?.content?.redacted}
     <Event 
         isChat={true}
         isBoardPostInChat={true}
