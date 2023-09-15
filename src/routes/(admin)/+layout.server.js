@@ -10,19 +10,20 @@ export async function load( { fetch, params, url, cookies, request } ) {
     hasToken = true;
   }
   if (!token) {
-    throw redirect(307, '/login');
+    //throw redirect(307, '/login');
   }
 
-  let data = {token:token}
+  let data = {}
 
   if(hasToken) {
     let u = `${PUBLIC_API_URL}/account/session`;
     const res = await fetch(u);
     const resp = await res.json();
 
-    if(resp?.valid && resp?.credentials?.admin) {
-      data = resp.credentials
+    if(resp?.valid && !resp?.credentials?.admin) {
+      //throw redirect(307, '/');
     }
+    data.credentials = resp.credentials;
   }
 
   return data;

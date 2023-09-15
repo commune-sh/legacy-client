@@ -545,3 +545,12 @@ export async function searchGIFs(query) {
   })
   return data
 }
+
+export async function ListUsers() {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/admin/v2/users?from=0&limit=10&guests=false`,
+    method: 'GET'
+  })
+  return data
+}
+

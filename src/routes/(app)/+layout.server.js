@@ -36,7 +36,6 @@ export async function load( { fetch, params, url, cookies, request } ) {
   let isIndex = url?.pathname === '/';
   let isAll = url?.pathname === '/all';
 
-  /*
   if((isIndex && !hasToken) || isAll) {
     let url = `${PUBLIC_API_URL}/events`;
 
@@ -49,6 +48,7 @@ export async function load( { fetch, params, url, cookies, request } ) {
 
     data.events = resp.events;
   }
+  /*
 
   if(isIndex && hasToken) {
     let url = `${PUBLIC_API_URL}/feed`;
