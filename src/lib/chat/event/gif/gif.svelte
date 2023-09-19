@@ -72,6 +72,7 @@ function openImage(index) {
 
 video {
     border-radius: 4px;
+    background-color: var(--shade-3);
 }
 
 @media screen and (max-width: 768px) {

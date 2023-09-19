@@ -47,7 +47,8 @@ $: state = $store.editorStates[stateKey]
 
 
 $: gif_enabled = $store.features?.gif?.enabled &&
-    $store.features?.gif?.service == 'tenor' 
+    $store.features?.gif?.service == 'tenor' && 
+    (isChat || reply)
 
 const dispatch = createEventDispatcher()
 
