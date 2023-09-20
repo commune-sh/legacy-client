@@ -103,7 +103,9 @@ onMount(() => {
             loadFullBody()
         }
 
-        titleInput.value = editingEvent?.content?.title
+        if(editingEvent?.content?.title) {
+            titleInput.value = editingEvent?.content?.title
+        }
         autosize(titleInput)
         autosize(bodyInput)
         focusBodyInput()

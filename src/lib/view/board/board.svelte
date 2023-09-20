@@ -328,7 +328,7 @@ function handleScrollRev() {
         entries.forEach(entry => {
             if (entry.isIntersecting && startedFetching) {
                 //fetchMore()
-                let lastEventInStore = $store.events[roomID].board?.[0]?.event_id
+                let lastEventInStore = $store.events[rid].board?.[0]?.event_id
                 let x = data?.events[0]?.event_id
                 if(lastEventInStore != x) {
                     console.log("repopulating events")
@@ -476,20 +476,20 @@ $: holder = isTopic ? 'topic' : isRoom ? 'board' : isSpace ? 'space' : null
 
 
 function updateReactions(e) {
-    let index = $store.events[roomID].board.findIndex((event) => event.event_id == e.detail.event_id)
+    let index = $store.events[rid].board.findIndex((event) => event.event_id == e.detail.event_id)
     if(index > -1) {
         console.log("updating reactions", e.detail)
-        $store.events[roomID].board[index].reactions = e.detail.reactions
+        $store.events[rid].board[index].reactions = e.detail.reactions
     }
 }
 
 function updateReplyCount(e) {
     const event_id = e.detail.event_id
     const reply_count = e.detail.reply_count
-    let index = $store.events[roomID].board.findIndex((event) => event.event_id == event_id)
+    let index = $store.events[rid].board.findIndex((event) => event.event_id == event_id)
     if(index > -1) {
         console.log("updating reply count", e.detail)
-        $store.events[roomID].board[index].reply_count = reply_count
+        $store.events[rid].board[index].reply_count = reply_count
     }
 }
 
@@ -501,11 +501,11 @@ $: noEvents = events?.length == 0 || events == null
 $: selectedPost = isReply ? null : events?.find(e => e?.slug == $page.params.post)
 
 function postEdited(e) {
-    let index = $store.events[roomID].board.findIndex((event) => event.event_id == e.detail.event_id)
+    let index = $store.events[rid].board.findIndex((event) => event.event_id == e.detail.event_id)
     if(index > -1) {
         console.log("updating edited content")
-        $store.events[roomID].board[index].content.title = e.detail.content.title
-        $store.events[roomID].board[index].content.body = e.detail.content.body
+        $store.events[rid].board[index].content.title = e.detail.content.title
+        $store.events[rid].board[index].content.body = e.detail.content.body
     }
 }
 
@@ -545,10 +545,10 @@ async function redactPost(e) {
 
 async function pinPost(e) {
     const event = e.detail
-    const index = $store.events[roomID].board.findIndex(i => i.event_id === event.event_id);
+    const index = $store.events[rid].board.findIndex(i => i.event_id === event.event_id);
     if(index !== -1) {
-        let ps = $store.events[roomID].board[index].pinned
-        $store.events[roomID].board[index].pinned = !ps
+        let ps = $store.events[rid].board[index].pinned
+        $store.events[rid].board[index].pinned = !ps
 
 
         let pinned = state?.space?.pinned_events
