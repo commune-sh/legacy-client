@@ -481,6 +481,9 @@ async function createPost() {
 
         if(title) {
             post.content['title'] = title
+            if(isSocial && title == 'attachment') {
+                delete post.content['title']
+            }
         }
         /*
         let post = {

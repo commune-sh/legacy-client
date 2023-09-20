@@ -515,9 +515,9 @@ $: roomExists = isRoom && state?.children?.find((child) => child.alias ==
 
 async function redactPost(e) {
     const event = e.detail
-    const index = $store.events[roomID].board.findIndex(i => i.event_id === event.event_id);
+    const index = $store.events[rid].board.findIndex(i => i.event_id === event.event_id);
     if(index !== -1) {
-        $store.events[roomID].board.splice(index, 1);
+        $store.events[rid].board.splice(index, 1);
     }
     if(isPost && event.slug == $page.params.post) {
         let url = `/${$page.params.space}`
