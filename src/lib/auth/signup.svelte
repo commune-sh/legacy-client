@@ -6,6 +6,7 @@ import { debounce } from '$lib/utils/utils.js'
 import { hostname } from '$lib/utils/utils.js'
 import { eye, eyeoff, discord as discordIcon, github as githubIcon  } from '$lib/assets/icons.js'
 import { APIRequest, validateEmail } from '$lib/utils/request.js'
+import { goto } from '$app/navigation';
 import { sendCode, verifyEmail } from '$lib/utils/request.js'
 import { v4 as uuidv4 } from 'uuid';
 
