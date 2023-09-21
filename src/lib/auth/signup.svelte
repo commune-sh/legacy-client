@@ -4,7 +4,7 @@ import { PUBLIC_API_URL, PUBLIC_BASE_URL } from '$env/static/public';
 import { store } from '$lib/store/store.js'
 import { debounce } from '$lib/utils/utils.js'
 import { hostname } from '$lib/utils/utils.js'
-import { eye, eyeoff } from '$lib/assets/icons.js'
+import { eye, eyeoff, discord as discordIcon, github as githubIcon  } from '$lib/assets/icons.js'
 import { APIRequest, validateEmail } from '$lib/utils/request.js'
 import { sendCode, verifyEmail } from '$lib/utils/request.js'
 import { v4 as uuidv4 } from 'uuid';
@@ -17,6 +17,9 @@ $: require_email = $store.features?.require_email
 $: down = $store.down
 
 $: signupDisabled = $store.features?.registration_enabled === false
+
+$: discord_enabled = $store.health?.oauth?.discord?.client_id != null
+$: github_enabled = $store.health?.oauth?.github?.client_id != null
 
 const dispatch = createEventDispatcher()
 
@@ -500,6 +503,23 @@ function togglePass() {
             {/if}
             <div class="mt3">
                 <span class="href sm" on:click={login}>Already have an account?</span>
+            </div>
+
+            <div class="fl">
+            {#if discord_enabled}
+                <div class="mt4">
+                    <div class="ic c-ico" on:click={startDiscordAuth}>
+                        {@html discordIcon}
+                    </div>
+                </div>
+            {/if}
+            {#if github_enabled}
+                    <div class="mt4" class:ml3={discord_enabled}>
+                    <div class="ic c-ico" on:click={startGithubAuth}>
+                        {@html githubIcon}
+                    </div>
+                </div>
+            {/if}
             </div>
 
         </div>

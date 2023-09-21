@@ -59,7 +59,7 @@ export async function load( { fetch, params, url, cookies, request } ) {
 
     data.data = d;
 
-    if(d?.access_token && d?.authenticated) {
+    if(d?.access_token && (d?.created || d?.authenticated)) {
       cookies.set('token', d.access_token, {
         path: '/',
         httpOnly: false,
@@ -72,7 +72,6 @@ export async function load( { fetch, params, url, cookies, request } ) {
   } catch (error) {
     console.error('Error exchanging code for access token:', error);
   }
-
 
   throw redirect(307, `${PUBLIC_BASE_URL}`);
   return data;
