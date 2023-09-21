@@ -348,6 +348,26 @@ function togglePass() {
     passwordInput.focus()
 }
 
+$: discord_client_id = $store.health?.oauth?.discord?.client_id
+
+function startDiscordAuth() {
+    const redir = encodeURIComponent(`${PUBLIC_BASE_URL}/oauth/discord`);
+
+    let url = `https://discord.com/api/oauth2/authorize?client_id=${discord_client_id}&redirect_uri=${redir}&response_type=code&scope=identify`
+
+    goto(url)
+}
+
+$: github_client_id = $store.health?.oauth?.github?.client_id
+
+function startGithubAuth() {
+    let url =
+        `https://github.com/login/oauth/authorize?client_id=${github_client_id}&scope=read:user`
+
+    goto(url)
+}
+
+
 </script>
 
 
