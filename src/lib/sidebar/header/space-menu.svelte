@@ -16,7 +16,9 @@ $: sender_id = $store.credentials?.matrix_user_id
 
 $: isOwner = state?.owner?.user_id === sender_id
 
-$: isSpaceAdmin = $store?.power_levels?.space?.[$store?.credentials?.matrix_user_id] == 100
+//$: isSpaceAdmin = $store?.power_levels?.space?.[$store?.credentials?.matrix_user_id] == 100
+
+$: isSpaceAdmin = state?.space?.power_levels?.users?.[$store?.credentials?.matrix_user_id] == 100
 
 $: space_room_id = state?.room_id
 
