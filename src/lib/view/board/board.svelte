@@ -277,7 +277,6 @@ function initLoad(){
         return
     }
 
-    /*
     if(existing) {
         ready = true
         reloading = false
@@ -289,8 +288,6 @@ function initLoad(){
     } else {
         loadEvents(true)
     }
-    */
-        loadEvents(true)
 }
 
 function setupObserver() {
