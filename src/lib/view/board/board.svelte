@@ -290,7 +290,10 @@ function initLoad(){
         loadEvents(true)
     }
     */
+
+    if(!isIndex) {
         loadEvents(true)
+    }
 }
 
 function setupObserver() {
