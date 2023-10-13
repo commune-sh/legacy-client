@@ -277,7 +277,6 @@ function initLoad(){
         return
     }
 
-    /*
     if(existing) {
         ready = true
         reloading = false
@@ -287,11 +286,6 @@ function initLoad(){
         }, 1000)
         return
     } else {
-        loadEvents(true)
-    }
-    */
-
-    if(!isIndex) {
         loadEvents(true)
     }
 }
