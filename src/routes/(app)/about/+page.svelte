@@ -1,9 +1,19 @@
 <script>
+import { onMount } from 'svelte';
 import Header from '$lib/header/header.svelte';
 import about from '/static/about.md?raw'
 import MarkdownIt from 'markdown-it'
-import MarkdownItEmoji from 'markdown-it-emoji'
-import MarkdownItLinkAttributes from 'markdown-it-link-attributes'
+import { GetStats } from '$lib/utils/request.js'
+
+let stats = {
+    spaces: 0,
+    users: 0,
+}
+
+onMount(async () => {
+    let st = await GetStats()
+    stats = st
+})
 
 let md = new MarkdownIt({
   html: true,

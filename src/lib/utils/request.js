@@ -554,3 +554,11 @@ export async function ListUsers() {
   return data
 }
 
+export async function GetStats() {
+  const data = await APIRequest({
+    url: `${PUBLIC_API_URL}/stats`,
+    method: 'GET'
+  })
+  return data
+}
+
