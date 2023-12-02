@@ -21,9 +21,14 @@ $: formatted_body = about ?  md.render(about) : ''
     <Header />
 
     <div class="space-container">
+        <div class="container">
 
-        <div class="content pa3">
-            {@html formatted_body}
+            <div class="content pa3">
+                {#if about}
+                    {@html formatted_body}
+                {:else}
+                {/if}
+            </div>
         </div>
     </div>
 </section>
@@ -33,6 +38,16 @@ $: formatted_body = about ?  md.render(about) : ''
 .about {
     display: grid;
     grid-template-rows: 48px 1fr;
+    overflow: hidden;
+}
+
+.space-container {
+    overflow: hidden;
+}
+
+.container {
+    overflow-y: auto;
+    height: 100%;
 }
 .content {
     display: grid;
