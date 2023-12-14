@@ -10,6 +10,8 @@ import UITester from './pages/ui-tester/ui-tester.svelte'
 
 $: active = $store.settings?.active
 
+$: is_admin = $store.credentials?.admin == true
+
 function kill() {
     $store.settings.active = false
 }
@@ -25,14 +27,22 @@ let items = [
             {
                 name: 'Appearance',
                 component: Appearance
-            },
+            }
+        ],
+    },
+]
+
+$: if(is_admin) {
+    items.push({
+        category: 'Admin',
+        settings: [
             {
                 name: 'UI Tester',
                 component: UITester
             }
         ],
-    },
-]
+    })
+}
 
 let selected = items[0].settings[0]
 
@@ -79,7 +89,7 @@ function selectItem(item) {
 </script>
 
 {#if active}
-<section class="settings">
+<section class="settings sel-no">
     <nav class="sidebar">
         <div class="">
         </div>
