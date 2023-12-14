@@ -6,6 +6,7 @@ import tippy from 'tippy.js';
 
 import General from './pages/general/general.svelte'
 import Appearance from './pages/appearance/appearance.svelte'
+import UITester from './pages/ui-tester/ui-tester.svelte'
 
 $: active = $store.settings?.active
 
@@ -24,6 +25,10 @@ let items = [
             {
                 name: 'Appearance',
                 component: Appearance
+            },
+            {
+                name: 'UI Tester',
+                component: UITester
             }
         ],
     },
