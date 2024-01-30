@@ -89,11 +89,6 @@ async function getSpaces() {
     overflow-x: hidden;
 }
 
-.sk {
-    display: grid;
-    grid-template-columns: auto auto;
-}
-
 
 @media (max-width: 1010px) {
     .modal {

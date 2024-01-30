@@ -100,6 +100,11 @@ async function join() {
 </div>
 
 <style>
+
+.item {
+    height: fit-content;
+}
+
 .space {
     background: var(--shade-2);
     border-radius: 7px;
