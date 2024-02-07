@@ -9,6 +9,7 @@ import { onMount, tick } from 'svelte'
 import { page } from '$app/stores';
 import { store } from '$lib/store/store.js'
 import View from '$lib/view/view.svelte'
+import Legacy from '$lib/legacy/legacy.svelte'
 import Sync from '$lib/sync/sync.svelte'
 import Health from '$lib/sync/health.svelte'
 import Down from '$lib/errors/down.svelte'
@@ -27,6 +28,11 @@ $: if(data) {
     console.log(data)
 }
 
+$: if(data.legacy_matrix_mode) {
+}
+
+$: legacy_matrix_mode = data.legacy_matrix_mode
+$: legacy_matrix_open = data.legacy_matrix_open
 
 $: if(data.health) {
     $store.health = data.health
@@ -259,6 +265,7 @@ $: if(isIndex && browser) {
     {/if}
 </svelte:head>
 
+{#if !legacy_matrix_mode}
 
 {#if authenticated && EmojiPicker}
     <svelte:component this={EmojiPicker} />
@@ -352,10 +359,14 @@ $: if(isIndex && browser) {
 {/if}
 
 
-{#if down}
+{#if down && !legacy_matrix_mode}
     <Down />
 {/if}
 
+
+{:else}
+<Legacy {data} />
+{/if}
 
 
 

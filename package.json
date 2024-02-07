@@ -39,6 +39,7 @@
 		"markdown-it": "^13.0.1",
 		"markdown-it-emoji": "^2.0.2",
 		"markdown-it-link-attributes": "^4.0.1",
+		"matrix-js-sdk": "^31.2.0",
 		"punycode": "^2.3.0",
 		"ramda": "^0.29.0",
 		"tippy.js": "^6.3.7",

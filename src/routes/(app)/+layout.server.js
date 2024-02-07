@@ -1,7 +1,27 @@
-import { PUBLIC_API_URL } from '$env/static/public';
+import { PUBLIC_API_URL, PUBLIC_LEGACY_MATRIX_MODE, PUBLIC_LEGACY_MATRIX_OPEN, PUBLIC_MATRIX_URL } from '$env/static/public';
 
 /** @type {import('./$types').LayoutLoad} */
 export async function load( { fetch, params, url, cookies, request } ) {
+
+  // params for legacy matrix client view
+  if(PUBLIC_LEGACY_MATRIX_MODE == "true") {
+    let data = {
+      browser: true,
+      legacy_matrix_mode: true,
+      legacy_matrix_open: false,
+    }
+
+    if(PUBLIC_LEGACY_MATRIX_OPEN == "true") {
+      data.legacy_matrix_open = true;
+    }
+
+    // let url = `${PUBLIC_MATRIX_URL}/health_check`;
+    // const res = await fetch( url );
+    // const resp = await res.json();
+    // data.health = resp
+
+    return data
+  }
 
   let hasToken = false;
   let token = cookies.get('token');
