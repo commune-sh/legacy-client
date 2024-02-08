@@ -20,6 +20,10 @@ PUBLIC_INDEX=true
 PUBLIC_META_DESCRIPTION=Build new internet communities with Commune
 PUBLIC_FAVICON=https://commune.sh/favicon.png #Optional custom location
 
+# Use as a regular matrix client
+PUBLIC_LEGACY_MATRIX_MODE=false
+PUBLIC_LEGACY_MATRIX_OPEN=false
+
 PUBLIC_APP_NAME=Commune
 PUBLIC_API_URL=https://api.commune.sh
 PUBLIC_BASE_URL=http://commune.sh
