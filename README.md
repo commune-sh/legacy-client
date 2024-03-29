@@ -1,5 +1,5 @@
-#### Commune Client
-This is the frontend to the [Commune server](https://github.com/commune-os/commune-server). 
+### Commune
+Commune is a supercharged Matrix client with enhanced functionality.
 
 #### How to run
 This is a standard sveltekit app and runs on Node, Cloudflare etc. Our main instance  [Commune](https://app.commune.sh) is deployed to Cloudflare pages, directly from a mirror of this repository.
