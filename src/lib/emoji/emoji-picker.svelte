@@ -348,6 +348,7 @@ function switchToEmoji() {
 
                 {#if space_emoji?.length > 0}
                     {#each space_emoji as space}
+                        {#if space?.emoji?.length > 0}
 
                         <div id="em-{space.alias}" 
                             class:disable={space_alias != space.alias}
@@ -373,6 +374,7 @@ function switchToEmoji() {
                             </div>
                         </div>
 
+                        {/if}
                     {/each}
                 {/if}
 
