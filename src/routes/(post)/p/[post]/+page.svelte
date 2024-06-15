@@ -23,7 +23,13 @@ $: if(data.health) {
 
 $: if(data) {
     console.log(data)
+    console.log(data)
+    console.log(data)
+    console.log(data)
+    console.log(data)
 }
+
+$: post_exists = data?.event != null
 
 $: down = $store.down || data?.error
 
@@ -99,7 +105,13 @@ $: imageSRC = imageKey ? `${PUBLIC_MEDIA_URL}/${imageKey}` : ''
     </div>
     <div class="content">
         <div class="inner">
+            {#if post_exists}
                 <Post embed={true} post={data}/>
+            {:else}
+                <div class="grd-c">
+                    Could not find that post.
+                </div>
+            {/if}
         </div>
     </div>
 </div>

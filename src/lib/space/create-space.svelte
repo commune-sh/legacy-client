@@ -29,17 +29,6 @@ let kill =() => {
 }
 
 onMount(() => {
-    const keyHandler = (e) => {
-        if(e.key === 'Escape') {
-            if(!name && !username && !topic) {
-                kill()
-            }
-        }
-    }
-    window.addEventListener('keydown', keyHandler)
-    return () => {
-        window.removeEventListener('keydown', keyHandler)
-    }
 })
 
 $: if($store.creatingSpace) {
